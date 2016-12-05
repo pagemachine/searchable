@@ -1,0 +1,33 @@
+{
+  "name": "pagemachine/searchable",
+  "description": "Elasticsearch companion API for TYPO3",
+  "type": "typo3-cms-extension",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Saskia Schreiber",
+      "email": "sschreiber@pagemachine.de"
+    }
+  ],
+  "require": {
+    "php": "^5.6 | ^7.0",
+    "elasticsearch/elasticsearch": "~5.0"
+  },
+  "require-dev": {
+  },
+  "suggest": {
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload": {
+    "psr-4": {
+      "PAGEmachine\\Searchable\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PAGEmachine\\Searchable\\Tests\\": "Tests/"
+    }
+  }
+}
