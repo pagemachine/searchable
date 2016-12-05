@@ -1,0 +1,18 @@
+plugin.tx_searchable {
+    view {
+        templateRootPaths.0 = {$plugin.tx_searchable.view.templateRootPath}
+        partialRootPaths.0 = {$plugin.tx_searchable.view.partialRootPath}
+        layoutRootPaths.0 = {$plugin.tx_searchable.view.layoutRootPath}
+
+        pluginNamespace = tx_searchable
+    }
+    persistence {
+        storagePid = {$plugin.tx_searchable.persistence.storagePid}
+    }
+}
+
+module.tx_searchable {
+    settings < plugin.tx_searchable.settings
+    persistence < plugin.tx_searchable.persistence
+    view < plugin.tx_searchable.view
+}

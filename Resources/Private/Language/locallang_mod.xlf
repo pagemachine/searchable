@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2016-12-05T10:33:20+00:00" product-name="searchable">
+        <header/>
+        <body>
+            <trans-unit id="mlang_tabs_tab">
+                <source>Searchable</source>
+            </trans-unit>
+            <trans-unit id="mlang_labels_tabdescr">
+                <source>Searchable Index</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
