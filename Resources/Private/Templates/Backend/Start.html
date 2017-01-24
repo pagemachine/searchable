@@ -5,20 +5,32 @@
 
 	<f:flashMessages />
 
-	<div>
-		<h2>Search</h2>
+		<h2>Stats</h2>
 
-		<f:form action="search">
-			<label for="term">Search: </label><f:form.textfield name="term" id="term" /><br>
-			<f:form.submit value="Submit" />
+		<table class="table">
+			<tr>
+				<td><b>Cluster name:</b> {health.cluster_name}</td>
+				<td><b>Status:</b> <span style="background:{health.status};">{health.status}</span></td>
+				<td><b>Nodes:</b> {health.number_of_nodes}</td>
+				<td><b>Active Shards:</b> {health.active_shards}</td>
+				<td><b>Index 'typo3':</b> {index.primaries.docs.count} Documents</td>
+			</tr>
+		</table>
+
+
+		<h2>Test Search</h2>
+
+		<f:form action="search" class="form-inline">
+			<div class="form-group">
+				<label for="term">Search: </label>
+				<f:form.textfield name="term" id="term" class="form-control" />
+				
+			</div>
+			<f:form.submit value="Submit" class="btn btn-primary" />
 
 		</f:form>
 
-	</div>
-
-	<div>
 		<h2>Actions</h2>
-		<f:link.action action="indexPages">Index Pages</f:link.action>
-	</div>
+		<f:link.action action="indexPages" class="btn btn-default">Index Pages</f:link.action>
 
 </f:section>

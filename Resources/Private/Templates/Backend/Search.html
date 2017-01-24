@@ -5,17 +5,20 @@
 
 	<f:flashMessages />
 
-		<f:form action="search">
-			<label for="term">Search: </label><f:form.textfield name="term" id="term" /><br>
-			<f:form.submit value="Submit" />
+		<f:form action="search" class="form-inline">
+			<div class="form-group">
+				<label for="term">Search: </label>
+				<f:form.textfield name="term" id="term" class="form-control" />
+				
+			</div>
+			<f:form.submit value="Submit" class="btn btn-primary" />
 
 		</f:form>
 
-	<div>
-		<p>Search took {result.took} milliseconds. It found <b>{result.hits.total}</b> results.</p>
+		<p>Search for <b>{term}</b> took {result.took} milliseconds. It found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total}</b> entries.</p>
 
 		<f:if condition="{result.hits.hits}">
-			<table>
+			<table class="table">
 				<tr>
 					<th>ID</th>
 					<th>Type</th>
@@ -39,11 +42,8 @@
 
 		</f:if>
 
-
-	</div>
-
 	<div>
-		<f:link.action action="start">Return</f:link.action>
+		<f:link.action action="start" class="btn btn-default">Return</f:link.action>
 	</div>
 
 </f:section>
