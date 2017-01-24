@@ -1,0 +1,24 @@
+<f:layout name="Backend" />
+<f:section name="main">
+
+	<h1>Searchable</h1>
+
+	<f:flashMessages />
+
+	<div>
+		<h2>Search</h2>
+
+		<f:form action="search">
+			<label for="term">Search: </label><f:form.textfield name="term" id="term" /><br>
+			<f:form.submit value="Submit" />
+
+		</f:form>
+
+	</div>
+
+	<div>
+		<h2>Actions</h2>
+		<f:link.action action="indexPages">Index Pages</f:link.action>
+	</div>
+
+</f:section>

@@ -1,0 +1,49 @@
+<f:layout name="Backend" />
+<f:section name="main">
+
+	<h1>Search result</h1>
+
+	<f:flashMessages />
+
+		<f:form action="search">
+			<label for="term">Search: </label><f:form.textfield name="term" id="term" /><br>
+			<f:form.submit value="Submit" />
+
+		</f:form>
+
+	<div>
+		<p>Search took {result.took} milliseconds. It found <b>{result.hits.total}</b> results.</p>
+
+		<f:if condition="{result.hits.hits}">
+			<table>
+				<tr>
+					<th>ID</th>
+					<th>Type</th>
+					<th>Title</th>
+					<th>Score</th>
+				</tr>
+
+				<f:for each="{result.hits.hits}" as="hit">
+
+					<tr>
+						<td>{hit._id}</td>
+						<td>{hit._type}</td>
+						<td>{hit._source.title}</td>
+						<td>{hit._score}</td>
+					</tr>
+
+				</f:for>
+
+
+			</table>
+
+		</f:if>
+
+
+	</div>
+
+	<div>
+		<f:link.action action="start">Return</f:link.action>
+	</div>
+
+</f:section>
