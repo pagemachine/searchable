@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Search;
@@ -21,7 +20,7 @@ class BackendController extends ActionController {
      *
      * @var string
      */
-    protected $defaultViewObjectName = BackendTemplateView::class;  
+    protected $defaultViewObjectName = BackendTemplateView::class;
 
     /**
      * Backend controller overview action to show general information about the elasticsearch instance
@@ -30,10 +29,18 @@ class BackendController extends ActionController {
      */
     public function startAction() {
 
-        $client = ClientBuilder::create()->build();
+         try {
 
-        $this->view->assign("health", $client->cluster()->health());
-        $this->view->assign("index", $client->indices()->stats(['index' => 'typo3'])['indices']['typo3']);
+            $client = ClientBuilder::create()->build();
+            $this->view->assign("health", $client->cluster()->health());
+            $this->view->assign("index", $client->indices()->stats(['index' => 'typo3'])['indices']['typo3']);
+            
+        } catch (\Exception $e) {
+
+            $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR); 
+        }       
+
+
 
 
     }
