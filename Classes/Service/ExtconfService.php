@@ -29,6 +29,16 @@ class ExtconfService {
         return $index;
     }
 
+    /**
+     * Returns all defined indexers
+     * 
+     * @return array
+     */
+    public static function getIndexers() {
+
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
+    }
+
 
 
 }
