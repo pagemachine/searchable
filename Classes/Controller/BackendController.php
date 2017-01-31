@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Controller;
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Search;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
@@ -32,8 +33,11 @@ class BackendController extends ActionController {
          try {
 
             $client = ClientBuilder::create()->build();
+
+            $index = ExtconfService::getIndex();
+
             $this->view->assign("health", $client->cluster()->health());
-            $this->view->assign("index", $client->indices()->stats(['index' => 'typo3'])['indices']['typo3']);
+            $this->view->assign("index", $client->indices()->stats(['index' => $index])['indices'][$index]);
             
         } catch (\Exception $e) {
 
@@ -52,7 +56,7 @@ class BackendController extends ActionController {
      */
     public function indexPagesAction() {
 
-        $indexer = new PagesIndexer("typo3");
+        $indexer = new PagesIndexer(ExtconfService::getIndex());
 
         $response = $indexer->run();
 
