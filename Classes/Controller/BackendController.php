@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Controller;
 
 use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -117,6 +118,25 @@ class BackendController extends ActionController {
         $this->view->assign("url", $url);
 
 
+
+    }
+
+    /**
+     * Resets all indices (basically truncates elasticsearch database and clears all mappings)
+     *
+     * @return void
+     */
+    public function resetIndicesAction() {
+
+        $indexManager = IndexManager::getInstance();
+
+        foreach (ExtconfService::getIndices() as $index) {
+
+            $indexManager->resetIndex($index);
+        }
+
+        $this->addFlashMessage("Index reset complete.");
+        $this->redirect("start");
 
     }
 

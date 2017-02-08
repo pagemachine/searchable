@@ -13,6 +13,15 @@ use PAGEmachine\Searchable\UndefinedIndexException;
 class ExtconfService {
 
     /**
+     * Returns all available indices
+     *
+     * @return array
+     */
+    public static function getIndices() {
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
+    }
+
+    /**
      * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
      * 
      * @param  integer $language
