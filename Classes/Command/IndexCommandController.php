@@ -24,7 +24,6 @@ class IndexCommandController extends CommandController
 
         foreach ($types as $indexerConfiguration) {
 
-
             $indexer = GeneralUtility::makeInstance($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
 
             $result = $indexer->run();
