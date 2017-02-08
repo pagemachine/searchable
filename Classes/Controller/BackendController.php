@@ -7,7 +7,9 @@ use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /*
@@ -83,6 +85,37 @@ class BackendController extends ActionController {
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);
+
+    }
+
+    /**
+     * Runs a http request directly to elasticsearch (debug)
+     *
+     * @param  string $request
+     * @return string $answer
+     */
+    public function requestAction($url = '') {
+
+        if ($url != '') {
+            $request = GeneralUtility::makeInstance(HttpRequest::class, $url);
+            $result = $request->send();
+
+
+            $this->view->assign("response", 
+                print_r(
+                    json_decode(
+                        $result->getBody(),
+                        true
+                    ),
+                    true
+                )
+            );        
+        } else {
+            $url = "http://localhost:9200/typo3/";
+        }
+
+        $this->view->assign("url", $url);
+
 
 
     }

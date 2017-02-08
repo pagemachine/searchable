@@ -1,0 +1,26 @@
+<f:layout name="Backend" />
+<f:section name="main">
+
+	<h1>Request</h1>
+
+	<f:flashMessages />
+
+		<f:form action="request" class="form-inline">
+			<div class="form-group">
+				<label for="url">Request: </label>
+				<f:form.textfield name="url" id="url" class="form-control" style="width: 300px;" value="{url}"/>
+				
+			</div>
+			<f:form.submit value="Submit" class="btn btn-primary" />
+
+		</f:form>
+
+		<f:if condition="{response}">
+			<pre>{response}</pre>
+		</f:if>
+
+	<div>
+		<f:link.action action="start" class="btn btn-default">Return</f:link.action>
+	</div>
+
+</f:section>
