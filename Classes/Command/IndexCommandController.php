@@ -20,17 +20,18 @@ class IndexCommandController extends CommandController
 
         $defaultIndex = ExtconfService::getIndex();
 
-        $indexerNames = ExtconfService::getIndexers();
+        $types = ExtconfService::getTypes();
 
-        foreach ($indexerNames as $className) {
+        foreach ($types as $indexerConfiguration) {
 
-            $indexer = GeneralUtility::makeInstance($className, $defaultIndex);
+
+            $indexer = GeneralUtility::makeInstance($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
 
             $result = $indexer->run();
 
             if ($result['errors']) {
 
-                $this->outputLine("There was an error running " . $className . ":");
+                $this->outputLine("There was an error running " . $indexerConfiguration['indexer'] . ":");
 
                 \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result['errors'], __METHOD__, 5, true);
                 break;

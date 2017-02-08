@@ -21,12 +21,19 @@ class PagesIndexer extends Indexer {
     /**
      * @var string
      */
-    public $indexFields = "uid, title, doktype";
+    public $contentIndexFields = "uid, header, bodytext";
 
     /**
-     * @var string
+     * Configuration array holding all options needed for this indexer
+     *
+     * @var array
      */
-    public $contentIndexFields = "uid, header, bodytext";
+    protected $config  = [
+        'type' => 'pages',
+        'fields' => ["uid", "title", "doktype"],
+        'subtypes' => []
+    ];
+
 
     /**
      * Used while fetching pages, sorts out all page types which are not displayed in FE
@@ -53,12 +60,12 @@ class PagesIndexer extends Indexer {
 
     /**
      * @param String      $index  The index name to use
-     * @param String      $type   The type to use
+     * @param array       $config
      * @param Client|null $client
      */
-    public function __construct($index, $type = 'pages', Client $client = null, PageRepository $pageRepository = null) {
+    public function __construct($index, $config = [], Client $client = null, PageRepository $pageRepository = null) {
 
-        parent::__construct($index, $type, $client);
+        parent::__construct($index, $config, $client);
 
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
 
@@ -90,7 +97,7 @@ class PagesIndexer extends Indexer {
      */
     protected function collectDataFromPagetree($id = 0) {
 
-        $pageList = $this->pageRepository->getMenu($id, $this->indexFields, 'sorting', '', false);
+        $pageList = $this->pageRepository->getMenu($id, implode(",", $this->config['fields']), 'sorting', '', false);
 
 
         if (!empty($pageList)) {

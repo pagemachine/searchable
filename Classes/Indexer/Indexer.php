@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Indexer;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -58,15 +59,42 @@ class Indexer {
       $this->type = $type;
     }
 
+
+    /**
+     * @var array $config
+     */
+    protected $config;
+    
+    /**
+     * @return array
+     */
+    public function getConfig() {
+      return $this->config;
+    }
+    
+    /**
+     * @param array $config
+     * @return void
+     */
+    public function setConfig($config) {
+      $this->config = $config;
+    }
+
     /**
      * @param String      $index  The index name to use
      * @param String      $type   The type to use
+     * @param array      $config   The configuration to apply
      * @param Client|null $client
      */
-    public function __construct($index, $type, Client $client = null) {
+    public function __construct($index, $config = [], Client $client = null) {
 
         $this->index = $index;
-        $this->type = $type;
+
+        if (!empty($config)) {
+            ArrayUtility::mergeRecursiveWithOverrule($this->config, $config);
+        }
+
+        $this->type = $this->config['type'];
 
         $this->client = $client ?: ClientBuilder::create()->build();
     }

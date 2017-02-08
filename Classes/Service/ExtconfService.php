@@ -30,13 +30,13 @@ class ExtconfService {
     }
 
     /**
-     * Returns all defined indexers
+     * Returns all defined types
      * 
      * @return array
      */
-    public static function getIndexers() {
+    public static function getTypes() {
 
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['types'];
     }
 
 
