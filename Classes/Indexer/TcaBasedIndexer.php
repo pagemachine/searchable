@@ -1,8 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use PAGEmachine\Searchable\DataCollector\TcaBasedDataCollector;
+use PAGEmachine\Searchable\DataCollector\TcaRecord;
 use PAGEmachine\Searchable\Query\BulkQuery;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -19,6 +21,13 @@ class TcaBasedIndexer extends Indexer {
      * @var BulkQuery
      */
     protected $query;
+
+    /**
+     *
+     * @var \TYPO3\CMS\Frontend\Page\PageRepository
+     * @inject
+     */
+    protected $pageRepository;
 
     /**
      * Configuration array holding all options needed for this indexer
@@ -56,7 +65,6 @@ class TcaBasedIndexer extends Indexer {
         'subtypes' => []
     ];
 
-
     /**
      * Main function for indexing
      * 
@@ -66,18 +74,37 @@ class TcaBasedIndexer extends Indexer {
 
         $this->query = new BulkQuery($this->index, $this->type);
 
-        $dataCollector = new TcaBasedDataCollector($this->config);
+        $dataCollector = new TcaRecord($this->config);
 
-        $records = $dataCollector->getRecords();
+        $recordUidList = $this->getRecordList();
 
-        foreach ($records as $record) {
+        foreach ($recordUidList as $item) {
 
-            $this->query->addRow($record['uid'], $record);
+            $fullRecord = $dataCollector->getRecord($item['uid'], $this->config['table'], $this->config);
+
+            $this->query->addRow($item['uid'], $fullRecord);
         }
 
         $response = $this->query->execute();
 
         return $response;
+
+    }
+
+    /**
+     * Fetches records for indexing
+     *
+     * @return array
+     */
+    public function getRecordList() {
+
+        $recordList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            "uid", 
+            $this->config['table'], 
+            "1=1" . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+        );
+        
+        return $recordList;
 
     }
 

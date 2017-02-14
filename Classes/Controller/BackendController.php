@@ -12,6 +12,7 @@ use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -137,6 +138,39 @@ class BackendController extends ActionController {
 
         $this->addFlashMessage("Index reset complete.");
         $this->redirect("start");
+
+    }
+
+    /**
+     * 
+     *
+     * @return void
+     */
+    public function indexFullAction() {
+
+        $defaultIndex = ExtconfService::getIndex();
+
+        $types = ExtconfService::getTypes();
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
+        foreach ($types as $indexerConfiguration) {
+
+            $indexer = $objectManager->get($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
+
+            $result = $indexer->run();
+
+            if ($result['errors']) {
+
+                $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
+
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result['errors'], __METHOD__, 5, true);
+                die();
+            }
+        }
+
+        $this->addFlashMessage("Indexing finished.");
+        //$this->redirect("start");
 
     }
 
