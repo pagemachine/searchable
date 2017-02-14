@@ -13,6 +13,11 @@ class IndexCommandController extends CommandController
 {
 
     /**
+     * @var bool
+     */
+    protected $requestAdminPermissions = TRUE;
+
+    /**
      * Reset all indices (if necessary) and let all defined indexers run
      * @return void
      */

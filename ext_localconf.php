@@ -19,14 +19,15 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
             'config' => [
                 'type' => 'news',
                 'table' => 'tx_news_domain_model_news',
-                'fields' => ['uid', 'title', 'teaser', 'bodytext', 'author', 'author_email', 'tags'],
+                'excludeFields' => [
+                    'path_segment',
+                    'import_id',
+                    'import_source'
+                ],
                 'subtypes' => [
                     'tags' => [
                         'indexer' => \PAGEmachine\Searchable\Indexer\TcaBasedIndexer::class,
                         'config' => [
-                            'fields' => [
-                                'title'
-                            ]
                         ]
                     ]
                 ]

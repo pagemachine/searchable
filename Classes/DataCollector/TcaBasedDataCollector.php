@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
+use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -40,8 +41,6 @@ class TcaBasedDataCollector {
      */
     protected $config = [];
 
-    protected $excludeFields = [];
-
 
 
     /**
@@ -52,7 +51,7 @@ class TcaBasedDataCollector {
     public function __construct($config = [], PageRepository $pageRepository = null, TcaDatabaseRecord $formDataGroup = null, FormDataCompiler $formDataCompiler = null) {
 
         $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(TcaDatabaseRecord::class);
-        $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
+        $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
 
         $this->config = $config;
@@ -91,7 +90,7 @@ class TcaBasedDataCollector {
 
         $formDataCompilerInput = [
             'tableName' => $this->config['table'],
-            'vanillaUid' => $uid,
+            'vanillaUid' => (int)$uid,
             'command' => 'edit'
         ];
 
@@ -99,9 +98,36 @@ class TcaBasedDataCollector {
 
         $record = $data['databaseRow'];
 
+        //Cleanup
+        $record = $this->removeExcludedFields($record);
+
         //@todo: Add field cleanup and subtype handling here
 
 
+        return $record;
+
+
+    }
+
+    /**
+     * Removes excluded fields from record
+     *
+     * @param  array $record
+     * @return array $record
+     */
+    protected function removeExcludedFields($record) {
+
+        $excludeFields = array_merge($this->config['systemExcludeFields'], $this->config['excludeFields']);
+
+        foreach ($excludeFields as $excludeField) {
+
+            if (array_key_exists($excludeField, $record)) {
+
+                unset($record[$excludeField]);
+            }
+        }
+
+        return $record;
 
     }
 

@@ -27,7 +27,32 @@ class TcaBasedIndexer extends Indexer {
      */
     protected $config  = [
         'type' => '',
-        'fields' => [],
+        'systemExcludeFields' => [
+            'tstamp',
+            'crdate',
+            'cruser_id',
+            't3ver_oid',
+            't3ver_id',
+            't3ver_wsid',
+            't3ver_label',
+            't3ver_state',
+            't3ver_stage',
+            't3ver_count',
+            't3ver_tstamp',
+            't3ver_move_id',
+            't3_origuid',
+            'editlock',
+            'sys_language_uid',
+            'l10n_parent',
+            'l10n_diffsource',
+            'deleted',
+            'hidden',
+            'starttime',
+            'endtime',
+            'sorting',
+            'fe_group'
+        ],
+        'excludeFields' => [],
         'subtypes' => []
     ];
 
