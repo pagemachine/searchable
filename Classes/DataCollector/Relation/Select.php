@@ -24,13 +24,13 @@ class Select implements SingletonInterface {
     }
 
     /**
-     * Resolves a relation and marks fields which add a new record level
+     * Resolves a select relation. Separates actual records from static fields and calls the specified collector for them
      *
      * @param  mixed $rawField
      * @param  array $fieldTca The TCA config of this relation
      * @param  array $configuration The configuration of this indexing
      * @param  TcaRecord $collector
-     * @return array $processedField array in the format ['records' => [...], 'static' => [...]]
+     * @return array $processedField
      */
     public function resolveRelation($rawField, $fieldTca, $configuration, TcaRecord $collector) {
 

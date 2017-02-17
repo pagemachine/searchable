@@ -42,6 +42,7 @@ class TcaRecord {
 
         //Cleanup
         $record = $this->removeExcludedFields($record, $configuration);
+        $record = $this->removeUnusedRelationsAndEmptyValues($record, $configuration);
 
         if (!empty($configuration['subtypes'])) {
 
@@ -56,7 +57,6 @@ class TcaRecord {
 
             }            
         }
-
 
 
         //@todo: Add field cleanup and subtype handling here
@@ -92,6 +92,35 @@ class TcaRecord {
 
         return $record;
 
+    }
+
+    /**
+     * Removes excluded fields from record
+     *
+     * @param  array $record
+     * @param  array $configuration
+     * @return array $record
+     */
+    protected function removeUnusedRelationsAndEmptyValues($record, $configuration) {
+
+
+        foreach ($record as $key => $field) {
+
+            if (empty($field)) {
+
+                unset($record[$key]);
+            }
+            else if (in_array(
+                $GLOBALS['TCA'][$this->toplevelConfiguration['table']]['columns'][$key]['config']['type'],
+                ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($configuration['subtypes'][$key])
+            ) {
+                unset($record[$key]);
+
+            }
+
+        }
+
+        return $record;
     }
 
     /**
