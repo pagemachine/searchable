@@ -1,7 +1,9 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
+use PAGEmachine\Searchable\DataCollector\Relation\RelationManager;
 use PAGEmachine\Searchable\DataCollector\Relation\Select;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -10,56 +12,168 @@ use PAGEmachine\Searchable\DataCollector\Relation\Select;
 /**
  * Class for fetching TCA-based data according to the given config
  */
-class TcaRecord {
+class TcaRecord extends AbstractDataCollector implements DataCollectorInterface {
 
     /**
      *
-     * @var array
+     * @var \TYPO3\CMS\Frontend\Page\PageRepository
+     * @inject
      */
-    protected $toplevelConfiguration;
+    protected $pageRepository;
 
     /**
      *
-     * @param array $config
-     */
-    public function __construct($config = []) {
+     * @var \PAGEmachine\Searchable\DataCollector\Relation\RelationManager
+     * @inject
+     */    
+    protected $relationManager;
 
-        $this->toplevelConfiguration = $config;
+    protected $defaultConfiguration = [
+        'excludeFields' => [
+            'tstamp',
+            'crdate',
+            'cruser_id',
+            't3ver_oid',
+            't3ver_id',
+            't3ver_wsid',
+            't3ver_label',
+            't3ver_state',
+            't3ver_stage',
+            't3ver_count',
+            't3ver_tstamp',
+            't3ver_move_id',
+            't3_origuid',
+            'editlock',
+            'sys_language_uid',
+            'l10n_parent',
+            'l10n_diffsource',
+            'deleted',
+            'hidden',
+            'starttime',
+            'endtime',
+            'sorting',
+            'fe_group'
+        ]
+    ];
+
+    /**
+     * The table this collector relates to
+     * @var string $table
+     */
+    protected $table;
+    
+    /**
+     * @return string
+     */
+    public function getTable() {
+      return $this->table;
+    }
+    
+    /**
+     * @param string $table
+     * @return void
+     */
+    public function setTable($table) {
+      $this->table = $table;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getTcaConfiguration() {
+      return $GLOBALS['TCA'][$this->table];
     }
 
+    /**
+     * Builds configuration - hook into here if you want to add some stuff to config manually
+     *
+     * @param  array  $configuration
+     * @return array $mergedConfiguration
+     * @Override
+     */
+    public function buildConfiguration($configuration = []) {
 
+        $configuration = parent::buildConfiguration($configuration);
+        
+        if (!empty($configuration['table'])) {
+
+            $this->table = $configuration['table'];
+        } else {
+
+            throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+        }
+
+        return $configuration;
+
+    }
+
+    /**
+     * Overriden to assign the correct table to the child (if needed)
+     * 
+     * @param string $classname
+     * @param  array  $collectorConfig
+     * @return DataCollectorInterface
+     * @Override
+     */
+    public function buildSubCollector($classname, $collectorConfig = []) {
+
+        $tca = $this->getTcaConfiguration();
+
+        $childTable = $tca['columns'][$collectorConfig['field']]['config']['foreign_table'];
+        $collectorConfig['table'] = $childTable;
+
+        $subCollector = parent::buildSubCollector($classname, $collectorConfig);
+
+        return $subCollector;
+
+    }
+
+    /**
+     * Fetches records for indexing
+     *
+     * @return array
+     */
+    public function getRecordList() {
+
+        $recordList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            "uid", 
+            $this->table, 
+            "1=1" . $this->pageRepository->enableFields($this->table) . BackendUtility::deleteClause($this->table)
+        );
+        
+        return $recordList;
+
+    }
 
     /**
      * Fetches a single record
      * 
      * @param integer $uid
-     * @param array $configuration The configuration for this record type
      * @return array
      */
-    public function getRecord($uid, $table, $configuration) {
+    public function getRecord($uid) {
 
-        $record = FormDataRecord::getInstance()->getRecord($uid, $table);
+        $record = FormDataRecord::getInstance()->getRecord($uid, $this->table);
 
         //Cleanup
-        $record = $this->removeExcludedFields($record, $configuration);
-        $record = $this->removeUnusedRelationsAndEmptyValues($record, $configuration);
+        $record = $this->removeExcludedFields($record);
+        $record = $this->removeUnusedRelationsAndEmptyValues($record);
 
-        if (!empty($configuration['subtypes'])) {
+        $tca = $this->getTcaConfiguration();
 
-            foreach ($configuration['subtypes'] as $fieldname => $subconfig) {
+        if (!empty($this->configuration['subtypes'])) {
+
+            foreach ($this->configuration['subtypes'] as $subconfig) {
+                $fieldname = $subconfig['config']['field'];
 
                 $record[$fieldname] = $this->fetchSubtypeField(
+                    $fieldname,
                     $record[$fieldname], 
-                    $GLOBALS['TCA'][$this->toplevelConfiguration['table']]['columns'][$fieldname], 
-                    $subconfig, 
-                    $record['uid']
+                    $tca['columns'][$fieldname]
                 );
 
             }            
         }
-
-
-        //@todo: Add field cleanup and subtype handling here
 
 
         return $record;
@@ -71,12 +185,11 @@ class TcaRecord {
      * Removes excluded fields from record
      *
      * @param  array $record
-     * @param  array $configuration
      * @return array $record
      */
-    protected function removeExcludedFields($record, $configuration) {
+    protected function removeExcludedFields($record) {
 
-        $excludeFields = $configuration['excludeFields'] ? array_merge($this->toplevelConfiguration['systemExcludeFields'], $configuration['excludeFields']) : $this->toplevelConfiguration['systemExcludeFields'];
+        $excludeFields = $this->configuration['excludeFields'];
 
         if (!empty($excludeFields)) {
 
@@ -98,11 +211,9 @@ class TcaRecord {
      * Removes excluded fields from record
      *
      * @param  array $record
-     * @param  array $configuration
      * @return array $record
      */
-    protected function removeUnusedRelationsAndEmptyValues($record, $configuration) {
-
+    protected function removeUnusedRelationsAndEmptyValues($record) {
 
         foreach ($record as $key => $field) {
 
@@ -111,8 +222,8 @@ class TcaRecord {
                 unset($record[$key]);
             }
             else if (in_array(
-                $GLOBALS['TCA'][$this->toplevelConfiguration['table']]['columns'][$key]['config']['type'],
-                ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($configuration['subtypes'][$key])
+                $GLOBALS['TCA'][$this->configuration['table']]['columns'][$key]['config']['type'],
+                ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($this->configuration['subtypes'][$key])
             ) {
                 unset($record[$key]);
 
@@ -126,19 +237,18 @@ class TcaRecord {
     /**
      * Fetches a subtype relation field (select, group etc.)
      *
+     * @param string $fieldname
      * @param  mixed $rawField The field as it is returned from the Formengine. Contains the necessary uids
      * @param  array $fieldTca
-     * @param  array $config parent configuration
-     * @param  integer $parentUid The current parent record
      * @return array
      */
-    protected function fetchSubtypeField($rawField, $fieldTca, $configuration, $parentUid) {
+    protected function fetchSubtypeField($fieldname, $rawField, $fieldTca) {
 
-        $resolvedField = Select::getInstance()->resolveRelation($rawField, $fieldTca, $configuration['config'], $this);
+        $resolver = $this->relationManager->getResolverForRelation($fieldTca['config']['type']);
+
+        $resolvedField = $resolver->resolveRelation($rawField, $fieldTca, $this->getSubCollectorForField($fieldname));
 
         return $resolvedField;
-
-
     }
 
 

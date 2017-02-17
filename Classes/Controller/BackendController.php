@@ -170,7 +170,7 @@ class BackendController extends ActionController {
         }
 
         $this->addFlashMessage("Indexing finished.");
-        //$this->redirect("start");
+        $this->redirect("start");
 
     }
 

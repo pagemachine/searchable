@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\Relation;
 
+use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\DataCollector\TcaRecord;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -12,7 +13,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * 
  */
-class Select implements SingletonInterface {
+class Select implements SingletonInterface, RelationInterface {
 
     /**
      *
@@ -28,11 +29,10 @@ class Select implements SingletonInterface {
      *
      * @param  mixed $rawField
      * @param  array $fieldTca The TCA config of this relation
-     * @param  array $configuration The configuration of this indexing
-     * @param  TcaRecord $collector
+     * @param  DataCollectorInterface $collector
      * @return array $processedField
      */
-    public function resolveRelation($rawField, $fieldTca, $configuration, TcaRecord $collector) {
+    public function resolveRelation($rawField, $fieldTca, DataCollectorInterface $collector) {
 
     	$records = [];
 
@@ -48,7 +48,7 @@ class Select implements SingletonInterface {
                         $records[$key] = $value;
                     }
 
-                    $records[$key] = $collector->getRecord($value, $fieldTca['config']['foreign_table'], $configuration);
+                    $records[$key] = $collector->getRecord($value);
                 }
             }
         }
