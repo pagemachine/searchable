@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use Elasticsearch\Client;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -86,6 +87,7 @@ class PagesIndexer extends Indexer {
         $response = $this->query->execute();
 
         return $response;
+        
 
     }
 
