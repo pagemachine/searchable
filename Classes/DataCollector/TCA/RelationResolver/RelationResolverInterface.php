@@ -1,5 +1,5 @@
 <?php
-namespace PAGEmachine\Searchable\DataCollector\Relation;
+namespace PAGEmachine\Searchable\DataCollector\TCA\RelationResolver;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 
@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 /**
  * 
  */
-interface RelationInterface {
+interface RelationResolverInterface {
 
     /**
      * Resolves relation

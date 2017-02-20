@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use PAGEmachine\Searchable\DataCollector\TcaRecord;
+use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\Query\BulkQuery;
 
 /*
@@ -11,7 +11,7 @@ use PAGEmachine\Searchable\Query\BulkQuery;
 /**
  * Simple TCA based indexer reading fields and processing them
  */
-class TcaBasedIndexer extends Indexer {
+class TcaIndexer extends Indexer {
 
 
     /**
@@ -39,7 +39,7 @@ class TcaBasedIndexer extends Indexer {
 
         $this->query = new BulkQuery($this->index, $this->type);
 
-        $dataCollector = $this->objectManager->get(TcaRecord::class, $this->config);
+        $dataCollector = $this->objectManager->get(TcaDataCollector::class, $this->config);
 
         $recordUidList = $dataCollector->getRecordList();
 

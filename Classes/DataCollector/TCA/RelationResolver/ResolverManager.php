@@ -1,5 +1,5 @@
 <?php
-namespace PAGEmachine\Searchable\DataCollector\Relation;
+namespace PAGEmachine\Searchable\DataCollector\TCA\RelationResolver;
 
 use TYPO3\CMS\Core\SingletonInterface;
 
@@ -10,11 +10,10 @@ use TYPO3\CMS\Core\SingletonInterface;
 /**
  * 
  */
-class RelationManager implements SingletonInterface {
+class ResolverManager implements SingletonInterface {
 
 	protected $relationResolvers = [
-		'select' => Select::class
-
+		'select' => SelectRelationResolver::class
 	];
 
 	/**

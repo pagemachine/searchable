@@ -44,13 +44,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         //     ]
         // ],
         'styleguide' => [
-            'indexer' => \PAGEmachine\Searchable\Indexer\TcaBasedIndexer::class,
+            'indexer' => \PAGEmachine\Searchable\Indexer\TcaIndexer::class,
             'config' => [
                 'type' => 'styleguide',
                 'table' => 'tx_styleguide_forms',
                 'subtypes' => [
                     'select_25' => [
-                        'collector' => \PAGEmachine\Searchable\DataCollector\TcaRecord::class,
+                        'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
                         'config' => [
                             'field' => 'select_25',
                             'excludeFields' => [

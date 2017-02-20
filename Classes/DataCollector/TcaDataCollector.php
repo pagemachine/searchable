@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use PAGEmachine\Searchable\DataCollector\Relation\RelationManager;
-use PAGEmachine\Searchable\DataCollector\Relation\Select;
+use PAGEmachine\Searchable\DataCollector\TCA\RelationResolver\ResolverManager;
+use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /*
@@ -12,7 +12,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 /**
  * Class for fetching TCA-based data according to the given config
  */
-class TcaRecord extends AbstractDataCollector implements DataCollectorInterface {
+class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface {
 
     /**
      *
@@ -23,10 +23,10 @@ class TcaRecord extends AbstractDataCollector implements DataCollectorInterface 
 
     /**
      *
-     * @var \PAGEmachine\Searchable\DataCollector\Relation\RelationManager
+     * @var \PAGEmachine\Searchable\DataCollector\TCA\RelationResolver\ResolverManager
      * @inject
      */    
-    protected $relationManager;
+    protected $resolverManager;
 
     protected $defaultConfiguration = [
         'excludeFields' => [
@@ -244,7 +244,7 @@ class TcaRecord extends AbstractDataCollector implements DataCollectorInterface 
      */
     protected function fetchSubtypeField($fieldname, $rawField, $fieldTca) {
 
-        $resolver = $this->relationManager->getResolverForRelation($fieldTca['config']['type']);
+        $resolver = $this->resolverManager->getResolverForRelation($fieldTca['config']['type']);
 
         $resolvedField = $resolver->resolveRelation($rawField, $fieldTca, $this->getSubCollectorForField($fieldname));
 

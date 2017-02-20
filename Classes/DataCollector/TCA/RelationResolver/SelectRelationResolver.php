@@ -1,8 +1,7 @@
 <?php
-namespace PAGEmachine\Searchable\DataCollector\Relation;
+namespace PAGEmachine\Searchable\DataCollector\TCA\RelationResolver;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
-use PAGEmachine\Searchable\DataCollector\TcaRecord;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -13,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * 
  */
-class Select implements SingletonInterface, RelationInterface {
+class SelectRelationResolver implements SingletonInterface, RelationResolverInterface {
 
     /**
      *

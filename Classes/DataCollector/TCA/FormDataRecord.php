@@ -1,5 +1,5 @@
 <?php
-namespace PAGEmachine\Searchable\DataCollector;
+namespace PAGEmachine\Searchable\DataCollector\TCA;
 
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
