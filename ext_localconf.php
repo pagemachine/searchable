@@ -50,7 +50,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                 'table' => 'tx_styleguide_forms',
                 'subtypes' => [
                     'select_25' => [
-                        'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
                         'config' => [
                             'field' => 'select_25',
                             'excludeFields' => [

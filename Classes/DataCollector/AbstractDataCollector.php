@@ -124,7 +124,9 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
 
 			foreach ($this->configuration['subtypes'] as $subtypeConfig) {
 
-				$subCollector = $this->buildSubCollector($subtypeConfig['collector'], $subtypeConfig['config']);
+                $subtypeCollectorClass = $subtypeConfig['collector'] ?: get_class($this);
+
+				$subCollector = $this->buildSubCollector($subtypeCollectorClass, $subtypeConfig['config']);
 
 				$this->addSubCollector($subtypeConfig['config']['field'], $subCollector);
 			}
