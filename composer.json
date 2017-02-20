@@ -14,11 +14,18 @@
     "elasticsearch/elasticsearch": "~5.0"
   },
   "require-dev": {
+    "phpunit/phpunit": "^5.3"
   },
   "suggest": {
   },
   "config": {
     "bin-dir": "bin"
+  },
+  "extra": {
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": "web"
+    }
   },
   "autoload": {
     "psr-4": {
@@ -27,7 +34,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "PAGEmachine\\Searchable\\Tests\\": "Tests/"
+      "PAGEmachine\\Searchable\\Tests\\": "Tests/",
+      "TYPO3\\CMS\\Core\\Tests\\": "vendor/typo3/cms/typo3/sysext/core/Tests/"
     }
   }
 }
