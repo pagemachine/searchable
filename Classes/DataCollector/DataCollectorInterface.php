@@ -47,8 +47,12 @@ interface DataCollectorInterface {
 	 */
 	public function getConfiguration();
 
-
-
-
+    /**
+     * Fetches a record
+     * 
+     * @param  int $identifier
+     * @return array
+     */
+    public function getRecord($identifier);
 
 }

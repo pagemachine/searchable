@@ -148,12 +148,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * Fetches a single record
      * 
-     * @param integer $uid
+     * @param integer $identifier
      * @return array
      */
-    public function getRecord($uid) {
+    public function getRecord($identifier) {
 
-        $record = FormDataRecord::getInstance()->getRecord($uid, $this->table);
+        $record = FormDataRecord::getInstance()->getRecord($identifier, $this->table);
 
         //Cleanup
         $record = $this->removeExcludedFields($record);
