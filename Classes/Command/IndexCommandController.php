@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Command;
 
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use \TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
 /*
@@ -11,6 +12,11 @@ use \TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
 class IndexCommandController extends CommandController
 {
+
+    /**
+     * @var bool
+     */
+    protected $requestAdminPermissions = TRUE;
 
     /**
      * Reset all indices (if necessary) and let all defined indexers run
@@ -22,9 +28,11 @@ class IndexCommandController extends CommandController
 
         $types = ExtconfService::getTypes();
 
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
         foreach ($types as $indexerConfiguration) {
 
-            $indexer = GeneralUtility::makeInstance($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
+            $indexer = $objectManager->get($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
 
             $result = $indexer->run();
 

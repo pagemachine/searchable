@@ -3,7 +3,10 @@ namespace PAGEmachine\Searchable\Indexer;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -16,6 +19,13 @@ class Indexer {
      * @var Client
      */
     protected $client;
+
+    /**
+     * ObjectManager
+     *
+     * @var ObjectManager
+     */
+    protected $objectManager;
 
 
     /**
@@ -85,18 +95,21 @@ class Indexer {
      * @param String      $type   The type to use
      * @param array      $config   The configuration to apply
      * @param Client|null $client
+     * @param ObjectManager|null $objectManager
      */
-    public function __construct($index, $config = [], Client $client = null) {
+    public function __construct($index, $config = [], Client $client = null, ObjectManager $objectManager = null) {
 
         $this->index = $index;
 
         if (!empty($config)) {
-            ArrayUtility::mergeRecursiveWithOverrule($this->config, $config);
+            $this->config = ConfigurationMergerService::merge($this->config, $config);
         }
 
         $this->type = $this->config['type'];
 
         $this->client = $client ?: ClientBuilder::create()->build();
+
+        $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
     }
 
 

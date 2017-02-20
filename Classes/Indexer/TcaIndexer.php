@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use PAGEmachine\Searchable\DataCollector\TcaBasedDataCollector;
+use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\Query\BulkQuery;
 
 /*
@@ -11,7 +11,7 @@ use PAGEmachine\Searchable\Query\BulkQuery;
 /**
  * Simple TCA based indexer reading fields and processing them
  */
-class TcaBasedIndexer extends Indexer {
+class TcaIndexer extends Indexer {
 
 
     /**
@@ -26,11 +26,9 @@ class TcaBasedIndexer extends Indexer {
      * @var array
      */
     protected $config  = [
-        'type' => '',
-        'fields' => [],
+        'excludeFields' => [],
         'subtypes' => []
     ];
-
 
     /**
      * Main function for indexing
@@ -41,13 +39,15 @@ class TcaBasedIndexer extends Indexer {
 
         $this->query = new BulkQuery($this->index, $this->type);
 
-        $dataCollector = new TcaBasedDataCollector($this->config);
+        $dataCollector = $this->objectManager->get(TcaDataCollector::class, $this->config);
 
-        $records = $dataCollector->getRecords();
+        $recordUidList = $dataCollector->getRecordList();
 
-        foreach ($records as $record) {
+        foreach ($recordUidList as $item) {
 
-            $this->query->addRow($record['uid'], $record);
+            $fullRecord = $dataCollector->getRecord($item['uid']);
+
+            $this->query->addRow($item['uid'], $fullRecord);
         }
 
         $response = $this->query->execute();
