@@ -94,14 +94,19 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     public function buildConfiguration($configuration = []) {
 
         $configuration = parent::buildConfiguration($configuration);
-        
-        if (!empty($configuration['table'])) {
 
-            $this->table = $configuration['table'];
-        } else {
+        if (!$this->table) {
 
-            throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+            if (!empty($configuration['table'])) {
+
+                $this->table = $configuration['table'];
+            } else {
+
+                throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+            }
         }
+        
+
 
         return $configuration;
 
@@ -120,7 +125,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $tca = $this->getTcaConfiguration();
 
         $childTable = $tca['columns'][$collectorConfig['field']]['config']['foreign_table'];
-        $collectorConfig['table'] = $childTable;
+
+        if (empty($collectorConfig['table']) && $childTable != null) {
+            $collectorConfig['table'] = $childTable;
+        }
+        
 
         $subCollector = parent::buildSubCollector($classname, $collectorConfig);
 

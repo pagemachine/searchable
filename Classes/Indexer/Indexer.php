@@ -1,8 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -13,12 +12,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 
 class Indexer {
-
-    /**
-     * Elasticsearch client
-     * @var Client
-     */
-    protected $client;
 
     /**
      * ObjectManager
@@ -32,6 +25,11 @@ class Indexer {
      * @var String $index
      */
     protected $index;
+
+    /**
+     * @var BulkQuery
+     */
+    protected $query;
     
     /**
      * @return String
@@ -94,10 +92,10 @@ class Indexer {
      * @param String      $index  The index name to use
      * @param String      $type   The type to use
      * @param array      $config   The configuration to apply
-     * @param Client|null $client
+     * @param BulkQuery|null $query
      * @param ObjectManager|null $objectManager
      */
-    public function __construct($index, $config = [], Client $client = null, ObjectManager $objectManager = null) {
+    public function __construct($index, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null) {
 
         $this->index = $index;
 
@@ -107,7 +105,7 @@ class Indexer {
 
         $this->type = $this->config['type'];
 
-        $this->client = $client ?: ClientBuilder::create()->build();
+        $this->query = $query ?: new BulkQuery($this->index, $this->type);
 
         $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
     }

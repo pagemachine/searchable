@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
-use PAGEmachine\Searchable\Query\BulkQuery;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -12,13 +11,6 @@ use PAGEmachine\Searchable\Query\BulkQuery;
  * Simple TCA based indexer reading fields and processing them
  */
 class TcaIndexer extends Indexer {
-
-
-    /**
-     * The array wrapper class holding all parameters
-     * @var BulkQuery
-     */
-    protected $query;
 
     /**
      * Configuration array holding all options needed for this indexer
@@ -36,8 +28,6 @@ class TcaIndexer extends Indexer {
      * @return array
      */
     public function run() {
-
-        $this->query = new BulkQuery($this->index, $this->type);
 
         $dataCollector = $this->objectManager->get(TcaDataCollector::class, $this->config);
 
