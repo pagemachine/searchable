@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\DataCollector;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -13,6 +14,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * AbstractDataCollector
  */
 abstract class AbstractDataCollector implements DataCollectorInterface {
+
+    /**
+     * ObjectManager
+     *
+     * @var ObjectManager
+     */
+    protected $objectManager;
 
 	/**
 	 * @var array $defaultConfiguration
@@ -90,8 +98,11 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
 	/**
 	 *
 	 * @param array $configuration
+     * @param ObjectManager $objectManager
 	 */
-	public function __construct($configuration = []) {
+	public function __construct($configuration = [], ObjectManager $objectManager = null) {
+
+        $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
 		$this->configuration = $this->buildConfiguration($configuration);
 
@@ -144,7 +155,7 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
 	 */
 	public function buildSubCollector($classname, $collectorConfig = []) {
 
-		$subCollector = GeneralUtility::makeInstance($classname, $collectorConfig);
+		$subCollector = $this->objectManager->get($classname, $collectorConfig);
 
 		return $subCollector;
 
