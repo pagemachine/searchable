@@ -14,7 +14,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         //     'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class
         // ],
         // 'news' => [
-        //     'indexer' => \PAGEmachine\Searchable\Indexer\TcaBasedIndexer::class,
+        //     'indexer' => \PAGEmachine\Searchable\Indexer\TcaIndexer::class,
         //     'type' => 'news',
         //     'config' => [
         //         'table' => 'tx_news_domain_model_news',
@@ -25,15 +25,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         //         ],
         //         'subtypes' => [
         //             'tags' => [
-        //                 'field' => 'tags',
-        //                 'collector' => \PAGEmachine\Searchable\DataCollector\TcaRecord::class,
         //                 'config' => [
+        //                     'field' => 'tags'
         //                 ]
         //             ],
         //             'categories' => [
-        //                 'field' => 'categories',
-        //                 'collector' => \PAGEmachine\Searchable\DataCollector\TcaRecord::class,
         //                 'config' => [
+        //                     'field' => 'categories',
         //                     'excludeFields' => [
         //                         'items'
         //                     ]
@@ -47,6 +45,12 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
             'config' => [
                 'type' => 'styleguide',
                 'table' => 'tx_styleguide_forms',
+                'preview' => [
+                    'renderer' => \PAGEmachine\Searchable\Preview\SimplePreviewRenderer::class,
+                    'config' => [
+                        'field' => 'rte_1'
+                    ]
+                ],
                 'subtypes' => [
                     'select_25' => [
                         'config' => [

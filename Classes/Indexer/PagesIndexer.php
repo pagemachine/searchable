@@ -44,6 +44,7 @@ class PagesIndexer extends Indexer {
         foreach ($pages as $uid => $page) {
 
             $fullpage = $dataCollector->getRecord($uid);
+            $fullpage['preview'] = $this->previewRenderer->render($fullpage);
             
             $this->query->addRow($uid, $fullpage);
         }

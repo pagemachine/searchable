@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
+use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -30,6 +32,11 @@ class Indexer {
      * @var BulkQuery
      */
     protected $query;
+
+    /**
+     * @var PreviewRendererInterface
+     */
+    protected $previewRenderer;
     
     /**
      * @return String
@@ -94,8 +101,9 @@ class Indexer {
      * @param array      $config   The configuration to apply
      * @param BulkQuery|null $query
      * @param ObjectManager|null $objectManager
+     * @param PreviewRendererInterface|null $previewRenderer
      */
-    public function __construct($index, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null) {
+    public function __construct($index, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null) {
 
         $this->index = $index;
 
@@ -108,6 +116,33 @@ class Indexer {
         $this->query = $query ?: new BulkQuery($this->index, $this->type);
 
         $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
+
+        $this->setPreviewRenderer($previewRenderer);
+         
+    }
+
+    /**
+     * Sets the preview renderer
+     * 
+     * @param PreviewRendererInterface|null $previewRenderer
+     */
+    protected function setPreviewRenderer(PreviewRendererInterface $previewRenderer = null) {
+
+        if ($previewRenderer) {
+
+            $this->previewRenderer = $previewRenderer;
+        } else {
+
+            if (!empty($this->config['preview']['renderer'])) {
+
+                $this->previewRenderer = $this->objectManager->get($this->config['preview']['renderer'], $this->config['preview']['config']);
+            } else {
+
+                $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+            }
+        }
+
+
     }
 
 
