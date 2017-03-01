@@ -1,7 +1,8 @@
 <?php
-namespace PAGEmachine\Searchable\DataCollector\TCA\RelationResolver;
+namespace PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\RelationResolverInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -16,7 +17,7 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
 
     /**
      *
-     * @return FormDataRecord
+     * @return SelectRelationResolver
      */
     public static function getInstance() {
 
@@ -26,12 +27,18 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
     /**
      * Resolves a select relation. Separates actual records from static fields and calls the specified collector for them
      *
-     * @param  mixed $rawField
-     * @param  array $fieldTca The TCA config of this relation
-     * @param  DataCollectorInterface $collector
+     * @param  string $fieldname
+     * @param  array $record The record containing the field to resolve
+     * @param  DataCollectorInterface $childCollector
+     * @param  DataCollectorInterface $parentCollector
      * @return array $processedField
      */
-    public function resolveRelation($rawField, $fieldTca, DataCollectorInterface $collector) {
+    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
+
+        $parentConfiguration = $parentCollector->getConfiguration();
+        $fieldTca = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$fieldname];
+
+        $rawField = $record[$fieldname];
 
     	$records = [];
 
@@ -47,7 +54,7 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
                         $records[$key] = $value;
                     }
 
-                    $records[$key] = $collector->getRecord($value);
+                    $records[$key] = $childCollector->getRecord($value);
                 }
             }
         }

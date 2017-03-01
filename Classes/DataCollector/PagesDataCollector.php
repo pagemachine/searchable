@@ -53,6 +53,16 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             'fe_login_mode',
             'backend_layout',
             'backend_layout_next_level'
+        ],
+        'contentExcludeFields' => [
+            'sys_language_uid',
+            'l10n_parent',
+            'l10n_diffsource',
+            'deleted',
+            'hidden',
+            'starttime',
+            'endtime',
+            'sorting'
         ]
     ];   
 

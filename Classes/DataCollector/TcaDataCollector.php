@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use PAGEmachine\Searchable\DataCollector\TCA\RelationResolver\ResolverManager;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
@@ -23,7 +23,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
     /**
      *
-     * @var \PAGEmachine\Searchable\DataCollector\TCA\RelationResolver\ResolverManager
+     * @var \PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager
      * @inject
      */    
     protected $resolverManager;
@@ -173,13 +173,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         if (!empty($this->configuration['subtypes'])) {
 
             foreach ($this->configuration['subtypes'] as $subconfig) {
+
                 $fieldname = $subconfig['config']['field'];
 
-                $record[$fieldname] = $this->fetchSubtypeField(
-                    $fieldname,
-                    $record[$fieldname], 
-                    $tca['columns'][$fieldname]
-                );
+                $resolvedField = $this->resolverManager->resolveRelation($fieldname, $record, $this->getSubCollectorForField($fieldname), $this);
+
+                $record[$fieldname] = $resolvedField;
 
             }            
         }
@@ -241,23 +240,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         return $record;
-    }
-
-    /**
-     * Fetches a subtype relation field (select, group etc.)
-     *
-     * @param string $fieldname
-     * @param  mixed $rawField The field as it is returned from the Formengine. Contains the necessary uids
-     * @param  array $fieldTca
-     * @return array
-     */
-    protected function fetchSubtypeField($fieldname, $rawField, $fieldTca) {
-
-        $resolver = $this->resolverManager->getResolverForRelation($fieldTca['config']['type']);
-
-        $resolvedField = $resolver->resolveRelation($rawField, $fieldTca, $this->getSubCollectorForField($fieldname));
-
-        return $resolvedField;
     }
 
 
