@@ -35,12 +35,18 @@ class ResolverManager implements SingletonInterface {
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
 
         $parentConfiguration = $parentCollector->getConfiguration();
+        $subConfiguration = $childCollector->getConfiguration();
         $tca = $GLOBALS['TCA'][$parentConfiguration['table']];
 
         $classname = null;
 
-        //Try TCA/FormEngine related stuff
-        if ($tca['columns'][$fieldname] && $tca['columns'][$fieldname]['config']['type']) {
+        // Check for a custom resolver first
+        if (isset($subConfiguration['resolver'])) {
+
+            $classname = $subConfiguration['resolver'];
+        }
+        //Next try TCA/FormEngine related stuff
+        else if ($tca['columns'][$fieldname] && $tca['columns'][$fieldname]['config']['type']) {
 
             if (!empty($this->relationResolvers['FormEngine'][$tca['columns'][$fieldname]['config']['type']])) {
 
@@ -50,12 +56,6 @@ class ResolverManager implements SingletonInterface {
                 throw new \Exception('No TCA relation resolver for type "' . $tca['columns'][$fieldname]['config']['type'] . '" found.', 1488368425);
             }
         }
-        else if ($childCollector->getConfiguration()['table']) {
-
-            // Non-TCA database relation resolver
-
-        }
-
 
         if ($classname != null) {
 

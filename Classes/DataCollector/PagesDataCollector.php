@@ -131,32 +131,4 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
     }
 
-    /**
-     * Fetches a single record plus content
-     * 
-     * @param integer $identifier
-     * @return array
-     */
-    public function getRecord($identifier) {
-
-        $record = parent::getRecord($identifier);
-
-        $record['content'] = $this->fetchContentForPage($record['uid']);
-
-        return $record;
-    }
-
-    /**
-     * Fetches content for a given pageId
-     * 
-     * @param  integer $pageId
-     * @return array
-     */
-    protected function fetchContentForPage($pageId) {
-
-        $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('header, bodytext', 'tt_content', 'pid = ' . $pageId . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
-
-        return $content;
-
-    }
 }
