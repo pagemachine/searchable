@@ -18,7 +18,8 @@ class ResolverManager implements SingletonInterface {
      */
 	protected $relationResolvers = [
         'FormEngine' => [
-            'select' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver::class
+            'select' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver::class,
+            'inline' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver::class
         ]
 		
 	];
