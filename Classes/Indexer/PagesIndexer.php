@@ -3,8 +3,6 @@ namespace PAGEmachine\Searchable\Indexer;
 
 
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -19,7 +17,16 @@ class PagesIndexer extends Indexer {
      */
     protected $config  = [
         'type' => 'pages',
-        'subtypes' => []
+        'subtypes' => [
+            'content' => [
+                'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
+                'config' => [
+                    'field' => 'content',
+                    'table' => 'tt_content',
+                    'resolver' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class
+                ]
+            ]
+        ]
     ];
 
     /**

@@ -11,19 +11,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     ],
     'types' => [
         'pages' => [
-            'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class,
-            'config' => [
-                'subtypes' => [
-                    'content' => [
-                        'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
-                        'config' => [
-                            'field' => 'content',
-                            'table' => 'tt_content',
-                            'resolver' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class
-                        ]
-                    ]
-                ]
-            ]
+            'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class
         ],
         // 'news' => [
         //     'indexer' => \PAGEmachine\Searchable\Indexer\TcaBasedIndexer::class,
