@@ -46,9 +46,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                 'type' => 'styleguide',
                 'table' => 'tx_styleguide_forms',
                 'preview' => [
-                    'renderer' => \PAGEmachine\Searchable\Preview\SimplePreviewRenderer::class,
+                    'renderer' => \PAGEmachine\Searchable\Preview\FluidPreviewRenderer::class,
                     'config' => [
-                        'field' => 'rte_1'
+                        'fields' => ['rte_1']
                     ]
                 ],
                 'subtypes' => [
