@@ -40,9 +40,12 @@ class PageLinkBuilder implements LinkBuilderInterface {
     /**
      * @param array $config
      */
-    public function __construct($config) {
+    public function __construct($config = null) {
 
-        $this->config = ConfigurationMergerService::merge($this->config, $config);
+        if ($config != null) {
+
+            $this->config = ConfigurationMergerService::merge($this->config, $config);
+        }     
     }
 
     /**

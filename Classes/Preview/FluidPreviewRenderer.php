@@ -42,9 +42,15 @@ class FluidPreviewRenderer implements PreviewRendererInterface {
      */
     public function __construct($config) {
 
-        $this->config = ConfigurationMergerService::merge($this->config, $config);
+        if ($config != null) {
+
+            $this->config = ConfigurationMergerService::merge($this->config, $config);
+        }
     }
 
+    /**
+     * @return void
+     */
     public function initializeObject() {
 
         $this->prepareView();
