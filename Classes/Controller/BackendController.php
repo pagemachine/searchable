@@ -52,29 +52,7 @@ class BackendController extends ActionController {
 
 
     }
-
-    /**
-     * Testing action to index pages
-     * 
-     * @return void
-     */
-    public function indexPagesAction() {
-
-        $indexer = new PagesIndexer(ExtconfService::getIndex());
-
-        $response = $indexer->run();
-
-        if ($response['errors']) {
-            $this->addFlashMessage("Something went wrong with your request.", "Error", AbstractMessage::ERROR);
-        } else {
-            $this->addFlashMessage("Request took " . $response['took'] . "ms.", "Success");
-        }
-
-        
-        $this->redirect("start");
-
-    }
-
+    
     /**
      * Function to run search tests in the backend.
      * @todo remove this when everything works or extend to a debuggig device
