@@ -4,7 +4,6 @@ namespace PAGEmachine\Searchable\Preview;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 
@@ -41,7 +40,7 @@ class FluidPreviewRenderer implements PreviewRendererInterface {
     /**
      * @param array $config
      */
-    public function __construct($config, ObjectManager $objectManager = null) {
+    public function __construct($config) {
 
         $this->config = ConfigurationMergerService::merge($this->config, $config);
     }
