@@ -33,8 +33,6 @@ class PageLinkBuilder implements LinkBuilderInterface {
             'addQueryStringMethod' => null
         ],
         'dynamicParts' => [
-            'pageUid' => '',
-            'additionalParams' => []
         ]
     ];
 
@@ -59,20 +57,42 @@ class PageLinkBuilder implements LinkBuilderInterface {
 
         $linkConfiguration = $this->config['fixedParts'];
 
-        foreach ($this->config['dynamicParts'] as $key => $partConfig) {
+        if (!empty($this->config['dynamicParts'])) {
 
-            if (!empty($partConfig)) {
+             $this->config['dynamicParts'] = $this->replaceFieldsRecursive($this->config['dynamicParts'], $record);
 
-                if (is_string($partConfig) && $record[$partConfig] != null) {
-
-                    $linkConfiguration[$key] = $record[$partConfig];
-                    continue;
-                }
-            }
+             $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $this->config['dynamicParts']);
         }
 
         $linkConfiguration['title'] = $record[$this->config['titleField']];
 
+
         return $linkConfiguration;
+    }
+
+    /**
+     *
+     * @param  array $configuration
+     * @param  array $record
+     * @return array
+     */
+    protected function replaceFieldsRecursive($configuration, $record) {
+
+        foreach ($configuration as $key => $value) {
+
+            if (is_array($value)) {
+
+                $configuration[$key] = $this->replaceFieldsRecursive($value, $record);
+            } else if (is_string($value) && $record[$value] != null) {
+
+                $configuration[$key] = $record[$value];
+            } else {
+
+                unset($configuration[$key]);
+            }
+
+        }
+
+        return $configuration;
     }
 }
