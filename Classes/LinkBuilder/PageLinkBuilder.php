@@ -18,6 +18,7 @@ class PageLinkBuilder implements LinkBuilderInterface {
      * @var array
      */
     protected $config = [
+        'titleField' => '',
         'fixedParts' => [
             'pageUid' => null,
             'additionalParams' => [],
@@ -54,7 +55,7 @@ class PageLinkBuilder implements LinkBuilderInterface {
      * @param  array $record
      * @return array
      */
-    public function createLink($record) {
+    public function createLinkConfiguration($record) {
 
         $linkConfiguration = $this->config['fixedParts'];
 
@@ -69,6 +70,8 @@ class PageLinkBuilder implements LinkBuilderInterface {
                 }
             }
         }
+
+        $linkConfiguration['title'] = $record[$this->config['titleField']];
 
         return $linkConfiguration;
     }

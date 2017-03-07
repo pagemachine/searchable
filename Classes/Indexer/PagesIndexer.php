@@ -17,6 +17,14 @@ class PagesIndexer extends Indexer {
      */
     protected $config  = [
         'type' => 'pages',
+        'link' => [
+            'config' => [
+                'titleField' => 'title', 
+                'dynamicParts' => [
+                    'pageUid' => 'uid'
+                ]
+            ]
+        ],
         'subtypes' => [
             'content' => [
                 'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
@@ -27,6 +35,7 @@ class PagesIndexer extends Indexer {
                 ]
             ]
         ]
+
     ];
 
     /**

@@ -14,6 +14,6 @@ interface LinkBuilderInterface {
      * @param  array $record
      * @return string
      */
-    public function createLink($record);
+    public function createLinkConfiguration($record);
 
 }

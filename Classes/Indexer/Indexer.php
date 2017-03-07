@@ -184,7 +184,7 @@ class Indexer {
     protected function addSystemFields($record = []) {
         $systemFields = [];
 
-        $systemFields['link'] = $this->linkBuilder->createLink($record);
+        $systemFields['link'] = $this->linkBuilder->createLinkConfiguration($record);
         $systemFields['preview'] = $this->previewRenderer->render($record);
 
         $record['_meta'] = $systemFields;
