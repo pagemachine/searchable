@@ -65,9 +65,7 @@ class FormDataRecord implements SingletonInterface {
 
         $data = $this->formDataCompiler->compile($formDataCompilerInput);
 
-        $record = $data['databaseRow'];
-
-        return $record;
+        return $data;
 
 
     }

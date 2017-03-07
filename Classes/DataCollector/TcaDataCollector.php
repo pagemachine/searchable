@@ -3,7 +3,9 @@ namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
+use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -61,6 +63,21 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @var string $table
      */
     protected $table;
+
+    /**
+     * Stores the processedTca for the current record
+     *
+     * @var array
+     */
+    protected $processedTca = [];
+
+    /**
+     * @return array
+     */
+    public function getProcessedTca() {
+
+        return $this->processedTca;
+    }
     
     /**
      * @return string
@@ -130,7 +147,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             $collectorConfig['table'] = $childTable;
         }
         
-
         $subCollector = parent::buildSubCollector($classname, $collectorConfig);
 
         return $subCollector;
@@ -162,14 +178,18 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecord($identifier) {
 
-        $record = FormDataRecord::getInstance()->getRecord($identifier, $this->table);
+        $data = FormDataRecord::getInstance()->getRecord($identifier, $this->table);
+        $record = $data['databaseRow'];
+        $this->processedTca = $data['processedTca'];
 
         //Cleanup
         $record = $this->removeExcludedFields($record);
         $record = $this->removeUnusedRelationsAndEmptyValues($record);
 
-        $tca = $this->getTcaConfiguration();
+        //Plain value filling
+        $record = $this->fillPlainValues($record);
 
+        //Fill subtypes at last
         if (!empty($this->configuration['subtypes'])) {
 
             foreach ($this->configuration['subtypes'] as $subconfig) {
@@ -182,11 +202,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
             }            
         }
-
-
         return $record;
-
-
     }
 
     /**
@@ -242,8 +258,102 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         return $record;
     }
 
+    /**
+     * Fills plain values like checkboxes with their labels
+     *
+     * @param  array $record
+     * @return array $record
+     */
+    protected function fillPlainValues($record) {
+
+        $processedTca = $this->getProcessedTca();
+
+        foreach ($record as $fieldname => $value) {
+
+            switch($processedTca['columns'][$fieldname]['config']['type']) {
+                case 'check':
+                    $record[$fieldname] = $this->processCheckboxField($value, $processedTca['columns'][$fieldname]['config']);
+                    break;
+                case 'radio':
+                    $record[$fieldname] = $this->processRadioField($value, $processedTca['columns'][$fieldname]['config']);
+                    break;
+
+            }
 
 
+        }
+
+        return $record;
+    }
+
+    /**
+     * Resolves the bitmask and puts in labels for checkboxes
+     *
+     * @param  int $value
+     * @param  array $fieldTca
+     * @return string
+     */
+    protected function processCheckboxField($value, $fieldTca) {
+
+        $items = [];
+
+        $itemCount = count($fieldTca['items']);
+        $activeItemKeys = BinaryConversionUtility::convertCheckboxValue($value, $itemCount);
+
+        foreach ($activeItemKeys as $key) {
+
+            $label = $fieldTca['items'][$key][0];
+
+            if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
+
+                $label = $this->getLanguageService()->sL($label);
+            }
+
+            $items[] = $label;
+        }
+
+        return implode(", ", $items);
+
+
+    }
+
+    /**
+     * Resolves radio fields
+     *
+     * @param  int $value
+     * @param  array $fieldTca
+     * @return string
+     */
+    protected function processRadioField($value, $fieldTca) {
+
+        $label = "";
+
+        if (is_array($fieldTca['items'])) {
+            foreach ($fieldTca['items'] as $set) {
+                if ((string)$set[1] === (string)$value) {
+                    $label = $set[0];
+                    break;
+                }
+            }
+        }
+
+        if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
+
+            $label = $this->getLanguageService()->sL($label);
+        }
+
+        return $label;
+
+    }
+
+
+    /**
+     * @return \TYPO3\CMS\Lang\LanguageService
+    */
+    protected function getLanguageService() {
+
+        return $GLOBALS['LANG'];
+    }
 
 
 
