@@ -5,6 +5,12 @@ if (!defined('TYPO3_MODE')) {
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile('searchable', 'Configuration/TypoScript', 'Searchable');
 
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+    'PAGEmachine.' . $_EXTKEY,
+    'Search',
+    'Search form and results'
+);
+
 // Backend module
 if (TYPO3_MODE === 'BE') {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(

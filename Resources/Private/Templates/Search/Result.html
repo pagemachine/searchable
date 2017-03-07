@@ -1,0 +1,32 @@
+{namespace s=PAGEmachine\Searchable\ViewHelpers}
+<f:layout name="Default" />
+<f:section name="main">
+
+        <f:render partial="Search/Form" />
+
+        <p>Search for <b>{term}</b> found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total}</b> entries.</p>
+
+        <f:if condition="{result.hits.hits}">
+
+            <div class="results">
+
+                <f:for each="{result.hits.hits}" as="hit">
+                    <div class="result">
+                           
+                        <h3><s:link.page arguments="{hit._source._meta.link}">Hit</s:link.page></h3>
+
+                        <div class="result-preview">
+                            <f:format.raw>{hit._source._meta.preview}</f:format.raw>
+                        </div>
+                        <div class="result-meta">
+                            <span class="result-score">Score: {hit._score}</span>
+                        </div>
+
+                    </div>
+                </f:for>
+
+            </div>
+
+        </f:if>
+
+</f:section>
