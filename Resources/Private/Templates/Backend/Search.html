@@ -1,3 +1,4 @@
+{namespace s=PAGEmachine\Searchable\ViewHelpers}
 <f:layout name="Backend" />
 <f:section name="main">
 
@@ -27,11 +28,10 @@
 				</tr>
 
 				<f:for each="{result.hits.hits}" as="hit">
-
 					<tr>
 						<td>{hit._id}</td>
 						<td>{hit._type}</td>
-						<td><f:format.raw>{hit._source.preview}</f:format.raw></td>
+						<td><f:format.raw>{hit._source._meta.preview}</f:format.raw></td>
 						<td>{hit._score}</td>
 					</tr>
 

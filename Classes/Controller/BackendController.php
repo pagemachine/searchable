@@ -164,7 +164,7 @@ class BackendController extends ActionController {
 
                 $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
 
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result['errors'], __METHOD__, 5, true);
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
                 die();
             }
         }

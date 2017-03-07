@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
+use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
@@ -37,6 +39,11 @@ class Indexer {
      * @var PreviewRendererInterface
      */
     protected $previewRenderer;
+
+    /**
+     * @var LinkBuilderInterface
+     */
+    protected $linkBuilder;
     
     /**
      * @return String
@@ -103,7 +110,7 @@ class Indexer {
      * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
      */
-    public function __construct($index, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null) {
+    public function __construct($index, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null) {
 
         $this->index = $index;
 
@@ -118,6 +125,7 @@ class Indexer {
         $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
 
         $this->setPreviewRenderer($previewRenderer);
+        $this->setLinkBuilder($linkBuilder);
          
     }
 
@@ -145,5 +153,42 @@ class Indexer {
 
     }
 
+    /**
+     * Sets the link builder
+     * 
+     * @param LinkBuilderInterface|null $linkBuilder
+     */
+    protected function setLinkBuilder(LinkBuilderInterface $linkBuilder = null) {
 
+        if ($linkBuilder) {
+
+            $this->linkBuilder = $linkBuilder;
+        } else {
+
+            if (!empty($this->config['link']['builder'])) {
+
+                $this->linkBuilder = $this->objectManager->get($this->config['link']['builder'], $this->config['link']['config']);
+            } else {
+
+                $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
+            }
+        }
+
+    }
+
+    /**
+     * Calls the specific classes for fields like preview and link
+     *
+     * @param array $record
+     */
+    protected function addSystemFields($record = []) {
+        $systemFields = [];
+
+        $systemFields['link'] = $this->linkBuilder->createLink($record);
+        $systemFields['preview'] = $this->previewRenderer->render($record);
+
+        $record['_meta'] = $systemFields;
+
+        return $record;
+    }
 }

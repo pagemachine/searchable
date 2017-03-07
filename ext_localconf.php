@@ -10,9 +10,18 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         0 => 'typo3'
     ],
     'types' => [
-        // 'pages' => [
-        //     'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class
-        // ],
+        'pages' => [
+            'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class,
+            'config' => [
+                'link' => [
+                    'config' => [
+                        'dynamicParts' => [
+                            'pageUid' => 'uid'
+                        ]
+                    ]
+                ]
+            ]
+        ],
         // 'news' => [
         //     'indexer' => \PAGEmachine\Searchable\Indexer\TcaIndexer::class,
         //     'type' => 'news',
@@ -40,40 +49,40 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         //         ]
         //     ]
         // ],
-        'styleguide' => [
-            'indexer' => \PAGEmachine\Searchable\Indexer\TcaIndexer::class,
-            'config' => [
-                'type' => 'styleguide',
-                'table' => 'tx_styleguide_forms',
-                'preview' => [
-                    'renderer' => \PAGEmachine\Searchable\Preview\FluidPreviewRenderer::class,
-                    'config' => [
-                        'fields' => ['rte_1']
-                    ]
-                ],
-                'subtypes' => [
-                    'select_25' => [
-                        'config' => [
-                            'field' => 'select_25',
-                            'excludeFields' => [
-                                'perms_userid',
-                                'perms_groupid',
-                                'perms_user',
-                                'perms_group',
-                                'perms_everybody',
-                                'tx_impexp_origuid'
-                            ]
-                        ],
-                    ],
-                    'inline_2' => [
-                        'config' => [
-                            'field' => 'inline_2'
-                        ]
-                    ]
-                ]
+        // 'styleguide' => [
+        //     'indexer' => \PAGEmachine\Searchable\Indexer\TcaIndexer::class,
+        //     'config' => [
+        //         'type' => 'styleguide',
+        //         'table' => 'tx_styleguide_forms',
+        //         'preview' => [
+        //             'renderer' => \PAGEmachine\Searchable\Preview\FluidPreviewRenderer::class,
+        //             'config' => [
+        //                 'fields' => ['rte_1']
+        //             ]
+        //         ],
+        //         'subtypes' => [
+        //             'select_25' => [
+        //                 'config' => [
+        //                     'field' => 'select_25',
+        //                     'excludeFields' => [
+        //                         'perms_userid',
+        //                         'perms_groupid',
+        //                         'perms_user',
+        //                         'perms_group',
+        //                         'perms_everybody',
+        //                         'tx_impexp_origuid'
+        //                     ]
+        //                 ],
+        //             ],
+        //             'inline_2' => [
+        //                 'config' => [
+        //                     'field' => 'inline_2'
+        //                 ]
+        //             ]
+        //         ]
 
-            ]
+        //     ]
 
-        ]
+        // ]
     ],
 ];

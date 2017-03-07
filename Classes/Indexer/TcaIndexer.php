@@ -36,7 +36,7 @@ class TcaIndexer extends Indexer {
         foreach ($recordUidList as $item) {
 
             $fullRecord = $dataCollector->getRecord($item['uid']);
-            $fullRecord['preview'] = $this->previewRenderer->render($fullRecord);
+            $fullRecord = $this->addSystemFields($fullRecord);
 
             $this->query->addRow($item['uid'], $fullRecord);
         }
