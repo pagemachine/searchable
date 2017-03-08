@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
+use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -160,14 +161,35 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecordList() {
 
+        $tca = $this->getTcaConfiguration();
+
         $recordList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             "uid", 
             $this->table, 
-            "1=1" . $this->pageRepository->enableFields($this->table) . BackendUtility::deleteClause($this->table)
+            $tca['ctrl']['languageField'] . "=0" . $this->pageRepository->enableFields($this->table) . BackendUtility::deleteClause($this->table)
         );
         
         return $recordList;
 
+    }
+
+    /**
+     * Returns translation uid
+     *
+     * @param  int $identifier the base record uid
+     * @param  int $language language to translate to
+     * @return int|false
+     */
+    public function getTranslationUid($identifier, $language) {
+
+        $translation = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+            "uid", 
+            $this->table, 
+            $GLOBALS['TCA'][$this->table]['ctrl']['languageField'] . '=' . (int)$language . ' AND ' . $GLOBALS['TCA'][$this->table]['ctrl']['transOrigPointerField'] . '=' . (int)$identifier . $this->pageRepository->enableFields($this->table), '', '', '1');
+
+        $translationUid = $translation ? $translation[0] : false;
+
+        return $translationUid;
     }
 
     /**
@@ -181,6 +203,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $data = FormDataRecord::getInstance()->getRecord($identifier, $this->table);
         $record = $data['databaseRow'];
         $this->processedTca = $data['processedTca'];
+
+        if ($this->language != 0) {
+
+            $record = $this->languageOverlay($record);
+        }
 
         //Cleanup
         $record = $this->removeExcludedFields($record);
@@ -202,7 +229,40 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
             }            
         }
+
         return $record;
+    }
+
+    /**
+     *
+     * @param  array $record
+     * @return array
+     */
+    protected function languageOverlay($record) {
+
+        $overlayUtility = OverlayUtility::getInstance();
+
+        $translationUid = $this->getTranslationUid($record['uid'], $this->language);
+
+        if ($translationUid) {
+
+            $translationData = FormDataRecord::getInstance()->getRecord($translationUid, $this->table);
+            $translationRecord = $translationData['databaseRow'];
+
+            foreach ($record as $key => $field) {
+
+                //If the FE overlay differs from the raw base record, replace the field with the translated field in the processed record
+                if ($overlayUtility->shouldFieldBeOverlaid($this->table, $key, $translationData['defaultLanguageRow'][$key])) {
+
+                    $record[$key] = $translationRecord[$key];
+                }
+            }
+
+        }
+
+        return $record;
+
+
     }
 
     /**
@@ -313,7 +373,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         return implode(", ", $items);
-
 
     }
 

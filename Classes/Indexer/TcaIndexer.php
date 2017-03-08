@@ -29,7 +29,7 @@ class TcaIndexer extends Indexer {
      */
     public function run() {
 
-        $dataCollector = $this->objectManager->get(TcaDataCollector::class, $this->config);
+        $dataCollector = $this->objectManager->get(TcaDataCollector::class, $this->config, $this->language);
 
         $recordUidList = $dataCollector->getRecordList();
 

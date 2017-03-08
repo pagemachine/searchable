@@ -56,6 +56,27 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
 	  return $this->configuration;
 	}
 
+
+	/**
+	 * @var int $language
+	 */
+	protected $language = 0;
+	
+	/**
+	 * @return int
+	 */
+	public function getLanguage() {
+	  return $this->language;
+	}
+	
+	/**
+	 * @param int $language
+	 * @return void
+	 */
+	public function setLanguage($language) {
+	  $this->language = $language;
+	}
+
 	/**
 	 * @var array $subCollectors
 	 */
@@ -98,9 +119,12 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
 	/**
 	 *
 	 * @param array $configuration
+	 * @param int $language
      * @param ObjectManager $objectManager
 	 */
-	public function __construct($configuration = [], ObjectManager $objectManager = null) {
+	public function __construct($configuration = [], $language = 0, ObjectManager $objectManager = null) {
+
+		$this->language = $language;
 
         $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
@@ -155,7 +179,7 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
 	 */
 	public function buildSubCollector($classname, $collectorConfig = []) {
 
-		$subCollector = $this->objectManager->get($classname, $collectorConfig);
+		$subCollector = $this->objectManager->get($classname, $collectorConfig, $this->language);
 
 		return $subCollector;
 

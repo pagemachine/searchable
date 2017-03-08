@@ -83,6 +83,27 @@ class Indexer {
 
 
     /**
+     * @var int $language
+     */
+    protected $language;
+    
+    /**
+     * @return int
+     */
+    public function getLanguage() {
+      return $this->language;
+    }
+    
+    /**
+     * @param int $language
+     * @return void
+     */
+    public function setLanguage($language) {
+      $this->language = $language;
+    }
+
+
+    /**
      * @var array $config
      */
     protected $config;
@@ -104,15 +125,17 @@ class Indexer {
 
     /**
      * @param String      $index  The index name to use
+     * @param int         $language The language uid to index
      * @param String      $type   The type to use
      * @param array      $config   The configuration to apply
      * @param BulkQuery|null $query
      * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
      */
-    public function __construct($index, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null) {
+    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null) {
 
         $this->index = $index;
+        $this->language = $language;
 
         if (!empty($config)) {
             $this->config = ConfigurationMergerService::merge($this->config, $config);

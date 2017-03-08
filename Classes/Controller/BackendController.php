@@ -121,12 +121,12 @@ class BackendController extends ActionController {
 
     /**
      * 
-     *
+     * @param int $language
      * @return void
      */
-    public function indexFullAction() {
+    public function indexFullAction($language = 0) {
 
-        $defaultIndex = ExtconfService::getIndex();
+        $index = ExtconfService::getIndex($language);
 
         $types = ExtconfService::getTypes();
 
@@ -134,7 +134,7 @@ class BackendController extends ActionController {
 
         foreach ($types as $indexerConfiguration) {
 
-            $indexer = $objectManager->get($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
+            $indexer = $objectManager->get($indexerConfiguration['indexer'], $index, $language, $indexerConfiguration['config']);
 
             $result = $indexer->run();
 
