@@ -251,6 +251,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
             foreach ($record as $key => $field) {
 
+                if ($key == "uid" || $key == "pid") {
+
+                    continue;
+                }
+
                 //If the FE overlay differs from the raw base record, replace the field with the translated field in the processed record
                 if ($overlayUtility->shouldFieldBeOverlaid($this->table, $key, $translationData['defaultLanguageRow'][$key])) {
 
@@ -306,7 +311,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 unset($record[$key]);
             }
             else if (in_array(
-                $GLOBALS['TCA'][$this->configuration['table']]['columns'][$key]['config']['type'],
+                $GLOBALS['TCA'][$this->table]['columns'][$key]['config']['type'],
                 ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($this->configuration['subtypes'][$key])
             ) {
                 unset($record[$key]);
