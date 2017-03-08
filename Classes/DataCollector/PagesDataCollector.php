@@ -52,7 +52,10 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             'SYS_LASTCHANGED',
             'fe_login_mode',
             'backend_layout',
-            'backend_layout_next_level'
+            'backend_layout_next_level',
+            '_PAGES_OVERLAY',
+            '_PAGES_OVERLAY_UID',
+            '_PAGES_OVERLAY_LANGUAGE'
         ],
         'contentExcludeFields' => [
             'sys_language_uid',
@@ -129,6 +132,20 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         return $pages;
 
+    }
+
+    /**
+     *
+     * Simplified languageOverlay mechanism for pages
+     * pages_language_overlay contains a fixed set of OL fields. No need to run the FormEngine on them (does not work too well anyway)
+     *
+     * @param  array $record
+     * @return array
+     */
+    protected function languageOverlay($record) {
+
+        $overlayRecord = $this->pageRepository->getPageOverlay($record, $this->language);
+        return $overlayRecord;
     }
 
 }

@@ -17,6 +17,7 @@ class PagesIndexer extends Indexer {
      */
     protected $config  = [
         'type' => 'pages',
+        'table' => 'pages',
         'link' => [
             'config' => [
                 'titleField' => 'title', 
@@ -33,6 +34,15 @@ class PagesIndexer extends Indexer {
                     'table' => 'tt_content',
                     'resolver' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class
                 ]
+            ],
+            'categories' => [
+                'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
+                'config' => [
+                    'field' => 'categories',
+                    'excludeFields' => [
+                        'items'
+                    ]
+                ]
             ]
         ]
 
@@ -46,7 +56,7 @@ class PagesIndexer extends Indexer {
      */
     public function run() {
 
-        $dataCollector = $this->objectManager->get(PagesDataCollector::class, $this->config);
+        $dataCollector = $this->objectManager->get(PagesDataCollector::class, $this->config, $this->language);
 
         $pages = $dataCollector->getRecordList();
         
@@ -57,6 +67,7 @@ class PagesIndexer extends Indexer {
             
             $this->query->addRow($uid, $fullpage);
         }
+
 
         $response = $this->query->execute();
         return $response;
