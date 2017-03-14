@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Controller;
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
+use PAGEmachine\Searchable\Mapper\TcaMapper;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -149,6 +150,25 @@ class BackendController extends ActionController {
 
         $this->addFlashMessage("Indexing finished.");
         $this->redirect("start");
+
+    }
+
+    /**
+     * Returns the current mapping for all types
+     *
+     * @return void
+     */
+    public function dumpMappingAction() {
+
+        $tcaMapper = TcaMapper::getInstance();
+
+        foreach (ExtconfService::getTypes() as $indexerConfiguration) {
+
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tcaMapper->createMapping($indexerConfiguration), __METHOD__, 8, defined('TYPO3_cliMode'));
+        }
+
+        die();
+
 
     }
 
