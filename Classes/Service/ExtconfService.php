@@ -39,6 +39,22 @@ class ExtconfService {
     }
 
     /**
+     * Returns true if an index for the given language exists, otherwise false
+     *
+     * @param  integer $language
+     * @return boolean
+     */
+    public static function hasIndex($language = 0) {
+
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language])) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns all defined types
      * 
      * @return array
