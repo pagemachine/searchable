@@ -4,7 +4,6 @@ namespace PAGEmachine\Searchable\Controller;
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
-use PAGEmachine\Searchable\Mapper\TcaMapper;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -20,6 +19,12 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 
 class BackendController extends ActionController {
+
+    /**
+     * @var \PAGEmachine\Searchable\Indexer\IndexerFactory
+     * @inject
+     */
+    protected $indexerFactory;
 
     /**
      * Backend Template Container
@@ -102,17 +107,27 @@ class BackendController extends ActionController {
     }
 
     /**
-     * Resets all indices (basically truncates elasticsearch database and clears all mappings)
+     * Resets all indices (basically truncates elasticsearch database and recreates all mappings)
      *
      * @return void
      */
     public function resetIndicesAction() {
 
+        $indexers = $this->indexerFactory->makeIndexers();
+
+        $mapping = [];
+
+        foreach ($indexers as $indexer) {
+
+            $mapping[$indexer->getType()] = $indexer->getMapping();
+        }
+
+
         $indexManager = IndexManager::getInstance();
 
         foreach (ExtconfService::getIndices() as $index) {
 
-            $indexManager->resetIndex($index);
+            $indexManager->resetIndex($index, $mapping);
         }
 
         $this->addFlashMessage("Index reset complete.");
@@ -127,50 +142,32 @@ class BackendController extends ActionController {
      */
     public function indexFullAction($language = 0) {
 
-        $index = ExtconfService::getIndex($language);
+        $indexers = $this->indexerFactory->makeIndexers($language);
 
-        $types = ExtconfService::getTypes();
+        if (!empty($indexers)) {
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            foreach ($indexers as $indexer) {
 
-        foreach ($types as $indexerConfiguration) {
+                $result = $indexer->run();
 
-            $indexer = $objectManager->get($indexerConfiguration['indexer'], $index, $language, $indexerConfiguration['config']);
+                if ($result['errors']) {
 
-            $result = $indexer->run();
+                    $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
 
-            if ($result['errors']) {
-
-                $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
-
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
-                die();
+                    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
+                    die();
+                }
             }
+
+            $this->addFlashMessage("Indexing finished.");
+
+        } else {
+
+            $this->addFlashMessage("No indexers found for language " . $language . ". Doing nothing.", "", AbstractMessage::WARNING);
         }
 
-        $this->addFlashMessage("Indexing finished.");
         $this->redirect("start");
 
     }
-
-    /**
-     * Returns the current mapping for all types
-     *
-     * @return void
-     */
-    public function dumpMappingAction() {
-
-        $tcaMapper = TcaMapper::getInstance();
-
-        foreach (ExtconfService::getTypes() as $indexerConfiguration) {
-
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tcaMapper->createMapping($indexerConfiguration), __METHOD__, 8, defined('TYPO3_cliMode'));
-        }
-
-        die();
-
-
-    }
-
 
 }

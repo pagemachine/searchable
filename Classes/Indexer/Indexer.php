@@ -3,6 +3,8 @@ namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use PAGEmachine\Searchable\Mapper\MapperInterface;
+use PAGEmachine\Searchable\Mapper\DefaultMapper;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
@@ -44,6 +46,11 @@ class Indexer {
      * @var LinkBuilderInterface
      */
     protected $linkBuilder;
+
+    /**
+     * @var MapperInterface
+     */
+    protected $mapper;
     
     /**
      * @return String
@@ -132,7 +139,7 @@ class Indexer {
      * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
      */
-    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null) {
+    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, MapperInterface $mapper = null) {
 
         $this->index = $index;
         $this->language = $language;
@@ -149,7 +156,19 @@ class Indexer {
 
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
+
+        $this->mapper = $mapper ?: DefaultMapper::getInstance();
          
+    }
+
+    /**
+     * Returns the mapping for this indexer
+     *
+     * @return array
+     */
+    public function getMapping() {
+
+        return $this->mapper->createMapping($this);
     }
 
     /**

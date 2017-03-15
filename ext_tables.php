@@ -19,7 +19,7 @@ if (TYPO3_MODE === 'BE') {
         'searchable',
         '',
         array(
-        	'Backend' => 'start, search, request, resetIndices, indexFull, dumpMapping'
+        	'Backend' => 'start, search, request, resetIndices, indexFull'
         ),
         array(
             'access'    => 'user,group',

@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * TCA based mapper, creates the index mapping based on the given TCA
  */
-class TcaMapper implements SingletonInterface {
+class TcaMapper implements SingletonInterface, MapperInterface {
 
     /**
      * @return TcaMapper
@@ -57,7 +57,6 @@ class TcaMapper implements SingletonInterface {
         ];
 
         $tca = $GLOBALS['TCA'][$table];
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tca, __METHOD__, 8, defined('TYPO3_cliMode'));
 
         // Fetch plain types
         foreach ($tca['columns'] as $fieldname => $column) {
