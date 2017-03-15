@@ -50,7 +50,10 @@ class IndexManager implements SingletonInterface {
             'index' => $index
         ];
 
-        $response = $this->client->indices()->delete($deleteParams);
+        if ($this->client->indices()->exists($deleteParams)) {
+
+            $response = $this->client->indices()->delete($deleteParams);
+        }
 
         $params = [
             'index' => $index,
