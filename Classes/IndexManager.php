@@ -41,9 +41,10 @@ class IndexManager implements SingletonInterface {
     /**
      * Deletes and recreates an index
      * @param  string $index
+     * @param  array $mapping
      * @return array
      */
-    public function resetIndex($index) {
+    public function resetIndex($index, $mapping = []) {
 
         $deleteParams = [
             'index' => $index
@@ -60,6 +61,11 @@ class IndexManager implements SingletonInterface {
                 ]
             ]
         ];
+
+        if (!empty($mapping)) {
+
+            $params['body']['mappings'] = $mapping;
+        }
 
         $response = $this->client->indices()->create($params);
     }

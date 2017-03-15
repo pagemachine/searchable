@@ -19,33 +19,59 @@ class IndexCommandController extends CommandController
     protected $requestAdminPermissions = TRUE;
 
     /**
+     * @var \PAGEmachine\Searchable\Indexer\IndexerFactory
+     * @inject
+     */
+    protected $indexerFactory;
+
+    /**
      * Reset all indices (if necessary) and let all defined indexers run
      * @return void
      */
     public function indexFullCommand() {
 
-        $defaultIndex = ExtconfService::getIndex();
+        $indices = ExtconfService::getIndices();
 
-        $types = ExtconfService::getTypes();
+        foreach ($indices as $language => $indexname) {
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
-        foreach ($types as $indexerConfiguration) {
-
-            $indexer = $objectManager->get($indexerConfiguration['indexer'], $defaultIndex, $indexerConfiguration['config']);
-
-            $result = $indexer->run();
-
-            if ($result['errors']) {
-
-                $this->outputLine("There was an error running " . $indexerConfiguration['indexer'] . ":");
-
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result['errors'], __METHOD__, 5, true);
-                break;
-            }
+            $this->indexLanguage($language);
         }
 
         $this->outputLine("Indexing finished.");
+
+    }
+
+    /**
+     * Runs the indexing process for one language
+     *
+     * @param  integer $language The language to index
+     * @return void
+     */
+    protected function indexLanguage($language = 0) {
+
+        $indexers = $this->indexerFactory->makeIndexers($language);
+
+        if (!empty($indexers)) {
+
+            foreach ($indexers as $indexer) {
+
+                $result = $indexer->run();
+
+                if ($result['errors']) {
+
+                    $this->outputLine("There was an error running " . $indexerConfiguration['indexer'] . ":");
+
+                    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
+                    die();
+                }
+            }
+
+            $this->outputLine("Successfully ran indexing for language " . $language . ".");
+
+        } else {
+
+            $this->outputLine("WARNING: No indexers found for language " . $language . ". Doing nothing.");
+        }
 
     }
 }

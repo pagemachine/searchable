@@ -8,7 +8,7 @@ use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class PagesIndexer extends Indexer {
+class PagesIndexer extends Indexer implements IndexerInterface {
 
     /**
      * Configuration array holding all options needed for this indexer
@@ -44,8 +44,21 @@ class PagesIndexer extends Indexer {
                     ]
                 ]
             ]
+        ],
+        'mapping' => [
+            'properties' => [
+                'content' => [
+                    'properties' => [
+                        'header' => [
+                            'type' => 'text'
+                        ],
+                        'bodytext' => [
+                            'type' => 'text'
+                        ]
+                    ]
+                ]
+            ]
         ]
-
     ];
 
     /**

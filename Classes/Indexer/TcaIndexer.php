@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 /**
  * Simple TCA based indexer reading fields and processing them
  */
-class TcaIndexer extends Indexer {
+class TcaIndexer extends Indexer implements IndexerInterface {
 
     /**
      * Configuration array holding all options needed for this indexer
