@@ -64,6 +64,18 @@ class ExtconfService {
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['types'];
     }
 
+    /**
+     * Returns the meta fieldname used for preview, link etc.
+     * 
+     * @return array
+     */
+    public static function getMetaFieldname() {
+
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'];
+
+
+    }
+
 
 
 }

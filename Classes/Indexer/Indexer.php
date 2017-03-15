@@ -3,12 +3,13 @@ namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
-use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
+use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -229,7 +230,7 @@ class Indexer {
         $systemFields['link'] = $this->linkBuilder->createLinkConfiguration($record);
         $systemFields['preview'] = $this->previewRenderer->render($record);
 
-        $record['_meta'] = $systemFields;
+        $record[ExtconfService::getMetaFieldname()] = $systemFields;
 
         return $record;
     }

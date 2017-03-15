@@ -13,12 +13,12 @@
                 <f:for each="{result.hits.hits}" as="hit">
                     <div class="result">
                            
-                        <h3><s:link.page arguments="{hit._source._meta.link}">
-                            {hit._source._meta.link.title}
+                        <h3><s:link.page arguments="{hit._source.searchable_meta.link}">
+                            {hit._source.searchable_meta.link.title}
                         </s:link.page></h3>
 
                         <div class="result-preview">
-                            <f:format.raw>{hit._source._meta.preview}</f:format.raw>
+                            <f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
                         </div>
                         <div class="result-meta">
                             <span class="result-score">Score: {hit._score}</span>

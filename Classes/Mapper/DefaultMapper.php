@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Mapper;
 
 use PAGEmachine\Searchable\Indexer\IndexerInterface;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -36,7 +37,19 @@ class DefaultMapper implements SingletonInterface, MapperInterface {
 
         $mapping = (!empty($configuration['mapping'])) ? $configuration['mapping'] : [];
 
+        $mapping['properties'][ExtconfService::getMetaFieldname()] = $this->getMetaMapping();
+
         return $mapping;
+    }
+
+    /**
+     * Returns the meta field mapping
+     *
+     * @return array
+     */
+    protected function getMetaMapping() {
+
+        return ["enabled" => false];
     }
 
 }

@@ -15,8 +15,11 @@ if (TYPO3_MODE === 'BE') {
 );
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
+    // The fieldname to store meta information in (link, preview etc.). This field will be added to all created ES types and set to index = false
+    // Note that this field will also affect how you can access the meta fields in templates!
+    'metaField' => 'searchable_meta',
+    //Add indices here. Default format: languagekey => indexname
     'indices' => [],
+    //Add your indexer configurations here. Each type represents a toplevel object like news, pages etc.
     'types' => []
 ];
-
-
