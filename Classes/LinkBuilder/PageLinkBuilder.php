@@ -3,7 +3,6 @@ namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -12,7 +11,14 @@ use PAGEmachine\Searchable\Service\ConfigurationMergerService;
  * PageLinkBuilder
  * Creates a link configuration array to be passed on to a Fluid link.page ViewHelper
  */
-class PageLinkBuilder implements LinkBuilderInterface {
+class PageLinkBuilder extends AbstractLinkBuilder implements LinkBuilderInterface {
+
+    /**
+     * The default title if the title field is empty
+     *
+     * @var string
+     */
+    protected $defaultTitle = "Link";
 
     /**
      * @var array
@@ -37,17 +43,6 @@ class PageLinkBuilder implements LinkBuilderInterface {
     ];
 
     /**
-     * @param array $config
-     */
-    public function __construct($config = null) {
-
-        if ($config != null) {
-
-            $this->config = ConfigurationMergerService::merge($this->config, $config);
-        }     
-    }
-
-    /**
      * Creates a link
      * 
      * @param  array $record
@@ -64,7 +59,7 @@ class PageLinkBuilder implements LinkBuilderInterface {
              $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $this->config['dynamicParts']);
         }
 
-        $linkConfiguration['title'] = $record[$this->config['titleField']];
+        $linkConfiguration['title'] = $this->getLinkTitle($record);
 
 
         return $linkConfiguration;
@@ -94,5 +89,23 @@ class PageLinkBuilder implements LinkBuilderInterface {
         }
 
         return $configuration;
+    }
+
+    /**
+     * Fetches the link title
+     *
+     * @param  array  $record
+     * @return string
+     */
+    protected function getLinkTitle($record = []) {
+
+        $title = $record[$this->config['titleField']];
+
+        if ($title == null) {
+
+            $title = $this->defaultTitle;
+        }
+
+        return $title;
     }
 }
