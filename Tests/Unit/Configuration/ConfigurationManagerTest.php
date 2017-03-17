@@ -128,5 +128,62 @@ class ConfigurationManagerTest extends UnitTestCase
         
     }
 
+    /**
+     * @test
+     */
+    public function mergesMultipleConfigurationsOnTheSameLevel() {
+        $configuration = [
+            'pages' => [
+                'className' => TestIndexerFixture::class,
+                'config' => [
+                    'type' => 'pages',
+                    'collector' => [
+                        'className' => TestDataCollectorFixture::class,
+                        'config' => [
+                            'extconfOption' => 'foobar',
+                            'subCollectors' => [
+                                'myType' => [
+                                    'className' => TestDataCollectorFixture::class,
+                                    'config' => [
+                                        'subExtconfOption' => 'barbaz'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ];
+        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+
+        $expectedConfiguration = [
+            'pages' => [
+                'className' => TestIndexerFixture::class,
+                'config' => [
+                    'type' => 'pages',
+                    'customOption' => 1,
+                    'collector' => [
+                        'className' => TestDataCollectorFixture::class,
+                        'config' => [
+                            'extconfOption' => 'foobar',
+                            'option1' => 1,
+                            'option2' => 2,
+                            'subCollectors' => [
+                                'myType' => [
+                                    'className' => TestDataCollectorFixture::class,
+                                    'config' => [
+                                        'subExtconfOption' => 'barbaz'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());  
+    }
+
     
 }

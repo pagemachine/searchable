@@ -5,6 +5,7 @@ use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -63,32 +64,32 @@ class ConfigurationManager implements SingletonInterface {
      */
     protected function buildConfiguration($configuration, $rootConfiguration) {
 
-        $subConfiguration = $configuration['config'] ?: [];
+        if (is_string($configuration['className']) && !empty($configuration['className'])) {
 
-            if (is_string($configuration['className']) && !empty($configuration['className'])) {
+            // Class will only be called if it implements a specific interface.
+            // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
+            if (in_array(DynamicConfigurationInterface::class, class_implements($configuration['className']))) {
 
-                // Class will only be called if it implements a specific interface.
-                // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
-                if (in_array(DynamicConfigurationInterface::class, class_implements($configuration['className']))) {
+                $defaultConfiguration = $configuration['className']::getDefaultConfiguration($rootConfiguration, $configuration['config']);
 
-                    $defaultConfiguration = $configuration['className']::getDefaultConfiguration($rootConfiguration, $subConfiguration);
+                if (is_array($defaultConfiguration)) {
 
-                    $subConfiguration = ConfigurationMergerService::merge($defaultConfiguration, $subConfiguration);                    
-                }
-
-
-            }
-
-        //Recursive calls to fetch additional data
-        foreach($subConfiguration as $key => $config) {
-
-            if (is_array($config) && !empty($config)) {
-
-                $subConfiguration[$key] = $this->buildConfiguration($config, $rootConfiguration);
+                    $configuration['config'] = ConfigurationMergerService::merge($defaultConfiguration, $configuration['config']);
+                }                       
             }
         }
 
-        $configuration['config'] = $subConfiguration;
+        if (!empty($configuration['config'])) {
+
+            //Recursive calls to fetch additional data
+            foreach($configuration['config'] as $key => $config) {
+
+                if (is_array($config) && !empty($config)) {
+
+                    $configuration['config'][$key] = $this->buildConfiguration($config, $rootConfiguration);
+                }
+            }            
+        }
 
         return $configuration;
     }
