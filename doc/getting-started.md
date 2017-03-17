@@ -24,7 +24,7 @@ Now simply install it via Extension Manager or TYPO3 console.
 ## Setup
 * Include **Typoscript** and **Constants** into your template (static includes)
 * Create a search page and and *Search* Plugin element inside
-* Configure your **indices** and **types** (see the next chapter)
+* Configure your **indices** and **indexers** (see the next chapter)
 * Run the command controller to create the configured indices (Command TBA)
 * Run `[webroot]/typo3/cli_dispatch.phpsh index:indexFull` (runs all defined Indexers)
 
@@ -37,12 +37,12 @@ To create a simple setup for a non-multilanguage page, first configure a **defau
         0 => 'typo3'
     ];
 
-Now we need to define the **types** we want to index. 
-Usually everything that produces a single search result URL (*pages* and toplevel extension content such as *news*) deserves a separate type. Records that "belong" to another record, such as *tt_content*, *categories*, *tags*, will be appended as **subtypes** in the toplevel configuration.
+Now we need to define the **indexers** we want to run. 
+Usually everything that produces a single search result URL (*pages* and toplevel extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, *tags*, will be appended as **subtypes** in the toplevel indexer configuration.
 
 Let's create a simple setup for page indexing:
 
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['types']['pages'] = [
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['pages'] = [
         'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class
     ];
 

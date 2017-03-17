@@ -20,6 +20,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'metaField' => 'searchable_meta',
     //Add indices here. Default format: languagekey => indexname
     'indices' => [],
-    //Add your indexer configurations here. Each type represents a toplevel object like news, pages etc.
-    'types' => []
+    //Add your indexer configurations here. Each indexer represents a toplevel object type like news, pages etc.
+    'indexers' => []
 ];

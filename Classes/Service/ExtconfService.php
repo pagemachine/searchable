@@ -59,9 +59,9 @@ class ExtconfService {
      * 
      * @return array
      */
-    public static function getTypes() {
+    public static function getIndexers() {
 
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['types'];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
     }
 
     /**
