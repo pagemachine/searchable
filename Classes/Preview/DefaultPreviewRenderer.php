@@ -9,7 +9,7 @@ namespace PAGEmachine\Searchable\Preview;
 /**
  * Simple preview renderer.
  */
-class DefaultPreviewRenderer implements PreviewRendererInterface {
+class DefaultPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
 
     /**
      * @var array

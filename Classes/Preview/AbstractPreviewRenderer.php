@@ -1,8 +1,7 @@
 <?php
-namespace PAGEmachine\Searchable\LinkBuilder;
+namespace PAGEmachine\Searchable\Preview;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 
 
 /*
@@ -10,9 +9,10 @@ use PAGEmachine\Searchable\Service\ConfigurationMergerService;
  */
 
 /**
- * AbstractLinkBuilder
+ * Simple preview renderer.
  */
-abstract class AbstractLinkBuilder implements DynamicConfigurationInterface {
+abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface {
+
 
     /**
      * DefaultConfiguration
@@ -37,16 +37,28 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface {
     /**
      * @var array
      */
-    protected $config = [];
+    protected $config;
 
     /**
      * @param array $config
      */
-    public function __construct($config = null) {
+    public function __construct($config) {
 
-        if ($config != null) {
-
-            $this->config = ConfigurationMergerService::merge($this->config, $config);
-        }
+        $this->config = $config;
     }
+
+    /**
+     * Renders the preview
+     * 
+     * @param  array $record
+     * @return string
+     */
+    public function render($record) {
+
+        $preview = implode(", ", $record);
+
+        return $preview;
+    }
+
+
 }

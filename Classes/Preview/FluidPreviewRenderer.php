@@ -15,7 +15,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 /**
  * Fluid Preview Renderer. Uses a Fluid Standalone View to render previews
  */
-class FluidPreviewRenderer implements PreviewRendererInterface {
+class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
 
     /**
      * @var \TYPO3\CMS\Fluid\View\StandaloneView

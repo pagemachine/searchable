@@ -33,12 +33,6 @@ interface DataCollectorInterface {
 	 */
 	public function getSubCollectorForField($field);
 
-	/**
-	 * Returns the default configuration
-	 *
-	 * @return array
-	 */
-	public function getDefaultConfiguration();
 
 	/**
 	 * Returns the merged configuration (default + custom)

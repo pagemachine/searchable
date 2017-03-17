@@ -2,6 +2,8 @@
 namespace PAGEmachine\Searchable\Service;
 
 use PAGEmachine\Searchable\UndefinedIndexException;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -10,7 +12,16 @@ use PAGEmachine\Searchable\UndefinedIndexException;
 /**
  * Helper class for all extconf related settings
  */
-class ExtconfService {
+class ExtconfService implements SingletonInterface {
+
+    /**
+     * @return ExtconfService
+     */
+    public static function getInstance() {
+
+        return GeneralUtility::makeInstance(ExtconfService::class);
+
+    }
 
     /**
      * Returns all available indices
@@ -74,6 +85,16 @@ class ExtconfService {
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'];
 
 
+    }
+
+    /**
+     * Returns raw indexer configuration
+     * 
+     * @return array
+     */
+    public function getIndexerConfiguration() {
+
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
     }
 
 

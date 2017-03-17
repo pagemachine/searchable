@@ -13,16 +13,6 @@ use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 class TcaIndexer extends Indexer implements IndexerInterface {
 
     /**
-     * Configuration array holding all options needed for this indexer
-     *
-     * @var array
-     */
-    protected $config  = [
-        'excludeFields' => [],
-        'subtypes' => []
-    ];
-
-    /**
      * Main function for indexing
      * 
      * @return array

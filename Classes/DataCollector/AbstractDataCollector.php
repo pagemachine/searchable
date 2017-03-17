@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
+use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -13,7 +14,24 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * AbstractDataCollector
  */
-abstract class AbstractDataCollector implements DataCollectorInterface {
+abstract class AbstractDataCollector implements DataCollectorInterface, DynamicConfigurationInterface {
+
+    /**
+     * @var array $defaultConfiguration
+     */
+    protected static $defaultConfiguration = [];
+
+    /**
+     * This function will be called by the ConfigurationManager.
+     * It can be used to add default configuration
+     *
+     * @param array $rootConfiguration The complete root configuration
+     * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
+     */
+    public static function getDefaultConfiguration($rootConfiguration, $currentSubconfiguration) {
+
+       return static::$defaultConfiguration;
+    }
 
     /**
      * ObjectManager
@@ -21,26 +39,6 @@ abstract class AbstractDataCollector implements DataCollectorInterface {
      * @var ObjectManager
      */
     protected $objectManager;
-
-	/**
-	 * @var array $defaultConfiguration
-	 */
-	protected $defaultConfiguration = [];
-	
-	/**
-	 * @return array
-	 */
-	public function getDefaultConfiguration() {
-	  return $this->defaultConfiguration;
-	}
-	
-	/**
-	 * @param array $defaultConfiguration
-	 * @return void
-	 */
-	public function setDefaultConfiguration($defaultConfiguration) {
-	  $this->defaultConfiguration = $defaultConfiguration;
-	}
 
 
 	/**

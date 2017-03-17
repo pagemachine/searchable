@@ -7,8 +7,6 @@ namespace PAGEmachine\Searchable\Indexer;
 
 interface IndexerInterface {
 
-
-
     /**
      * Main function for indexing
      * 

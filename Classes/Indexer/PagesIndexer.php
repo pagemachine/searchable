@@ -16,49 +16,6 @@ class PagesIndexer extends Indexer implements IndexerInterface {
      * @var array
      */
     protected $config  = [
-        'type' => 'pages',
-        'table' => 'pages',
-        'link' => [
-            'config' => [
-                'titleField' => 'title', 
-                'dynamicParts' => [
-                    'pageUid' => 'uid'
-                ]
-            ]
-        ],
-        'subtypes' => [
-            'content' => [
-                'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
-                'config' => [
-                    'field' => 'content',
-                    'table' => 'tt_content',
-                    'resolver' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class
-                ]
-            ],
-            'categories' => [
-                'collector' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
-                'config' => [
-                    'field' => 'categories',
-                    'excludeFields' => [
-                        'items'
-                    ]
-                ]
-            ]
-        ],
-        'mapping' => [
-            'properties' => [
-                'content' => [
-                    'properties' => [
-                        'header' => [
-                            'type' => 'text'
-                        ],
-                        'bodytext' => [
-                            'type' => 'text'
-                        ]
-                    ]
-                ]
-            ]
-        ]
     ];
 
     /**

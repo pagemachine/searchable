@@ -31,6 +31,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */    
     protected $resolverManager;
 
+    /**
+     * @var array
+     */
     protected $defaultConfiguration = [
         'excludeFields' => [
             'tstamp',

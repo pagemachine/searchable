@@ -57,15 +57,22 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             '_PAGES_OVERLAY_UID',
             '_PAGES_OVERLAY_LANGUAGE'
         ],
-        'contentExcludeFields' => [
-            'sys_language_uid',
-            'l10n_parent',
-            'l10n_diffsource',
-            'deleted',
-            'hidden',
-            'starttime',
-            'endtime',
-            'sorting'
+        'subCollectors' => [
+            'content' => [
+                'config' => [
+                    'excludeFields' => [
+                        'sys_language_uid',
+                        'l10n_parent',
+                        'l10n_diffsource',
+                        'deleted',
+                        'hidden',
+                        'starttime',
+                        'endtime',
+                        'sorting'
+                    ]
+                ]
+            ]
+
         ]
     ];   
 

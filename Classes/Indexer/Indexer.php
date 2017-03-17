@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
@@ -18,7 +19,27 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class Indexer {
+class Indexer implements DynamicConfigurationInterface {
+
+    /**
+     * DefaultConfiguration
+     * Add your own default configuration here if necessary
+     *
+     * @var array
+     */
+    protected static $defaultConfiguration = [];
+
+    /**
+     * This function will be called by the ConfigurationManager.
+     * It can be used to add default configuration
+     *
+     * @param array $rootConfiguration The complete root configuration
+     * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
+     */
+    public static function getDefaultConfiguration($rootConfiguration, $currentSubconfiguration) {
+
+       return static::$defaultConfiguration;
+    }
 
     /**
      * ObjectManager
