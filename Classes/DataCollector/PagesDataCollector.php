@@ -60,7 +60,13 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         ],
         'subCollectors' => [
             'content' => [
+                'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
                 'config' => [
+                    'field' => 'content',
+                    'table' => 'tt_content',
+                    'resolver' => [
+                        'className' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class
+                    ],
                     'excludeFields' => [
                         'sys_language_uid',
                         'l10n_parent',
