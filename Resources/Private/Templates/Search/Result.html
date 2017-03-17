@@ -2,33 +2,36 @@
 <f:layout name="Default" />
 <f:section name="main">
 
-        <f:render partial="Search/Form" />
+  <f:render partial="Search/Form" />
 
-        <p>Search for <b>{term}</b> found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total}</b> entries.</p>
+  <f:if condition="{term}">
 
-        <f:if condition="{result.hits.hits}">
+    <p>Search for <b>{term}</b> found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total}</b> entries.</p>
 
-            <div class="results">
+    <f:if condition="{result.hits.hits}">
 
-                <f:for each="{result.hits.hits}" as="hit">
-                    <div class="result">
-                           
-                        <h3><s:link.page arguments="{hit._source.searchable_meta.link}">
-                            {hit._source.searchable_meta.link.title}
-                        </s:link.page></h3>
+        <div class="results">
 
-                        <div class="result-preview">
-                            <f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
-                        </div>
-                        <div class="result-meta">
-                            <span class="result-score">Score: {hit._score}</span>
-                        </div>
+            <f:for each="{result.hits.hits}" as="hit">
+                <div class="result">
+                       
+                    <h3><s:link.page arguments="{hit._source.searchable_meta.link}">
+                        {hit._source.searchable_meta.link.title}
+                    </s:link.page></h3>
 
+                    <div class="result-preview">
+                        <f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
                     </div>
-                </f:for>
+                    <div class="result-meta">
+                        <span class="result-score">Score: {hit._score}</span>
+                    </div>
 
-            </div>
+                </div>
+            </f:for>
 
-        </f:if>
+        </div>
+
+    </f:if>
+  </f:if>
 
 </f:section>

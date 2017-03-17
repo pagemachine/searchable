@@ -25,9 +25,11 @@ class SearchController extends ActionController {
      * @param string $term
      * @return void
      */
-    public function resultAction($term) {
+    public function resultAction($term = null) {
 
-        $result = Search::getInstance()->search($term);
+        if ($term) {
+            $result = Search::getInstance()->search($term);
+        }
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);
