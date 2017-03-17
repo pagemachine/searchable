@@ -74,6 +74,8 @@ class ConfigurationManager implements SingletonInterface {
 
                 if (is_array($defaultConfiguration)) {
 
+                    $configuration['config'] = $configuration['config'] ?: [];
+
                     $configuration['config'] = ConfigurationMergerService::merge($defaultConfiguration, $configuration['config']);
                 }                       
             }
