@@ -25,20 +25,32 @@ class ConfigurationManager implements SingletonInterface {
     }
 
     /**
+     * Holds the processed configuration so it runs only once through the full stack of classes
+     *
+     * @var array
+     */
+    protected $processedConfiguration = null;
+
+    /**
      * Builds and returns the processed configuration
      *
      * @return array
      */
     public function getIndexerConfiguration() {
 
-        $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
+        if ($this->processedConfiguration == null) {
 
-        foreach ($configuration as $key => $indexerConfiguration) {
-            $configuration[$key] = $this->buildConfiguration($indexerConfiguration, $configuration);
+            $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
+
+            foreach ($configuration as $key => $indexerConfiguration) {
+                $configuration[$key] = $this->buildConfiguration($indexerConfiguration, $configuration);
+
+            }
+
+            $this->processedConfiguration = $configuration;
 
         }
-
-        return $configuration;
+        return $this->processedConfiguration;
 
     }
 
