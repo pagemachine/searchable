@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -25,10 +24,10 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
      * This function will be called by the ConfigurationManager.
      * It can be used to add default configuration
      *
-     * @param array $rootConfiguration The complete root configuration
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
+     * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($rootConfiguration, $currentSubconfiguration) {
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
 
        return static::$defaultConfiguration;
     }
@@ -42,16 +41,16 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
 
 
 	/**
-	 * @var array $configuration
+	 * @var array $config
 	 */
-	protected $configuration = [];
+	protected $config = [];
 
 	
 	/**
 	 * @return array
 	 */
-	public function getConfiguration() {
-	  return $this->configuration;
+	public function getConfig() {
+	  return $this->config;
 	}
 
 
@@ -126,22 +125,9 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
 
         $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
-		$this->configuration = $this->buildConfiguration($configuration);
+		$this->config = $configuration;
 
 		$this->buildSubCollectors();
-	}
-
-	/**
-	 * Builds configuration - hook into here if you want to add some stuff to config manually
-	 *
-	 * @param  array  $configuration
-	 * @return array $mergedConfiguration
-	 */
-	public function buildConfiguration($configuration = []) {
-
-		$mergedConfiguration = ConfigurationMergerService::merge($this->defaultConfiguration, $configuration);
-		return $mergedConfiguration;
-
 	}
 
 	/**
@@ -153,11 +139,11 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
 
 		$this->subCollectors = [];
 
-		if (!empty($this->configuration['subtypes'])) {
+		if (!empty($this->config['subCollectors'])) {
 
-			foreach ($this->configuration['subtypes'] as $subtypeConfig) {
+			foreach ($this->config['subCollectors'] as $subtypeConfig) {
 
-                $subtypeCollectorClass = $subtypeConfig['collector'] ?: get_class($this);
+                $subtypeCollectorClass = $subtypeConfig['className'] ?: get_class($this);
 
 				$subCollector = $this->buildSubCollector($subtypeCollectorClass, $subtypeConfig['config']);
 

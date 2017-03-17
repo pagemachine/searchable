@@ -35,16 +35,16 @@ class ResolverManager implements SingletonInterface {
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
 
-        $parentConfiguration = $parentCollector->getConfiguration();
-        $subConfiguration = $childCollector->getConfiguration();
+        $parentConfiguration = $parentCollector->getConfig();
+        $subConfiguration = $childCollector->getConfig();
         $tca = $GLOBALS['TCA'][$parentConfiguration['table']];
 
         $classname = null;
 
         // Check for a custom resolver first
-        if (isset($subConfiguration['resolver'])) {
+        if (is_array($subConfiguration['resolver']) && $subConfiguration['resolver']['className']) {
 
-            $classname = $subConfiguration['resolver'];
+            $classname = $subConfiguration['resolver']['className'];
         }
         //Next try TCA/FormEngine related stuff
         else if ($tca['columns'][$fieldname] && $tca['columns'][$fieldname]['config']['type']) {

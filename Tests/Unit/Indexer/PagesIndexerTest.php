@@ -52,8 +52,16 @@ class PagesIndexerTest extends UnitTestCase {
         $linkBuilder = $this->prophesize(LinkBuilderInterface::class);
         $linkBuilder->createLinkConfiguration(Argument::type("array"))->willReturn(["link" => "config"]);
 
+        $config = [
+            'collector' => [
+                'className' => PagesDataCollector::class,
+                'config' => []
+            ]
+        ];
 
-        $this->pagesIndexer = new PagesIndexer("typo3", 0, [], $this->query->reveal(), $objectManager->reveal(), $previewRenderer->reveal(), $linkBuilder->reveal());
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'] = "_meta";
+
+        $this->pagesIndexer = new PagesIndexer("typo3", 0, $config, $this->query->reveal(), $objectManager->reveal(), $previewRenderer->reveal(), $linkBuilder->reveal());
     }
 
     /**

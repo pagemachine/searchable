@@ -35,7 +35,7 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
 
-        $parentConfiguration = $parentCollector->getConfiguration();
+        $parentConfiguration = $parentCollector->getConfig();
         $fieldTca = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$fieldname];
 
         $rawField = $record[$fieldname];

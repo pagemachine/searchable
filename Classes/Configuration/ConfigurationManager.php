@@ -59,10 +59,10 @@ class ConfigurationManager implements SingletonInterface {
      * Builds configuration recursively by calling $subclass::getDefaultConfiguration if there is a subclass
      *
      * @param  array $configuration
-     * @param  array $rootConfiguration
+     * @param  array $parentConfiguration
      * @return array
      */
-    protected function buildConfiguration($configuration, $rootConfiguration) {
+    protected function buildConfiguration($configuration, $parentConfiguration) {
 
         if (is_string($configuration['className']) && !empty($configuration['className'])) {
 
@@ -70,7 +70,7 @@ class ConfigurationManager implements SingletonInterface {
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
             if (in_array(DynamicConfigurationInterface::class, class_implements($configuration['className']))) {
 
-                $defaultConfiguration = $configuration['className']::getDefaultConfiguration($rootConfiguration, $configuration['config']);
+                $defaultConfiguration = $configuration['className']::getDefaultConfiguration($configuration['config'], $parentConfiguration);
 
                 if (is_array($defaultConfiguration)) {
 
@@ -86,7 +86,7 @@ class ConfigurationManager implements SingletonInterface {
 
                 if (is_array($config) && !empty($config)) {
 
-                    $configuration['config'][$key] = $this->buildConfiguration($config, $rootConfiguration);
+                    $configuration['config'][$key] = $this->buildConfiguration($config, $configuration);
                 }
             }            
         }

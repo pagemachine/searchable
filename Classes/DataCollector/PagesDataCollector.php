@@ -13,7 +13,8 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class PagesDataCollector extends TcaDataCollector implements DataCollectorInterface {
 
-    protected $defaultConfiguration = [
+    protected static $defaultConfiguration = [
+        'table' => 'pages',
         'excludeFields' => [
             'tstamp',
             'crdate',
@@ -91,11 +92,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      * @var array
      */
     public $indexedDoktypes = ['1'];
-
-    /**
-     * @var string
-     */
-    protected $table = "pages";
 
     /**
      * Returns a list of page records

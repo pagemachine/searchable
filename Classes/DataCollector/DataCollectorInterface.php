@@ -39,7 +39,7 @@ interface DataCollectorInterface {
 	 *
 	 * @return array
 	 */
-	public function getConfiguration();
+	public function getConfig();
 
     /**
      * Fetches a record

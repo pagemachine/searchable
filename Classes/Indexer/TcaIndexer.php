@@ -1,8 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -13,19 +11,26 @@ use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 class TcaIndexer extends Indexer implements IndexerInterface {
 
     /**
+     * @var array
+     */
+    protected static $defaultConfiguration = [
+        'collector' => [
+            'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class
+        ]
+    ];
+
+    /**
      * Main function for indexing
      * 
      * @return array
      */
     public function run() {
 
-        $dataCollector = $this->objectManager->get(TcaDataCollector::class, $this->config, $this->language);
-
-        $recordUidList = $dataCollector->getRecordList();
+        $recordUidList = $this->dataCollector->getRecordList();
 
         foreach ($recordUidList as $item) {
 
-            $fullRecord = $dataCollector->getRecord($item['uid']);
+            $fullRecord = $this->dataCollector->getRecord($item['uid']);
             $fullRecord = $this->addSystemFields($fullRecord);
 
             $this->query->addRow($item['uid'], $fullRecord);

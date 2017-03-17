@@ -34,7 +34,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * @var array
      */
-    protected $defaultConfiguration = [
+    protected static $defaultConfiguration = [
         'excludeFields' => [
             'tstamp',
             'crdate',
@@ -63,10 +63,30 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     ];
 
     /**
-     * The table this collector relates to
-     * @var string $table
+     * This function will be called by the ConfigurationManager.
+     * It can be used to add default configuration
+     *
+     * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
+     * @param array $parentConfiguration
      */
-    protected $table;
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
+
+        $defaultConfiguration = static::$defaultConfiguration;
+
+        //If this is a subcollector, try fetching the table name from the parent TCA
+        if (!$currentSubconfiguration['table']) {
+
+            if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
+
+                $defaultConfiguration['table'] = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table'];
+            } else {
+
+                throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+            }
+        }
+
+        return $defaultConfiguration;
+    }
 
     /**
      * Stores the processedTca for the current record
@@ -83,78 +103,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         return $this->processedTca;
     }
     
-    /**
-     * @return string
-     */
-    public function getTable() {
-      return $this->table;
-    }
-    
-    /**
-     * @param string $table
-     * @return void
-     */
-    public function setTable($table) {
-      $this->table = $table;
-    }
     
     /**
      * @return array
      */
     public function getTcaConfiguration() {
-      return $GLOBALS['TCA'][$this->table];
-    }
-
-    /**
-     * Builds configuration - hook into here if you want to add some stuff to config manually
-     *
-     * @param  array  $configuration
-     * @return array $mergedConfiguration
-     * @Override
-     */
-    public function buildConfiguration($configuration = []) {
-
-        $configuration = parent::buildConfiguration($configuration);
-
-        if (!$this->table) {
-
-            if (!empty($configuration['table'])) {
-
-                $this->table = $configuration['table'];
-            } else {
-
-                throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
-            }
-        }
-        
-
-
-        return $configuration;
-
-    }
-
-    /**
-     * Overriden to assign the correct table to the child (if needed)
-     * 
-     * @param string $classname
-     * @param  array  $collectorConfig
-     * @return DataCollectorInterface
-     * @Override
-     */
-    public function buildSubCollector($classname, $collectorConfig = []) {
-
-        $tca = $this->getTcaConfiguration();
-
-        $childTable = $tca['columns'][$collectorConfig['field']]['config']['foreign_table'];
-
-        if (empty($collectorConfig['table']) && $childTable != null) {
-            $collectorConfig['table'] = $childTable;
-        }
-        
-        $subCollector = parent::buildSubCollector($classname, $collectorConfig);
-
-        return $subCollector;
-
+      return $GLOBALS['TCA'][$this->config['table']];
     }
 
     /**
@@ -168,8 +122,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $recordList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             "uid", 
-            $this->table, 
-            $tca['ctrl']['languageField'] . "=0" . $this->pageRepository->enableFields($this->table) . BackendUtility::deleteClause($this->table)
+            $this->config['table'], 
+            $tca['ctrl']['languageField'] . "=0" . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
         );
         
         return $recordList;
@@ -187,8 +141,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $translation = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
             "uid", 
-            $this->table, 
-            $GLOBALS['TCA'][$this->table]['ctrl']['languageField'] . '=' . (int)$language . ' AND ' . $GLOBALS['TCA'][$this->table]['ctrl']['transOrigPointerField'] . '=' . (int)$identifier . $this->pageRepository->enableFields($this->table), '', '', '1');
+            $this->config['table'], 
+            $GLOBALS['TCA'][$this->config['table']]['ctrl']['languageField'] . '=' . (int)$language . ' AND ' . $GLOBALS['TCA'][$this->config['table']]['ctrl']['transOrigPointerField'] . '=' . (int)$identifier . $this->pageRepository->enableFields($this->config['table']), '', '', '1');
 
         $translationUid = $translation ? $translation[0] : false;
 
@@ -203,7 +157,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecord($identifier) {
 
-        $data = FormDataRecord::getInstance()->getRecord($identifier, $this->table);
+        $data = FormDataRecord::getInstance()->getRecord($identifier, $this->config['table']);
         $record = $data['databaseRow'];
         $this->processedTca = $data['processedTca'];
 
@@ -220,9 +174,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $record = $this->fillPlainValues($record);
 
         //Fill subtypes at last
-        if (!empty($this->configuration['subtypes'])) {
+        if (!empty($this->config['subCollectors'])) {
 
-            foreach ($this->configuration['subtypes'] as $subconfig) {
+            foreach ($this->config['subCollectors'] as $subconfig) {
 
                 $fieldname = $subconfig['config']['field'];
 
@@ -249,7 +203,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         if ($translationUid) {
 
-            $translationData = FormDataRecord::getInstance()->getRecord($translationUid, $this->table);
+            $translationData = FormDataRecord::getInstance()->getRecord($translationUid, $this->config['table']);
             $translationRecord = $translationData['databaseRow'];
 
             foreach ($record as $key => $field) {
@@ -260,7 +214,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 }
 
                 //If the FE overlay differs from the raw base record, replace the field with the translated field in the processed record
-                if ($overlayUtility->shouldFieldBeOverlaid($this->table, $key, $translationData['defaultLanguageRow'][$key])) {
+                if ($overlayUtility->shouldFieldBeOverlaid($this->config['table'], $key, $translationData['defaultLanguageRow'][$key])) {
 
                     $record[$key] = $translationRecord[$key];
                 }
@@ -281,7 +235,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected function removeExcludedFields($record) {
 
-        $excludeFields = $this->configuration['excludeFields'];
+        $excludeFields = $this->config['excludeFields'];
 
         if (!empty($excludeFields)) {
 
@@ -314,8 +268,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 unset($record[$key]);
             }
             else if (in_array(
-                $GLOBALS['TCA'][$this->table]['columns'][$key]['config']['type'],
-                ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($this->configuration['subtypes'][$key])
+                $GLOBALS['TCA'][$this->config['table']]['columns'][$key]['config']['type'],
+                ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($this->config['subCollectors'][$key])
             ) {
                 unset($record[$key]);
 

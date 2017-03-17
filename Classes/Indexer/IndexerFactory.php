@@ -1,9 +1,9 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 
@@ -39,11 +39,11 @@ class IndexerFactory implements SingletonInterface {
             return [];
         }
 
-        $indexers = ExtconfService::getIndexers();
+        $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
-        foreach ($indexers as $indexerConfiguration) {
+        foreach ($indexerConfiguration as $indexer) {
 
-            $indexers[] = $this->objectManager->get($indexerConfiguration['indexer'], $index, $language, $indexerConfiguration['config']);
+            $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
 
         }
 

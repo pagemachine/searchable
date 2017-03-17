@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
+use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
@@ -9,7 +10,6 @@ use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -33,10 +33,10 @@ class Indexer implements DynamicConfigurationInterface {
      * This function will be called by the ConfigurationManager.
      * It can be used to add default configuration
      *
-     * @param array $rootConfiguration The complete root configuration
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
+     * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($rootConfiguration, $currentSubconfiguration) {
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
 
        return static::$defaultConfiguration;
     }
@@ -58,6 +58,11 @@ class Indexer implements DynamicConfigurationInterface {
      * @var BulkQuery
      */
     protected $query;
+
+    /**
+     * @var DataCollectorInterface
+     */
+    protected $dataCollector;
 
     /**
      * @var PreviewRendererInterface
@@ -164,17 +169,16 @@ class Indexer implements DynamicConfigurationInterface {
     public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, MapperInterface $mapper = null) {
 
         $this->index = $index;
+        $this->config = $config;
         $this->language = $language;
-
-        if (!empty($config)) {
-            $this->config = ConfigurationMergerService::merge($this->config, $config);
-        }
 
         $this->type = $this->config['type'];
 
-        $this->query = $query ?: new BulkQuery($this->index, $this->type);
-
         $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
+
+        $this->dataCollector = $this->objectManager->get($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
+
+        $this->query = $query ?: new BulkQuery($this->index, $this->type);
 
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
