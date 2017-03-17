@@ -74,7 +74,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $defaultConfiguration = static::$defaultConfiguration;
 
         //If this is a subcollector, try fetching the table name from the parent TCA
-        if (!$currentSubconfiguration['table']) {
+        if (!$currentSubconfiguration['table'] && !$defaultConfiguration['table']) {
 
             if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
 
