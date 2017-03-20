@@ -119,7 +119,10 @@ class ConfigurationManager implements SingletonInterface {
 
                         foreach ($config as $subkey => $subconfig) {
 
-                            $config[$subkey] = $this->buildConfiguration($subconfig, $configuration);
+                            if (is_array($subconfig)) {
+
+                                $config[$subkey] = $this->buildConfiguration($subconfig, $configuration);
+                            }     
                         }
 
                         $configuration['config'][$key] = $config;
