@@ -172,7 +172,9 @@ class ConfigurationManagerTest extends UnitTestCase
                                 'myType' => [
                                     'className' => TestDataCollectorFixture::class,
                                     'config' => [
-                                        'subExtconfOption' => 'barbaz'
+                                        'subExtconfOption' => 'barbaz',
+                                        'option1' => 1,
+                                        'option2' => 2
                                     ]
                                 ]
                             ]

@@ -88,9 +88,28 @@ class ConfigurationManager implements SingletonInterface {
 
                 if (is_array($config) && !empty($config)) {
 
-                    $configuration['config'][$key] = $this->buildConfiguration($config, $configuration);
+                    if ($config['className'] || $config['config']) {
+
+                        $configuration['config'][$key] = $this->buildConfiguration($config, $configuration);
+                    } else {
+
+                        foreach ($config as $subkey => $subconfig) {
+
+                            $config[$subkey] = $this->buildConfiguration($subconfig, $configuration[$key]);
+                        }
+
+                        $configuration['config'][$key] = $config;
+                    }
+
+                    
                 }
-            }            
+            }
+
+            //Add table to update array, if it exists
+            if ($configuration['config']['table']) {
+
+                $this->updateConfiguration['database'][$configuration['config']['table']] = true;
+            }         
         }
 
         return $configuration;
