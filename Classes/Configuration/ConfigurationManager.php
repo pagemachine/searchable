@@ -33,6 +33,14 @@ class ConfigurationManager implements SingletonInterface {
     protected $processedConfiguration = null;
 
     /**
+     * UpdateConfiguration
+     * @var array
+     */
+    protected $updateConfiguration = [
+        'database' => []
+    ];
+
+    /**
      * Builds and returns the processed configuration
      *
      * @return array
@@ -56,6 +64,22 @@ class ConfigurationManager implements SingletonInterface {
     }
 
     /**
+     * Returns an array containing all relevant tables for updating
+     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent 
+     *
+     * @return array
+     */
+    public function getUpdateConfiguration() {
+
+        if ($this->processedConfiguration == null) {
+
+            $this->getIndexerConfiguration();
+        }
+
+        return $this->updateConfiguration;
+    }
+
+    /**
      * Builds configuration recursively by calling $subclass::getDefaultConfiguration if there is a subclass
      *
      * @param  array $configuration
@@ -70,7 +94,7 @@ class ConfigurationManager implements SingletonInterface {
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
             if (in_array(DynamicConfigurationInterface::class, class_implements($configuration['className']))) {
 
-                $defaultConfiguration = $configuration['className']::getDefaultConfiguration($configuration['config'], $parentConfiguration);
+                $defaultConfiguration = $configuration['className']::getDefaultConfiguration($configuration['config'], $parentConfiguration['config']);
 
                 if (is_array($defaultConfiguration)) {
 
@@ -95,7 +119,7 @@ class ConfigurationManager implements SingletonInterface {
 
                         foreach ($config as $subkey => $subconfig) {
 
-                            $config[$subkey] = $this->buildConfiguration($subconfig, $configuration[$key]);
+                            $config[$subkey] = $this->buildConfiguration($subconfig, $configuration);
                         }
 
                         $configuration['config'][$key] = $config;
