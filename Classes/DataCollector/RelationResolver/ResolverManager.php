@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\RelationResolverInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /*
@@ -16,24 +17,23 @@ class ResolverManager implements SingletonInterface {
     /**
      * @var array
      */
-	protected $relationResolvers = [
+    protected $relationResolvers = [
         'FormEngine' => [
             'select' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver::class,
             'inline' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver::class
         ]
-		
-	];
+        
+    ];
 
     /**
-     * Looks up a relation resolver, passes on the arguments and returns the result
-     *
-     * @param  string $fieldname The name of the field. Either represents the database/TCA fieldname or - in other cases - just the array key
-     * @param  array $record The record containing the field to resolve
+     * Finds a suitable resolver
+     * 
+     * @param  string                 $fieldname
      * @param  DataCollectorInterface $childCollector
      * @param  DataCollectorInterface $parentCollector
-     * @return array $processedField
+     * @return RelationResolverInterface
      */
-    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
+    public function findResolverForRelation($fieldname, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
 
         $parentConfiguration = $parentCollector->getConfig();
         $subConfiguration = $childCollector->getConfig();
@@ -61,15 +61,11 @@ class ResolverManager implements SingletonInterface {
         if ($classname != null) {
 
             $resolver = $classname::getInstance();
-            return $resolver->resolveRelation($fieldname, $record, $childCollector, $parentCollector);
+            return $resolver;
         }
         else {
 
             throw new \Exception('No relation resolver for field "' . $fieldname . '" found.', 1488369044);            
         }
     }
-
-
-
-
 }

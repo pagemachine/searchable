@@ -126,9 +126,15 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
         $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
 		$this->config = $configuration;
-
-		$this->buildSubCollectors();
 	}
+
+    /**
+     * @return void
+     */
+    public function initializeObject() {
+
+        $this->buildSubCollectors();
+    }
 
 	/**
 	 * Builds up subcollectors. Note that this function will be called in the subcollectors as well, so all collectors build a tree structure.

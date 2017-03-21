@@ -32,6 +32,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     protected $resolverManager;
 
     /**
+     * Holds one resolver for each subtype field
+     * @var array
+     */
+    protected $relationResolvers = [];
+
+    /**
      * @var array
      */
     protected static $defaultConfiguration = [
@@ -86,6 +92,19 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         return $defaultConfiguration;
+    }
+
+    /**
+     * Add resolver when fetching subtype collectors
+     *
+     * @Override
+     * @param string                 $field        Fieldname to apply this collector to
+     * @param DataCollectorInterface $subCollector
+     */
+    public function addSubCollector($field, DataCollectorInterface $collector) {
+
+        parent::addSubCollector($field, $collector);
+        $this->relationResolvers[$field] = $this->resolverManager->findResolverForRelation($field, $collector, $this);
     }
 
     /**
@@ -180,7 +199,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
                 $fieldname = $subconfig['config']['field'];
 
-                $resolvedField = $this->resolverManager->resolveRelation($fieldname, $record, $this->getSubCollectorForField($fieldname), $this);
+                $resolver = $this->relationResolvers[$fieldname];
+                $resolvedField = $resolver->resolveRelation($fieldname, $record, $this->getSubCollectorForField($fieldname), $this);
 
                 $record[$fieldname] = $resolvedField;
 
