@@ -35,15 +35,21 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
 
-        $uidList = explode(",", $record[$fieldname]);
-        $records = [];
+        if (!empty($record[$fieldname]) && is_array($record[$fieldname])) {
 
-        foreach($uidList as $uid) {
+            $uidList = explode(",", $record[$fieldname]);
+            $records = [];
 
-            $records[] = $childCollector->getRecord($uid);
+            foreach($uidList as $uid) {
+
+                $records[] = $childCollector->getRecord($uid);
+            }
+
+            return $records;
+
         }
 
-        return $records;
+        return [];
 
     }
 
