@@ -70,6 +70,41 @@ class Search implements SingletonInterface {
         return $result;
     }
 
+    /**
+     * Special search query used by DataCollectors to retrieve updated records
+     * @param  string $table
+     * @return array
+     */
+    public function searchUpdates($table) {
+
+        $params = [
+            'index' => ExtconfService::getInstance()->getUpdateIndex(),
+            'type' => 'updates',
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'table' => $table
+                    ]
+                ]
+            ]
+        ];
+        $result = $this->client->search($params);
+        
+
+        $updates = [];
+
+        if ($result['hits']['total'] > 0) {
+
+            foreach ($result['hits']['hits'] as $hit) {
+
+                $updates[] = $hit['_source'];
+            }
+        }
+
+        return $updates;
+
+    }
+
 
 
 

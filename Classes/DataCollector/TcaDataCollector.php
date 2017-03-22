@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\DataCollector;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -147,6 +148,33 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         
         return $recordList;
 
+    }
+
+    /**
+     * Returns list of updated records
+     * @return array
+     */
+    public function getUpdatedRecordList() {
+
+        $updates = Search::getInstance()->searchUpdates($this->config['table']);
+
+        $wheres = [];
+
+        foreach ($updates as $update) {
+
+            $wheres[] = $update['where'];
+        }
+
+        $tca = $this->getTcaConfiguration();
+        $languageStatement = $tca['ctrl']['languageField'] ? " AND " . $tca['ctrl']['languageField'] . "=0" : '';
+
+        $recordList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            "uid", 
+            $this->config['table'], 
+            "(" . implode("OR", $wheres) . ")" . $languageStatement . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+        );
+        
+        return $recordList;
     }
 
     /**

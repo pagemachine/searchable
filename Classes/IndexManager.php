@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -71,6 +72,20 @@ class IndexManager implements SingletonInterface {
         }
 
         $response = $this->client->indices()->create($params);
+    }
+
+    /**
+     * Resets the update index
+     * 
+     * @return void
+     */
+    public function resetUpdateIndex() {
+
+        $this->resetIndex(
+            ExtconfService::getInstance()->getUpdateIndex()
+        );
+
+
     }
 
 

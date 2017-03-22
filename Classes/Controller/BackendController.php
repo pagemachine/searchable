@@ -77,13 +77,19 @@ class BackendController extends ActionController {
     /**
      * Runs a http request directly to elasticsearch (debug)
      *
-     * @param  string $request
+     * @param  string $url
+     * @param  string $body
      * @return string $answer
      */
-    public function requestAction($url = '') {
+    public function requestAction($url = '', $body = '') {
 
         if ($url != '') {
             $request = GeneralUtility::makeInstance(HttpRequest::class, $url);
+
+            if ($body != '') {
+
+                $request->setBody($body);
+            }
             $result = $request->send();
 
 
@@ -101,6 +107,7 @@ class BackendController extends ActionController {
         }
 
         $this->view->assign("url", $url);
+        $this->view->assign("body", $body);
 
 
 
@@ -158,7 +165,7 @@ class BackendController extends ActionController {
                     die();
                 }
             }
-
+            IndexManager::getInstance()->resetUpdateIndex();
             $this->addFlashMessage("Indexing finished.");
 
         } else {
@@ -167,6 +174,43 @@ class BackendController extends ActionController {
         }
 
         $this->redirect("start");
+
+    }
+
+    /**
+     * 
+     * @return void
+     */
+    public function indexPartialAction() {
+
+        $indexers = $this->indexerFactory->makeIndexers(0);
+
+         if (!empty($indexers)) {
+
+            foreach ($indexers as $indexer) {
+
+                $result = $indexer->runUpdate();
+
+                if ($result['errors']) {
+
+                    $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
+
+                    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
+                    die();
+                }
+            }
+
+            IndexManager::getInstance()->resetUpdateIndex();
+
+            $this->addFlashMessage("Indexing finished.");
+
+        } else {
+
+            $this->addFlashMessage("No indexers found. Doing nothing.", "", AbstractMessage::WARNING);
+        }
+
+        $this->redirect("start");       
+
 
     }
 

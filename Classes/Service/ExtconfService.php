@@ -97,6 +97,15 @@ class ExtconfService implements SingletonInterface {
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
     }
 
+    /**
+     * Returns the update index
+     * @return string
+     */
+    public function getUpdateIndex() {
+
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
+    }
+
 
 
 }

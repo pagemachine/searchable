@@ -65,6 +65,21 @@ class PagesIndexer extends Indexer implements IndexerInterface {
 
     }
 
+    /**
+     * Runs an update
+     * 
+     * @return void
+     */
+    public function runUpdate() {
+
+        $recordUidList = $this->dataCollector->getUpdatedRecordList();
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($recordUidList, __METHOD__, 8, defined('TYPO3_cliMode'));
+        die();
+
+
+    }
+
 
 
 

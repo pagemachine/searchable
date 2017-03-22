@@ -103,6 +103,17 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_DELETEquery_postProcessAction(&$table, &$where, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
+
+        if ($updateConfiguration['database'][$table]) {
+
+            $updateQuery = new UpdateQuery();
+
+            $response = $updateQuery
+                ->setTable($table)
+                ->setWhere($where)
+                ->execute();
+        }
     }
 
     /**
