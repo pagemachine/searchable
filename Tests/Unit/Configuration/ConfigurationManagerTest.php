@@ -188,5 +188,83 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());  
     }
 
+    /**
+     * @test
+     */
+    public function createsUpdateConfiguration() {
+        $configuration = [
+            'pages' => [
+                'className' => TestIndexerFixture::class,
+                'config' => [
+                    'type' => 'pages',
+                    'collector' => [
+                        'className' => TestDataCollectorFixture::class,
+                        'config' => [
+                            'table' => 'pagestable',
+                            'subCollectors' => [
+                                'myType' => [
+                                    'className' => TestDataCollectorFixture::class,
+                                    'config' => [
+                                        'table' => 'contenttable',
+                                        'field' => 'content',
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            'extensioncontent' => [
+                'className' => TestIndexerFixture::class,
+                'config' => [
+                    'type' => 'extensiontype',
+                    'collector' => [
+                        'className' => TestDataCollectorFixture::class,
+                        'config' => [
+                            'table' => 'extensiontable',
+                            'subCollectors' => [
+                                'myType' => [
+                                    'className' => TestDataCollectorFixture::class,
+                                    'config' => [
+                                        'table' => 'contenttable',
+                                        'field' => 'content'
+                                    ]
+                                ],
+                                'myType2' => [
+                                    'className' => TestDataCollectorFixture::class,
+                                    'config' => [
+                                        'table' => 'othertable',
+                                        'field' => 'othercontent'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],            
+            ]
+        ];
+        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+
+        $expectedUpdateConfiguration = [
+            'database' => [
+                'toplevel' => [
+                    'pagestable' => 'pages',
+                    'extensiontable' => 'extensiontype'
+                ],
+                'sublevel' => [
+                    'contenttable' => [
+                        'pages.content',
+                        'extensiontype.content'
+                    ],
+                    'othertable' => [
+                        'extensiontype.othercontent'
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expectedUpdateConfiguration, $this->configurationManager->getUpdateConfiguration());  
+    }
+
     
 }

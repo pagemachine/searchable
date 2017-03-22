@@ -37,7 +37,10 @@ class ConfigurationManager implements SingletonInterface {
      * @var array
      */
     protected $updateConfiguration = [
-        'database' => []
+        'database' => [
+            'toplevel' => [],
+            'sublevel' => []
+        ]
     ];
 
 
@@ -54,13 +57,28 @@ class ConfigurationManager implements SingletonInterface {
 
             foreach ($configuration as $key => $indexerConfiguration) {
                 $configuration[$key] = $this->processIndexerLevel($indexerConfiguration);
-
             }
 
             $this->processedConfiguration = $configuration;
 
         }
         return $this->processedConfiguration;
+    }
+
+    /**
+     * Returns an array containing all relevant tables for updating
+     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent 
+     *
+     * @return array
+     */
+    public function getUpdateConfiguration() {
+
+        if ($this->processedConfiguration == null) {
+
+            $this->getIndexerConfiguration();
+        }
+
+        return $this->updateConfiguration;
     }
 
     /**
@@ -76,7 +94,7 @@ class ConfigurationManager implements SingletonInterface {
 
             if (!empty($indexerConfiguration['config']['collector'])) {
 
-                $indexerConfiguration['config']['collector'] = $this->addRecursiveCollectorConfig($indexerConfiguration['config']['collector'], $indexerConfiguration);
+                $indexerConfiguration['config']['collector'] = $this->addRecursiveCollectorConfig($indexerConfiguration['config']['collector'], $indexerConfiguration, $indexerConfiguration['config']['type']);
             }
 
             if (!empty($indexerConfiguration['config']['preview'])) {
@@ -92,35 +110,6 @@ class ConfigurationManager implements SingletonInterface {
 
         return $indexerConfiguration;
 
-    }
-
-    /**
-     * Adds collector configuration
-     *
-     * @param array $configuration
-     * @param array $parentConfiguration
-     */
-    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration) {
-
-        $configuration = $this->addClassDefaultConfiguration($configuration, $parentConfiguration);
-
-        if (!empty($configuration['config'])) {
-
-            if (!empty($configuration['config']['resolver'])) {
-
-                $configuration['config']['resolver'] =  $this->addClassDefaultConfiguration($configuration['config']['resolver'], $configuration);
-            }
-
-            if (!empty($configuration['config']['subCollectors'])) {
-
-                foreach ($configuration['config']['subCollectors'] as $key => $subCollectorConfig) {
-
-                    $configuration['config']['subCollectors'][$key] = $this->addRecursiveCollectorConfig($subCollectorConfig, $configuration);
-                }
-            }  
-        }
-
-        return $configuration;
     }
 
     /**
@@ -152,19 +141,72 @@ class ConfigurationManager implements SingletonInterface {
     }
 
     /**
-     * Returns an array containing all relevant tables for updating
-     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent 
+     * Adds collector configuration
      *
-     * @return array
+     * @param array $configuration
+     * @param array $parentConfiguration
+     * @param string $typeName
+     * @param string $collectorPath
      */
-    public function getUpdateConfiguration() {
+    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration, $typeName, $collectorPath = "") {
 
-        if ($this->processedConfiguration == null) {
+        $configuration = $this->addClassDefaultConfiguration($configuration, $parentConfiguration);
 
-            $this->getIndexerConfiguration();
+        if (!empty($configuration['config'])) {
+
+            if (!empty($configuration['config']['table'])) {
+
+                if ($collectorPath == "") {
+
+                    $this->addToplevelUpdateConfiguration($typeName, $configuration['config']['table']);
+                    $collectorPath = $typeName;
+                } else {
+
+                    $collectorPath = $collectorPath . "." . $configuration['config']['field'];
+
+                    $this->addSublevelUpdateConfiguration($collectorPath, $configuration['config']['table']);
+                }
+
+                
+            }
+
+            if (!empty($configuration['config']['resolver'])) {
+
+                $configuration['config']['resolver'] =  $this->addClassDefaultConfiguration($configuration['config']['resolver'], $configuration);
+            }
+
+            if (!empty($configuration['config']['subCollectors'])) {
+
+                foreach ($configuration['config']['subCollectors'] as $key => $subCollectorConfig) {
+
+                    $configuration['config']['subCollectors'][$key] = $this->addRecursiveCollectorConfig($subCollectorConfig, $configuration, $typeName, $collectorPath);
+                }
+            }  
         }
 
-        return $this->updateConfiguration;
+        return $configuration;
+    }
+
+    /**
+     * Adds a path to toplevel update configuration
+     *
+     * @param string $typeName
+     * @param string $table
+     */
+    protected function addToplevelUpdateConfiguration($typeName, $table) {
+
+        $this->updateConfiguration['database']['toplevel'][$table] = $typeName;
+    }
+
+    /**
+     * Adds a path to sublevel update configuration
+     *
+     * @param string $sublevelPath
+     * @param string $table
+     */
+    protected function addSublevelUpdateConfiguration($sublevelPath, $table) {
+
+        $this->updateConfiguration['database']['sublevel'][$table][] = $sublevelPath;
     }
 
 }
