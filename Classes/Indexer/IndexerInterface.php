@@ -14,6 +14,13 @@ interface IndexerInterface {
      */
     public function run();
 
+     /**
+     * Update function for indexing
+     * 
+     * @return array
+     */   
+    public function runUpdate();
+
     /**
      * @return String
      */

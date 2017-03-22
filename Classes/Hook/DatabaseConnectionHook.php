@@ -11,6 +11,18 @@ use TYPO3\CMS\Core\Database\PostProcessQueryHookInterface;
 
 class DatabaseConnectionHook implements PostProcessQueryHookInterface
 {
+
+    /**
+     * @var UpdateQuery
+     */
+    protected $updateQuery;
+
+    public function __construct() {
+
+        $this->updateQuery = new UpdateQuery();
+    }
+
+
     /**
     * Post-processor for the SELECTquery method.
     *
@@ -40,17 +52,6 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     public function exec_INSERTquery_postProcessAction(&$table, array &$fieldsValues, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
 
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if ($updateConfiguration['database'][$table]) {
-
-            $updateQuery = new UpdateQuery();
-
-            $response = $updateQuery
-                ->setTable($table)
-                ->setWhere("uid=" . $parentObject->sql_insert_id())
-                ->execute();
-        }
     }
 
     /**
@@ -79,18 +80,8 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_UPDATEquery_postProcessAction(&$table, &$where, array &$fieldsValues, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
-        if ($updateConfiguration['database'][$table]) {
-
-            $updateQuery = new UpdateQuery();
-
-            $response = $updateQuery
-                ->setTable($table)
-                ->setWhere($where)
-                ->execute();
-        }
-
+        $this->addUpdatesToElasticsearch($table, $where);
     }
 
     /**
@@ -103,17 +94,6 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_DELETEquery_postProcessAction(&$table, &$where, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if ($updateConfiguration['database'][$table]) {
-
-            $updateQuery = new UpdateQuery();
-
-            $response = $updateQuery
-                ->setTable($table)
-                ->setWhere($where)
-                ->execute();
-        }
     }
 
     /**
@@ -125,5 +105,37 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_TRUNCATEquery_postProcessAction(&$table, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+    }
+
+    /**
+     * Adds updates to ES
+     *
+     * @param string $table
+     * @param string $where
+     */
+    protected function addUpdatesToElasticsearch($table, $where) {
+
+        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
+
+        //If table is toplevel, mark the corresponding document as updated
+        if (is_string($updateConfiguration['database']['toplevel'][$table])) {
+
+            $uidMatch = [];
+            if (preg_match("/^uid=([0-9]*)$/", $where, $uidMatch)) {
+                
+                $this->updateQuery->addUpdate($updateConfiguration['database']['toplevel'][$table], "uid", $uidMatch[1]);
+            }
+        }
+        else if (array_key_exists($table, $updateConfiguration['database']['sublevel']) && !empty($updateConfiguration['database']['sublevel'][$table])) {
+
+            foreach ($updateConfiguration['database']['sublevel'][$table] as $typeName => $path) {
+
+                $uidMatch = [];
+                if (preg_match("/^uid=([0-9]*)$/", $where, $uidMatch)) {
+
+                    $this->updateQuery->addUpdate($typeName, $path . ".uid", $uidMatch[1]);
+                }
+            }
+        }
     }
 }

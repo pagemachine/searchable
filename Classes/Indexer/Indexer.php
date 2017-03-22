@@ -10,6 +10,7 @@ use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
+use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -255,8 +256,38 @@ class Indexer implements DynamicConfigurationInterface {
         $systemFields['link'] = $this->linkBuilder->createLinkConfiguration($record);
         $systemFields['preview'] = $this->previewRenderer->render($record);
 
+        $systemFields['updated'] = false;
+
         $record[ExtconfService::getMetaFieldname()] = $systemFields;
 
         return $record;
+    }
+
+    /**
+     * Runs an update
+     * 
+     * @return array
+     */
+    public function runUpdate() {
+
+        $updateQuery = new UpdateQuery();
+
+        $updates = $updateQuery->getUpdates($this->index, $this->type);
+
+        if (!empty($updates)) {
+            foreach ($updates as $uid) {
+
+                $fullRecord = $this->dataCollector->getRecord($uid);
+                $fullRecord = $this->addSystemFields($fullRecord);
+
+                $this->query->addRow($uid, $fullRecord);
+            }
+
+            $response = $this->query->execute();
+
+            return $response;
+        }
+
+        return [];
     }
 }

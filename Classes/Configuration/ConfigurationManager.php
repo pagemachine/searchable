@@ -77,7 +77,6 @@ class ConfigurationManager implements SingletonInterface {
 
             $this->getIndexerConfiguration();
         }
-
         return $this->updateConfiguration;
     }
 
@@ -156,17 +155,15 @@ class ConfigurationManager implements SingletonInterface {
 
             if (!empty($configuration['config']['table'])) {
 
-                if ($collectorPath == "") {
+                if ($configuration['config']['field']) {
 
-                    $this->addToplevelUpdateConfiguration($typeName, $configuration['config']['table']);
-                    $collectorPath = $typeName;
+                    $collectorPath = $collectorPath ? $collectorPath . "." . $configuration['config']['field'] : $configuration['config']['field'];
+                    $this->addSublevelUpdateConfiguration($typeName, $collectorPath, $configuration['config']['table']);
+
                 } else {
 
-                    $collectorPath = $collectorPath . "." . $configuration['config']['field'];
-
-                    $this->addSublevelUpdateConfiguration($collectorPath, $configuration['config']['table']);
+                    $this->addToplevelUpdateConfiguration($typeName, $configuration['config']['table']);                    
                 }
-
                 
             }
 
@@ -201,12 +198,13 @@ class ConfigurationManager implements SingletonInterface {
     /**
      * Adds a path to sublevel update configuration
      *
+     * @param string $typeName
      * @param string $sublevelPath
      * @param string $table
      */
-    protected function addSublevelUpdateConfiguration($sublevelPath, $table) {
+    protected function addSublevelUpdateConfiguration($typeName, $sublevelPath, $table) {
 
-        $this->updateConfiguration['database']['sublevel'][$table][] = $sublevelPath;
+        $this->updateConfiguration['database']['sublevel'][$table][$typeName] = $sublevelPath;
     }
 
 }

@@ -253,11 +253,11 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
                 'sublevel' => [
                     'contenttable' => [
-                        'pages.content',
-                        'extensiontype.content'
+                        'pages' => 'content',
+                        'extensiontype' => 'content'
                     ],
                     'othertable' => [
-                        'extensiontype.othercontent'
+                        'extensiontype' => 'othercontent'
                     ]
                 ]
             ]

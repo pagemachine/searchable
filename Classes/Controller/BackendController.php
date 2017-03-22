@@ -202,7 +202,7 @@ class BackendController extends ActionController {
 
             IndexManager::getInstance()->resetUpdateIndex();
 
-            $this->addFlashMessage("Indexing finished.");
+            $this->addFlashMessage("Partial Indexing finished.");
 
         } else {
 

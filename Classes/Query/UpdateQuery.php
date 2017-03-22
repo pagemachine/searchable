@@ -27,20 +27,6 @@ class UpdateQuery extends AbstractQuery {
     }
 
     /**
-     * Update type
-     * 
-     * @var string
-     */
-    protected $type = "updates";
-
-    /**
-     * @return string
-     */
-    public function getType() {
-      return $this->type;
-    }
-
-    /**
      * @return void
      */
     public function __construct() {
@@ -58,42 +44,25 @@ class UpdateQuery extends AbstractQuery {
     public function init() {
         $this->parameters =  [
             'index' => $this->getIndex(),
-            'type' => $this->getType(),
             'body' => [
-                'table' => null,
-                'where' => null
             ]
         ];
     }
 
-    public function setBody($body) {
-
-        $this->parameters['body'] = $body;
-        return $this;
-    }
-
-    public function setTable($table) {
-
-        $this->parameters['body']['table'] = $table;
-        return $this;
-    }
-
-    public function setWhere($where) {
-
-        $this->parameters['body']['where'] = $where;
-        return $this;
-    }
-
     /**
-     * Executes a bulk insertion query
+     * Adds a new update query string
      * 
      * @return array
      */
-    public function execute() {
+    public function addUpdate($type, $property, $id) {
 
-        // Use id field to store identical updates only once
-        $id = sha1($this->parameters['body']['table'] . "/" . $this->parameters['body']['where']);
-        $this->parameters['id'] = $id;
+        // Use querystring hash as id to mark each update only once
+        $docid = sha1($path . ":" . $id);
+
+        $this->parameters['id'] = $docid;
+        $this->parameters['type'] = $type;
+        $this->parameters['body']['property'] = $property;
+        $this->parameters['body']['uid'] = $id;
 
 
         /**
@@ -102,6 +71,69 @@ class UpdateQuery extends AbstractQuery {
         $response = $this->client->index($this->getParameters());
 
         return $response;
+    }
+
+    /**
+     * Adds a new update query string
+     * 
+     * @return array
+     */
+    public function getUpdates($index, $type) {
+
+        $this->init();
+
+        $this->parameters['type'] = $type;
+        $this->parameters['body'] = [
+            'query' => [
+                'match_all' => new \stdClass()
+            ]
+        ];
+        
+
+        $result = $this->client->search($this->parameters);
+
+        if (empty($result['hits']['hits'])) {
+
+            return [];
+        }
+        $updateParams = [];
+
+        foreach ($result['hits']['hits'] as $hit) {
+
+            $updateParams[] = [
+                "term" => [
+                    $hit['_source']['property'] => $hit['_source']['uid']
+                ]
+            ];
+        }
+
+        $this->parameters['index'] = $index;
+        $this->parameters['body'] = [
+            '_source' => false,
+            'query' => [
+                'bool' => [
+                    'should' => $updateParams,
+                    'minimum_should_match' => 1
+                ]
+            ]
+        ];
+
+        $result = $this->client->search($this->parameters);
+        if (empty($result['hits']['hits'])) {
+
+            return [];
+        }
+
+        $recordids = [];
+        foreach ($result['hits']['hits'] as $hit) {
+
+            $recordids[] = $hit['_id'];
+        }
+
+
+        return $recordids;
+
+
     }
 
 
