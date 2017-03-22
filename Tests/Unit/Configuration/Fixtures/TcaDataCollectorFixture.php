@@ -26,4 +26,15 @@ class TcaDataCollectorFixture extends TcaDataCollector
         return [];
     }
 
+    /**
+     * Checks if a record still exists. This is needed for the update scripts
+     *
+     * @param  int $identifier
+     * @return bool
+     */
+    public function exists($identifier)
+    {
+        return true;
+    }
+
 }
