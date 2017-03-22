@@ -51,7 +51,13 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_INSERTquery_postProcessAction(&$table, array &$fieldsValues, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        $this->registerToplevelUpdate($table, 'uid=' . $parentObject->sql_insert_id());
 
+        //Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
+        if ($table == 'tt_content') {
+
+            $this->registerToplevelUpdate("pages", "uid=" . $fieldsValues['pid']);
+        }
     }
 
     /**
@@ -80,8 +86,8 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_UPDATEquery_postProcessAction(&$table, &$where, array &$fieldsValues, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
-
-        $this->addUpdatesToElasticsearch($table, $where);
+        $this->registerToplevelUpdate($table, $where);
+        $this->registerSublevelUpdates($table, $where);
     }
 
     /**
@@ -94,6 +100,8 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_DELETEquery_postProcessAction(&$table, &$where, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        $this->registerToplevelUpdate($table, $where);
+        $this->registerSublevelUpdates($table, $where);        
     }
 
     /**
@@ -107,13 +115,14 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     {
     }
 
+
     /**
      * Adds updates to ES
      *
      * @param string $table
      * @param string $where
      */
-    protected function addUpdatesToElasticsearch($table, $where) {
+    protected function registerToplevelUpdate($table, $where) {
 
         $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
@@ -126,7 +135,20 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
                 $this->updateQuery->addUpdate($updateConfiguration['database']['toplevel'][$table], "uid", $uidMatch[1]);
             }
         }
-        else if (array_key_exists($table, $updateConfiguration['database']['sublevel']) && !empty($updateConfiguration['database']['sublevel'][$table])) {
+
+    }
+
+    /**
+     * Adds updates to ES
+     *
+     * @param string $table
+     * @param string $where
+     */
+    protected function registerSublevelUpdates($table, $where) {
+
+        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
+
+        if (array_key_exists($table, $updateConfiguration['database']['sublevel']) && !empty($updateConfiguration['database']['sublevel'][$table])) {
 
             foreach ($updateConfiguration['database']['sublevel'][$table] as $typeName => $path) {
 

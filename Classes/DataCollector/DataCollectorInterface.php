@@ -49,4 +49,12 @@ interface DataCollectorInterface {
      */
     public function getRecord($identifier);
 
+    /**
+     * Checks if a record still exists. This is needed for the update scripts
+     *
+     * @param  int $identifier
+     * @return bool
+     */
+    public function exists($identifier);
+
 }

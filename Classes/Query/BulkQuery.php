@@ -109,10 +109,38 @@ class BulkQuery extends AbstractQuery {
      */
     public function execute() {
 
-        /**
-         * @var array
-         */
-        $response = $this->client->bulk($this->getParameters());
+        if (!empty($this->parameters['body'])) {
+
+            /**
+             * @var array
+             */
+            $response = $this->client->bulk($this->getParameters());
+
+            return $response;
+        }
+
+        return [];
+    }
+
+    /**
+     * Deletes an existing document
+     * @todo move this away from the bulkquery (does not fit its domain)
+     *
+     * @param  int $id
+     * @return array
+     */
+    public function delete($id) {
+
+        $params = [
+            'index' => $this->index,
+            'type' => $this->type,
+            'id' => $id  
+        ];
+
+        if ($this->client->exists($params)) {
+
+            $response = $this->client->delete($params);
+        }
 
         return $response;
     }

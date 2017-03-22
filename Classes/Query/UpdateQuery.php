@@ -80,6 +80,8 @@ class UpdateQuery extends AbstractQuery {
      */
     public function getUpdates($index, $type) {
 
+        $recordids = [];
+
         $this->init();
 
         $this->parameters['type'] = $type;
@@ -96,15 +98,23 @@ class UpdateQuery extends AbstractQuery {
 
             return [];
         }
+
         $updateParams = [];
 
         foreach ($result['hits']['hits'] as $hit) {
 
-            $updateParams[] = [
-                "term" => [
-                    $hit['_source']['property'] => $hit['_source']['uid']
-                ]
-            ];
+            //If this is a simple toplevel uid check, we can add this id directly to the updated uid list
+            if ($hit['_source']['property'] == 'uid') {
+
+                $recordids[$hit['_source']['uid']] = $hit['_source']['uid'];
+            } else {
+
+                 $updateParams[] = [
+                    "term" => [
+                        $hit['_source']['property'] => $hit['_source']['uid']
+                    ]
+                ];
+            }
         }
 
         $this->parameters['index'] = $index;
@@ -119,18 +129,14 @@ class UpdateQuery extends AbstractQuery {
         ];
 
         $result = $this->client->search($this->parameters);
-        if (empty($result['hits']['hits'])) {
 
-            return [];
+        if (!empty($result['hits']['hits'])) {
+
+            foreach ($result['hits']['hits'] as $hit) {
+
+                $recordids[$hit['_id']] = $hit['_id'];
+            }
         }
-
-        $recordids = [];
-        foreach ($result['hits']['hits'] as $hit) {
-
-            $recordids[] = $hit['_id'];
-        }
-
-
         return $recordids;
 
 

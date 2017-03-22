@@ -151,33 +151,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     }
 
     /**
-     * Returns list of updated records
-     * @return array
-     */
-    public function getUpdatedRecordList() {
-
-        $updates = Search::getInstance()->searchUpdates($this->config['table']);
-
-        $wheres = [];
-
-        foreach ($updates as $update) {
-
-            $wheres[] = $update['where'];
-        }
-
-        $tca = $this->getTcaConfiguration();
-        $languageStatement = $tca['ctrl']['languageField'] ? " AND " . $tca['ctrl']['languageField'] . "=0" : '';
-
-        $recordList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            "uid", 
-            $this->config['table'], 
-            "(" . implode("OR", $wheres) . ")" . $languageStatement . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
-        );
-        
-        return $recordList;
-    }
-
-    /**
      * Returns translation uid
      *
      * @param  int $identifier the base record uid
@@ -194,6 +167,27 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $translationUid = $translation ? $translation[0] : false;
 
         return $translationUid;
+    }
+
+    /**
+     * Checks if a record still exists. This is needed for the update scripts
+     *
+     * @param  int $identifier
+     * @return bool
+     */
+    public function exists($identifier) {
+
+        $recordCount = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
+            "uid", 
+            $this->config['table'], 
+            "uid=" . $identifier . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table']));
+
+        if ($recordCount > 0) {
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

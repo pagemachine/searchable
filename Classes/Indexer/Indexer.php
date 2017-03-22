@@ -256,12 +256,11 @@ class Indexer implements DynamicConfigurationInterface {
         $systemFields['link'] = $this->linkBuilder->createLinkConfiguration($record);
         $systemFields['preview'] = $this->previewRenderer->render($record);
 
-        $systemFields['updated'] = false;
-
         $record[ExtconfService::getMetaFieldname()] = $systemFields;
 
         return $record;
     }
+
 
     /**
      * Runs an update
@@ -277,10 +276,17 @@ class Indexer implements DynamicConfigurationInterface {
         if (!empty($updates)) {
             foreach ($updates as $uid) {
 
-                $fullRecord = $this->dataCollector->getRecord($uid);
-                $fullRecord = $this->addSystemFields($fullRecord);
+                if ($this->dataCollector->exists($uid)) {
 
-                $this->query->addRow($uid, $fullRecord);
+                    $fullRecord = $this->dataCollector->getRecord($uid);
+                    $fullRecord = $this->addSystemFields($fullRecord);
+
+                    $this->query->addRow($uid, $fullRecord);                       
+                }
+                else {
+
+                    $this->query->delete($uid);
+                }
             }
 
             $response = $this->query->execute();
