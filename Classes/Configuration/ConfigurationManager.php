@@ -40,6 +40,7 @@ class ConfigurationManager implements SingletonInterface {
         'database' => []
     ];
 
+
     /**
      * Builds and returns the processed configuration
      *
@@ -52,7 +53,7 @@ class ConfigurationManager implements SingletonInterface {
             $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
 
             foreach ($configuration as $key => $indexerConfiguration) {
-                $configuration[$key] = $this->buildConfiguration($indexerConfiguration, $configuration);
+                $configuration[$key] = $this->processIndexerLevel($indexerConfiguration);
 
             }
 
@@ -60,33 +61,75 @@ class ConfigurationManager implements SingletonInterface {
 
         }
         return $this->processedConfiguration;
-
     }
 
     /**
-     * Returns an array containing all relevant tables for updating
-     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent 
      *
+     * @param  array $indexerConfiguration
      * @return array
      */
-    public function getUpdateConfiguration() {
+    protected function processIndexerLevel($indexerConfiguration) {
 
-        if ($this->processedConfiguration == null) {
+        $indexerConfiguration = $this->addClassDefaultConfiguration($indexerConfiguration, []);
 
-            $this->getIndexerConfiguration();
+        if (!empty($indexerConfiguration['config'])) {
+
+            if (!empty($indexerConfiguration['config']['collector'])) {
+
+                $indexerConfiguration['config']['collector'] = $this->addRecursiveCollectorConfig($indexerConfiguration['config']['collector'], $indexerConfiguration);
+            }
+
+            if (!empty($indexerConfiguration['config']['preview'])) {
+
+                $indexerConfiguration['config']['preview'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['preview'], $indexerConfiguration);
+            }
+
+            if (!empty($indexerConfiguration['config']['link'])) {
+
+                $indexerConfiguration['config']['link'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['link'], $indexerConfiguration);
+            }
         }
 
-        return $this->updateConfiguration;
+        return $indexerConfiguration;
+
     }
 
     /**
-     * Builds configuration recursively by calling $subclass::getDefaultConfiguration if there is a subclass
+     * Adds collector configuration
      *
-     * @param  array $configuration
-     * @param  array $parentConfiguration
-     * @return array
+     * @param array $configuration
+     * @param array $parentConfiguration
      */
-    protected function buildConfiguration($configuration, $parentConfiguration) {
+    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration) {
+
+        $configuration = $this->addClassDefaultConfiguration($configuration, $parentConfiguration);
+
+        if (!empty($configuration['config'])) {
+
+            if (!empty($configuration['config']['resolver'])) {
+
+                $configuration['config']['resolver'] =  $this->addClassDefaultConfiguration($configuration['config']['resolver'], $configuration);
+            }
+
+            if (!empty($configuration['config']['subCollectors'])) {
+
+                foreach ($configuration['config']['subCollectors'] as $key => $subCollectorConfig) {
+
+                    $configuration['config']['subCollectors'][$key] = $this->addRecursiveCollectorConfig($subCollectorConfig, $configuration);
+                }
+            }  
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * Adds class default configuration
+     *
+     * @param array $configuration
+     * @param array $parentConfiguration
+     */
+    protected function addClassDefaultConfiguration($configuration, $parentConfiguration) {
 
         if (is_string($configuration['className']) && !empty($configuration['className'])) {
 
@@ -105,42 +148,23 @@ class ConfigurationManager implements SingletonInterface {
             }
         }
 
-        if (!empty($configuration['config'])) {
-
-            //Recursive calls to fetch additional data
-            foreach($configuration['config'] as $key => $config) {
-
-                if (is_array($config) && !empty($config)) {
-
-                    if ($config['className'] || $config['config']) {
-
-                        $configuration['config'][$key] = $this->buildConfiguration($config, $configuration);
-                    } else {
-
-                        foreach ($config as $subkey => $subconfig) {
-
-                            if (is_array($subconfig)) {
-
-                                $config[$subkey] = $this->buildConfiguration($subconfig, $configuration);
-                            }     
-                        }
-
-                        $configuration['config'][$key] = $config;
-                    }
-
-                    
-                }
-            }
-
-            //Add table to update array, if it exists
-            if ($configuration['config']['table']) {
-
-                $this->updateConfiguration['database'][$configuration['config']['table']] = true;
-            }         
-        }
-
         return $configuration;
     }
 
+    /**
+     * Returns an array containing all relevant tables for updating
+     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent 
+     *
+     * @return array
+     */
+    public function getUpdateConfiguration() {
+
+        if ($this->processedConfiguration == null) {
+
+            $this->getIndexerConfiguration();
+        }
+
+        return $this->updateConfiguration;
+    }
 
 }
