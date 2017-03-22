@@ -15,12 +15,7 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     /**
      * @var UpdateQuery
      */
-    protected $updateQuery;
-
-    public function __construct() {
-
-        $this->updateQuery = new UpdateQuery();
-    }
+    protected $updateQuery = null;
 
 
     /**
@@ -51,6 +46,9 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_INSERTquery_postProcessAction(&$table, array &$fieldsValues, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        if (!is_array($GLOBALS['TCA'])) {
+            return;
+        }
         $this->registerToplevelUpdate($table, 'uid=' . $parentObject->sql_insert_id());
 
         //Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
@@ -86,6 +84,9 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_UPDATEquery_postProcessAction(&$table, &$where, array &$fieldsValues, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        if (!is_array($GLOBALS['TCA'])) {
+            return;
+        }
         $this->registerToplevelUpdate($table, $where);
         $this->registerSublevelUpdates($table, $where);
     }
@@ -100,6 +101,9 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_DELETEquery_postProcessAction(&$table, &$where, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        if (!is_array($GLOBALS['TCA'])) {
+            return;
+        }
         $this->registerToplevelUpdate($table, $where);
         $this->registerSublevelUpdates($table, $where);        
     }
@@ -132,7 +136,7 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
             $uidMatch = [];
             if (preg_match("/^uid=([0-9]*)$/", $where, $uidMatch)) {
                 
-                $this->updateQuery->addUpdate($updateConfiguration['database']['toplevel'][$table], "uid", $uidMatch[1]);
+                $this->getQuery()->addUpdate($updateConfiguration['database']['toplevel'][$table], "uid", $uidMatch[1]);
             }
         }
 
@@ -155,9 +159,24 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
                 $uidMatch = [];
                 if (preg_match("/^uid=([0-9]*)$/", $where, $uidMatch)) {
 
-                    $this->updateQuery->addUpdate($typeName, $path . ".uid", $uidMatch[1]);
+                    $this->getQuery()->addUpdate($typeName, $path . ".uid", $uidMatch[1]);
                 }
             }
         }
+    }
+
+    /**
+     * Returns the query and constructs it if necessary
+     * @return UpdateQuery
+     */
+    protected function getQuery() {
+
+        if ($this->updateQuery == null) {
+
+            $this->updateQuery = new UpdateQuery();
+        }
+
+        return $this->updateQuery;
+
     }
 }
