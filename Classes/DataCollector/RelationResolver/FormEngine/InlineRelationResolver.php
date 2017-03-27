@@ -42,7 +42,10 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
 
             foreach($uidList as $uid) {
 
-                $records[] = $childCollector->getRecord($uid);
+                if ($childCollector->exists($uid)) {
+
+                    $records[] = $childCollector->getRecord($uid);
+                }
             }
 
             return $records;
