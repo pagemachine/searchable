@@ -5,6 +5,7 @@ use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use PAGEmachine\Searchable\Enumeration\TcaType;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -106,7 +107,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     public function addSubCollector($field, DataCollectorInterface $collector) {
 
         parent::addSubCollector($field, $collector);
-        $this->relationResolvers[$field] = $this->resolverManager->findResolverForRelation($field, $collector, $this);
+
+        $column = $collector->getConfig()['field'];
+        $this->relationResolvers[$field] = $this->resolverManager->findResolverForRelation($column, $collector, $this);
     }
 
     /**
@@ -122,6 +125,29 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     public function getProcessedTca() {
 
         return $this->processedTca;
+    }
+
+    /**
+     * Returns true if a subcollector exists for given column (this is the TCA column, not the subtype fieldname!)
+     *
+     * @param  string $field
+     * @return boolean
+     */
+    public function subCollectorExistsForColumn($column) {
+
+        if (!empty($this->config['subCollectors'])) {
+
+            foreach ($this->config['subCollectors'] as $subconfig) {
+
+                if ($subconfig['config']['field'] == $column) {
+
+                    return true;
+                }
+
+            }            
+        }
+
+        return false;
     }
     
     
@@ -209,26 +235,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         //Cleanup
-        $record = $this->removeExcludedFields($record);
-        $record = $this->removeUnusedRelationsAndEmptyValues($record);
-
-        //Plain value filling
-        $record = $this->fillPlainValues($record);
-
-        //Fill subtypes at last
-        if (!empty($this->config['subCollectors'])) {
-
-            foreach ($this->config['subCollectors'] as $subconfig) {
-
-                $fieldname = $subconfig['config']['field'];
-
-                $resolver = $this->relationResolvers[$fieldname];
-                $resolvedField = $resolver->resolveRelation($fieldname, $record, $this->getSubCollectorForField($fieldname), $this);
-
-                $record[$fieldname] = $resolvedField;
-
-            }            
-        }
+        $record = $this->processColumns($record);
 
         return $record;
     }
@@ -271,85 +278,82 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     }
 
     /**
-     * Removes excluded fields from record
+     * Processes each column depending on type
      *
      * @param  array $record
-     * @return array $record
+     * @return array
      */
-    protected function removeExcludedFields($record) {
-
-        $excludeFields = $this->config['excludeFields'];
-
-        if (!empty($excludeFields)) {
-
-            foreach ($excludeFields as $excludeField) {
-
-                if (array_key_exists($excludeField, $record)) {
-
-                    unset($record[$excludeField]);
-                }
-            }
-
-        }
-
-        return $record;
-
-    }
-
-    /**
-     * Removes excluded fields from record
-     *
-     * @param  array $record
-     * @return array $record
-     */
-    protected function removeUnusedRelationsAndEmptyValues($record) {
-
-        foreach ($record as $key => $field) {
-
-            if (empty($field)) {
-
-                unset($record[$key]);
-            }
-            else if (in_array(
-                $this->processedTca['columns'][$key]['config']['type'],
-                ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($this->config['subCollectors'][$key])
-            ) {
-                unset($record[$key]);
-
-            }
-
-        }
-
-        return $record;
-    }
-
-    /**
-     * Fills plain values like checkboxes with their labels
-     *
-     * @param  array $record
-     * @return array $record
-     */
-    protected function fillPlainValues($record) {
-
-        $processedTca = $this->getProcessedTca();
+    protected function processColumns($record)
+    {
         $plainValueProcessor = PlainValueProcessor::getInstance();
 
-        foreach ($record as $fieldname => $value) {
+        //Preprocess fields
+        foreach ($record as $key => $field) {
 
-            switch($processedTca['columns'][$fieldname]['config']['type']) {
-                case 'check':
-                    $record[$fieldname] = $plainValueProcessor->processCheckboxField($value, $processedTca['columns'][$fieldname]['config']);
-                    break;
-                case 'radio':
-                    $record[$fieldname] = $plainValueProcessor->processRadioField($value, $processedTca['columns'][$fieldname]['config']);
-                    break;
+            $type = $this->processedTca['columns'][$key]['config']['type'];
 
+            if (
+                empty($field) || //empty
+                $this->isExcludeField($key) || //excluded
+                (TcaType::isRelation($type) && !$this->subCollectorExistsForColumn($key)) || //Unused relation
+                TcaType::isUnsupported($type) //Unsupported type
+                )
+            {
+
+                unset($record[$key]);
+                continue;
             }
 
+            //plain types
+            switch ($type) 
+            {
+                case TcaType::RADIO:
+                    $record[$key] = $plainValueProcessor->processRadioField($field, $this->processedTca['columns'][$key]['config']);
+                    break;
 
+                case TcaType::CHECK:
+                    $record[$key] = $plainValueProcessor->processCheckboxField($field, $this->processedTca['columns'][$key]['config']);
+                    break;
+            }
+        }
+
+        //Fill subtypes at last
+        if (!empty($this->config['subCollectors'])) {
+
+            foreach ($this->config['subCollectors'] as $key => $subconfig) {
+
+                $fieldname = $subconfig['config']['field'];
+
+                $resolver = $this->relationResolvers[$key];
+                $resolvedField = $resolver->resolveRelation($fieldname, $record, $this->getSubCollectorForField($key), $this);
+
+                //Unset the original column
+                unset($record[$fieldname]);
+
+                //Add processed column
+                $record[$key] = $resolvedField;
+
+            }            
         }
 
         return $record;
+
+    }
+
+    /**
+     * Returns true if this field should be excluded
+     *
+     * @param  string  $fieldname
+     * @return boolean
+     */
+    protected function isExcludeField($fieldname) {
+
+        if (!empty($this->config['excludeFields']) && in_array($fieldname, $this->config['excludeFields'])) {
+
+            return true;
+        }
+
+        return false;
     }
 
 }

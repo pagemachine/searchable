@@ -113,6 +113,21 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
 		throw new \Exception("Subcollector for field '" . $field . "' is not defined.", 1487341012);
 	}
 
+    /**
+     * Returns true if a subcollector exists for given field
+     *
+     * @param  string $field
+     * @return boolean
+     */
+    public function subCollectorExists($field) {
+
+        if (!empty($this->subCollectors[$field]) && $this->subCollectors[$field] instanceof DataCollectorInterface) {
+
+            return true;
+        }
+        return false;
+    }
+
 	/**
 	 *
 	 * @param array $configuration
@@ -147,13 +162,13 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
 
 		if (!empty($this->config['subCollectors'])) {
 
-			foreach ($this->config['subCollectors'] as $subtypeConfig) {
+			foreach ($this->config['subCollectors'] as $key => $subtypeConfig) {
 
                 $subtypeCollectorClass = $subtypeConfig['className'] ?: get_class($this);
 
 				$subCollector = $this->buildSubCollector($subtypeCollectorClass, $subtypeConfig['config']);
 
-				$this->addSubCollector($subtypeConfig['config']['field'], $subCollector);
+				$this->addSubCollector($key, $subCollector);
 			}
 		}
 

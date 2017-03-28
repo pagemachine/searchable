@@ -22,16 +22,49 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
     /**
      * Returns true if the type is of plain mapping type (supported type with no relations)
      *
+     * @param $type
      * @return boolean
      */
-    public function isPlainMappingType() {
+    public static function isPlain($type) {
 
-        return in_array($this->__toString(), [
+        return in_array($type, [
             self::INPUT,
             self::TEXT,
             self::CHECK,
             self::RADIO
         ]);
+    }
+
+    /**
+     * Returns true if the type is relation based (and needs subcollector handling)
+     *
+     * @param $type
+     * @return boolean
+     */
+    public static function isRelation($type) {
+
+        return in_array($type, [
+            self::SELECT,
+            self::INLINE
+        ]);        
+    }
+
+    /**
+     * Returns true if the type is currently unsupported by this extension
+     *
+     * @param $type
+     * @return boolean
+     */
+    public static function isUnsupported($type) {
+
+        return in_array($type, [
+            self::NONE,
+            self::PASSTHROUGH,
+            self::USER,
+            self::FLEX,
+            self::GROUP //Group type is not supported yet even if it is a valid relation
+        ]);   
+
     }
 
     /**

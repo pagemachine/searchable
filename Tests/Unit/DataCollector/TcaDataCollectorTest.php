@@ -135,13 +135,16 @@ class TcaDataCollectorTest extends UnitTestCase
     {
         $objectManager = $this->prophesize(ObjectManager::class);
         $subCollector = $this->prophesize(TcaDataCollector::class);
+        $subCollector->getConfig()->willReturn(
+            ['field' => 'selectfield']
+        );
 
         $objectManager->get(TcaDataCollector::class, Argument::type("array"), 0)->willReturn($subCollector->reveal());
 
         $configuration = [
             'table' => 'example_table',
             'subCollectors' => [
-                'selectfield' => [
+                'es_selectfield' => [
                     'className' => TcaDataCollector::class,
                     'config' => [
                         'field' => 'selectfield'
@@ -187,10 +190,10 @@ class TcaDataCollectorTest extends UnitTestCase
         
         $this->inject($this->tcaDataCollector, "objectManager", $objectManager->reveal());
 
-        $this->tcaDataCollector->addSubCollector("selectfield", $subCollector->reveal());
+        $this->tcaDataCollector->addSubCollector("es_selectfield", $subCollector->reveal());
 
         $expectedOutput = [
-            'selectfield' => [
+            'es_selectfield' => [
                 [
                     'uid' => 123,
                     'title' => 'foobar'
