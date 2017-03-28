@@ -159,6 +159,25 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     }
 
     /**
+     * returns records
+     *
+     * @return \Generator
+     */
+    public function getRecords()
+    {
+        $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+            "uid", 
+            $this->config['table'], 
+            $tca['ctrl']['languageField'] . "=0" . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+        );
+        
+        while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
+
+            yield $this->getRecord($rawRecord['uid']);
+        }
+    }
+
+    /**
      * Fetches records for indexing
      *
      * @return array

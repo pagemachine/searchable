@@ -114,13 +114,11 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     }
 
     /**
-     * Fetches pages recursively from given root
      * 
-     * @param  int $pid
-     * @param  array  $pages The page array to append to
-     * @return array $pages
+     *
+     * @return \Generator
      */
-    protected function fetchPagesRecursive($pid, $pages = []) {
+    public function getRecords($pid = 0) {
 
         $rawList = $this->pageRepository->getMenu($pid, 'uid, doktype', 'sorting', '', false);
 
@@ -128,19 +126,20 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
             foreach ($rawList as $uid => $page) {
 
-                if (in_array($page['doktype'], $this->indexedDoktypes)) {
+                yield $this->getRecord($uid);
 
-                    $pages[$uid] = $page;
+                //@todo: use "yield from" as soon as PHP7 is a requirement
+                $subpages = $this->getRecords($uid);
+                if (!empty($subpages)) {
+
+                    foreach ($subpages as $page) {
+
+                        yield $page;
+                    }                    
                 }
-                
-                //Recursive call!
-                $pages = $this->fetchPagesRecursive($uid, $pages);
 
             }
         }
-
-        return $pages;
-
     }
 
     /**

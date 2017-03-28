@@ -53,6 +53,7 @@ class PagesIndexerTest extends UnitTestCase {
         $linkBuilder->createLinkConfiguration(Argument::type("array"))->willReturn(["link" => "config"]);
 
         $config = [
+            'pid' => 0,
             'collector' => [
                 'className' => PagesDataCollector::class,
                 'config' => []
@@ -77,9 +78,7 @@ class PagesIndexerTest extends UnitTestCase {
             ]
         ];
 
-        $this->pagesCollector->getRecordList()->willReturn($pageList);
-
-        $this->pagesCollector->getRecord(3)->willReturn($pageList['3']);
+        $this->pagesCollector->getRecords(0)->willReturn($pageList);
 
         $this->query->addRow(3, [
                 'uid' => '3',

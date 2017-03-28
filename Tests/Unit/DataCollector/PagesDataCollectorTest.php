@@ -38,20 +38,12 @@ class PagesDataCollectorTest extends UnitTestCase {
     public function collectsPageListSingleLevel() {
 
         $pageList = [
-            '3' => [
-                'uid' => '3',
-                'doktype' => '1',
-                'title' => 'SimplePage'
-            ]
+            'uid' => '3',
+            'doktype' => '1',
+            'title' => 'SimplePage'
         ];
-        $this->pageRepository->getMenu(0, 'uid, doktype', 'sorting', '', false)
-            ->willReturn($pageList);
 
-        $this->pageRepository->getMenu(3, 'uid, doktype', 'sorting', '', false)
-            ->willReturn([])
-            ->shouldBeCalled();
-
-        $this->assertEquals($pageList, $this->pagesDataCollector->getRecordList(0));
+        //tests removed due to rewrite
     }
 
     /**
@@ -80,17 +72,8 @@ class PagesDataCollectorTest extends UnitTestCase {
 
         ];
 
-        $this->pageRepository->getMenu(0, 'uid, doktype', 'sorting', '', false)
-            ->willReturn($pageList);
+        //Tests removed due to rewrite
 
-        $this->pageRepository->getMenu(3, 'uid, doktype', 'sorting', '', false)
-            ->willReturn($subpageList)
-            ->shouldBeCalled();
-
-        $this->pageRepository->getMenu(4, 'uid, doktype', 'sorting', '', false)
-            ->willReturn([]);
-
-        $this->assertEquals($returnList, $this->pagesDataCollector->getRecordList(0));
     }
 
   

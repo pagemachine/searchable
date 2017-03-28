@@ -12,6 +12,7 @@ class PagesIndexer extends Indexer implements IndexerInterface {
      */
     protected static $defaultConfiguration = [
         'type' => 'pages',
+        'pid' => 0,
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\PagesDataCollector::class
         ],
@@ -43,28 +44,22 @@ class PagesIndexer extends Indexer implements IndexerInterface {
     /**
      * Main function for indexing
      * 
-     * @todo Fix rootpage handling, currently fetches from id 0
      * @return array
      */
     public function run() {
 
-        $pages = $this->dataCollector->getRecordList();
-        
-        foreach ($pages as $uid => $page) {
+        foreach ($this->dataCollector->getRecords($this->config['pid']) as $fullRecord) {
 
-            $fullpage = $this->dataCollector->getRecord($uid);
-            $fullpage = $this->addSystemFields($fullpage);
-            
-            $this->query->addRow($uid, $fullpage);
+            $fullRecord = $this->addSystemFields($fullRecord);
+
+            $this->query->addRow($fullRecord['uid'], $fullRecord);
         }
 
-
         $response = $this->query->execute();
+
         return $response;
-        
 
     }
-
 
 
 

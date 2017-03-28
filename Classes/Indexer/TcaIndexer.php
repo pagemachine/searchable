@@ -26,11 +26,8 @@ class TcaIndexer extends Indexer implements IndexerInterface {
      */
     public function run() {
 
-        $recordUidList = $this->dataCollector->getRecordList();
+        foreach ($this->dataCollector->getRecords() as $fullRecord) {
 
-        foreach ($recordUidList as $item) {
-
-            $fullRecord = $this->dataCollector->getRecord($item['uid']);
             $fullRecord = $this->addSystemFields($fullRecord);
 
             $this->query->addRow($item['uid'], $fullRecord);
