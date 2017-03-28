@@ -165,6 +165,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecords()
     {
+        $tca = $this->getTcaConfiguration();
+
         $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             "uid", 
             $this->config['table'], 
