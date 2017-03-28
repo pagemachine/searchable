@@ -1,12 +1,15 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
+use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use Prophecy\Argument;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Testcase for TcaDataCollector
@@ -122,6 +125,80 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $this->assertEquals($expectedOutput, $this->tcaDataCollector->getRecord(123));
 
+        
+    }
+
+    /**
+     * @test
+     */
+    public function processesRelations()
+    {
+        $objectManager = $this->prophesize(ObjectManager::class);
+        $subCollector = $this->prophesize(TcaDataCollector::class);
+
+        $objectManager->get(TcaDataCollector::class, Argument::type("array"), 0)->willReturn($subCollector->reveal());
+
+        $configuration = [
+            'table' => 'example_table',
+            'subCollectors' => [
+                'selectfield' => [
+                    'className' => TcaDataCollector::class,
+                    'config' => [
+                        'field' => 'selectfield'
+                    ]
+                ]
+            ]
+
+        ];
+
+        $recordTca = [
+            'columns' => [
+                'selectfield' => [
+                    'config' => [
+                        'foreign_table' => 'selecttable'
+                    ]
+                ]
+            ]
+        ];
+
+        $record = [
+            'databaseRow' => [
+                'selectfield' => [
+                    1 => 2
+                ]
+            ],
+            'processedTca' => $recordTca
+        ];
+
+        $this->tcaDataCollector = new TcaDataCollector($configuration);
+
+        $this->formDataRecord->getRecord(123, 'example_table')->willReturn($record);
+
+        $resolver = $this->prophesize(SelectRelationResolver::class);
+        $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, $this->tcaDataCollector)->willReturn([[
+            'uid' => 123,
+            'title' => 'foobar'
+        ]]);
+
+        $resolverManager = $this->prophesize(ResolverManager::class);
+        $resolverManager->findResolverForRelation("selectfield", $subCollector, $this->tcaDataCollector)->willReturn($resolver->reveal());
+        $this->inject($this->tcaDataCollector, "resolverManager", $resolverManager->reveal());
+
+        
+        $this->inject($this->tcaDataCollector, "objectManager", $objectManager->reveal());
+
+        $this->tcaDataCollector->addSubCollector("selectfield", $subCollector->reveal());
+
+        $expectedOutput = [
+            'selectfield' => [
+                [
+                    'uid' => 123,
+                    'title' => 'foobar'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expectedOutput, $this->tcaDataCollector->getRecord(123));
         
     }
 
