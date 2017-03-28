@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
+use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
@@ -310,7 +311,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 unset($record[$key]);
             }
             else if (in_array(
-                $GLOBALS['TCA'][$this->config['table']]['columns'][$key]['config']['type'],
+                $this->processedTca['columns'][$key]['config']['type'],
                 ['select', 'group', 'passthrough', 'inline', 'flex']) && empty($this->config['subCollectors'][$key])
             ) {
                 unset($record[$key]);
@@ -331,15 +332,16 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     protected function fillPlainValues($record) {
 
         $processedTca = $this->getProcessedTca();
+        $plainValueProcessor = PlainValueProcessor::getInstance();
 
         foreach ($record as $fieldname => $value) {
 
             switch($processedTca['columns'][$fieldname]['config']['type']) {
                 case 'check':
-                    $record[$fieldname] = $this->processCheckboxField($value, $processedTca['columns'][$fieldname]['config']);
+                    $record[$fieldname] = $plainValueProcessor->processCheckboxField($value, $processedTca['columns'][$fieldname]['config']);
                     break;
                 case 'radio':
-                    $record[$fieldname] = $this->processRadioField($value, $processedTca['columns'][$fieldname]['config']);
+                    $record[$fieldname] = $plainValueProcessor->processRadioField($value, $processedTca['columns'][$fieldname]['config']);
                     break;
 
             }
@@ -349,77 +351,5 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         return $record;
     }
-
-    /**
-     * Resolves the bitmask and puts in labels for checkboxes
-     *
-     * @param  int $value
-     * @param  array $fieldTca
-     * @return string
-     */
-    protected function processCheckboxField($value, $fieldTca) {
-
-        $items = [];
-
-        $itemCount = count($fieldTca['items']);
-        $activeItemKeys = BinaryConversionUtility::convertCheckboxValue($value, $itemCount);
-
-        foreach ($activeItemKeys as $key) {
-
-            $label = $fieldTca['items'][$key][0];
-
-            if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
-
-                $label = $this->getLanguageService()->sL($label);
-            }
-
-            $items[] = $label;
-        }
-
-        return implode(", ", $items);
-
-    }
-
-    /**
-     * Resolves radio fields
-     *
-     * @param  int $value
-     * @param  array $fieldTca
-     * @return string
-     */
-    protected function processRadioField($value, $fieldTca) {
-
-        $label = "";
-
-        if (is_array($fieldTca['items'])) {
-            foreach ($fieldTca['items'] as $set) {
-                if ((string)$set[1] === (string)$value) {
-                    $label = $set[0];
-                    break;
-                }
-            }
-        }
-
-        if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
-
-            $label = $this->getLanguageService()->sL($label);
-        }
-
-        return $label;
-
-    }
-
-
-    /**
-     * @return \TYPO3\CMS\Lang\LanguageService
-    */
-    protected function getLanguageService() {
-
-        return $GLOBALS['LANG'];
-    }
-
-
-
-
 
 }
