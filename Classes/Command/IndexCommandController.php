@@ -30,12 +30,19 @@ class IndexCommandController extends CommandController
      */
     public function indexFullCommand() {
 
+        $starttime = microtime(true);
+
         $indices = ExtconfService::getIndices();
 
         foreach ($indices as $language => $indexname) {
 
             $this->indexLanguage($language);
         }
+
+        $endtime = microtime(true);
+
+        $this->outputLine("Time: " . ($endtime - $starttime));
+        $this->outputLine("Memory (MB): " . (memory_get_peak_usage(true) / 1000000));
 
         $this->outputLine("Indexing finished.");
 
