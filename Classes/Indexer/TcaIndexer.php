@@ -22,20 +22,28 @@ class TcaIndexer extends Indexer implements IndexerInterface {
     /**
      * Main function for indexing
      * 
-     * @return array
+     * @return \Generator
      */
     public function run() {
+
+        $counter = 0;
 
         foreach ($this->dataCollector->getRecords() as $fullRecord) {
 
             $fullRecord = $this->addSystemFields($fullRecord);
 
             $this->query->addRow($item['uid'], $fullRecord);
+
+            $counter++;
+
+            if ($counter >= 1) {
+
+                $this->query->execute();
+                $this->query->resetBody();
+                $counter = 0;
+                yield "20 records processed.";
+            }
         }
-
-        $response = $this->query->execute();
-
-        return $response;
 
     }
 

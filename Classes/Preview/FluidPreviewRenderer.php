@@ -74,6 +74,10 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
             }
 
             $this->view->assign("fields", $assignFields);
+        } 
+        else {
+
+            $this->view->assign("fields", $record);
         }
 
         $preview = $this->view->render();

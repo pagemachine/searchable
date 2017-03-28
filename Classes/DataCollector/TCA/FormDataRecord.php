@@ -33,9 +33,9 @@ class FormDataRecord implements SingletonInterface {
      * @param TcaDatabaseRecord|null
      * @param FormDataCompiler|null
      */
-    public function __construct(TcaDatabaseRecord $formDataGroup = null, FormDataCompiler $formDataCompiler = null) {
+    public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null) {
 
-        $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+        $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(SearchableRecordGroup::class);
         $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
     }
 
@@ -64,6 +64,9 @@ class FormDataRecord implements SingletonInterface {
         ];
 
         $data = $this->formDataCompiler->compile($formDataCompilerInput);
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($data, __METHOD__, 8, defined('TYPO3_cliMode'));
+        die();
 
         return $data;
 

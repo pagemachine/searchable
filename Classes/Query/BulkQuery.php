@@ -145,5 +145,15 @@ class BulkQuery extends AbstractQuery {
         return $response;
     }
 
+    /**
+     * Resets the body (for batch indexing)
+     *
+     * @return void
+     */
+    public function resetBody() {
+
+        $this->parameters['body'] = [];
+    }
+
 
 }

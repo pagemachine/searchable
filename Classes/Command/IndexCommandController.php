@@ -62,15 +62,13 @@ class IndexCommandController extends CommandController
 
             foreach ($indexers as $indexer) {
 
-                $result = $indexer->run();
+                foreach ($indexer->run() as $resultMessage) {
 
-                if ($result['errors']) {
+                    $this->outputLine($resultMessage);
 
-                    $this->outputLine("There was an error running " . $indexerConfiguration['indexer'] . ":");
-
-                    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
-                    die();
+                    break;
                 }
+                
             }
 
             $this->outputLine("Successfully ran indexing for language " . $language . ".");
