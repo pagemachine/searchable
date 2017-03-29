@@ -12,7 +12,6 @@ class PagesIndexer extends Indexer implements IndexerInterface {
      */
     protected static $defaultConfiguration = [
         'type' => 'pages',
-        'pid' => 0,
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\PagesDataCollector::class
         ],
@@ -51,7 +50,7 @@ class PagesIndexer extends Indexer implements IndexerInterface {
         $counter = 0;
         $overallCounter = 0;
 
-        foreach ($this->dataCollector->getRecords($this->config['pid']) as $fullRecord) {
+        foreach ($this->dataCollector->getRecords() as $fullRecord) {
 
             $fullRecord = $this->addSystemFields($fullRecord);
 

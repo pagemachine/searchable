@@ -44,6 +44,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @var array
      */
     protected static $defaultConfiguration = [
+        'pid' => null,
         'excludeFields' => [
             'tstamp',
             'crdate',
@@ -167,10 +168,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     {
         $tca = $this->getTcaConfiguration();
 
+        $pidRestriction = $this->config['pid'] !== null ? ' AND pid = ' . $this->config['pid'] : '';
+
         $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             "uid", 
             $this->config['table'], 
-            $tca['ctrl']['languageField'] . "=0" . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+            $tca['ctrl']['languageField'] . "=0" . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
         );
         
         while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
@@ -206,10 +209,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function exists($identifier) {
 
+        $pidRestriction = $this->config['pid'] !== null ? ' AND pid = ' . $this->config['pid'] : '';
+
         $recordCount = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
             "uid", 
             $this->config['table'], 
-            "uid=" . $identifier . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table']));
+            "uid=" . $identifier . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table']));
 
         if ($recordCount > 0) {
 

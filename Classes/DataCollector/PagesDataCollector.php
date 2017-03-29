@@ -15,6 +15,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
     protected static $defaultConfiguration = [
         'table' => 'pages',
+        'pid' => 0,
         'excludeFields' => [
             'tstamp',
             'crdate',
@@ -104,7 +105,9 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @return \Generator
      */
-    public function getRecords($pid = 0) {
+    public function getRecords($pid = null) {
+
+        $pid = $pid ?: $this->config['pid'];
 
         $rawList = $this->pageRepository->getMenu($pid, 'uid, doktype', 'sorting', '', false);
 
@@ -116,6 +119,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
                 //@todo: use "yield from" as soon as PHP7 is a requirement
                 $subpages = $this->getRecords($uid);
+
                 if (!empty($subpages)) {
 
                     foreach ($subpages as $page) {
