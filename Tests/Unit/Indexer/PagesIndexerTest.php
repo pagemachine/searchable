@@ -70,8 +70,8 @@ class PagesIndexerTest extends UnitTestCase {
      */
     public function addsPagesToIndex() {
 
-        $pageList = [
-            '3' => [
+        $pageList = [ 
+            [
                 'uid' => '3',
                 'doktype' => '1',
                 'title' => 'SimplePage'
@@ -91,9 +91,14 @@ class PagesIndexerTest extends UnitTestCase {
             ])->shouldBeCalled();
 
         $this->query->execute()->shouldBeCalled();
+        $this->query->resetBody()->shouldBeCalled();
 
 
-        $this->pagesIndexer->run();
+        foreach ($this->pagesIndexer->run() as $runMessage) {
+
+            //do nothing
+
+        }
 
     }
 
