@@ -65,9 +65,6 @@ class FormDataRecord implements SingletonInterface {
 
         $data = $this->formDataCompiler->compile($formDataCompilerInput);
 
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($data, __METHOD__, 8, defined('TYPO3_cliMode'));
-        die();
-
         return $data;
 
 

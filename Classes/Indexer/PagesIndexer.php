@@ -44,22 +44,41 @@ class PagesIndexer extends Indexer implements IndexerInterface {
     /**
      * Main function for indexing
      * 
-     * @return array
+     * @return \Generator
      */
     public function run() {
+
+        $counter = 0;
+        $overallCounter = 0;
 
         foreach ($this->dataCollector->getRecords($this->config['pid']) as $fullRecord) {
 
             $fullRecord = $this->addSystemFields($fullRecord);
 
             $this->query->addRow($fullRecord['uid'], $fullRecord);
+
+            $counter++;
+            $overallCounter++;
+
+            if ($counter >= 20) {
+
+                $this->query->execute();
+                $this->query->resetBody();
+
+                $counter = 0;
+                yield $overallCounter;
+            }
         }
 
-        $response = $this->query->execute();
+        if ($counter != 0) {
 
-        return $response;
+            $this->query->execute();
+            $this->query->resetBody();
+            yield $overallCounter;
+        }
 
     }
+
 
 
 

@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\TCA;
 
-
 use TYPO3\CMS\Backend\Form\FormDataGroupInterface;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Service\DependencyOrderingService;
@@ -12,6 +11,27 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class SearchableRecordGroup implements FormDataGroupInterface
 {
+    protected $dataProviders = [];
+
+    /**
+     * @return void
+     */
+    public function __construct() {
+
+        $dataProvider = $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'];
+
+        //Replace TcaSelectItems DataProvider with a custom one that does not fetch all available items for relations
+        unset($dataProvider[\TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class]);
+        $dataProvider[\PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaSelectRelations::class] = [
+            'depends' => []
+        ];
+
+
+        $orderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
+        $this->dataProviders = $orderingService->orderByDependencies($dataProvider, 'before', 'depends');
+    }
+
+
     /**
      * Compile form data
      *
@@ -21,33 +41,8 @@ class SearchableRecordGroup implements FormDataGroupInterface
      */
     public function compile(array $result)
     {
-        $dataProvider = [
-            \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseEditRow::class => [
-                'depends' => []
-            ],
-            \TYPO3\CMS\Backend\Form\FormDataProvider\InitializeProcessedTca::class => [
-                'depends' => [
-                    \TYPO3\CMS\Backend\Form\FormDataProvider\PageTsConfig::class,
-                ],
-            ],
-            \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class => [
-                'depends' => [
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\DatabasePageRootline::class,
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\PageTsConfigMerged::class,
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\InitializeProcessedTca::class,
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\TcaTypesShowitem::class,
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsRemoveUnused::class,
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\TcaCheckboxItems::class,
-                    // // GeneralUtility::getFlexFormDS() needs unchanged databaseRow values as string
-                    // \TYPO3\CMS\Backend\Form\FormDataProvider\TcaFlexFetch::class,
-                ],
-            ],
 
-        ];
-        $orderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
-        $orderedDataProvider = $orderingService->orderByDependencies($dataProvider, 'before', 'depends');
-
-        foreach ($orderedDataProvider as $providerClassName => $_) {
+        foreach ($this->dataProviders as $providerClassName => $_) {
             /** @var FormDataProviderInterface $provider */
             $provider = GeneralUtility::makeInstance($providerClassName);
 
