@@ -210,9 +210,9 @@ class Indexer implements DynamicConfigurationInterface {
             $this->previewRenderer = $previewRenderer;
         } else {
 
-            if (!empty($this->config['preview']['renderer'])) {
+            if (!empty($this->config['preview']['className'])) {
 
-                $this->previewRenderer = $this->objectManager->get($this->config['preview']['renderer'], $this->config['preview']['config']);
+                $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
             } else {
 
                 $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
@@ -234,9 +234,9 @@ class Indexer implements DynamicConfigurationInterface {
             $this->linkBuilder = $linkBuilder;
         } else {
 
-            if (!empty($this->config['link']['builder'])) {
+            if (!empty($this->config['link']['className'])) {
 
-                $this->linkBuilder = $this->objectManager->get($this->config['link']['builder'], $this->config['link']['config']);
+                $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
             } else {
 
                 $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
