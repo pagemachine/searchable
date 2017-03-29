@@ -100,20 +100,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     public $indexedDoktypes = ['1'];
 
     /**
-     * Returns a list of page records
-     * Recursive by default. Returns the whole page tree
-     * 
-     * @param  int $uid The uid to start from
-     * @return array
-     */
-    public function getRecordList($pid = 0) {
-
-        $recordList = $this->fetchPagesRecursive($pid);
-        return $recordList;
-
-    }
-
-    /**
      * 
      *
      * @return \Generator

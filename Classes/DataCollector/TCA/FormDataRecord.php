@@ -33,9 +33,9 @@ class FormDataRecord implements SingletonInterface {
      * @param TcaDatabaseRecord|null
      * @param FormDataCompiler|null
      */
-    public function __construct(TcaDatabaseRecord $formDataGroup = null, FormDataCompiler $formDataCompiler = null) {
+    public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null) {
 
-        $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+        $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(SearchableRecordGroup::class);
         $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
     }
 

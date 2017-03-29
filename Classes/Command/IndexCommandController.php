@@ -34,17 +34,24 @@ class IndexCommandController extends CommandController
 
         $indices = ExtconfService::getIndices();
 
-        foreach ($indices as $language => $indexname) {
+        $this->outputLine("<info>Starting indexing, %s indices found.</info>", [count($indices)]);
+        $this->outputLine();
+
+        foreach ($indices as $language => $index) {
 
             $this->indexLanguage($language);
         }
 
         $endtime = microtime(true);
 
-        $this->outputLine("Time: " . ($endtime - $starttime));
-        $this->outputLine("Memory (MB): " . (memory_get_peak_usage(true) / 1000000));
+        $this->outputLine();
 
-        $this->outputLine("Indexing finished.");
+        $this->outputLine("<options=bold>Time (seconds):</> " . ($endtime - $starttime));
+        $this->outputLine("<options=bold>Memory (MB):</> " . (memory_get_peak_usage(true) / 1000000));
+
+        $this->outputLine();
+
+        $this->outputLine("<info>Indexing finished.</info>");
 
     }
 
@@ -60,24 +67,30 @@ class IndexCommandController extends CommandController
 
         if (!empty($indexers)) {
 
+            $this->outputLine("<comment>Language %s:</comment>", [$language]);
+
             foreach ($indexers as $indexer) {
 
-                $result = $indexer->run();
+                $this->outputLine();
+                $this->outputLine("<comment> Type '%s':</comment>", [$indexer->getType()] );
 
-                if ($result['errors']) {
+                $this->output->progressStart();
 
-                    $this->outputLine("There was an error running " . $indexerConfiguration['indexer'] . ":");
+                foreach ($indexer->run() as $resultMessage) {
 
-                    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
-                    die();
+                    $this->output->progressSet($resultMessage);
+
                 }
+
+                $this->output->progressFinish();
+                
             }
 
-            $this->outputLine("Successfully ran indexing for language " . $language . ".");
+            $this->outputLine();
 
         } else {
 
-            $this->outputLine("WARNING: No indexers found for language " . $language . ". Doing nothing.");
+            $this->outputLine("<comment>WARNING: No indexers found for language " . $language . ". Doing nothing.</comment>");
         }
 
     }
