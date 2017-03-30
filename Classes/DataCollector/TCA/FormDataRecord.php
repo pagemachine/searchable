@@ -55,12 +55,13 @@ class FormDataRecord implements SingletonInterface {
      * @param string $table
      * @return array
      */
-    public function getRecord($uid, $table) {
+    public function getRecord($uid, $table, $fieldlist) {
 
         $formDataCompilerInput = [
             'tableName' => $table,
             'vanillaUid' => (int)$uid,
-            'command' => 'edit'
+            'command' => 'edit',
+            'columnsToProcess' => $fieldlist
         ];
 
         $data = $this->formDataCompiler->compile($formDataCompilerInput);

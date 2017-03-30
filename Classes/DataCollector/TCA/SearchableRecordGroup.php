@@ -26,6 +26,12 @@ class SearchableRecordGroup implements FormDataGroupInterface
             'depends' => []
         ];
 
+        //Unset DataProvider which determines the items to process. This information will be handed over in the compiler input array
+        unset($dataProvider[\TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessShowitem::class]);
+
+        //unset record title provider - no need
+        unset($dataProvider[\TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessRecordTitle::class]);
+
 
         $orderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
         $this->dataProviders = $orderingService->orderByDependencies($dataProvider, 'before', 'depends');

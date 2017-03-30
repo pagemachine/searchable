@@ -37,16 +37,6 @@ class TcaDataCollectorTest extends UnitTestCase
      */
     protected function setUp()
     {
-        $configuration = [
-            'table' => 'example_table',
-            'excludeFields' => [
-                'excludeme',
-                'excludemetoo'
-            ]
-
-        ];
-
-        $this->tcaDataCollector = new TcaDataCollector($configuration);
 
         $this->formDataRecord = $this->prophesize(FormDataRecord::class);
         $this->plainValueProcessor = $this->prophesize(PlainValueProcessor::class);
@@ -95,22 +85,38 @@ class TcaDataCollectorTest extends UnitTestCase
             ]
         ];
 
+        $GLOBALS['TCA']['example_table'] = $recordTca;
+
         $record = [
             'databaseRow' => [
                 'uid' => 123,
                 'title' => 'foobar',
                 'checkboxfield' => '2',
                 'radiofield' => '3',
-                'excludeme' => 'lalala',
                 'emptyfield' => '',
-                'unusedrelation' => [
-                    1 => 1
-                ]
             ],
             'processedTca' => $recordTca
         ];
 
-        $this->formDataRecord->getRecord(123, 'example_table')->willReturn($record);
+        $configuration = [
+            'table' => 'example_table',
+            'excludeFields' => [
+                'excludeme',
+                'excludemetoo'
+            ]
+
+        ];
+
+        $this->tcaDataCollector = new TcaDataCollector($configuration);
+
+        $this->formDataRecord->getRecord(123, 'example_table', [
+            'uid',
+            'pid',
+            'title',
+            'checkboxfield',
+            'radiofield',
+            'emptyfield'
+        ])->shouldBeCalled()->willReturn($record);
 
         $this->plainValueProcessor->processCheckboxField("2", Argument::type("array"))->shouldBeCalled()->willReturn("checkboxvalue");
         $this->plainValueProcessor->processRadioField("3", Argument::type("array"))->shouldBeCalled()->willReturn("radiovalue");
@@ -164,6 +170,8 @@ class TcaDataCollectorTest extends UnitTestCase
             ]
         ];
 
+        $GLOBALS['TCA']['example_table'] = $recordTca;
+
         $record = [
             'databaseRow' => [
                 'selectfield' => [
@@ -175,7 +183,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $this->tcaDataCollector = new TcaDataCollector($configuration);
 
-        $this->formDataRecord->getRecord(123, 'example_table')->willReturn($record);
+        $this->formDataRecord->getRecord(123, 'example_table', Argument::type('array'))->willReturn($record);
 
         $resolver = $this->prophesize(SelectRelationResolver::class);
         $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, $this->tcaDataCollector)->willReturn([[

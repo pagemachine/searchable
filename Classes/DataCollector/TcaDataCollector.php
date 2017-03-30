@@ -73,6 +73,13 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     ];
 
     /**
+     * Field whitelist - filters excludeFields and unused relations/unsupported types. Passed on to the FormEngine to reduce overhead
+     *
+     * @var array|null
+     */
+    protected $fieldWhitelist = null;
+
+    /**
      * This function will be called by the ConfigurationManager.
      * It can be used to add default configuration
      *
@@ -232,9 +239,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecord($identifier) {
 
-        $data = FormDataRecord::getInstance()->getRecord($identifier, $this->config['table']);
+        $data = FormDataRecord::getInstance()->getRecord($identifier, $this->config['table'], $this->getFieldWhitelist());
         $record = $data['databaseRow'];
         $this->processedTca = $data['processedTca'];
+
 
         if ($this->language != 0) {
 
@@ -297,19 +305,13 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         //Preprocess fields
         foreach ($record as $key => $field) {
 
-            $type = $this->processedTca['columns'][$key]['config']['type'];
-
-            if (
-                empty($field) || //empty
-                $this->isExcludeField($key) || //excluded
-                (TcaType::isRelation($type) && !$this->subCollectorExistsForColumn($key)) || //Unused relation
-                TcaType::isUnsupported($type) //Unsupported type
-                )
+            if (empty($field) || $this->isExcludeField($key))
             {
-
                 unset($record[$key]);
                 continue;
             }
+
+            $type = $this->processedTca['columns'][$key]['config']['type'];
 
             //plain types
             switch ($type) 
@@ -345,6 +347,54 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         return $record;
 
+    }
+
+    /**
+     * Returns the field whitelist for this record
+     *
+     * @return array
+     */
+    public function getFieldWhitelist() {
+
+        if ($this->fieldWhitelist == null) {
+
+            $whitelist = $this->getWhitelistSystemFields();
+
+            $tca = $this->getTcaConfiguration();
+
+            foreach ($tca['columns'] as $key => $column) {
+
+                $type = $column['config']['type'];
+
+                if (
+                    !$this->isExcludeField($key) && //excluded
+                    (TcaType::isPlain($type) || (TcaType::isRelation($type) && $this->subCollectorExistsForColumn($key))) //Plain type or relation with subcollector
+                    )
+                {
+                    $whitelist[] = $key;
+                }
+
+            }
+
+            $this->fieldWhitelist = $whitelist;
+
+        }
+        return $this->fieldWhitelist;
+    }
+
+    /**
+     * Returns the whitelisted system fields (always enabled)
+     *
+     * @return array
+     */
+    protected function getWhitelistSystemFields() {
+
+        $systemFields = [
+            'uid',
+            'pid'
+        ];
+
+        return $systemFields;
     }
 
     /**
