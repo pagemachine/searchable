@@ -268,7 +268,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         if ($translationUid) {
 
-            $translationData = FormDataRecord::getInstance()->getRecord($translationUid, $this->config['table']);
+            $translationData = FormDataRecord::getInstance()->getRecord($translationUid, $this->config['table'], $this->getFieldWhitelist());
             $translationRecord = $translationData['databaseRow'];
 
             foreach ($record as $key => $field) {
