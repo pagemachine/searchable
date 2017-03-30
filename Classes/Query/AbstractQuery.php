@@ -3,7 +3,8 @@ namespace PAGEmachine\Searchable\Query;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-
+use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -42,11 +43,19 @@ abstract class AbstractQuery {
     protected $client;
 
     /**
-     * @param Client|null $client
+     * @var Logger
      */
-    public function __construct(Client $client = null) {
+    protected $logger;
+
+    /**
+     * @param Client|null $client
+     * @param Logger|null $logger
+     */
+    public function __construct(Client $client = null, Logger $logger = null) {
 
         $this->client = $client ?: ClientBuilder::create()->build();
+        $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
+
     }
 
     /**

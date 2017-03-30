@@ -105,7 +105,7 @@ class BulkQuery extends AbstractQuery {
     /**
      * Executes a bulk insertion query
      * 
-     * @return array
+     * @return void
      */
     public function execute() {
 
@@ -116,10 +116,11 @@ class BulkQuery extends AbstractQuery {
              */
             $response = $this->client->bulk($this->getParameters());
 
-            return $response;
-        }
+            if ($response['errors']) {
 
-        return [];
+                $this->logger->error("Bulk Query response contains errors: ", $response);
+            }
+        }
     }
 
     /**
@@ -127,7 +128,7 @@ class BulkQuery extends AbstractQuery {
      * @todo move this away from the bulkquery (does not fit its domain)
      *
      * @param  int $id
-     * @return array
+     * @return void
      */
     public function delete($id) {
 
@@ -140,9 +141,12 @@ class BulkQuery extends AbstractQuery {
         if ($this->client->exists($params)) {
 
             $response = $this->client->delete($params);
-        }
 
-        return $response;
+            if ($response['errors']) {
+
+                $this->logger->error("Delete Query response contains errors: ", $response);
+            }
+        }
     }
 
     /**
