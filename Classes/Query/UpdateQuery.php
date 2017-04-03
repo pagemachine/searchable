@@ -117,35 +117,33 @@ class UpdateQuery extends AbstractQuery {
             }
         }
 
-        $this->parameters['index'] = $index;
-        $this->parameters['body'] = [
-            '_source' => false,
-            'query' => [
-                'bool' => [
-                    'should' => $updateParams,
-                    'minimum_should_match' => 1
+        if (!empty($updateParams)) {
+
+            $this->parameters['index'] = $index;
+            $this->parameters['body'] = [
+                '_source' => false,
+                'query' => [
+                    'bool' => [
+                        'should' => $updateParams,
+                        'minimum_should_match' => 1
+                    ]
                 ]
-            ]
-        ];
+            ];
 
-        $result = $this->client->search($this->parameters);
+            $result = $this->client->search($this->parameters);
 
-        if (!empty($result['hits']['hits'])) {
+            if (!empty($result['hits']['hits'])) {
 
-            foreach ($result['hits']['hits'] as $hit) {
+                foreach ($result['hits']['hits'] as $hit) {
 
-                $recordids[$hit['_id']] = $hit['_id'];
+                    $recordids[$hit['_id']] = $hit['_id'];
+                }
             }
         }
+
         return $recordids;
 
 
     }
-
-
-
-
-
-    
 
 }
