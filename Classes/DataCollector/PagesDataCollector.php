@@ -146,4 +146,29 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         return $overlayRecord;
     }
 
+    /**
+     * Checks if a record still exists. This is needed for the update scripts
+     * Pages work differently regarding pids. That is why we reset the pid restriction while checking if a record exists
+     * @todo: Possibly check the rootline instead. But beware the performance impact...
+     *
+     * @param  int $identifier
+     * @return bool
+     */
+    public function exists($identifier) {
+
+        $pidRestriction = '';
+
+        $recordCount = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
+            "uid", 
+            $this->config['table'], 
+            "uid=" . $identifier . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table']));
+
+        if ($recordCount > 0) {
+
+            return true;
+        }
+
+        return false;
+    }
+
 }
