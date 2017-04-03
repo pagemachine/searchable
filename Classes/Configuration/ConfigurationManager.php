@@ -193,6 +193,12 @@ class ConfigurationManager implements SingletonInterface {
     protected function addToplevelUpdateConfiguration($typeName, $table) {
 
         $this->updateConfiguration['database']['toplevel'][$table] = $typeName;
+
+        //Special case handling for pages since language overlays are in a separate table
+        if ($table == 'pages') {
+
+            $this->updateConfiguration['database']['toplevel']['pages_language_overlay'] = $typeName;
+        }
     }
 
     /**
@@ -205,6 +211,12 @@ class ConfigurationManager implements SingletonInterface {
     protected function addSublevelUpdateConfiguration($typeName, $sublevelPath, $table) {
 
         $this->updateConfiguration['database']['sublevel'][$table][$typeName] = $sublevelPath;
+
+        //Special case handling for pages since language overlays are in a separate table
+        if ($table == 'pages') {
+
+            $this->updateConfiguration['database']['sublevel']['pages_language_overlay'][$typeName] = $sublevelPath;
+        }
     }
 
 }

@@ -57,7 +57,7 @@ class UpdateQuery extends AbstractQuery {
     public function addUpdate($type, $property, $id) {
 
         // Use querystring hash as id to mark each update only once
-        $docid = sha1($path . ":" . $id);
+        $docid = sha1($type . "." . $property . ":" . $id);
 
         $this->parameters['id'] = $docid;
         $this->parameters['type'] = $type;
