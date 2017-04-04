@@ -80,9 +80,9 @@ class PageLinkBuilderTest extends UnitTestCase {
      */
     public function createsDynamicLinkTitle() {
 
-        $configuration = [
-            'titleField' => 'foobar'
-        ];
+        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
+        $configuration['titleField'] = 'foobar';
+
 
         $record = [
             'foobar' => 'baz'
@@ -100,11 +100,9 @@ class PageLinkBuilderTest extends UnitTestCase {
      */
     public function replacesDynamicFields() {
 
-        $configuration = [
-            'dynamicParts' => [
-                'pageUid' => 'page'
-            ]
-        ];
+        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
+
+        $configuration['dynamicParts'] = [ 'pageUid' => 'page'];
 
         $record = [
             'page' => '123'
@@ -122,13 +120,13 @@ class PageLinkBuilderTest extends UnitTestCase {
      */
     public function replacesNestedDynamicFields() {
 
-        $configuration = [
-            'dynamicParts' => [
-                'pageUid' => 'page',
-                'additionalParams' => [
-                    'param1' => 'property1',
-                    'param2' => 'property2'
-                ]
+        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
+
+        $configuration['dynamicParts'] = [
+            'pageUid' => 'page',
+            'additionalParams' => [
+                'param1' => 'property1',
+                'param2' => 'property2'
             ]
         ];
 
@@ -151,14 +149,10 @@ class PageLinkBuilderTest extends UnitTestCase {
      */
     public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead() {
 
-        $configuration = [
-            'fixedParts' => [
-                'pageUid' => '123'
-            ],
-            'dynamicParts' => [
-                'pageUid' => 'page'
-            ]
-        ];
+        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
+
+        $configuration['fixedParts']['pageUid'] = '123';
+        $configuration['dynamicParts']['pageUid'] = 'page';
 
         $record = [];
 

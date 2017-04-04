@@ -23,7 +23,7 @@ class PageLinkBuilder extends AbstractLinkBuilder implements LinkBuilderInterfac
     /**
      * @var array
      */
-    protected $config = [
+    protected static $defaultConfiguration = [
         'titleField' => '',
         'fixedParts' => [
             'pageUid' => null,
