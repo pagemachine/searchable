@@ -130,11 +130,13 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
 
         $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
+
+
         //If table is toplevel, mark the corresponding document as updated
         if (is_string($updateConfiguration['database']['toplevel'][$table])) {
 
             $uidMatch = [];
-            if (preg_match("/^uid=([0-9]*)$/", $where, $uidMatch)) {
+            if (preg_match("/^uid\s?=\s?([0-9]*)$/", $where, $uidMatch)) {
                 
                 $this->getQuery()->addUpdate($updateConfiguration['database']['toplevel'][$table], "uid", $uidMatch[1]);
             }
@@ -157,7 +159,7 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
             foreach ($updateConfiguration['database']['sublevel'][$table] as $typeName => $path) {
 
                 $uidMatch = [];
-                if (preg_match("/^uid=([0-9]*)$/", $where, $uidMatch)) {
+                if (preg_match("/^uid\s?=\s?([0-9]*)$/", $where, $uidMatch)) {
 
                     $this->getQuery()->addUpdate($typeName, $path . ".uid", $uidMatch[1]);
                 }
