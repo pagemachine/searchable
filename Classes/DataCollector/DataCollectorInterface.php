@@ -44,10 +44,9 @@ interface DataCollectorInterface {
     /**
      * Fetches a list of records
      *
-     * @param int|null $pid
      * @return array
      */
-    public function getRecords($pid = null);
+    public function getRecords();
 
     /**
      * Fetches a single record
@@ -56,13 +55,5 @@ interface DataCollectorInterface {
      * @return array
      */
     public function getRecord($identifier);
-
-    /**
-     * Checks if a record still exists. This is needed for the update scripts
-     *
-     * @param  int $identifier
-     * @return bool
-     */
-    public function exists($identifier);
 
 }

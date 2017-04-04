@@ -261,7 +261,6 @@ class Indexer implements DynamicConfigurationInterface {
         return $record;
     }
 
-
     /**
      * Runs an update
      * 
@@ -274,23 +273,20 @@ class Indexer implements DynamicConfigurationInterface {
         $updates = $updateQuery->getUpdates($this->index, $this->type);
 
         if (!empty($updates)) {
-            foreach ($updates as $uid) {
+            foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
 
-                if ($this->dataCollector->exists($uid)) {
+                if ($fullRecord['deleted'] == 1) {
 
-                    $fullRecord = $this->dataCollector->getRecord($uid);
-                    $fullRecord = $this->addSystemFields($fullRecord);
-
-                    $this->query->addRow($uid, $fullRecord);                       
+                    $this->query->delete($fullRecord['uid']);
                 }
                 else {
 
-                    $this->query->delete($uid);
+                     $fullRecord = $this->addSystemFields($fullRecord);
+                     $this->query->addRow($fullRecord['uid'], $fullRecord);
                 }
             }
 
             $response = $this->query->execute();
-
             return $response;
         }
 

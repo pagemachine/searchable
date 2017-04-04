@@ -45,6 +45,15 @@ abstract class AbstractDataCollector implements DataCollectorInterface, DynamicC
 	 */
 	protected $config = [];
 
+    /**
+     *
+     * @param array $config
+     */
+    public function setConfig($config = []) {
+
+        $this->config = $config;
+    }
+
 	
 	/**
 	 * @return array

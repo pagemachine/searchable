@@ -190,45 +190,40 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     }
 
     /**
-     * Returns translation uid
+     * Works like getRecords, but processes only a given uid list to update
      *
-     * @param  int $identifier the base record uid
-     * @param  int $language language to translate to
-     * @return int|false
+     * @param  array $updateUidList
+     * @return \Generator
      */
-    public function getTranslationUid($identifier, $language) {
+    public function getUpdatedRecords($updateUidList) {
 
-        $translation = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-            "uid", 
-            $this->config['table'], 
-            $GLOBALS['TCA'][$this->config['table']]['ctrl']['languageField'] . '=' . (int)$language . ' AND ' . $GLOBALS['TCA'][$this->config['table']]['ctrl']['transOrigPointerField'] . '=' . (int)$identifier . $this->pageRepository->enableFields($this->config['table']), '', '', '1');
+        $tca = $this->getTcaConfiguration();
 
-        $translationUid = $translation ? $translation[0] : false;
+        $pidRestriction = $this->config['pid'] != null ? ' AND pid = ' . $this->config['pid'] : '';
 
-        return $translationUid;
-    }
+        foreach ($updateUidList as $uid) {
 
-    /**
-     * Checks if a record still exists. This is needed for the update scripts
-     *
-     * @param  int $identifier
-     * @return bool
-     */
-    public function exists($identifier) {
+            $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+                "uid", 
+                $this->config['table'], 
+                "uid=" . $uid . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+            );
 
-        $pidRestriction = $this->config['pid'] !== null ? ' AND pid = ' . $this->config['pid'] : '';
+            if ($record) {
 
-        $recordCount = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
-            "uid", 
-            $this->config['table'], 
-            "uid=" . $identifier . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table']));
+                $fullRecord = $this->getRecord($record['uid']);
 
-        if ($recordCount > 0) {
+                if (!empty($fullRecord)) {
 
-            return true;
+                    yield $fullRecord;
+                    continue;
+                }
+            }
+
+            yield ['uid' => $uid, 'deleted' => 1];
+
         }
 
-        return false;
     }
 
     /**
@@ -240,56 +235,35 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     public function getRecord($identifier) {
 
         $data = FormDataRecord::getInstance()->getRecord($identifier, $this->config['table'], $this->getFieldWhitelist());
+
+        if (empty($data)) {
+
+            return [];
+        }
+
         $record = $data['databaseRow'];
         $this->processedTca = $data['processedTca'];
 
 
-        if ($this->language != 0) {
+        $record = $this->languageOverlay($record);
 
-            $record = $this->languageOverlay($record);
+        if (!empty($record)) {
+            //Cleanup
+            $record = $this->processColumns($record);
         }
-
-        //Cleanup
-        $record = $this->processColumns($record);
 
         return $record;
     }
 
     /**
+     * Get overlay
      *
      * @param  array $record
      * @return array
      */
-    protected function languageOverlay($record) {
+    protected function languageoverlay($record) {
 
-        $overlayUtility = OverlayUtility::getInstance();
-
-        $translationUid = $this->getTranslationUid($record['uid'], $this->language);
-
-        if ($translationUid) {
-
-            $translationData = FormDataRecord::getInstance()->getRecord($translationUid, $this->config['table'], $this->getFieldWhitelist());
-            $translationRecord = $translationData['databaseRow'];
-
-            foreach ($record as $key => $field) {
-
-                if ($key == "uid" || $key == "pid") {
-
-                    continue;
-                }
-
-                //If the FE overlay differs from the raw base record, replace the field with the translated field in the processed record
-                if ($overlayUtility->shouldFieldBeOverlaid($this->config['table'], $key, $translationData['defaultLanguageRow'][$key])) {
-
-                    $record[$key] = $translationRecord[$key];
-                }
-            }
-
-        }
-
-        return $record;
-
-
+        return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->getFieldWhitelist());
     }
 
     /**
@@ -391,7 +365,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $systemFields = [
             'uid',
-            'pid'
+            'pid',
+            $this->getTcaConfiguration()['ctrl']['languageField']
         ];
 
         return $systemFields;

@@ -54,9 +54,10 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
                         $records[$key] = $value;
                     }
 
-                    if ($childCollector->exists($value)) {
+                    $childRecord = $childCollector->getRecord($value);
+                    if (!empty($childRecord)) {
 
-                        $records[$key] = $childCollector->getRecord($value);
+                        $records[$key] = $childRecord;
                     }
                 }
             }

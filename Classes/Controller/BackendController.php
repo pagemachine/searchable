@@ -180,35 +180,37 @@ class BackendController extends ActionController {
      */
     public function indexPartialAction() {
 
-        $indexers = $this->indexerFactory->makeIndexers(0);
+        foreach (ExtconfService::getIndices() as $language => $name) {
 
-         if (!empty($indexers)) {
+            $indexers = $this->indexerFactory->makeIndexers($language);
 
-            foreach ($indexers as $indexer) {
+             if (!empty($indexers)) {
 
-                $result = $indexer->runUpdate();
+                foreach ($indexers as $indexer) {
 
-                if ($result['errors']) {
+                    $result = $indexer->runUpdate();
 
-                    $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
+                    if ($result['errors']) {
 
-                    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
-                    die();
+                        $this->addFlashMessage("There was an error running " . $indexerConfiguration['indexer'] . ".");
+
+                        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result, __METHOD__, 8);
+                        die();
+                    }
                 }
+
+                $this->addFlashMessage("Partial Indexing finished.");
+
+            } else {
+
+                $this->addFlashMessage("No indexers found. Doing nothing.", "", AbstractMessage::WARNING);
             }
 
-            IndexManager::getInstance()->resetUpdateIndex();
-
-            $this->addFlashMessage("Partial Indexing finished.");
-
-        } else {
-
-            $this->addFlashMessage("No indexers found. Doing nothing.", "", AbstractMessage::WARNING);
         }
 
-        $this->redirect("start");       
+        IndexManager::getInstance()->resetUpdateIndex();
 
-
+        $this->redirect("start");
     }
 
 }

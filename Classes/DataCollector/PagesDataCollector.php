@@ -89,9 +89,20 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @return \Generator
      */
-    public function getRecords($pid = null) {
+    public function getRecords() {
 
-        $pid = $pid ?: $this->config['pid'];
+        foreach ($this->getPageRecords($this->config['pid']) as $page) {
+
+            yield $page;
+        }
+    }
+
+    /**
+     * 
+     *
+     * @return \Generator
+     */
+    protected function getPageRecords($pid = null) {
 
         $rawList = $this->pageRepository->getMenu($pid, 'uid, doktype', 'sorting', '', false);
 
@@ -113,46 +124,36 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 }
 
             }
-        }
+        }        
     }
 
     /**
+     * Unset pid (works differently with pages and should not be taken into account)
+     * @todo Check for rootline if we want to be extra precise
      *
-     * Simplified languageOverlay mechanism for pages
-     * pages_language_overlay contains a fixed set of OL fields. No need to run the FormEngine on them (does not work too well anyway)
+     * @param  array $updateUidList
+     * @return \Generator
+     */
+    public function getUpdatedRecords($updateUidList) {
+
+        $this->config['pid'] = null;
+
+        foreach (parent::getUpdatedRecords($updateUidList) as $record) {
+
+            yield $record;
+        }
+
+    }
+
+    /**
+     * Get overlay
      *
      * @param  array $record
      * @return array
      */
-    protected function languageOverlay($record) {
+    protected function languageoverlay($record) {
 
-        $overlayRecord = $this->pageRepository->getPageOverlay($record, $this->language);
-        return $overlayRecord;
-    }
-
-    /**
-     * Checks if a record still exists. This is needed for the update scripts
-     * Pages work differently regarding pids. That is why we reset the pid restriction while checking if a record exists
-     * @todo: Possibly check the rootline instead. But beware the performance impact...
-     *
-     * @param  int $identifier
-     * @return bool
-     */
-    public function exists($identifier) {
-
-        $pidRestriction = '';
-
-        $recordCount = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
-            "uid", 
-            $this->config['table'], 
-            "uid=" . $identifier . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table']));
-
-        if ($recordCount > 0) {
-
-            return true;
-        }
-
-        return false;
+        return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language);
     }
 
 }

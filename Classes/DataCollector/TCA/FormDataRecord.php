@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\TCA;
 
+use TYPO3\CMS\Backend\Form\Exception\DatabaseRecordException;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -64,7 +65,16 @@ class FormDataRecord implements SingletonInterface {
             'columnsToProcess' => $fieldlist
         ];
 
-        $data = $this->formDataCompiler->compile($formDataCompilerInput);
+        try {
+
+            $data = $this->formDataCompiler->compile($formDataCompilerInput);
+        //Be nice and catch all errors related to inconsistent data (sometimes strange things happen with extbase relations)
+        } catch (DatabaseRecordException $e) {
+
+            $data = [];
+        }
+
+        
 
         return $data;
 
