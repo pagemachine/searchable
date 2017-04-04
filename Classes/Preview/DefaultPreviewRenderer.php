@@ -1,28 +1,14 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
 
 /**
- * Simple preview renderer.
+ * Default preview renderer.
  */
 class DefaultPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
-
-    /**
-     * @var array
-     */
-    protected $config;
-
-    /**
-     * @param array $config
-     */
-    public function __construct($config) {
-
-        $this->config = $config;
-    }
 
     /**
      * Renders the preview

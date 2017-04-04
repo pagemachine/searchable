@@ -47,18 +47,4 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface 
         $this->config = $config;
     }
 
-    /**
-     * Renders the preview
-     * 
-     * @param  array $record
-     * @return string
-     */
-    public function render($record) {
-
-        $preview = implode(", ", $record);
-
-        return $preview;
-    }
-
-
 }

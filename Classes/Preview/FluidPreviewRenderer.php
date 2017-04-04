@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -36,17 +35,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
         'templateName' => 'Preview/Default'
 
     ];
-
-    /**
-     * @param array $config
-     */
-    public function __construct($config) {
-
-        if ($config != null) {
-
-            $this->config = ConfigurationMergerService::merge($this->config, $config);
-        }
-    }
 
     /**
      * @return void
