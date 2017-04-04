@@ -42,7 +42,15 @@ interface DataCollectorInterface {
 	public function getConfig();
 
     /**
-     * Fetches a record
+     * Fetches a list of records
+     *
+     * @param int|null $pid
+     * @return array
+     */
+    public function getRecords($pid = null);
+
+    /**
+     * Fetches a single record
      * 
      * @param  int $identifier
      * @return array

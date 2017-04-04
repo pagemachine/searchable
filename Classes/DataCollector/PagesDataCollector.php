@@ -82,23 +82,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             ]
 
         ]
-    ];   
-
-    /**
-     * Used while fetching pages, sorts out all page types which are not displayed in FE
-     * This defines which page types are taken into account for recursive indexing, it does not mean they are all indexed!
-     * The latter is defined by $indexedDoktypes.
-     * 
-     * @see https://docs.typo3.org/typo3cms/CoreApiReference/PageTypes/Index.html
-     * @var string
-     */
-    public $doktypeLimiterStatement = " AND pages.doktype < 200";
-
-    /**
-     * Defines which doktypes are actually indexed.
-     * @var array
-     */
-    public $indexedDoktypes = ['1'];
+    ];
 
     /**
      * 
