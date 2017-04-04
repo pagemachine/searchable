@@ -2,8 +2,6 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
-
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -44,9 +42,6 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface {
      */
     public function __construct($config = null) {
 
-        if ($config != null) {
-
-            $this->config = ConfigurationMergerService::merge($this->config, $config);
-        }
+        $this->config = $config;
     }
 }
