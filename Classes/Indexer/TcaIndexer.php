@@ -19,42 +19,4 @@ class TcaIndexer extends Indexer implements IndexerInterface {
         ]
     ];
 
-    /**
-     * Main function for indexing
-     * 
-     * @return \Generator
-     */
-    public function run() {
-
-        $counter = 0;
-        $overallCounter = 0;
-
-        foreach ($this->dataCollector->getRecords() as $fullRecord) {
-
-            $fullRecord = $this->addSystemFields($fullRecord);
-
-            $this->query->addRow($fullRecord['uid'], $fullRecord);
-
-            $counter++;
-            $overallCounter++;
-
-            if ($counter >= 20) {
-
-                $this->query->execute();
-                $this->query->resetBody();
-
-                $counter = 0;
-                yield $overallCounter;
-            }
-        }
-
-        if ($counter != 0) {
-
-            $this->query->execute();
-            $this->query->resetBody();
-            yield $overallCounter;
-        }
-
-    }
-
 }
