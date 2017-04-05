@@ -302,9 +302,12 @@ class Indexer implements DynamicConfigurationInterface {
     /**
      * Runs an update
      * 
-     * @return array
+     * @return \Generator
      */
     public function runUpdate() {
+
+        $counter = 0;
+        $overallCounter = 0;
 
         $updateQuery = new UpdateQuery();
 
@@ -319,15 +322,29 @@ class Indexer implements DynamicConfigurationInterface {
                 }
                 else {
 
-                     $fullRecord = $this->addSystemFields($fullRecord);
-                     $this->query->addRow($fullRecord['uid'], $fullRecord);
+                    $counter++;
+                    $overallCounter++;
+
+                    $fullRecord = $this->addSystemFields($fullRecord);
+                    $this->query->addRow($fullRecord['uid'], $fullRecord);
+
+                    if ($counter >= 20) {
+
+                        $this->query->execute();
+                        $this->query->resetBody();
+
+                        $counter = 0;
+                        yield $overallCounter;
+                    }
                 }
             }
 
-            $response = $this->query->execute();
-            return $response;
-        }
+            if ($counter != 0) {
 
-        return [];
+                $this->query->execute();
+                $this->query->resetBody();
+                yield $overallCounter;
+            }
+        }
     }
 }
