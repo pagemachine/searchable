@@ -2,8 +2,10 @@
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
+use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use Prophecy\Argument;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -22,14 +24,37 @@ class PagesDataCollectorTest extends UnitTestCase {
     protected $pageRepository;
 
     /**
+     * @var FormDataRecord
+     */
+    protected $formDataRecord;
+
+    /**
      * Set up this testcase
      */
     public function setUp() {
 
-        $this->pagesDataCollector = new PagesDataCollector();
+        $GLOBALS['TCA']['pages'] = [
+            'columns' => [
+                'title' => [
+                    'config' => [
+                        'type' => 'input'
+                    ]
+                ]
+            ]
+        ];
+
+        $this->pagesDataCollector = $this->getMockBUilder(PagesDataCollector::class)
+        ->setConstructorArgs([PagesDataCollector::getDefaultConfiguration([], [])])
+        ->setMethods([
+                'getRecord'
+            ])
+        ->getMock();
 
         $this->pageRepository = $this->prophesize(PageRepository::class);
         $this->inject($this->pagesDataCollector, "pageRepository", $this->pageRepository->reveal());
+
+        $this->formDataRecord = $this->prophesize(FormDataRecord::class);
+        GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());
     }
 
     /**
@@ -38,12 +63,40 @@ class PagesDataCollectorTest extends UnitTestCase {
     public function collectsPageListSingleLevel() {
 
         $pageList = [
-            'uid' => '3',
-            'doktype' => '1',
-            'title' => 'SimplePage'
+            0 => [
+                'uid' => '3',
+                'pid' => '0',
+                'doktype' => '1',
+                'title' => 'SimplePage'
+            ],
+            1 => [
+                'uid' => '4',
+                'pid' => '0',
+                'doktype' => '1',
+                'title' => 'SimplePage2'
+            ]
         ];
 
-        //tests removed due to rewrite
+        $valueMap = [
+            [3, $pageList[0]],
+            [4, $pageList[1]]
+
+        ];
+
+        $this->pagesDataCollector->method("getRecord")
+            ->will($this->returnValueMap($valueMap));
+
+        $this->pageRepository->getMenu(0, 'uid', 'sorting', '', false)->willReturn(['3' => [], '4' => []]);
+        $this->pageRepository->getMenu(3, 'uid', 'sorting', '', false)->willReturn([]);
+        $this->pageRepository->getMenu(4, 'uid', 'sorting', '', false)->willReturn([]);
+
+        $records = $this->pagesDataCollector->getRecords();
+
+        $this->assertEquals($pageList[0], $records->current());
+        $records->next();
+        $this->assertEquals($pageList[1], $records->current());
+
+
     }
 
     /**
@@ -52,27 +105,38 @@ class PagesDataCollectorTest extends UnitTestCase {
     public function collectsPageListRecursive() {
 
         $pageList = [
-            '3' => [
+            0 => [
                 'uid' => '3',
                 'doktype' => '1',
                 'title' => 'SimplePage'
-            ]
-        ];
-        $subpageList = [
-            '4' => [
+            ],
+            1 => [
                 'uid' => '4',
                 'doktype' => '1',
                 'title' => 'SimpleSubpage'
             ]
         ];
 
-        $returnList = [
-            '3' => $pageList['3'],
-            '4' => $subpageList['4']
+        $valueMap = [
+            [3, $pageList[0]],
+            [4, $pageList[1]]
 
         ];
 
-        //Tests removed due to rewrite
+        $this->pagesDataCollector->method("getRecord")
+            ->will($this->returnValueMap($valueMap));
+
+        $this->pageRepository->getMenu(0, 'uid', 'sorting', '', false)->willReturn(['3' => []]);
+        $this->pageRepository->getMenu(3, 'uid', 'sorting', '', false)->willReturn(['4' => []]);
+        $this->pageRepository->getMenu(4, 'uid', 'sorting', '', false)->willReturn([]);
+
+        $records = $this->pagesDataCollector->getRecords();
+
+        $this->assertEquals($pageList[0], $records->current());
+        $records->next();
+        $this->assertEquals($pageList[1], $records->current());
+
+
 
     }
 

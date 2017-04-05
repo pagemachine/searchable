@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
+use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -104,7 +105,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function getPageRecords($pid = null) {
 
-        $rawList = $this->pageRepository->getMenu($pid, 'uid, doktype', 'sorting', '', false);
+        $rawList = $this->pageRepository->getMenu($pid, 'uid', 'sorting', '', false);
 
         if (!empty($rawList)) {
 
@@ -113,7 +114,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 yield $this->getRecord($uid);
 
                 //@todo: use "yield from" as soon as PHP7 is a requirement
-                $subpages = $this->getRecords($uid);
+                $subpages = $this->getPageRecords($uid);
 
                 if (!empty($subpages)) {
 
