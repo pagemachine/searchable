@@ -11,7 +11,7 @@ use \TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class IndexCommandController extends CommandController
+class SearchableCommandController extends CommandController
 {
 
     /**
@@ -26,7 +26,7 @@ class IndexCommandController extends CommandController
     protected $indexerFactory;
 
     /**
-     * Reset all indices (if necessary) and let all defined indexers run
+     * Runs all indexers (full)
      * @return void
      */
     public function indexFullCommand() {
@@ -35,7 +35,7 @@ class IndexCommandController extends CommandController
     }
 
     /**
-     * Runs an update on all indexers
+     * Runs all indexers (updates only)
      * @return void
      */
     public function indexPartialCommand() {
@@ -44,7 +44,7 @@ class IndexCommandController extends CommandController
     }
 
     /**
-     * Resets the index for the given language. 
+     * Resets the index for one language or all languages
      * @param string $index
      * @return void
      */

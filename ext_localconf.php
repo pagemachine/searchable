@@ -2,9 +2,8 @@
 
 if (!defined ('TYPO3_MODE')) die ('Access denied.');
 
-use PAGEmachine\Searchable\Command\IndexCommandController;
 if (TYPO3_MODE === 'BE') {
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['searchable'] = IndexCommandController::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['searchable'] = \PAGEmachine\Searchable\Command\SearchableCommandController::class;
 }
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
