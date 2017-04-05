@@ -3,17 +3,13 @@ namespace PAGEmachine\Searchable\Controller;
 
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\IndexManager;
-use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -42,21 +38,42 @@ class BackendController extends ActionController {
 
          try {
 
-            $client = ClientBuilder::create()->build();
+            $this->view->assign("updates", $this->fetchScheduledUpdates());
 
-            $index = ExtconfService::getIndex();
+            $stats = IndexManager::getInstance()->getStats();
 
-            $this->view->assign("health", $client->cluster()->health());
-            $this->view->assign("index", $client->indices()->stats(['index' => $index])['indices'][$index]);
+            $this->view->assign("health", $stats['health']);
+            $this->view->assign("indices", $stats['indices']);
             
         } catch (\Exception $e) {
 
             $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR); 
-        }       
+        }
 
+    }
 
+    /**
+     * Fetches scheduled updates for backend module
+     *
+     * @return array
+     */
+    protected function fetchScheduledUpdates() {
 
+        $client = ClientBuilder::create()->build();
 
+        $updates = $client->search([
+            'index' => ExtconfService::getInstance()->getUpdateIndex(),
+            'type' => '',
+            'body' => [
+                'query' => [
+                    'match_all' => new \stdClass()
+                ],
+            ]
+        ]);
+
+        $updates['count'] = $client->count(['index' => ExtconfService::getInstance()->getUpdateIndex()])['count'];
+
+        return $updates;
     }
     
     /**

@@ -40,6 +40,41 @@ class IndexManager implements SingletonInterface {
     }
 
     /**
+     * Returns index stats (for backend modules)
+     *
+     * @return array
+     */
+    public function getStats() {
+
+        $stats['health'] = $this->client->cluster()->health();
+
+        $info = [];
+
+        foreach (ExtconfService::getIndices() as $language => $index) {
+
+            $info[$language] = [
+                'name' => $index,
+                'language' => $language,
+            ];
+
+            foreach (ExtconfService::getIndexers() as $type => $config) {
+
+                $info[$language]['types'][$type] = [
+                    'name' => $type,
+                    'documents' => $this->client->count([
+                        'index' => $index,
+                        'type' => $type
+                    ])['count']
+                ];
+            }
+        }
+
+        $stats['indices'] = $info;
+
+        return $stats;
+    }
+
+    /**
      * Deletes and recreates an index
      * @param  string $index
      * @param  array $mapping
