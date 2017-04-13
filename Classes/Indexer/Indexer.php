@@ -20,7 +20,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class Indexer implements DynamicConfigurationInterface {
+class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
     /**
      * DefaultConfiguration

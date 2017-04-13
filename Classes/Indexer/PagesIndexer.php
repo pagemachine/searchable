@@ -5,7 +5,7 @@ namespace PAGEmachine\Searchable\Indexer;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class PagesIndexer extends Indexer implements IndexerInterface {
+class PagesIndexer extends Indexer {
 
     /**
      * @var array

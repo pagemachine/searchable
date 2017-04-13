@@ -8,7 +8,7 @@ namespace PAGEmachine\Searchable\Indexer;
 /**
  * Simple TCA based indexer reading fields and processing them
  */
-class TcaIndexer extends Indexer implements IndexerInterface {
+class TcaIndexer extends Indexer {
 
     /**
      * @var array
