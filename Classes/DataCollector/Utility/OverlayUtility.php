@@ -41,10 +41,11 @@ class OverlayUtility implements SingletonInterface {
      * @param  string         $table
      * @param  array          $record
      * @param  int            $language
+     * @param  mixed          $overlayMode
      * @param  array          $fieldWhitelist
      * @return array
      */
-    public function languageOverlay($table, $record, $language, $fieldWhitelist = []) {
+    public function languageOverlay($table, $record, $language, $overlayMode, $fieldWhitelist = []) {
 
         $tca = $GLOBALS['TCA'][$table];
         
@@ -52,12 +53,17 @@ class OverlayUtility implements SingletonInterface {
             'uid' => $record['uid'],
             'pid' => $record['pid'],
             $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']][0]
-            ], $language);
+            ], $language, $overlayMode);
 
 
         // PageRepository says this is not a valid record in this language, so don't return it
         // Examples: R(1), language 0 | R(0), language 1, olMode 'hideNonTranslated' | R(1), language 0 (invalid combination)
         if ($rawOverlay == null) {
+
+            return [];
+        }
+
+        if ((int)$overlayMode === 0 && $rawOverlay[$tca['ctrl']['languageField']] != $language) {
 
             return [];
         }

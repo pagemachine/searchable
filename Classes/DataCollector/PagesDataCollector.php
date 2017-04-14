@@ -17,6 +17,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     protected static $defaultConfiguration = [
         'table' => 'pages',
         'pid' => 0,
+        'sysLanguageOverlay' => 1,
         'excludeFields' => [
             'tstamp',
             'crdate',

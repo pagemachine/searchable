@@ -45,6 +45,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected static $defaultConfiguration = [
         'pid' => null,
+        //sys_language_overlay setting for this collector. Use 0|1|hideNonTranslated
+        'sysLanguageOverlay' => 1,
         'excludeFields' => [
             'tstamp',
             'crdate',
@@ -63,6 +65,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             'sys_language_uid',
             'l10n_parent',
             'l10n_diffsource',
+            'l18n_parent',
+            'l18n_diffsource',
             'deleted',
             'hidden',
             'starttime',
@@ -180,7 +184,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             "uid", 
             $this->config['table'], 
-            $tca['ctrl']['languageField'] . "=0" . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+            $tca['ctrl']['languageField'] . ' IN' . "(0,-1)" . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
         );
         
         while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
@@ -263,7 +267,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected function languageoverlay($record) {
 
-        return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->getFieldWhitelist());
+        return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->config['sysLanguageOverlay'], $this->getFieldWhitelist());
     }
 
     /**

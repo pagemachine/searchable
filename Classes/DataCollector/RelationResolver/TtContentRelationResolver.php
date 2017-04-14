@@ -72,7 +72,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      */
     protected function fetchContentUids($pid) {
 
-        $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', 'tt_content', 'pid = ' . $pid . ' AND ' . $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] . '=0' . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
+        $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', 'tt_content', 'pid = ' . $pid . ' AND ' . $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] . ' IN(0,-1)' . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
 
         return $content;
 
