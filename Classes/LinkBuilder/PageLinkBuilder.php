@@ -54,9 +54,9 @@ class PageLinkBuilder extends AbstractLinkBuilder implements LinkBuilderInterfac
 
         if (!empty($this->config['dynamicParts'])) {
 
-             $this->config['dynamicParts'] = $this->replaceFieldsRecursive($this->config['dynamicParts'], $record);
+            $dynamicConfiguration = $this->replaceFieldsRecursive($this->config['dynamicParts'], $record);
 
-             $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $this->config['dynamicParts']);
+            $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $dynamicConfiguration);
         }
 
         $linkConfiguration['title'] = $this->getLinkTitle($record);
