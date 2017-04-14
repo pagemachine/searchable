@@ -44,9 +44,17 @@ interface DataCollectorInterface {
     /**
      * Fetches a list of records
      *
-     * @return array
+     * @return \Generator
      */
     public function getRecords();
+
+    /**
+     * Fetches the list of updated records
+     *
+     * @param  array $updateUidList The list of updated uids coming from the Elasticsearch update index
+     * @return \Generator
+     */
+    public function getUpdatedRecords($updateUidList);
 
     /**
      * Fetches a single record

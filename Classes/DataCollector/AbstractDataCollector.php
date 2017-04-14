@@ -13,7 +13,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * AbstractDataCollector
  */
-abstract class AbstractDataCollector implements DataCollectorInterface, DynamicConfigurationInterface {
+abstract class AbstractDataCollector implements DynamicConfigurationInterface {
 
     /**
      * @var array $defaultConfiguration

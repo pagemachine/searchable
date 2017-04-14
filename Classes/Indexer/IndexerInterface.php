@@ -10,14 +10,14 @@ interface IndexerInterface {
     /**
      * Main function for indexing
      * 
-     * @return array
+     * @return \Generator
      */
     public function run();
 
      /**
      * Update function for indexing
      * 
-     * @return array
+     * @return \Generator
      */   
     public function runUpdate();
 
