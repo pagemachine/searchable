@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
+use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -48,6 +49,34 @@ class IndexerFactory implements SingletonInterface {
         }
 
         return $indexers;
+    }
+
+    /**
+     * Builds a single indexer
+     * @param  integer $language language to set up
+     * @param  string  $type     The type the index is for
+     * @return IndexerInterface
+     */
+    public function makeIndexer($language = 0, $type = '')
+    {
+        if (ExtconfService::hasIndex($language)) {
+
+            $index = ExtconfService::getIndex($language);
+        } else {
+
+            return null;
+        }
+
+        $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
+
+        if ($indexerConfiguration[$type]) {
+
+            return $this->objectManager->get($indexerConfiguration[$type]['className'], $index, $language, $indexerConfiguration[$type]['config']);
+        } else {
+
+            return null;
+        }
+
     }
 
 

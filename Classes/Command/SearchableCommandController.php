@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Command;
 
 use PAGEmachine\Searchable\IndexManager;
+use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -26,21 +27,49 @@ class SearchableCommandController extends CommandController
     protected $indexerFactory;
 
     /**
+     * Scheduled indexers, will be collected at start
+     * @var array
+     */
+    protected $scheduledIndexers = [];
+
+    /**
+     * Determines if a full indexing is performed
+     * @var boolean
+     */
+    protected $runFullIndexing = false;
+
+    /**
+     * Index type. If null, all indexers are run
+     * @var string|null
+     */
+    protected $type = null;
+
+    /**
      * Runs all indexers (full)
+     * @param  string $type If set, only runs indexing for the given type
      * @return void
      */
-    public function indexFullCommand() {
+    public function indexFullCommand($type = null) {
 
-        $this->runIndexers(true);
+        $this->runFullIndexing = true;
+        $this->type = $type;
+
+        $this->collectScheduledIndexers();
+        $this->runIndexers();
     }
 
     /**
      * Runs all indexers (updates only)
+     * @param  string $type If set, only runs indexing for the given type
      * @return void
      */
-    public function indexPartialCommand() {
+    public function indexPartialCommand($type = null) {
 
-        $this->runIndexers(false);
+        $this->runFullIndexing = false;
+        $this->type = $type;
+
+        $this->collectScheduledIndexers();
+        $this->runIndexers();
     }
 
     /**
@@ -61,7 +90,6 @@ class SearchableCommandController extends CommandController
             $mapping[$indexer->getType()] = $indexer->getMapping();
         }
 
-
         $indexManager = IndexManager::getInstance();
 
         if ($language != null) {
@@ -81,29 +109,74 @@ class SearchableCommandController extends CommandController
     }
 
     /**
-     * Runs indexers
-     *
-     * @param  boolean $full full update or partial update
+     * Collects scheduled indexers depending on settings
      * @return void
      */
-    protected function runIndexers($full = false) {
-
-        $starttime = microtime(true);
+    protected function collectScheduledIndexers() {
 
         $indices = ExtconfService::getIndices();
 
-        $this->outputLine();
-        $this->outputLine("<info>Starting indexing, %s indices found.</info>", [count($indices)]);
-        $this->outputLine("<info>Indexing mode: " . ($full ? "Full" : "Partial" . "</>"));
-
-        $this->outputLine();
-
         foreach ($indices as $language => $index) {
 
-            $this->indexLanguage($language, $full);
+            if ($this->type == null) {
+
+                 foreach ($this->indexerFactory->makeIndexers($language) as $indexer) {
+
+                    $this->scheduledIndexers[$language][] = $indexer;
+                 }
+            }
+            else {
+
+                $indexer = $this->indexerFactory->makeIndexer($language, $this->type);
+                if ($indexer != null) {
+
+                    $this->scheduledIndexers[$language][] = $indexer;
+                }
+            }
+        }
+    }
+
+    /**
+     * Runs indexers
+     *
+     * @return void
+     */
+    protected function runIndexers() {
+
+        $starttime = microtime(true);
+
+        $this->outputLine();
+        $this->outputLine("<info>Starting indexing, %s indices found.</info>", [count($this->scheduledIndexers[0])]);
+        $this->outputLine("<info>Indexing mode: " . ($this->runFullIndexing ? "Full" : "Partial" . "</info>"));
+
+        $this->outputLine();
+
+        foreach ($this->scheduledIndexers as $language => $indexers) {
+
+            if (!empty($indexers)) {
+
+                $this->outputLine("<comment>Language %s:</comment>", [$language]);
+
+                foreach ($indexers as $indexer) {
+
+                    $this->runSingleIndexer($indexer);
+                }
+                $this->outputLine();
+            } 
+            else {
+
+                $this->outputLine("<comment>WARNING: No indexers found for language " . $language . ". Doing nothing.</comment>");
+            }
         }
 
-        IndexManager::getInstance()->resetUpdateIndex();
+        if ($this->type == null) {
+            IndexManager::getInstance()->resetUpdateIndex();
+            $this->outputLine("<info>Update Index was reset.</info>");
+        }
+        else {
+
+            $this->outputLine("<info>Keeping update index since not all types were updated.</info>");
+        }
 
         $endtime = microtime(true);
 
@@ -117,50 +190,32 @@ class SearchableCommandController extends CommandController
     }
 
     /**
-     * Runs the indexing process for one language
-     *
-     * @param  integer $language The language to index
-     * @param  boolean $full full update or partial update
+     * Runs a single indexer
+     * @param  IndexerInterface $indexer
+     * @param  boolean          $full
      * @return void
      */
-    protected function indexLanguage($language = 0, $full = false) {
+    protected function runSingleIndexer(IndexerInterface $indexer)
+    {
+        $this->outputLine();
+        $this->outputLine("<comment> Type '%s':</comment>", [$indexer->getType()] );
+        $this->output->progressStart();
 
-        $indexers = $this->indexerFactory->makeIndexers($language);
+        if ($this->runFullIndexing) {
 
-        if (!empty($indexers)) {
+            foreach ($indexer->run() as $resultMessage) {
 
-            $this->outputLine("<comment>Language %s:</comment>", [$language]);
-
-            foreach ($indexers as $indexer) {
-
-                $this->outputLine();
-                $this->outputLine("<comment> Type '%s':</comment>", [$indexer->getType()] );
-                $this->output->progressStart();
-
-                if ($full) {
-
-                    foreach ($indexer->run() as $resultMessage) {
-
-                        $this->output->progressSet($resultMessage);
-                    }                    
-                } 
-                else {
-
-                    foreach ($indexer->runUpdate() as $resultMessage) {
-
-                        $this->output->progressSet($resultMessage);
-
-                    }   
-                }
-                $this->output->progressFinish();
-                
-            }
-            $this->outputLine();
+                $this->output->progressSet($resultMessage);
+            }                    
         } 
         else {
 
-            $this->outputLine("<comment>WARNING: No indexers found for language " . $language . ". Doing nothing.</comment>");
-        }
+            foreach ($indexer->runUpdate() as $resultMessage) {
 
+                $this->output->progressSet($resultMessage);
+
+            }   
+        }
+        $this->output->progressFinish();        
     }
 }
