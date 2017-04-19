@@ -24,6 +24,13 @@ class PagesIndexer extends Indexer {
                 ]
             ]
         ],
+        'preview' => [
+            'className' => \PAGEmachine\Searchable\Preview\FluidPreviewRenderer::class,
+            'config' => [
+                'templateName' => 'Preview/Pages',
+                'fields' => ['content']
+            ]
+        ],
         'mapping' => [
             'properties' => [
                 'content' => [

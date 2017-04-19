@@ -1,0 +1,9 @@
+<f:format.crop maxCharacters="350" append="...">
+	<f:format.stripTags>
+		<f:for each="{fields.content}" as="content">
+			<f:if condition="{content.bodytext}">
+				<f:format.raw>{content.bodytext}</f:format.raw>
+			</f:if>
+		</f:for>
+	</f:format.stripTags>
+</f:format.crop>

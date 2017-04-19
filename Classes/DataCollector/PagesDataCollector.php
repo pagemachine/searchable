@@ -78,7 +78,12 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                         'hidden',
                         'starttime',
                         'endtime',
-                        'sorting'
+                        'sorting',
+                        'CType',
+                        'imagecols',
+                        'header_layout',
+                        'sectionIndex',
+                        'table_delimiter'
                     ]
                 ]
             ]
