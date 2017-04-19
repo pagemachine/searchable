@@ -116,6 +116,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $configuration = [
             'table' => 'example_table',
+            'sysLanguageOverlay' => 1,
             'excludeFields' => [
                 'excludeme',
                 'excludemetoo'
@@ -135,7 +136,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'emptyfield'
         ])->shouldBeCalled()->willReturn($record);
 
-        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"))
+        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"), 1)
             ->shouldBeCalled()
             ->willReturn($record['databaseRow']);
 
@@ -171,11 +172,13 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $configuration = [
             'table' => 'example_table',
+            'sysLanguageOverlay' => 1,
             'subCollectors' => [
                 'es_selectfield' => [
                     'className' => TcaDataCollector::class,
                     'config' => [
-                        'field' => 'selectfield'
+                        'field' => 'selectfield',
+                        'sysLanguageOverlay' => 1,
                     ]
                 ]
             ]
@@ -212,7 +215,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $this->formDataRecord->getRecord(123, 'example_table', Argument::type('array'))->willReturn($record);
 
-        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"))
+        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"), 1)
             ->shouldBeCalled()
             ->willReturn($record['databaseRow']);
 
@@ -252,7 +255,8 @@ class TcaDataCollectorTest extends UnitTestCase
     public function processesTranslations() {
 
         $configuration = [
-            'table' => 'example_table'
+            'table' => 'example_table',
+            'sysLanguageOverlay' => 1,
         ];
 
         $recordTca = [
@@ -288,7 +292,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $this->formDataRecord->getRecord(1, 'example_table', Argument::type('array'))->willReturn($record);
 
-        $this->overlayUtility->languageOverlay('example_table', $baseRow, 1, Argument::type("array"))->shouldBeCalled()->willReturn($translatedRow);
+        $this->overlayUtility->languageOverlay('example_table', $baseRow, 1, Argument::type("array"), 1)->shouldBeCalled()->willReturn($translatedRow);
 
         $this->assertEquals($translatedRow, $this->tcaDataCollector->getRecord(1));
 

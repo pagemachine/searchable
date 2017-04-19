@@ -267,7 +267,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected function languageoverlay($record) {
 
-        return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->config['sysLanguageOverlay'], $this->getFieldWhitelist());
+        return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->getFieldWhitelist(), $this->config['sysLanguageOverlay']);
     }
 
     /**
