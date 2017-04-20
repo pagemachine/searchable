@@ -1,0 +1,10 @@
+.editorconfig export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+composer.lock export-ignore
+package.json export-ignore
+phpunit.xml export-ignore
+Runnerfile.sh export-ignore
+shippable.yml export-ignore
+
+Tests/ export-ignore

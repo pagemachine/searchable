@@ -1,0 +1,31 @@
+language: php
+
+php:
+  - 7
+
+env:
+  global:
+    - secure: nqjlHD6EZxyfRBqdr3AiI7VcfMsU+6K4YFFvzvSjbagFrX+bVgrIGT7A3D0vkZ+xgUvkIYTRS+PaXeBvz6arcW/xI1aNof/ZkQUWIVHHY+Nz0YsCrxH4mdvJK4otDFqW5VQRE72rxeFzjRXj5TZACJZuD5lq/AfVP0GeEC2N2qJMBa2vxV+27cfcQEYsZG2S02xsvzIxuuKHsnKg27eKGPNqOGkqgOIXnKp2Gyj5Yr1RLSHaCJjOrP30jkjFKzqPHxkhEkUH/y/wbKBtaO9TPBPOEgAXldDvIcDIfpqRI8hlisaYi5vFN/Y2YDk+VzYdsL1elZyBCmuMMAZhPWX4tg==
+  matrix:
+    - TYPO3_VERSION=^7.6
+
+
+build:
+  cache: true
+  cache_dir_list:
+    - $HOME/.composer/cache
+
+  ci:
+    - npm install
+    - npm install -g bash-task-runner
+    - runner build
+
+  on_success:
+    - runner deploy
+
+integrations:
+  notifications:
+    - integrationName: nettwork-slack
+      type: slack
+      recipients:
+        - "#shippable"
