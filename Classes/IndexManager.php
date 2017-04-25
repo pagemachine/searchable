@@ -91,6 +91,22 @@ class IndexManager implements SingletonInterface {
             $response = $this->client->indices()->delete($deleteParams);
         }
 
+        $this->createIndex($index, $mapping);
+    }
+
+    /**
+     * Creates an index. Checks if it exists before creating
+     * @param  string $index
+     * @param  array $mapping
+     * @return array
+     */
+    public function createIndex($index, $mapping = []) {
+
+        if ($this->client->indices()->exists(['index' => $index])) {
+
+            return [];
+        }
+
         $params = [
             'index' => $index,
             'body' => [
@@ -106,7 +122,7 @@ class IndexManager implements SingletonInterface {
             $params['body']['mappings'] = $mapping;
         }
 
-        $response = $this->client->indices()->create($params);
+        return $this->client->indices()->create($params);
     }
 
     /**

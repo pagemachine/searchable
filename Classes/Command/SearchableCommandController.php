@@ -109,6 +109,84 @@ class SearchableCommandController extends CommandController
     }
 
     /**
+     * Sets up everything, needs to be run after installation.
+     * Can be run multiple times to ensure correct setup.
+     *
+     * @return void
+     */
+    public function setupCommand() {
+
+        $indexManager = IndexManager::getInstance();
+
+        $response = $indexManager->createIndex(
+            ExtconfService::getInstance()->getUpdateIndex()
+        );
+
+        $this->outputLine("Checking for existing Update Index...");
+
+        if (empty($response)) {
+
+            $this->outputLine("<comment>\tUpdate Index already exists.</comment>");
+        } else {
+
+            $this->outputLine("<info>Update Index created.</info>");
+        }
+
+        $this->outputLine();
+        $this->outputLine("Building defined indexers and gathering mapping...");
+
+        $mapping = [];
+
+        try {
+            $indexers = $this->indexerFactory->makeIndexers();
+
+        } catch (\Exception $e) {
+
+            $this->outputline("<error>Something is wrong with your indexer configuration:</error>");
+            $this->outputline(get_class($e));
+            $this->outputline($e->getMessage());
+            $this->outputLine();
+            $this->outputLine("<error>Could not continue setup due to errors, aborting.</error>");
+
+            return;
+
+        }
+
+        
+
+        if (!empty($indexers)) {
+
+            foreach ($indexers as $indexer) {
+
+                $mapping[$indexer->getType()] = $indexer->getMapping();
+            }
+            $this->outputLine("Done.");
+        }
+        else {
+
+            $this->outputLine("<comment>\tWARNING: No indexers found for mapping.</comment>");
+        }
+
+        $this->outputLine();
+        $this->outputLine("Checking for existence of defined indices...");
+
+        $indices = ExtconfService::getIndices();
+
+        if (!empty($indices)) {
+
+            foreach ($indices as $language => $index) {
+
+                $response = $indexManager->createIndex($index, $mapping);
+
+                $this->outputLine("\tIndex '" . $index . "': " . (!empty($response) ? "<info>Created.</info>" : "<comment>Exists.</comment>"));
+            }
+        }
+
+        $this->outputLine();
+        $this->outputLine("<info>Searchable setup finished.</info>");
+    }
+
+    /**
      * Collects scheduled indexers depending on settings
      * @return void
      */
