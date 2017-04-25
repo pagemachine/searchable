@@ -111,7 +111,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function getPageRecords($pid = null) {
 
-        $rawList = $this->pageRepository->getMenu($pid, 'uid', 'sorting', '', false);
+        $rawList = $this->pageRepository->getMenu($pid, 'uid', 'sorting', ' AND pages.hidden = 0', false);
 
         if (!empty($rawList)) {
 
