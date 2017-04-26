@@ -42,11 +42,12 @@ class Search implements SingletonInterface {
     /**
      * Search everything (all indices and types) for the term
      * @param  string $term
+     * @param  array $options
      * @param  boolean $respectLanguage If set, the search will be limited to the current FE language (if there is an index for it) or the default language
      * @param  int $forceLanguage Forces the given language id
      * @return array
      */
-    public function search($term, $respectLanguage = true, $forceLanguage = null) {
+    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null) {
 
         $params = [
             'body' => [
@@ -57,6 +58,14 @@ class Search implements SingletonInterface {
                 ]
             ]
         ];
+
+        if (!empty($options)) {
+
+            foreach ($options as $key => $option) {
+
+                $params['body'][$key] = $option;
+            }
+        }
 
         if ($respectLanguage === true) {
 

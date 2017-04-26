@@ -14,5 +14,7 @@ plugin.tx_searchable {
     settings {
         # cat=plugin.tx_searchable//a; type=int+; label=Search result page
         resultPage =
+        # cat=plugin.tx_searchable//a; type=int+; label=Results per page
+        search.resultsPerPage = 10
     }
 }

@@ -11,6 +11,10 @@ plugin.tx_searchable {
     }
     settings {
         resultPage = {$plugin.tx_searchable.settings.resultPage}
+
+        search {
+            resultsPerPage = {$plugin.tx_searchable.settings.search.resultsPerPage}
+        }
     }
 }
 

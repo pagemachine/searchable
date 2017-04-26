@@ -26,18 +26,54 @@ class SearchController extends ActionController {
      * Performs a search and returns the result
      * 
      * @param string $term
+     * @param int $page
      * @return void
      */
-    public function resultsAction($term = null) {
+    public function resultsAction($term = null, $page = 1) {
+
+        //Pagination Offset
+        $options['from'] = (int)($page - 1) * $this->settings['search']['resultsPerPage'];
+
+        //Pagination Size
+        $options['size'] = (int)$this->settings['search']['resultsPerPage'];
 
         if ($term) {
-            $result = Search::getInstance()->search($term);
+            $result = Search::getInstance()->search($term, $options);
         }
 
-        $this->view->assign('result', $result);
-        $this->view->assign('term', $term);
+        $totalPages = $this->divideIntoPages($result);
+
+        $this->view->assignMultiple([
+            'term' => $term,
+            'settings' => $this->settings,
+            'currentPage' => $page,
+            'previousPage' => ($page > 1 ? $page - 1 : null),
+            'nextPage' => (isset($totalPages[$page+1]) ? $page + 1 : null),
+            'totalPages' => $totalPages,
+            'result' => $result
+        ]);
 
     }
 
+    /**
+     * Builds an array of pages for the pagination
+     * This is needed because vanilla Fluid is too stupid to run a simple for(count)...
+     *
+     * @param  array $result
+     * @param  int $currentPage
+     * @return array
+     */
+    protected function divideIntoPages($result) {
+
+        $pageCount = (int)round($result['hits']['total'] / $this->settings['search']['resultsPerPage']);
+
+        $totalPages = [];
+
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $totalPages[$i] = $i;
+        }
+
+        return $totalPages;
+    }
 
 }
