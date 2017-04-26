@@ -13,10 +13,13 @@ class SearchController extends ActionController {
     /**
      * Renders the search form
      *
+     * @param string $term
      * @return void
      */
-    public function searchAction() {
+    public function searchbarAction($term = null) {
 
+        $this->view->assign("settings", $this->settings);
+        $this->view->assign("term", $term);
     }
 
     /**
@@ -25,7 +28,7 @@ class SearchController extends ActionController {
      * @param string $term
      * @return void
      */
-    public function resultAction($term = null) {
+    public function resultsAction($term = null) {
 
         if ($term) {
             $result = Search::getInstance()->search($term);

@@ -7,8 +7,14 @@ if (!defined('TYPO3_MODE')) {
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'PAGEmachine.' . $_EXTKEY,
-    'Search',
-    'Search form and results'
+    'Searchbar',
+    'Searchable: Search bar'
+);
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+    'PAGEmachine.' . $_EXTKEY,
+    'Results',
+    'Searchable: Results'
 );
 
 // Backend module

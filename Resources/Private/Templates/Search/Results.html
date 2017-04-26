@@ -2,8 +2,6 @@
 <f:layout name="Default" />
 <f:section name="main">
 
-  <f:render partial="Search/Form" />
-
   <f:if condition="{term}">
 
     <p>Search for <b>{term}</b> found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total}</b> entries.</p>

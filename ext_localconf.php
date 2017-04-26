@@ -8,10 +8,18 @@ if (TYPO3_MODE === 'BE') {
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
     'PAGEmachine.' . $_EXTKEY,
-    'Search',
-    ['Search' => 'search, result'],
-    ['Search' => 'search, result']
+    'Searchbar',
+    ['Search' => 'searchbar'],
+    ['Search' => 'searchbar']
 );
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    'PAGEmachine.' . $_EXTKEY,
+    'Results',
+    ['Search' => 'results'],
+    ['Search' => 'results']
+);
+
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_db.php']['queryProcessors']['searchable'] = \PAGEmachine\Searchable\Hook\DatabaseConnectionHook::class;
 

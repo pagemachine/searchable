@@ -11,4 +11,8 @@ plugin.tx_searchable {
         # cat=plugin.tx_searchable//a; type=string; label=Default storage PID
         storagePid =
     }
+    settings {
+        # cat=plugin.tx_searchable//a; type=int+; label=Search result page
+        resultPage =
+    }
 }
