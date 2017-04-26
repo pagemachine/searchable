@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-04-26T10:33:20+00:00" product-name="searchable">
+		<header/>
+		<body>
+			<trans-unit id="searchbar_title">
+				<source>Searchable: Search bar</source>
+			</trans-unit>
+			<trans-unit id="searchbar_description">
+				<source>Use this plugin to include a search bar forwarding to the result page</source>
+			</trans-unit>
+			<trans-unit id="results_title">
+				<source>Searchable: Results</source>
+			</trans-unit>
+			<trans-unit id="results_description">
+				<source>This plugin renders the search results</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
