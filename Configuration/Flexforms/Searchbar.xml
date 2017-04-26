@@ -1,0 +1,21 @@
+<T3DataStructure>
+  <ROOT>
+    <type>array</type>
+      <el>
+        <settings.resultPage>
+          <TCEforms>
+            <label>Result page</label>
+            <config>
+              <type>group</type>
+              <internal_type>db</internal_type>
+              <allowed>pages</allowed>
+              <size>1</size>
+              <maxitems>1</maxitems>
+              <minitems>0</minitems>
+              <show_thumbs>1</show_thumbs>
+            </config>
+          </TCEforms>
+        </settings.resultPage>
+      </el>
+   </ROOT>
+</T3DataStructure>

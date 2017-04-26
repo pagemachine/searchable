@@ -11,6 +11,8 @@ if (!defined('TYPO3_MODE')) {
     'Searchable: Search bar'
 );
 
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('searchable_searchbar', 'FILE:EXT:' . $_EXTKEY . '/Configuration/Flexforms/Searchbar.xml');
+
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'PAGEmachine.' . $_EXTKEY,
     'Results',
