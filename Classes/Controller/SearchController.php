@@ -65,7 +65,7 @@ class SearchController extends ActionController {
      */
     protected function divideIntoPages($result) {
 
-        $pageCount = (int)round($result['hits']['total'] / $this->settings['search']['resultsPerPage']);
+        $pageCount = (int)ceil($result['hits']['total'] / $this->settings['search']['resultsPerPage']);
 
         $totalPages = [];
 
