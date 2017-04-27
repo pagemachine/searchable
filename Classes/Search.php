@@ -55,6 +55,10 @@ class Search implements SingletonInterface {
                     'match' => [
                         '_all' => $term
                     ]
+                ],
+                //Only load meta fields, not the whole source
+                '_source' => [
+                    'searchable_meta'
                 ]
             ]
         ];
