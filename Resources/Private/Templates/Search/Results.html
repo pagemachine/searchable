@@ -32,7 +32,7 @@
 					<f:if condition="{previousPage}">
 						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : previousPage}}">Prev</f:link.page>
 					</f:if>
-					<f:for each="{totalPages}" as="page">
+					<f:for each="{totalPages}" as="whatever" key="page">
 						<f:if condition="{page} == {currentPage}">
 							<f:then>{page}</f:then>
 							<f:else>

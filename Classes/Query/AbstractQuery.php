@@ -36,6 +36,25 @@ abstract class AbstractQuery {
     public function setParameters($parameters) {
       $this->parameters = $parameters;
     }
+    
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getParameter($key)
+    {
+        return isset($this->parameters[$key]) ? $this->parameters[$key] : null;
+    }
+    
+    /**
+     * @param string $key
+     * @param mixed $parameter
+     * @return void
+     */
+    public function setParameter($key, $parameter)
+    {
+        $this->parameters[$key] = $parameter;
+    }
 
     /**
      * @var Client

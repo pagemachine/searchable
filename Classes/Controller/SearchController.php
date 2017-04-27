@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
+use PAGEmachine\Searchable\Query\SearchQuery;
 use PAGEmachine\Searchable\Search;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -9,6 +10,19 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 
 class SearchController extends ActionController {
+
+    /**
+     * Search Query
+     *
+     * @var \PAGEmachine\Searchable\Query\SearchQuery
+     * @inject
+     */
+    protected $searchQuery;
+
+    public function initializeObject()
+    {
+        $this->searchQuery->setDefaultSettings($this->settings['search']);
+    }
 
     /**
      * Renders the search form
@@ -31,49 +45,26 @@ class SearchController extends ActionController {
      */
     public function resultsAction($term = null, $page = 1) {
 
-        //Pagination Offset
-        $options['from'] = (int)($page - 1) * $this->settings['search']['resultsPerPage'];
-
-        //Pagination Size
-        $options['size'] = (int)$this->settings['search']['resultsPerPage'];
-
         if ($term) {
-            $result = Search::getInstance()->search($term, $options);
+            $this->searchQuery
+                ->setTerm($term)
+                ->setPage($page);
+
+            $result = $this->searchQuery->execute();
         }
 
-        $totalPages = $this->divideIntoPages($result);
+        $pagesArray = array_fill(1, $this->searchQuery->getPageCount(), null);
 
         $this->view->assignMultiple([
             'term' => $term,
             'settings' => $this->settings,
             'currentPage' => $page,
             'previousPage' => ($page > 1 ? $page - 1 : null),
-            'nextPage' => (isset($totalPages[$page+1]) ? $page + 1 : null),
-            'totalPages' => $totalPages,
+            'nextPage' => (array_key_exists($page+1, $pagesArray) ? $page + 1 : null),
+            'totalPages' => $pagesArray,
             'result' => $result
         ]);
 
-    }
-
-    /**
-     * Builds an array of pages for the pagination
-     * This is needed because vanilla Fluid is too stupid to run a simple for(count)...
-     *
-     * @param  array $result
-     * @param  int $currentPage
-     * @return array
-     */
-    protected function divideIntoPages($result) {
-
-        $pageCount = (int)ceil($result['hits']['total'] / $this->settings['search']['resultsPerPage']);
-
-        $totalPages = [];
-
-        for ($i = 1; $i <= $pageCount; $i++) {
-            $totalPages[$i] = $i;
-        }
-
-        return $totalPages;
     }
 
 }
