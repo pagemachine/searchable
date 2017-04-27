@@ -16,6 +16,11 @@ class TcaIndexer extends Indexer {
     protected static $defaultConfiguration = [
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class
+        ],
+        'mapping' => [
+            '_all' => [
+                'store' => true
+            ],
         ]
     ];
 

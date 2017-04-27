@@ -32,6 +32,9 @@ class PagesIndexer extends Indexer {
             ]
         ],
         'mapping' => [
+            '_all' => [
+                'store' => true
+            ],
             'properties' => [
                 'content' => [
                     'properties' => [
