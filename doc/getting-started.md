@@ -34,7 +34,9 @@ Now simply install it via Extension Manager or TYPO3 console.
 To create a simple setup for a non-multilanguage page, first configure a **default index**:
 
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
-        0 => 'typo3'
+      '0' => [
+        'name' => 'typo3'
+      ]
     ];
 
 Now we need to define the **indexers** we want to run. 

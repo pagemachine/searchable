@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -110,10 +111,7 @@ class IndexManager implements SingletonInterface {
         $params = [
             'index' => $index,
             'body' => [
-                'settings' => [
-                    'number_of_shards' => 2,
-                    'number_of_replicas' => 0
-                ]
+                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index))
             ]
         ];
 

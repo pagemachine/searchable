@@ -29,7 +29,15 @@ class ExtconfService implements SingletonInterface {
      * @return array
      */
     public static function getIndices() {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
+        $indicesConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
+        $indices = [];
+
+        foreach ($indicesConfiguration as $language => $index) {
+
+            $indices[$language] = $index['name'];
+        }
+
+        return $indices;
     }
 
     /**
@@ -40,13 +48,42 @@ class ExtconfService implements SingletonInterface {
      */
     public static function getIndex($language = 0) {
 
-        $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language];
+        $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language]['name'];
 
         if (empty($index)) {
 
             throw new UndefinedIndexException('Index for language ' . $language . ' is not defined!');
         }
         return $index;
+    }
+
+    /**
+     * Returns the index settings for a given index
+     * 
+     * @param  string $indexName
+     * @return array $settings
+     */
+    public static function getIndexSettings($indexName) {
+
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $index) {
+
+            if ($index['name'] == $indexName && isset($index['settings'])) {
+
+                return $index['settings'];
+            }
+        }
+
+       return [];
+    }
+
+    /**
+     * Returns the default index settings
+     *
+     * @return array
+     */
+    public static function getDefaultIndexSettings() {
+
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultIndexSettings'] ?: [];
     }
 
     /**
