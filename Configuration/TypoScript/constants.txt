@@ -16,5 +16,11 @@ plugin.tx_searchable {
         resultPage =
         # cat=plugin.tx_searchable//a; type=int+; label=Results per page
         search.resultsPerPage = 10
+
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Show pre-rendered result preview
+        result.showPreview = 1
+
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Show highlighted text snippets in result
+        result.showHighlighting = 1
     }
 }

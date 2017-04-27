@@ -22,9 +22,22 @@
 												{hit._source.searchable_meta.link.title}
 										</s:link.page></h3>
 
-										<div class="result-preview">
-												<f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
-										</div>
+										<f:if condition="{settings.result.showPreview}">
+											<div class="result-preview">
+													<f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
+											</div>
+										</f:if>
+
+										<f:if condition="{settings.result.showHighlighting}">
+											<f:if condition="{hit.highlight}">
+												<div class="result-highlight">
+													<f:for each="{hit.highlight._all}" as="highlight">
+														<f:format.raw>{highlight}...</f:format.raw>
+													</f:for>
+												</div>
+											</f:if>
+										</f:if>
+
 										<div class="result-meta">
 												<span class="result-score"><f:translate key="results.score">Score</f:translate>: {hit._score}</span>
 										</div>
