@@ -18,6 +18,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'table' => 'pages',
         'pid' => 0,
         'sysLanguageOverlay' => 1,
+        'doktypes' => '1,4',
         'excludeFields' => [
             'tstamp',
             'crdate',
@@ -111,7 +112,18 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function getPageRecords($pid = null) {
 
-        $rawList = $this->pageRepository->getMenu($pid, 'uid', 'sorting', ' AND pages.hidden = 0', false);
+        $whereClause =
+            ' AND pages.hidden = 0' .
+            ' AND pages.doktype IN(' . $this->config['doktypes'] . ')'
+            ;
+
+        $rawList = $this->pageRepository->getMenu(
+            $pid,
+            'uid',
+            'sorting',
+            $whereClause,
+            false
+        );
 
         if (!empty($rawList)) {
 
