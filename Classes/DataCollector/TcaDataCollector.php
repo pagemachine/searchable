@@ -248,7 +248,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $record = $data['databaseRow'];
         $this->processedTca = $data['processedTca'];
 
-
         $record = $this->languageOverlay($record);
 
         if (!empty($record)) {

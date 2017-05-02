@@ -25,7 +25,7 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
     }
 
     /**
-     * Resolves a select relation. Separates actual records from static fields and calls the specified collector for them
+     * Resolves a select relation. Placeholder relation resolver until RelationResolvers are integrated into FormEngine DataProviders
      *
      * @param  string $fieldname
      * @param  array $record The record containing the field to resolve
@@ -35,25 +35,7 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
 
-        if (!empty($record[$fieldname]) && is_array($record[$fieldname])) {
-
-            $uidList = explode(",", $record[$fieldname]);
-            $records = [];
-
-            foreach($uidList as $uid) {
-
-                    $childRecord = $childCollector->getRecord($uid);
-                    if (!empty($childRecord)) {
-
-                        $records[] = $childRecord;
-                    }
-            }
-
-            return $records;
-
-        }
-
-        return [];
+        return $record[$fieldname];
 
     }
 

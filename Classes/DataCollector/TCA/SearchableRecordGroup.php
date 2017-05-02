@@ -32,6 +32,11 @@ class SearchableRecordGroup implements FormDataGroupInterface
         //unset record title provider - no need
         unset($dataProvider[\TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessRecordTitle::class]);
 
+        //Add custom inline provider to copy children to database record
+        $dataProvider[\PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaInlineCopyToDbRecord::class] = [
+            'depends' => [TYPO3\CMS\Backend\Form\FormDataProvider\TcaInline::class]
+        ];
+
 
         $orderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
         $this->dataProviders = $orderingService->orderByDependencies($dataProvider, 'before', 'depends');
