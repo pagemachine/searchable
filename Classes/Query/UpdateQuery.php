@@ -64,13 +64,15 @@ class UpdateQuery extends AbstractQuery {
         $this->parameters['body']['property'] = $property;
         $this->parameters['body']['uid'] = $id;
 
+        try {
+              $response = $this->client->index($this->getParameters());
+              return $response;         
+        } 
+        catch (\Exception $e) {
 
-        /**
-         * @var array
-         */
-        $response = $this->client->index($this->getParameters());
-
-        return $response;
+            $this->logger->error("Could not track update. Reason: " . $e->getMessage());
+            return [];
+        }
     }
 
     /**

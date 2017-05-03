@@ -247,18 +247,22 @@ class SearchQuery extends AbstractQuery {
     {
         $this->build();
 
-        /**
-         * @var array
-         */
-        $response = $this->client->search($this->getParameters());
+        try {
+          $response = $this->client->search($this->getParameters());
 
-        if ($response['errors']) {
+          if ($response['errors']) {
 
-            $this->logger->error("Search Query response contains errors: ", $response);
+              $this->logger->error("Search Query response contains errors: ", $response);
+          }
+
+          $this->result = $response;
+          return $response;         
+        } 
+        catch (\Exception $e) {
+
+            $this->logger->error("Elasticsearch-PHP encountered an error while searching: " . $e->getMessage());
+            return [];
         }
-
-        $this->result = $response;
-
         return $response;
     }
 
