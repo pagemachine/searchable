@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\DataCollector;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
+use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Enumeration\TcaType;
 use PAGEmachine\Searchable\Search;
@@ -47,32 +48,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         'pid' => null,
         //sys_language_overlay setting for this collector. Use 0|1|hideNonTranslated
         'sysLanguageOverlay' => 1,
-        'excludeFields' => [
-            'tstamp',
-            'crdate',
-            'cruser_id',
-            't3ver_oid',
-            't3ver_id',
-            't3ver_wsid',
-            't3ver_label',
-            't3ver_state',
-            't3ver_stage',
-            't3ver_count',
-            't3ver_tstamp',
-            't3ver_move_id',
-            't3_origuid',
-            'editlock',
-            'sys_language_uid',
-            'l10n_parent',
-            'l10n_diffsource',
-            'l18n_parent',
-            'l18n_diffsource',
-            'deleted',
-            'hidden',
-            'starttime',
-            'endtime',
-            'sorting',
-            'fe_group'
+        'mode' => 'whitelist',
+        'fields' => [
         ]
     ];
 
@@ -282,7 +259,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         //Preprocess fields
         foreach ($record as $key => $field) {
 
-            if (empty($field) || $this->isExcludeField($key))
+            if (empty($field) || (!in_array($key, $this->getFieldWhitelist()) && !$this->subCollectorExistsForColumn($key)))
             {
                 unset($record[$key]);
                 continue;
@@ -322,6 +299,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             }            
         }
 
+        //Cleanup - remove empty fields
+        $record = array_filter($record);
+
         return $record;
 
     }
@@ -335,60 +315,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         if ($this->fieldWhitelist == null) {
 
-            $whitelist = $this->getWhitelistSystemFields();
 
-            $tca = $this->getTcaConfiguration();
-
-            foreach ($tca['columns'] as $key => $column) {
-
-                $type = $column['config']['type'];
-
-                if (
-                    !$this->isExcludeField($key) && //excluded
-                    (TcaType::isPlain($type) || (TcaType::isRelation($type) && $this->subCollectorExistsForColumn($key))) //Plain type or relation with subcollector
-                    )
-                {
-                    $whitelist[] = $key;
-                }
-
-            }
-
-            $this->fieldWhitelist = $whitelist;
+            $this->fieldWhitelist = FieldListUtility::getInstance()->createFieldList($this->config['fields'], $this->getTcaConfiguration(), $this->config['mode']);
 
         }
         return $this->fieldWhitelist;
-    }
-
-    /**
-     * Returns the whitelisted system fields (always enabled)
-     *
-     * @return array
-     */
-    protected function getWhitelistSystemFields() {
-
-        $systemFields = [
-            'uid',
-            'pid',
-            $this->getTcaConfiguration()['ctrl']['languageField']
-        ];
-
-        return $systemFields;
-    }
-
-    /**
-     * Returns true if this field should be excluded
-     *
-     * @param  string  $fieldname
-     * @return boolean
-     */
-    protected function isExcludeField($fieldname) {
-
-        if (!empty($this->config['excludeFields']) && in_array($fieldname, $this->config['excludeFields'])) {
-
-            return true;
-        }
-
-        return false;
     }
 
 }

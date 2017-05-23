@@ -117,7 +117,8 @@ class TcaDataCollectorTest extends UnitTestCase
         $configuration = [
             'table' => 'example_table',
             'sysLanguageOverlay' => 1,
-            'excludeFields' => [
+            'mode' => 'blacklist',
+            'fields' => [
                 'excludeme',
                 'excludemetoo'
             ]
@@ -173,6 +174,8 @@ class TcaDataCollectorTest extends UnitTestCase
         $configuration = [
             'table' => 'example_table',
             'sysLanguageOverlay' => 1,
+            'mode' => 'whitelist',
+            'fields' => ['selectfield'],
             'subCollectors' => [
                 'es_selectfield' => [
                     'className' => TcaDataCollector::class,
@@ -257,6 +260,8 @@ class TcaDataCollectorTest extends UnitTestCase
         $configuration = [
             'table' => 'example_table',
             'sysLanguageOverlay' => 1,
+            'mode' => 'whitelist',
+            'fields' => ['title']
         ];
 
         $recordTca = [
