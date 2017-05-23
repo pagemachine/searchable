@@ -86,9 +86,9 @@ class PagesDataCollectorTest extends UnitTestCase {
         $this->pagesDataCollector->method("getRecord")
             ->will($this->returnValueMap($valueMap));
 
-        $this->pageRepository->getMenu(0, 'uid', 'sorting', Argument::type("string"), false)->willReturn(['3' => [], '4' => []]);
-        $this->pageRepository->getMenu(3, 'uid', 'sorting', Argument::type("string"), false)->willReturn([]);
-        $this->pageRepository->getMenu(4, 'uid', 'sorting', Argument::type("string"), false)->willReturn([]);
+        $this->pageRepository->getMenu(0, 'uid', 'sorting', Argument::type("string"))->willReturn(['3' => [], '4' => []]);
+        $this->pageRepository->getMenu(3, 'uid', 'sorting', Argument::type("string"))->willReturn([]);
+        $this->pageRepository->getMenu(4, 'uid', 'sorting', Argument::type("string"))->willReturn([]);
 
         $records = $this->pagesDataCollector->getRecords();
 
@@ -126,9 +126,9 @@ class PagesDataCollectorTest extends UnitTestCase {
         $this->pagesDataCollector->method("getRecord")
             ->will($this->returnValueMap($valueMap));
 
-        $this->pageRepository->getMenu(0, 'uid', 'sorting', Argument::type("string"), false)->willReturn(['3' => []]);
-        $this->pageRepository->getMenu(3, 'uid', 'sorting', Argument::type("string"), false)->willReturn(['4' => []]);
-        $this->pageRepository->getMenu(4, 'uid', 'sorting', Argument::type("string"), false)->willReturn([]);
+        $this->pageRepository->getMenu(0, 'uid', 'sorting', Argument::type("string"))->willReturn(['3' => []]);
+        $this->pageRepository->getMenu(3, 'uid', 'sorting', Argument::type("string"))->willReturn(['4' => []]);
+        $this->pageRepository->getMenu(4, 'uid', 'sorting', Argument::type("string"))->willReturn([]);
 
         $records = $this->pagesDataCollector->getRecords();
 

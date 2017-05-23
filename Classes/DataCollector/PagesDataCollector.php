@@ -72,8 +72,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             $pid,
             'uid',
             'sorting',
-            $whereClause,
-            false
+            $whereClause
         );
 
         if (!empty($rawList)) {
