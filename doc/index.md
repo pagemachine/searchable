@@ -11,3 +11,9 @@
 * [Language Handling](language-handling.md)
 
     Guide on how Searchable handles languages
+
+## Configuration Reference
+
+* [DataCollector](configuration/data-collector.md)
+
+    DataCollector configuration array
