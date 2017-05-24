@@ -18,7 +18,9 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'table' => 'pages',
         'pid' => 0,
         'sysLanguageOverlay' => 1,
-        'doktypes' => '1,4',
+        'doktypes' => ['1'],
+        'transientDoktypes' => ['4', '199'],
+        'groupWhereClause' => ' AND (pages.fe_group = "" OR pages.fe_group = 0)',
         'mode' => 'whitelist',
         'fields' => [
             'title'
@@ -44,6 +46,31 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     ];
 
     /**
+     * Cache string for database merged doktypes
+     *
+     * @var string|null
+     */
+    protected $doktypes = null;
+
+    /**
+     * Returns the doktypes needed for db fetching
+     *
+     * @return string
+     */
+    public function getDoktypes()
+    {
+        if ($this->doktypes == null) {
+
+            $this->doktypes = implode(
+                ",",
+                array_merge($this->config['doktypes'], $this->config['transientDoktypes'])
+            );
+        }
+
+        return $this->doktypes;
+    }
+
+    /**
      * 
      *
      * @return \Generator
@@ -62,15 +89,15 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      * @return \Generator
      */
     protected function getPageRecords($pid = null) {
-
         $whereClause =
             ' AND pages.hidden = 0' .
-            ' AND pages.doktype IN(' . $this->config['doktypes'] . ')'
+            ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
+            $this->config['groupWhereClause']
             ;
 
         $rawList = $this->pageRepository->getMenu(
             $pid,
-            'uid',
+            'uid, doktype, shortcut, shortcut_mode',
             'sorting',
             $whereClause
         );
@@ -79,7 +106,11 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
             foreach ($rawList as $uid => $page) {
 
-                yield $this->getRecord($uid);
+                //Check if doktype is indexable or transient
+                if (in_array($page['doktype'], $this->config['doktypes'])) {
+
+                    yield $this->getRecord($uid);
+                }
 
                 //@todo: use "yield from" as soon as PHP7 is a requirement
                 $subpages = $this->getPageRecords($uid);
