@@ -70,7 +70,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         $rawList = $this->pageRepository->getMenu(
             $pid,
-            'uid',
+            'uid, doktype, shortcut, shortcut_mode',
             'sorting',
             $whereClause
         );
