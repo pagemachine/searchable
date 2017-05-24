@@ -50,8 +50,10 @@ These settings are specific for the PagesDataCollector. The PagesDataCollector h
 | Option | Type | Required | Values | Description |
 |----------|---------|----------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | pid | integer | yes | Default: *0* | The pid to start the recursive fetching from. Since the PagesDataCollector fetches pages in a recursive tree structure, you should set the pid setting to your root page. |
-| doktypes | string | yes | Default: *1,4* | Which doktypes to index. Default is 1 (normal pages) and 4 (shortcuts). |
-| includeHideInMenu | boolean | yes | Default: *false* | Whether to include pages that are hidden in menu (`nav_hide` field). |
+| doktypes | string | yes | Default: *1* | Which doktypes to index. Default is 1 (normal pages). |
+| transientDoktypes | string | yes | Default: *4,199* | Doktypes which should not be included in the index, but should be searched for valid subpages. Default is 4 (shortcuts) and 199 (spacers). |
+| groupWhereClause | string | yes | Default: *AND (pages.fe\_group = "" OR pages.fe\_group = 0)* | The where clause applied for fe_group restrictions. By default all pages with access settings are hidden. You can add *" OR pages.fe\_group = -1"* if you want to show pages which are visible for non-authenticated users. |
+| includeHideInMenu | boolean | yes | Default: *false* | Whether to include pages that are hidden in menu (`nav\_hide` field). |
 
 ### Example
 
