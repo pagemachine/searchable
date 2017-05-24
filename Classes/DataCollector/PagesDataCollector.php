@@ -21,6 +21,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'doktypes' => ['1'],
         'transientDoktypes' => ['4', '199'],
         'groupWhereClause' => ' AND (pages.fe_group = "" OR pages.fe_group = 0)',
+        'includeHideInMenu' => false,
         'mode' => 'whitelist',
         'fields' => [
             'title'
@@ -92,7 +93,8 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         $whereClause =
             ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
-            $this->config['groupWhereClause']
+            $this->config['groupWhereClause'] . 
+            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
             ;
 
         $rawList = $this->pageRepository->getMenu(

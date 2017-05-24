@@ -51,6 +51,7 @@ These settings are specific for the PagesDataCollector. The PagesDataCollector h
 |----------|---------|----------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | pid | integer | yes | Default: *0* | The pid to start the recursive fetching from. Since the PagesDataCollector fetches pages in a recursive tree structure, you should set the pid setting to your root page. |
 | doktypes | string | yes | Default: *1,4* | Which doktypes to index. Default is 1 (normal pages) and 4 (shortcuts). |
+| includeHideInMenu | boolean | yes | Default: *false* | Whether to include pages that are hidden in menu (`nav_hide` field). |
 
 ### Example
 
