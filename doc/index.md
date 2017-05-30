@@ -12,7 +12,13 @@
 
     Guide on how Searchable handles languages
 
-## Configuration Reference
+## General Configuration
+
+* [Extension Manager Settings](configuration/em-settings.md)
+
+    Settings adjustable via Extension Manager, mainly connection settings such as the ES host
+
+## Indexer Configuration Reference
 
 * [DataCollector](configuration/data-collector.md)
 

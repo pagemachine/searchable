@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -59,7 +59,7 @@ class BackendController extends ActionController {
      */
     protected function fetchScheduledUpdates() {
 
-        $client = ClientBuilder::create()->build();
+        $client = Connection::getClient();
 
         $updates = $client->search([
             'index' => ExtconfService::getInstance()->getUpdateIndex(),

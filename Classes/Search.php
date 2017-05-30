@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -27,7 +27,7 @@ class Search implements SingletonInterface {
      */
     public function __construct(Client $client = null) {
 
-        $this->client = $client ?: ClientBuilder::create()->build();
+        $this->client = $client ?: Connection::getClient();
     }
 
     /**

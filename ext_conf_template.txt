@@ -1,0 +1,4 @@
+connection {
+	# cat=basic; type=string; label=Comma-separated list of host names
+	hosts = http://localhost:9200
+}

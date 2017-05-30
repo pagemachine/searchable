@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Query;
 
 use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
+use PAGEmachine\Searchable\Connection;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -72,7 +72,7 @@ abstract class AbstractQuery {
      */
     public function __construct(Client $client = null, Logger $logger = null) {
 
-        $this->client = $client ?: ClientBuilder::create()->build();
+        $this->client = $client ?: Connection::getClient();
         $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
 
     }
