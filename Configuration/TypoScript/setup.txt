@@ -18,6 +18,7 @@ plugin.tx_searchable {
         result {
             showPreview = {$plugin.tx_searchable.settings.result.showPreview}
             showHighlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
+            showSuggestions = {$plugin.tx_searchable.settings.result.showSuggestions}
         }
     }
 }

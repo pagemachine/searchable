@@ -24,6 +24,9 @@
 			<trans-unit id="results.score">
 				<source>Score</source>
 			</trans-unit>
+			<trans-unit id="results.didyoumean">
+				<source>Did you mean</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

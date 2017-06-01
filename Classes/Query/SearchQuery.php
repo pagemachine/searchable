@@ -117,6 +117,30 @@ class SearchQuery extends AbstractQuery {
 
 
     /**
+     * @var bool $suggest
+     */
+    protected $suggest;
+    
+    /**
+     * @return bool
+     */
+    public function getSuggest()
+    {
+        return $this->suggest;
+    }
+    
+    /**
+     * @param bool $suggest
+     * @return void
+     */
+    public function setSuggest($suggest)
+    {
+        $this->suggest = $suggest;
+        return $this;
+    }
+
+
+    /**
      * Offset the query. Used for pagination
      * @var int $from
      */
@@ -346,6 +370,18 @@ class SearchQuery extends AbstractQuery {
                 'post_tags' => ["</span>"],
                 'fields' => [
                     '_all' => new \stdClass()
+                ]
+            ];
+        }
+
+        if ($this->suggest) {
+
+            $this->parameters['body']['suggest'] = [
+                'suggestion' => [
+                    'text' => $this->term,
+                    'term' => [
+                        'field' => '_all'
+                    ]
                 ]
             ];
         }

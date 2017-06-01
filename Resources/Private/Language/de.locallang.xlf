@@ -31,6 +31,10 @@
 				<source>Score</source>
 				<target>Relevanz (Score)</target>
 			</trans-unit>
+			<trans-unit id="results.didyoumean">
+				<source>Did you mean</source>
+				<target>Meinten Sie</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

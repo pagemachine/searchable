@@ -48,6 +48,7 @@ class SearchController extends ActionController {
         if ($term) {
             $this->searchQuery
                 ->setHighlighting(true)
+                ->setSuggest(($this->settings['result']['showSuggestions'] ? true : false))
                 ->setTerm($term)
                 ->setPage($page);
 

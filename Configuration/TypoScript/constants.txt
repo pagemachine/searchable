@@ -22,5 +22,8 @@ plugin.tx_searchable {
 
         # cat=plugin.tx_searchable/enable/a; type=boolean; label=Show highlighted text snippets in result
         result.showHighlighting = 0
+
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Show Suggestions ("did you mean")
+        result.showSuggestions = 1
     }
 }

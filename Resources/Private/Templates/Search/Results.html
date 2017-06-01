@@ -3,6 +3,9 @@
 <f:section name="main">
 
 	<f:if condition="{term}">
+
+		<f:render partial="Results/Suggestions" arguments="{result : result, settings : settings}" />
+
 		<div class="results-count">
 			<f:translate key="results.information" arguments="{0: result.hits.total, 1: result.took}" />
 			<f:if condition="{result.hits.total}">
