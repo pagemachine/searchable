@@ -5,7 +5,10 @@
 	<f:if condition="{term}">
 		<div class="results-count">
 			<f:translate key="results.information" arguments="{0: result.hits.total, 1: result.took}" />
-			<f:translate key="results.pageinformation" arguments="{0: currentPage}" /> {totalPages -> f:count()}.
+			<f:if condition="{result.hits.total}">
+				<f:translate key="results.pageinformation" arguments="{0: currentPage}" /> {totalPages -> f:count()}.
+			</f:if>
+			
 		</div>
 
 		<f:if condition="{result.hits.hits}">
