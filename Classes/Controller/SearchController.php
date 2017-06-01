@@ -47,6 +47,7 @@ class SearchController extends ActionController {
 
         if ($term) {
             $this->searchQuery
+                ->setHighlighting(true)
                 ->setTerm($term)
                 ->setPage($page);
 

@@ -93,6 +93,30 @@ class SearchQuery extends AbstractQuery {
 
 
     /**
+     * @var bool $highlighting
+     */
+    protected $highlighting = false;
+    
+    /**
+     * @return bool
+     */
+    public function getHighlighting()
+    {
+        return $this->highlighting;
+    }
+    
+    /**
+     * @param bool $highlighting
+     * @return void
+     */
+    public function setHighlighting($highlighting)
+    {
+        $this->highlighting = $highlighting;
+        return $this;
+    }
+
+
+    /**
      * Offset the query. Used for pagination
      * @var int $from
      */
@@ -313,6 +337,17 @@ class SearchQuery extends AbstractQuery {
             $language = $this->language ?: $GLOBALS['TSFE']->sys_language_uid;
 
             $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+        }
+
+        if ($this->highlighting) {
+
+            $this->parameters['body']['highlight'] = [
+                'pre_tags' => ["<span class='searchable_highlight'>"],
+                'post_tags' => ["</span>"],
+                'fields' => [
+                    '_all' => new \stdClass()
+                ]
+            ];
         }
     }
 

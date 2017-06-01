@@ -15,6 +15,10 @@ plugin.tx_searchable {
         search {
             resultsPerPage = {$plugin.tx_searchable.settings.search.resultsPerPage}
         }
+        result {
+            showPreview = {$plugin.tx_searchable.settings.result.showPreview}
+            showHighlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
+        }
     }
 }
 
