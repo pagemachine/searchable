@@ -3,8 +3,10 @@
 <f:section name="main">
 
 	<f:if condition="{term}">
-
-	<div class="results-count">Found {result.hits.total} results (took {result.took}ms). Showing page {currentPage} of {totalPages -> f:count()}.</div>
+		<div class="results-count">
+			<f:translate key="results.information" arguments="{0: result.hits.total, 1: result.took}" />
+			<f:translate key="results.pageinformation" arguments="{0: currentPage}" /> {totalPages -> f:count()}.
+		</div>
 
 		<f:if condition="{result.hits.hits}">
 
@@ -21,7 +23,7 @@
 												<f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
 										</div>
 										<div class="result-meta">
-												<span class="result-score">Score: {hit._score}</span>
+												<span class="result-score"><f:translate key="results.score">Score</f:translate>: {hit._score}</span>
 										</div>
 
 								</div>
@@ -30,7 +32,7 @@
 				</div>
 				<div class="pagination">
 					<f:if condition="{previousPage}">
-						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : previousPage}}">Prev</f:link.page>
+						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : previousPage}}"><f:translate key="results.previous">Prev</f:translate></f:link.page>
 					</f:if>
 					<f:for each="{totalPages}" as="whatever" key="page">
 						<f:if condition="{page} == {currentPage}">
@@ -41,7 +43,7 @@
 						</f:if>
 					</f:for>
 					<f:if condition="{nextPage}">
-						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : nextPage}}">Next</f:link.page>
+						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : nextPage}}"><f:translate key="results.next">Next</f:translate></f:link.page>
 					</f:if>
 				</div>
 

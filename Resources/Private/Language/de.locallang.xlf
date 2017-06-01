@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-06-01T17:50:00+00:00" product-name="searchable">
+		<header/>
+		<body>
+			<trans-unit id="searchbar.label">
+				<source>Term</source>
+				<target>Suchbegriff</target>
+			</trans-unit>
+			<trans-unit id="searchbar.submit">
+				<source>Search</source>
+				<target>Suchen</target>
+			</trans-unit>
+			<trans-unit id="results.information">
+				<source>Found %s results (took %sms).</source>
+				<target>%s Ergebnisse gefunden (%sms).</target>
+			</trans-unit>
+			<trans-unit id="results.pageinformation">
+				<source>Showing page %s of</source>
+				<target>Seite %s von</target>
+			</trans-unit>
+			<trans-unit id="results.previous">
+				<source>Prev</source>
+				<target>Zurück</target>
+			</trans-unit>
+			<trans-unit id="results.next">
+				<source>Next</source>
+				<target>Weiter</target>
+			</trans-unit>
+			<trans-unit id="results.score">
+				<source>Score</source>
+				<target>Relevanz (Score)</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
