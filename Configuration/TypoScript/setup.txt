@@ -28,3 +28,5 @@ module.tx_searchable {
     persistence < plugin.tx_searchable.persistence
     view < plugin.tx_searchable.view
 }
+
+page.includeCSS.searchable = EXT:searchable/Resources/Public/Css/searchable.css

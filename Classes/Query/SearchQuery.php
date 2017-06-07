@@ -366,7 +366,7 @@ class SearchQuery extends AbstractQuery {
         if ($this->highlighting) {
 
             $this->parameters['body']['highlight'] = [
-                'pre_tags' => ["<span class='searchable_highlight'>"],
+                'pre_tags' => ["<span class='searchable-highlight'>"],
                 'post_tags' => ["</span>"],
                 'fields' => [
                     '_all' => new \stdClass()

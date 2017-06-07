@@ -1,0 +1,12 @@
+.tx-searchable .result-preview {
+	margin-bottom: 10px;
+}
+
+.tx-searchable .result-highlight {
+	font-style: italic;
+	margin-bottom: 10px;
+}
+
+.tx-searchable .result-highlight .searchable-highlight {
+	background-color: #FF0;
+}
