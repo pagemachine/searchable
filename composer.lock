@@ -975,16 +975,16 @@
         },
         {
             "name": "typo3/cms",
-            "version": "7.6.16",
+            "version": "7.6.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TYPO3/TYPO3.CMS.git",
-                "reference": "4cf10b1d32c1c4c074d14cacba64890640937015"
+                "reference": "9219e4fa9af5e4bd2ea1f208056cb396667cce45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TYPO3/TYPO3.CMS/zipball/4cf10b1d32c1c4c074d14cacba64890640937015",
-                "reference": "4cf10b1d32c1c4c074d14cacba64890640937015",
+                "url": "https://api.github.com/repos/TYPO3/TYPO3.CMS/zipball/9219e4fa9af5e4bd2ea1f208056cb396667cce45",
+                "reference": "9219e4fa9af5e4bd2ea1f208056cb396667cce45",
                 "shasum": ""
             },
             "require": {
@@ -1170,7 +1170,7 @@
                 "extbase",
                 "typo3"
             ],
-            "time": "2017-02-28T10:42:40+00:00"
+            "time": "2017-04-18T17:27:37+00:00"
         },
         {
             "name": "typo3/cms-composer-installers",
