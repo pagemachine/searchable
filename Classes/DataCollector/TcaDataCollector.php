@@ -315,9 +315,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         if ($this->fieldWhitelist == null) {
 
-
             $this->fieldWhitelist = FieldListUtility::getInstance()->createFieldList($this->config['fields'], $this->getTcaConfiguration(), $this->config['mode']);
-
         }
         return $this->fieldWhitelist;
     }

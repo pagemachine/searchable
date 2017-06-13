@@ -41,10 +41,7 @@ class FieldListUtility implements SingletonInterface {
 
             $type = $column['config']['type'];
 
-            if (
-                $this->shouldInclude($key, $configFields, $configMode) && //check whitelist/blacklist
-                TcaType::isPlain($type) //Add only plain types
-                )
+            if ($this->shouldInclude($key, $configFields, $configMode))
             {
                 $whitelist[] = $key;
             }

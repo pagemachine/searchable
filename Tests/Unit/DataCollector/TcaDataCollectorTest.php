@@ -120,7 +120,8 @@ class TcaDataCollectorTest extends UnitTestCase
             'mode' => 'blacklist',
             'fields' => [
                 'excludeme',
-                'excludemetoo'
+                'excludemetoo',
+                'unusedrelation'
             ]
 
         ];
