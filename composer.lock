@@ -1469,12 +1469,12 @@
             "version": "1.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Nimut/TYPO3-testing-framework.git",
+                "url": "https://github.com/Nimut/testing-framework.git",
                 "reference": "17cf539e0b37895bcb759f6b41d16f41ef49f4cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nimut/TYPO3-testing-framework/zipball/17cf539e0b37895bcb759f6b41d16f41ef49f4cc",
+                "url": "https://api.github.com/repos/Nimut/testing-framework/zipball/17cf539e0b37895bcb759f6b41d16f41ef49f4cc",
                 "reference": "17cf539e0b37895bcb759f6b41d16f41ef49f4cc",
                 "shasum": ""
             },
