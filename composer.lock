@@ -1466,16 +1466,16 @@
         },
         {
             "name": "nimut/testing-framework",
-            "version": "1.1.2",
+            "version": "1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nimut/testing-framework.git",
-                "reference": "17cf539e0b37895bcb759f6b41d16f41ef49f4cc"
+                "reference": "342d2c12e8c59a064b90e10221bfc058bb5108c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nimut/testing-framework/zipball/17cf539e0b37895bcb759f6b41d16f41ef49f4cc",
-                "reference": "17cf539e0b37895bcb759f6b41d16f41ef49f4cc",
+                "url": "https://api.github.com/repos/Nimut/testing-framework/zipball/342d2c12e8c59a064b90e10221bfc058bb5108c9",
+                "reference": "342d2c12e8c59a064b90e10221bfc058bb5108c9",
                 "shasum": ""
             },
             "require": {
@@ -1488,8 +1488,10 @@
                 "typo3/cms-install": ">=6.2 <9.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
                 "nimut/testing-framework-testbase": "@dev"
+            },
+            "suggest": {
+                "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
             },
             "type": "library",
             "extra": {
@@ -1537,7 +1539,7 @@
                 "phpunit",
                 "testing"
             ],
-            "time": "2017-03-05T11:51:20+00:00"
+            "time": "2017-05-24T07:58:03+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
