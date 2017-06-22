@@ -31,6 +31,9 @@ class PagesIndexer extends Indexer {
                 'fields' => ['content']
             ]
         ],
+        'mapper' => [
+            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
+        ],
         'mapping' => [
             '_all' => [
                 'store' => true

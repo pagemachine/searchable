@@ -65,13 +65,4 @@ interface IndexerInterface {
      */
     public function setConfig($config);
 
-    /**
-     * Returns the mapping for this indexer
-     *
-     * @return array
-     */
-    public function getMapping();
-
-
-
 }

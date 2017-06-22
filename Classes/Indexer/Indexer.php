@@ -5,8 +5,6 @@ use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
-use PAGEmachine\Searchable\Mapper\DefaultMapper;
-use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
@@ -74,11 +72,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @var LinkBuilderInterface
      */
     protected $linkBuilder;
-
-    /**
-     * @var MapperInterface
-     */
-    protected $mapper;
     
     /**
      * @return String
@@ -167,7 +160,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
      */
-    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, MapperInterface $mapper = null) {
+    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null) {
 
         $this->index = $index;
         $this->config = $config;
@@ -183,19 +176,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
-
-        $this->mapper = $mapper ?: DefaultMapper::getInstance();
          
-    }
-
-    /**
-     * Returns the mapping for this indexer
-     *
-     * @return array
-     */
-    public function getMapping() {
-
-        return $this->mapper->createMapping($this);
     }
 
     /**

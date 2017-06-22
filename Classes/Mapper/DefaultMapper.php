@@ -1,10 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Mapper;
 
-use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -12,34 +9,33 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * DefaultMapper
- * This mapper just looks into the given indexer configuration ("mapping" section) and returns the sub-array
- * It is set by default and can be used as a base for custom mappers
+ * Creates necessary meta fields and appends them to the mapping array
  */
-class DefaultMapper implements SingletonInterface, MapperInterface {
+class DefaultMapper implements MapperInterface {
 
     /**
-     * @return DefaultMapper
-     */
-    public static function getInstance() {
-
-        return GeneralUtility::makeInstance(DefaultMapper::class);
-    }
-
-    /**
-     * Creates a mapping array for the given index configuration
+     * DefaultMapping
      *
-     * @param  IndexerInterface $indexer
-     * @return array $mapping
+     * @var array
      */
-    public function createMapping(IndexerInterface $indexer) {
+    protected static $defaultMapping = [
+        'properties' => []
+    ];
 
-        $configuration = $indexer->getConfig();
+    /**
+     * Creates the mapping
+     *
+     * @param  array $indexerConfiguration The toplevel configuration for one indexer
+     * @return array
+     */
+    public static function getMapping($indexerConfiguration)
+    {
+        $mapping = self::$defaultMapping;
 
-        $mapping = (!empty($configuration['mapping'])) ? $configuration['mapping'] : [];
-
-        $mapping['properties'][ExtconfService::getMetaFieldname()] = $this->getMetaMapping();
+        $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
 
         return $mapping;
+
     }
 
     /**
@@ -47,7 +43,7 @@ class DefaultMapper implements SingletonInterface, MapperInterface {
      *
      * @return array
      */
-    protected function getMetaMapping() {
+    protected static function getMetaMapping() {
 
         return ["enabled" => false];
     }
