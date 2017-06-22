@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Configuration;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
+use PAGEmachine\Searchable\Feature\FeatureInterface;
 use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -134,6 +135,22 @@ class ConfigurationManager implements SingletonInterface {
                 $indexerConfiguration['config']['link'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['link'], $indexerConfiguration);
             }
 
+            if (!empty($indexerConfiguration['config']['features'])) {
+
+                foreach ($indexerConfiguration['config']['features'] as $key => $feature) {
+
+                    $indexerConfiguration['config']['features'][$key] = $this->addClassDefaultConfiguration($feature, $indexerConfiguration);
+
+                    if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
+
+                        $indexerConfiguration['config']['mapping'] = $feature['className']::modifyMapping(
+                            $indexerConfiguration['config']['mapping'], 
+                            $indexerConfiguration['config']['features'][$key]['config']
+                        );
+                    }
+                }
+            }
+
             if (!empty($indexerConfiguration['config']['mapper'])) {
 
                 $indexerConfiguration['config']['mapping'] = $this->addMapping($indexerConfiguration);
@@ -181,6 +198,7 @@ class ConfigurationManager implements SingletonInterface {
      */
     protected function addMapping($indexerConfiguration) {
 
+        //Apply mapper
         if (is_string($indexerConfiguration['config']['mapper']['className']) && !empty($indexerConfiguration['config']['mapper']['className'])) {
 
             // Class will only be called if it implements a specific interface.
@@ -236,6 +254,13 @@ class ConfigurationManager implements SingletonInterface {
                 foreach ($configuration['config']['subCollectors'] as $key => $subCollectorConfig) {
 
                     $configuration['config']['subCollectors'][$key] = $this->addRecursiveCollectorConfig($subCollectorConfig, $configuration, $typeName, $collectorPath);
+                }
+            }
+            if (!empty($configuration['config']['features'])) {
+
+                foreach ($configuration['config']['features'] as $key => $feature) {
+
+                    $configuration['config']['features'][$key] = $this->addClassDefaultConfiguration($feature, $configuration);
                 }
             }  
         }

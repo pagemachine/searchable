@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\Configuration;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TcaDataCollectorFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestDataCollectorFixture;
+use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestFeatureFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestIndexerFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestMapperFixture;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
@@ -217,6 +218,39 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
         $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
         $this->assertEquals('newMapperValue', $mapping['pages']['properties']['newKey']);
+    }
+
+    /**
+     * @test
+     */
+    public function enrichesMappingByFeatures() {
+        $configuration = [
+            'pages' => [
+                'className' => TestIndexerFixture::class,
+                'config' => [
+                    'type' => 'pages',
+                    'features' => [
+                        0 => [
+                            'className' => TestFeatureFixture::class,
+                        ]
+                        
+                    ],
+                    'mapping' => [
+                        'properties' => [
+                            'existingKey' => 'existingValue',
+                            'overrideKey' => 'overrideValue',
+                        ]
+                    ]
+                ],
+            ],
+        ];
+        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+
+        $mapping = $this->configurationManager->getMapping('pages');
+
+        $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
+        $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
+        $this->assertEquals('featurevalue', $mapping['pages']['featureproperty']);       
     }
 
     /**
