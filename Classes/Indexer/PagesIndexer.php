@@ -34,6 +34,11 @@ class PagesIndexer extends Indexer {
         'mapper' => [
             'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
         ],
+        'features' => [
+            'highlighting' => [
+                'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+            ]
+        ],
         'mapping' => [
             '_all' => [
                 'store' => true

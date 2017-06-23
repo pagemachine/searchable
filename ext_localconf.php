@@ -63,6 +63,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'query' => [
         PAGEmachine\Searchable\Query\SearchQuery::class => [ 
             'features' => [
+                'highlighting' => [
+                    'className' => PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+                ]
             ]
         ]
     ]
