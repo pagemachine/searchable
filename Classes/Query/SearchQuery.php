@@ -202,7 +202,7 @@ class SearchQuery extends AbstractQuery {
     /**
      * @var string $searchType
      */
-    protected $searchType = "match";
+    protected $searchType = "multi_match";
     
     /**
      * @return string
@@ -224,12 +224,12 @@ class SearchQuery extends AbstractQuery {
 
 
     /**
-     * @var string $searchFields
+     * @var array $searchFields
      */
-    protected $searchFields = "_all";
+    protected $searchFields = ["_all"];
     
     /**
-     * @return string
+     * @return array
      */
     public function getSearchFields()
     {
@@ -237,7 +237,7 @@ class SearchQuery extends AbstractQuery {
     }
     
     /**
-     * @param string $searchFields
+     * @param array $searchFields
      * @return SearchQuery
      */
     public function setSearchFields($searchFields)
@@ -349,7 +349,8 @@ class SearchQuery extends AbstractQuery {
         $this->parameters['body'] = [
             'query' => [
                 $this->searchType => [
-                    $this->searchFields => $this->term
+                    'fields' => $this->searchFields,
+                    'query' => $this->term
                 ]
             ],
             'from' => $this->from,
