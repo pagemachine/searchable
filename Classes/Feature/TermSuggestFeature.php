@@ -31,12 +31,10 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface {
      */
     public function modifyQuery($query)
     {
-        $query['body']['suggest'] = [
-            'suggestion' => [
-                'text' => $query['body']['query']['multi_match']['query'],
-                'term' => [
-                    'field' => '_all'
-                ]
+        $query['body']['suggest']['suggestion'] = [
+            'text' => $query['body']['query']['multi_match']['query'],
+            'term' => [
+                'field' => '_all'
             ]
         ];
 
