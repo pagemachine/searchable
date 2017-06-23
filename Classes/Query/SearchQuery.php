@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Query class for searching
  */
-class SearchQuery extends AbstractQuery {
+class SearchQuery extends AbstractQuery implements QueryInterface {
 
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing

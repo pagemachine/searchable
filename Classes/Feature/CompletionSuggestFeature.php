@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
+use PAGEmachine\Searchable\Query\QueryInterface;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -72,17 +73,19 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     /**
      * Modifies a query before it is executed
      *
-     * @param array $query
+     * @param QueryInterface $query
      * @return array
      */
-    public function modifyQuery($query)
+    public function modifyQuery(QueryInterface $query)
     {
-        $query['body']['suggest'][$this->config['completionField']] = [
-            'prefix' => $query['body']['query']['multi_match']['query'],
+        $parameters = $query->getParameters();
+        $parameters['body']['suggest'][$this->config['completionField']] = [
+            'prefix' => $query->getTerm(),
             'completion' => [
                 'field' => $this->config['completionField']
             ]
         ];
+        $query->setParameters($parameters);
 
         return $query;
     }

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
+use PAGEmachine\Searchable\Query\QueryInterface;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -87,10 +88,10 @@ abstract class AbstractFeature implements DynamicConfigurationInterface {
     /**
      * Modifies a query before it is executed
      *
-     * @param array $query
-     * @return array $query
+     * @param QueryInterface $query
+     * @return array
      */
-    public function modifyQuery($query)
+    public function modifyQuery(QueryInterface $query)
     {
         return $query;
     }

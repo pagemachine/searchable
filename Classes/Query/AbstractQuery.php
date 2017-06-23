@@ -140,7 +140,7 @@ abstract class AbstractQuery {
 
             if ($this->isFeatureEnabled($name)) {
 
-                $this->parameters = $feature->modifyQuery($this->parameters);
+                $feature->modifyQuery($this);
             }
         }
     }

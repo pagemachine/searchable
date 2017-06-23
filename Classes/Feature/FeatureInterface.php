@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Feature;
 
+use PAGEmachine\Searchable\Query\QueryInterface;
+
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -29,9 +31,8 @@ interface FeatureInterface {
     /**
      * Modifies a query before it is executed
      *
-     * @param array $query
-     * @return array $query
+     * @param QueryInterface $query
+     * @return array
      */
-    public function modifyQuery($query);
-
+    public function modifyQuery(QueryInterface $query);
 }

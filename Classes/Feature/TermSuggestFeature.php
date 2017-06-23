@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Feature;
 
+use PAGEmachine\Searchable\Query\QueryInterface;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -26,17 +28,19 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface {
     /**
      * Modifies a query before it is executed
      *
-     * @param array $query
+     * @param QueryInterface $query
      * @return array
      */
-    public function modifyQuery($query)
+    public function modifyQuery(QueryInterface $query)
     {
-        $query['body']['suggest']['suggestion'] = [
-            'text' => $query['body']['query']['multi_match']['query'],
+        $parameters = $query->getParameters();
+        $parameters['body']['suggest']['suggestion'] = [
+            'text' => $query->getTerm(),
             'term' => [
                 'field' => '_all'
             ]
         ];
+        $query->setParameters($parameters);
 
         return $query;
     }

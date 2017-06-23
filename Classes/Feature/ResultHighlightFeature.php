@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
+use PAGEmachine\Searchable\Query\QueryInterface;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -73,19 +74,21 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
     /**
      * Modifies a query before it is executed
      *
-     * @param array $query
+     * @param QueryInterface $query
      * @return array
      */
-    public function modifyQuery($query)
+    public function modifyQuery(QueryInterface $query)
     {
-        $query['body']['query']['multi_match']['fields'][] = $this->config['highlightField'];
-        $query['body']['highlight'] = [
+        $parameters = $query->getParameters();
+        $parameters['body']['query']['multi_match']['fields'][] = $this->config['highlightField'];
+        $parameters['body']['highlight'] = [
             'pre_tags' => ["<span class='searchable-highlight'>"],
             'post_tags' => ["</span>"],
             'fields' => [
                 $this->config['highlightField'] => new \stdClass()
             ]
         ];
+        $query->setParameters($parameters);
 
         return $query;
     }
