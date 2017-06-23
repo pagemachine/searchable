@@ -117,7 +117,7 @@ class SearchQuery extends AbstractQuery {
     /**
      * @var int $size
      */
-    protected $size;
+    protected $size = 10;
     
     /**
      * @return int
