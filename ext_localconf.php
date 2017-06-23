@@ -70,6 +70,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                     'className' => PAGEmachine\Searchable\Feature\TermSuggestFeature::class,
                 ],
             ]
+        ],
+        PAGEmachine\Searchable\Query\AutosuggestQuery::class => [
+            'features' => [
+                'completionSuggest' => [
+                    'className' => PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                ],
+            ]
         ]
     ]
 ];
@@ -92,3 +99,6 @@ if (!empty($_EXTCONF)) {
     }
   }
 }
+
+//Register eid
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
