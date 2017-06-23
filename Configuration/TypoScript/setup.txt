@@ -23,6 +23,7 @@ plugin.tx_searchable {
                 //@todo rename constants in V2
                 highlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
                 termSuggest = {$plugin.tx_searchable.settings.result.showSuggestions}
+                completionSuggest = {$plugin.tx_searchable.settings.features.completionSuggest}
             }
         }
     }

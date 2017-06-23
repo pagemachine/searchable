@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Feature;
 
+use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -10,6 +12,8 @@ namespace PAGEmachine\Searchable\Feature;
  * Creates mapping, indexing and search parameters for result highlighting
  */
 class ResultHighlightFeature extends AbstractFeature implements FeatureInterface {
+
+    use FieldCollectionTrait;
 
     /**
      * @var array
@@ -53,9 +57,9 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
     {
         if (!empty($this->config['fields'])) {
 
-            $highlightContent = $this->collectHighlightFields($record, $this->config['fields']);               
+            $highlightContent = $this->collectFields($record, $this->config['fields']);               
         }
-        $highlightContent = $this->collectFieldFromSubRecords($record, $this->config['highlightField'], $highlightContent);
+        $highlightContent = $this->collectFieldFromSubRecords($record, $this->config['highlightField'], $highlightContent, true);
 
         if (!empty($highlightContent)) {
 
@@ -64,62 +68,6 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
 
 
         return $record;
-    }
-
-    /**
-     * function to collect highlight fields
-     *
-     * @param array $record
-     * @param array $fields
-     */
-    protected function collectHighlightFields($record, $fields, $highlightContent = []) {
-        /**
-         * @var array
-         */
-        $highlightContent = [];
-
-        foreach ($fields as $field) {
-            if (array_key_exists($field, $record) && !empty($record[$field])) {
-                $highlightContent[] = $record[$field];
-            }
-        }
-        return $highlightContent;
-    }
-
-    /**
-     * Collects a field from Subrecords
-     *
-     * @param  array $record
-     * @param  string $fieldname
-     * @param  array  $collection
-     * @return array $collection
-     */
-    protected function collectFieldFromSubRecords(&$record, $fieldname, $collection = []) {
-
-        foreach ($record as $column => $value) {
-
-            if (is_array($value) && !isset($value['uid'])) {
-
-                foreach ($value as $childKey => $childRecord) {
-
-                    if (!empty($childRecord[$fieldname])) {
-
-                        $collection[] = $childRecord[$fieldname];
-                        unset($record[$column][$childKey][$fieldname]);
-                    }
-                }
-            }
-            else if (is_array($value)) {
-
-                if (!empty($value[$fieldname])) {
-
-                    $collection[] = $value[$fieldname];
-                    unset($record[$column][$fieldname]);
-                }                
-            }
-        }
-
-        return $collection;
     }
 
     /**

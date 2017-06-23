@@ -29,6 +29,14 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'features' => [
             'highlighting' => [
                 'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+            ],
+            'completion' => [
+                'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                'config' => [
+                    'fields' => [
+                        'title'
+                    ]
+                ]
             ]
         ],
         'subCollectors' => [

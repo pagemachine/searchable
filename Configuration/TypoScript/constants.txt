@@ -25,5 +25,8 @@ plugin.tx_searchable {
 
         # cat=plugin.tx_searchable/enable/a; type=boolean; label=Show Suggestions ("did you mean")
         result.showSuggestions = 1
+
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Load completion suggestions ("autosuggest")
+        features.completionSuggest = 0
     }
 }

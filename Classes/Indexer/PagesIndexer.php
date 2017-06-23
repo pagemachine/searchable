@@ -37,6 +37,9 @@ class PagesIndexer extends Indexer {
         'features' => [
             'highlighting' => [
                 'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+            ],
+            'completion' => [
+                'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class
             ]
         ],
         'mapping' => [
