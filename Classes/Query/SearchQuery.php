@@ -90,30 +90,6 @@ class SearchQuery extends AbstractQuery {
     }
 
     /**
-     * @var bool $suggest
-     */
-    protected $suggest;
-    
-    /**
-     * @return bool
-     */
-    public function getSuggest()
-    {
-        return $this->suggest;
-    }
-    
-    /**
-     * @param bool $suggest
-     * @return void
-     */
-    public function setSuggest($suggest)
-    {
-        $this->suggest = $suggest;
-        return $this;
-    }
-
-
-    /**
      * Offset the query. Used for pagination
      * @var int $from
      */
@@ -335,18 +311,6 @@ class SearchQuery extends AbstractQuery {
             $language = $this->language ?: $GLOBALS['TSFE']->sys_language_uid;
 
             $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
-        }
-
-        if ($this->suggest) {
-
-            $this->parameters['body']['suggest'] = [
-                'suggestion' => [
-                    'text' => $this->term,
-                    'term' => [
-                        'field' => '_all'
-                    ]
-                ]
-            ];
         }
 
         $this->applyFeatures();
