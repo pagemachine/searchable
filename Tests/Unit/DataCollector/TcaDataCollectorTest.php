@@ -37,6 +37,10 @@ class TcaDataCollectorTest extends UnitTestCase
      */
     protected $plainValueProcessor;
 
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
 
     /**
      * Set up this testcase
@@ -50,6 +54,9 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->overlayUtility = $this->prophesize(OverlayUtility::class);
 
         $this->tcaDataCollector = new TcaDataCollector([]);
+
+        $this->objectManager = $this->prophesize(ObjectManager::class);
+        $this->objectManager->get(Argument::any())->willReturn(null);
 
         GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());
         GeneralUtility::setSingletonInstance(PlainValueProcessor::class, $this->plainValueProcessor->reveal());
@@ -126,7 +133,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         ];
 
-        $this->tcaDataCollector->__construct($configuration);
+        $this->tcaDataCollector->__construct($configuration, 0, $this->objectManager->reveal());
 
         $this->formDataRecord->getRecord(123, 'example_table', [
             'uid',
@@ -164,13 +171,12 @@ class TcaDataCollectorTest extends UnitTestCase
      */
     public function processesRelations()
     {
-        $objectManager = $this->prophesize(ObjectManager::class);
         $subCollector = $this->prophesize(TcaDataCollector::class);
         $subCollector->getConfig()->willReturn(
             ['field' => 'selectfield']
         );
 
-        $objectManager->get(TcaDataCollector::class, Argument::type("array"), 0)->willReturn($subCollector->reveal());
+        $this->objectManager->get(TcaDataCollector::class, Argument::type("array"), 0)->willReturn($subCollector->reveal());
 
         $configuration = [
             'table' => 'example_table',
@@ -215,7 +221,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'processedTca' => $recordTca
         ];
 
-        $this->tcaDataCollector->__construct($configuration);
+        $this->tcaDataCollector->__construct($configuration, 0, $this->objectManager->reveal());
 
         $this->formDataRecord->getRecord(123, 'example_table', Argument::type('array'))->willReturn($record);
 
@@ -232,9 +238,6 @@ class TcaDataCollectorTest extends UnitTestCase
         $resolverManager = $this->prophesize(ResolverManager::class);
         $resolverManager->findResolverForRelation("selectfield", $subCollector, $this->tcaDataCollector)->willReturn($resolver->reveal());
         $this->inject($this->tcaDataCollector, "resolverManager", $resolverManager->reveal());
-
-        
-        $this->inject($this->tcaDataCollector, "objectManager", $objectManager->reveal());
 
         $this->tcaDataCollector->addSubCollector("es_selectfield", $subCollector->reveal());
 

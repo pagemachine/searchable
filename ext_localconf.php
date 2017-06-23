@@ -59,6 +59,12 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'defaultIndexSettings' => [
         'number_of_shards' => 2,
         'number_of_replicas' => 0
+    ],
+    'query' => [
+        PAGEmachine\Searchable\Query\SearchQuery::class => [ 
+            'features' => [
+            ]
+        ]
     ]
 ];
 

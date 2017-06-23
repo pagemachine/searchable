@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Query;
 
 use Elasticsearch\Client;
+use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -67,14 +68,55 @@ abstract class AbstractQuery {
     protected $logger;
 
     /**
+     * Features
+     *
+     * @var array
+     */
+    protected $features = [];
+
+    /**
+     * @var array $featureSettings
+     */
+    protected $featureSettings;
+    
+    /**
+     * @return array
+     */
+    public function getFeatureSettings()
+    {
+        return $this->featureSettings;
+    }
+    
+    /**
+     * @param array $featureSettings
+     * @return void
+     */
+    public function setFeatureSettings($featureSettings)
+    {
+        $this->featureSettings = $featureSettings;
+        return $this;
+    }
+
+    /**
      * @param Client|null $client
      * @param Logger|null $logger
+     * @param array $features
      */
-    public function __construct(Client $client = null, Logger $logger = null) {
+    public function __construct(Client $client = null, Logger $logger = null, $features = null) {
 
         $this->client = $client ?: Connection::getClient();
         $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
 
+        // Use get_class() instead of static self::class to retrieve the inherited child classname
+        $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(get_class($this))['features'];
+
+        if (!empty($features)) {
+
+            foreach ($features as $key => $feature) {
+                $this->features[$key] = GeneralUtility::makeInstance($feature['className'], $feature['config']);
+
+            }
+        }
     }
 
     /**
@@ -86,6 +128,39 @@ abstract class AbstractQuery {
     public function execute() {
 
         return [];
+    }
+
+    /**
+     * Apply features to query
+     *
+     */
+    protected function applyFeatures()
+    {
+        foreach ($this->features as $name => $feature) {
+
+            if ($this->isFeatureEnabled($name)) {
+
+                $this->parameters = $feature->modifyQuery($this->parameters);
+            }
+        }
+    }
+
+    /**
+     * Checks if a feature is enabled for this query
+     *
+     * @param string  $featureName
+     * @return boolean
+     */
+    public function isFeatureEnabled($featureName) {
+
+        if (
+            isset($this->featureSettings[$featureName])
+            && $this->featureSettings[$featureName] == 1
+            ) {
+
+            return true;
+        }
+        return false;
     }
 
 }

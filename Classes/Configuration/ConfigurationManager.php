@@ -42,6 +42,13 @@ class ConfigurationManager implements SingletonInterface {
     protected $processedMapping = null;
 
     /**
+     * Holds the processed query configuration
+     *
+     * @var array
+     */
+    protected $processedQueryConfiguration = null;
+
+    /**
      * UpdateConfiguration
      * @var array
      */
@@ -92,6 +99,35 @@ class ConfigurationManager implements SingletonInterface {
 
         return $this->processedMapping;
 
+    }
+
+    /**
+     * Returns the query configuration for a given query name
+     *
+     * @param string $queryClassName
+     * @return array
+     */
+    public function getQueryConfiguration($queryClassName) {
+
+        if ($this->processedQueryConfiguration == null) {
+
+            $queryConfiguration = ExtconfService::getInstance()->getQueryConfiguration();
+
+            foreach ($queryConfiguration as $queryName => $config) {
+
+                if (!empty($config['features'])) {
+
+                    foreach ($config['features'] as $key => $feature) {
+
+                        $queryConfiguration[$queryName]['features'][$key] = $this->addClassDefaultConfiguration($feature, $queryConfiguration);
+                    }
+                }
+            }
+
+            $this->processedQueryConfiguration = $queryConfiguration;
+        }
+
+        return $this->processedQueryConfiguration[$queryClassName];
     }
 
     /**

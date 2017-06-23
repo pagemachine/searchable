@@ -386,6 +386,8 @@ class SearchQuery extends AbstractQuery {
                 ]
             ];
         }
+
+        $this->applyFeatures();
     }
 
 }

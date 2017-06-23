@@ -46,6 +46,21 @@ abstract class AbstractFeature implements DynamicConfigurationInterface {
     }
 
     /**
+     * @var string
+     */
+    public static $featureName = "";
+
+    /**
+     * Returns the feature name (used in TypoScript to enable/disable the feature in FE)
+     *
+     * @return string
+     */
+    public static function getFeatureName()
+    {
+        return self::$featureName;
+    }
+
+    /**
      * Entry point to modify mapping.
      * Static to improve performance
      *

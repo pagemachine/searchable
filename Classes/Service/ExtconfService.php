@@ -155,6 +155,15 @@ class ExtconfService implements SingletonInterface {
         return $hosts;
     }
 
+    /**
+     * Returns the globally registered query configuration
+     * 
+     * @return array
+     */
+    public function getQueryConfiguration() {
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['query'];
+    }
+
 
 
 }

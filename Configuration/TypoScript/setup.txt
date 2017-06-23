@@ -20,6 +20,10 @@ plugin.tx_searchable {
             showHighlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
             showSuggestions = {$plugin.tx_searchable.settings.result.showSuggestions}
         }
+        query {
+            features {
+            }
+        }
     }
 }
 
