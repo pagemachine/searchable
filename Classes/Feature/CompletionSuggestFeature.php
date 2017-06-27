@@ -24,7 +24,11 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
         // The field to store the values for completion in
         'completionField' => 'searchable_autosuggest',
         // Prevents the whole source from being loaded for each suggestion. Should always be true if used with AJAX/search-as-you-type
-        'limitSource' => true
+        'limitSource' => true,
+        // If set, splits a sentence into different words so each word of the sentence 
+        'splitIntoWords' => false,
+        // Regex to use for splitting. Default is every unicode language letter (\p{L}) and digits (\d)
+        'splitRegex' => '/([^\p{L}\d])+/u',
     ];
 
     /**
@@ -43,7 +47,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     public static function modifyMapping($mapping, $configuration)
     {
         $mapping['properties'][$configuration['completionField']] = [
-            'type' => 'completion'
+            'type' => 'completion',
         ];
 
         return $mapping;
@@ -59,7 +63,12 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     {
         if (!empty($this->config['fields'])) {
 
-            $content = $this->collectFields($record, $this->config['fields']);               
+            $content = $this->collectFields($record, $this->config['fields']);
+
+            if ($this->config['splitIntoWords']) {
+
+                $content = $this->splitFields($content);
+            }   
         }
         $content = $this->collectFieldFromSubRecords($record, $this->config['completionField'], $content, true);
 
@@ -68,6 +77,28 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
             $record[$this->config['completionField']]['input'] = $content;
         }
         return $record;
+    }
+
+    /**
+     * Splits fields into tokens for indexing
+     *
+     * @param  array  $fields
+     * @return array
+     */
+    protected function splitFields($fields = [])
+    {
+        $splittedContent = [];
+        if (!empty($fields)) {
+
+            foreach ($fields as $field) {
+
+                $split = preg_split($this->config['splitRegex'], $field);
+                $splittedContent = array_merge($splittedContent, $split);
+            }
+        }
+
+        return $splittedContent;
+
     }
 
     /**
