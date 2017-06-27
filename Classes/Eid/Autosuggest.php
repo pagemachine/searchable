@@ -44,7 +44,7 @@ class Autosuggest {
         }
 
         header('Content-type: application/json');
-        echo json_encode($suggestions);
+        echo json_encode(['suggestions' => $suggestions]);
     }
 
     /**
@@ -78,7 +78,7 @@ class Autosuggest {
         }
 
         $response = $response->withHeader('Content-type', 'application/json');
-        $response->getBody()->write(json_encode($suggestions));
+        $response->getBody()->write(json_encode(['suggestions' => $suggestions]));
         return $response;
     }
 
