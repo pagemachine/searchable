@@ -230,6 +230,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         if (!empty($record)) {
             //Cleanup
             $record = $this->processColumns($record);
+            $record = $this->applyFeatures($record);
         }
 
         return $record;

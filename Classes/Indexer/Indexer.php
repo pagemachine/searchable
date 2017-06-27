@@ -5,8 +5,6 @@ use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
-use PAGEmachine\Searchable\Mapper\DefaultMapper;
-use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
@@ -76,9 +74,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
     protected $linkBuilder;
 
     /**
-     * @var MapperInterface
+     * @var array
      */
-    protected $mapper;
+    protected $features = [];
     
     /**
      * @return String
@@ -166,8 +164,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @param BulkQuery|null $query
      * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
+     * @param array       $features
      */
-    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, MapperInterface $mapper = null) {
+    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null) {
 
         $this->index = $index;
         $this->config = $config;
@@ -183,19 +182,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
-
-        $this->mapper = $mapper ?: DefaultMapper::getInstance();
+        $this->setFeatures($features);
          
-    }
-
-    /**
-     * Returns the mapping for this indexer
-     *
-     * @return array
-     */
-    public function getMapping() {
-
-        return $this->mapper->createMapping($this);
     }
 
     /**
@@ -243,6 +231,24 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
             }
         }
 
+    }
+
+    /**
+     * Stores available features
+     *
+     * @param array $features
+     */
+    protected function setFeatures($features) {
+
+        $features = $features ?: $this->config['features'];
+
+        if (!empty($features)) {
+
+            foreach ($features as $key => $featureConfig) {
+
+                $this->features[$key] = $this->objectManager->get($featureConfig['className'], $featureConfig['config']);
+            }
+        }
     }
 
     /**
@@ -326,6 +332,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
                     $overallCounter++;
 
                     $fullRecord = $this->addSystemFields($fullRecord);
+
                     $this->query->addRow($fullRecord['uid'], $fullRecord);
 
                     if ($counter >= 20) {

@@ -59,6 +59,25 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'defaultIndexSettings' => [
         'number_of_shards' => 2,
         'number_of_replicas' => 0
+    ],
+    'query' => [
+        PAGEmachine\Searchable\Query\SearchQuery::class => [ 
+            'features' => [
+                'highlighting' => [
+                    'className' => PAGEmachine\Searchable\Feature\ResultHighlightFeature::class,
+                ],
+                'termSuggest' => [
+                    'className' => PAGEmachine\Searchable\Feature\TermSuggestFeature::class,
+                ],
+            ]
+        ],
+        PAGEmachine\Searchable\Query\AutosuggestQuery::class => [
+            'features' => [
+                'completionSuggest' => [
+                    'className' => PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                ],
+            ]
+        ]
     ]
 ];
 
@@ -80,3 +99,9 @@ if (!empty($_EXTCONF)) {
     }
   }
 }
+
+//Register eid
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
+
+//Register FlexForm Hook
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['getFlexFormDSClass']['searchable'] = \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;

@@ -6,6 +6,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use Prophecy\Argument;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -29,6 +30,11 @@ class PagesDataCollectorTest extends UnitTestCase {
     protected $formDataRecord;
 
     /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    /**
      * Set up this testcase
      */
     public function setUp() {
@@ -43,8 +49,27 @@ class PagesDataCollectorTest extends UnitTestCase {
             ]
         ];
 
-        $this->pagesDataCollector = $this->getMockBUilder(PagesDataCollector::class)
-        ->setConstructorArgs([PagesDataCollector::getDefaultConfiguration([], [])])
+        $configuration = [
+            'table' => 'pages',
+            'pid' => 0,
+            'sysLanguageOverlay' => 1,
+            'doktypes' => ['1'],
+            'transientDoktypes' => ['4', '199'],
+            'groupWhereClause' => ' AND (pages.fe_group = "" OR pages.fe_group = 0)',
+            'includeHideInMenu' => false,
+            'mode' => 'whitelist',
+            'fields' => [
+                'title'
+            ],
+            'subCollectors' => [
+            ]
+        ];
+
+        $this->objectManager = $this->prophesize(ObjectManager::class);
+        $this->objectManager->get(Argument::any())->willReturn(null);
+
+        $this->pagesDataCollector = $this->getMockBuilder(PagesDataCollector::class)
+        ->setConstructorArgs([$configuration, 0, $this->objectManager->reveal()])
         ->setMethods([
                 'getRecord'
             ])

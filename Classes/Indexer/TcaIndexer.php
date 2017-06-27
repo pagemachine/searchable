@@ -17,6 +17,9 @@ class TcaIndexer extends Indexer {
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class
         ],
+        'mapper' => [
+            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
+        ],
         'mapping' => [
             '_all' => [
                 'store' => true

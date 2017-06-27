@@ -12,6 +12,12 @@ plugin.tx_searchable {
         storagePid =
     }
     settings {
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Include jQuery (disable this if you already have jQuery in your page)
+        includejQuery = 0
+
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Include jQuery Autocomplete (used for Autosuggest loading)
+        includejQueryAutocomplete = 1
+
         # cat=plugin.tx_searchable//a; type=int+; label=Search result page
         resultPage =
         # cat=plugin.tx_searchable//a; type=int+; label=Results per page
@@ -25,5 +31,8 @@ plugin.tx_searchable {
 
         # cat=plugin.tx_searchable/enable/a; type=boolean; label=Show Suggestions ("did you mean")
         result.showSuggestions = 1
+
+        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Load completion suggestions ("autosuggest")
+        features.completionSuggest = 0
     }
 }

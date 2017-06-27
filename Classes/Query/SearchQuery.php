@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Query class for searching
  */
-class SearchQuery extends AbstractQuery {
+class SearchQuery extends AbstractQuery implements QueryInterface {
 
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
@@ -66,8 +66,6 @@ class SearchQuery extends AbstractQuery {
         return $this;
     }
 
-
-    
     /**
      * @var int $language
      */
@@ -90,55 +88,6 @@ class SearchQuery extends AbstractQuery {
         $this->language = $language;
         return $this;
     }
-
-
-    /**
-     * @var bool $highlighting
-     */
-    protected $highlighting = false;
-    
-    /**
-     * @return bool
-     */
-    public function getHighlighting()
-    {
-        return $this->highlighting;
-    }
-    
-    /**
-     * @param bool $highlighting
-     * @return void
-     */
-    public function setHighlighting($highlighting)
-    {
-        $this->highlighting = $highlighting;
-        return $this;
-    }
-
-
-    /**
-     * @var bool $suggest
-     */
-    protected $suggest;
-    
-    /**
-     * @return bool
-     */
-    public function getSuggest()
-    {
-        return $this->suggest;
-    }
-    
-    /**
-     * @param bool $suggest
-     * @return void
-     */
-    public function setSuggest($suggest)
-    {
-        $this->suggest = $suggest;
-        return $this;
-    }
-
 
     /**
      * Offset the query. Used for pagination
@@ -168,7 +117,7 @@ class SearchQuery extends AbstractQuery {
     /**
      * @var int $size
      */
-    protected $size;
+    protected $size = 10;
     
     /**
      * @return int
@@ -202,7 +151,7 @@ class SearchQuery extends AbstractQuery {
     /**
      * @var string $searchType
      */
-    protected $searchType = "match";
+    protected $searchType = "multi_match";
     
     /**
      * @return string
@@ -224,12 +173,12 @@ class SearchQuery extends AbstractQuery {
 
 
     /**
-     * @var string $searchFields
+     * @var array $searchFields
      */
-    protected $searchFields = "_all";
+    protected $searchFields = ["_all"];
     
     /**
-     * @return string
+     * @return array
      */
     public function getSearchFields()
     {
@@ -237,7 +186,7 @@ class SearchQuery extends AbstractQuery {
     }
     
     /**
-     * @param string $searchFields
+     * @param array $searchFields
      * @return SearchQuery
      */
     public function setSearchFields($searchFields)
@@ -349,7 +298,8 @@ class SearchQuery extends AbstractQuery {
         $this->parameters['body'] = [
             'query' => [
                 $this->searchType => [
-                    $this->searchFields => $this->term
+                    'fields' => $this->searchFields,
+                    'query' => $this->term
                 ]
             ],
             'from' => $this->from,
@@ -363,28 +313,7 @@ class SearchQuery extends AbstractQuery {
             $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         }
 
-        if ($this->highlighting) {
-
-            $this->parameters['body']['highlight'] = [
-                'pre_tags' => ["<span class='searchable-highlight'>"],
-                'post_tags' => ["</span>"],
-                'fields' => [
-                    '_all' => new \stdClass()
-                ]
-            ];
-        }
-
-        if ($this->suggest) {
-
-            $this->parameters['body']['suggest'] = [
-                'suggestion' => [
-                    'text' => $this->term,
-                    'term' => [
-                        'field' => '_all'
-                    ]
-                ]
-            ];
-        }
+        $this->applyFeatures();
     }
 
 }

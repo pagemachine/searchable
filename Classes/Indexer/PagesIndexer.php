@@ -31,6 +31,17 @@ class PagesIndexer extends Indexer {
                 'fields' => ['content']
             ]
         ],
+        'mapper' => [
+            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
+        ],
+        'features' => [
+            'highlighting' => [
+                'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+            ],
+            'completion' => [
+                'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class
+            ]
+        ],
         'mapping' => [
             '_all' => [
                 'store' => true

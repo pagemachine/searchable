@@ -30,12 +30,13 @@
 													<f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
 											</div>
 										</f:if>
-
-										<f:if condition="{settings.result.showHighlighting}">
+										<f:if condition="{settings.features.highlighting}">
 											<f:if condition="{hit.highlight}">
 												<div class="result-highlight">
-													<f:for each="{hit.highlight._all}" as="highlight">
-														<f:format.raw>{highlight}...</f:format.raw>
+													<f:for each="{hit.highlight}" as="highlight">
+														<f:for each="{highlight}" as="field">
+															<f:format.raw>{field}...</f:format.raw>
+														</f:for>
 													</f:for>
 												</div>
 											</f:if>

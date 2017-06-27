@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
+use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -78,10 +79,9 @@ class IndexManager implements SingletonInterface {
     /**
      * Deletes and recreates an index
      * @param  string $index
-     * @param  array $mapping
      * @return array
      */
-    public function resetIndex($index, $mapping = []) {
+    public function resetIndex($index) {
 
         $deleteParams = [
             'index' => $index
@@ -92,16 +92,15 @@ class IndexManager implements SingletonInterface {
             $response = $this->client->indices()->delete($deleteParams);
         }
 
-        $this->createIndex($index, $mapping);
+        $this->createIndex($index);
     }
 
     /**
      * Creates an index. Checks if it exists before creating
      * @param  string $index
-     * @param  array $mapping
      * @return array
      */
-    public function createIndex($index, $mapping = []) {
+    public function createIndex($index) {
 
         if ($this->client->indices()->exists(['index' => $index])) {
 
@@ -114,6 +113,8 @@ class IndexManager implements SingletonInterface {
                 'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index))
             ]
         ];
+
+        $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
         if (!empty($mapping)) {
 

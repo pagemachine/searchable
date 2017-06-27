@@ -83,18 +83,11 @@ class SearchableCommandController extends CommandController
 
         $indexers = $this->indexerFactory->makeIndexers();
 
-        $mapping = [];
-
-        foreach ($indexers as $indexer) {
-
-            $mapping[$indexer->getType()] = $indexer->getMapping();
-        }
-
         $indexManager = IndexManager::getInstance();
 
         if ($language != null) {
 
-            $indexManager->resetIndex(ExtconfService::getIndex($language), $mapping);
+            $indexManager->resetIndex(ExtconfService::getIndex($language));
 
             $this->outputLine("Index '" . ExtconfService::getIndex($language) . "' was successfully cleared.");
         }
@@ -102,7 +95,7 @@ class SearchableCommandController extends CommandController
 
             foreach (ExtconfService::getIndices() as $index) {
 
-                $indexManager->resetIndex($index, $mapping);
+                $indexManager->resetIndex($index);
                 $this->outputLine("Index '" . $index . "' was successfully cleared.");
             }            
         }
@@ -133,9 +126,8 @@ class SearchableCommandController extends CommandController
         }
 
         $this->outputLine();
-        $this->outputLine("Building defined indexers and gathering mapping...");
+        $this->outputLine("Building defined indexers to validate configuration...");
 
-        $mapping = [];
 
         try {
             $indexers = $this->indexerFactory->makeIndexers();
@@ -152,19 +144,13 @@ class SearchableCommandController extends CommandController
 
         }
 
-        
-
         if (!empty($indexers)) {
 
-            foreach ($indexers as $indexer) {
-
-                $mapping[$indexer->getType()] = $indexer->getMapping();
-            }
             $this->outputLine("Done.");
         }
         else {
 
-            $this->outputLine("<comment>\tWARNING: No indexers found for mapping.</comment>");
+            $this->outputLine("<comment>\tWARNING: No indexers defined.</comment>");
         }
 
         $this->outputLine();
@@ -176,7 +162,7 @@ class SearchableCommandController extends CommandController
 
             foreach ($indices as $language => $index) {
 
-                $response = $indexManager->createIndex($index, $mapping);
+                $response = $indexManager->createIndex($index);
 
                 $this->outputLine("\tIndex '" . $index . "': " . (!empty($response) ? "<info>Created.</info>" : "<comment>Exists.</comment>"));
             }

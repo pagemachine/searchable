@@ -26,6 +26,19 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'fields' => [
             'title'
         ],
+        'features' => [
+            'highlighting' => [
+                'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+            ],
+            'completion' => [
+                'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                'config' => [
+                    'fields' => [
+                        'title'
+                    ]
+                ]
+            ]
+        ],
         'subCollectors' => [
             'content' => [
                 'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
@@ -39,6 +52,17 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                         'header',
                         'subheader',
                         'bodytext'
+                    ],
+                    'features' => [
+                        'highlighting' => [
+                            'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class,
+                            'config' => [
+                                'fields' => [
+                                    'subheader',
+                                    'bodytext'
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ]

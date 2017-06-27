@@ -94,6 +94,11 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface {
 	public function getSubCollectors() {
 	  return $this->subCollectors;
 	}
+
+    /**
+     * @var array $features
+     */
+    protected $features = [];
 	
 	/**
 	 * Adds a new SubCollector for subtypes
@@ -150,6 +155,14 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface {
         $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
 		$this->config = $configuration;
+
+        if (!empty($this->config['features'])) {
+
+            foreach ($this->config['features'] as $key => $featureConfig) {
+
+                $this->features[$key] = $this->objectManager->get($featureConfig['className'], $featureConfig['config']);
+            }
+        }
 	}
 
     /**
@@ -198,5 +211,20 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface {
 		return $subCollector;
 
 	}
+
+    /**
+     * Apply features to record
+     *
+     * @param array $record
+     * @return array $record
+     */
+    protected function applyFeatures($record)
+    {
+        foreach ($this->features as $feature) {
+
+            $record = $feature->modifyRecord($record);
+        }
+        return $record;
+    }
 
 }
