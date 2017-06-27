@@ -47,7 +47,7 @@ class SearchController extends ActionController {
 
         if ($term) {
             $this->searchQuery
-                ->setFeatureSettings($this->settings['query']['features'])
+                ->setFeatureSettings($this->settings['features'])
                 ->setTerm($term)
                 ->setPage($page);
 

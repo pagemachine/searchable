@@ -21,16 +21,29 @@ plugin.tx_searchable {
         result {
             showPreview = {$plugin.tx_searchable.settings.result.showPreview}
         }
-        query {
-            features {
-                //@todo rename constants in V2
-                highlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
-                termSuggest = {$plugin.tx_searchable.settings.result.showSuggestions}
-                completionSuggest = {$plugin.tx_searchable.settings.features.completionSuggest}
-            }
+    }
+}
+
+plugin.tx_searchable_searchbar < plugin.tx_searchable
+plugin.tx_searchable_searchbar {
+    settings {
+        features {
+            completionSuggest = {$plugin.tx_searchable.settings.features.completionSuggest}
         }
     }
 }
+
+plugin.tx_searchable_results < plugin.tx_searchable
+plugin.tx_searchable_results {
+    settings {
+        features {
+            //@todo rename constants in V2
+            highlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
+            termSuggest = {$plugin.tx_searchable.settings.result.showSuggestions}
+        }
+    }
+}
+
 
 module.tx_searchable {
     settings < plugin.tx_searchable.settings

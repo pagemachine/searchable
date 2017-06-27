@@ -30,7 +30,7 @@
 													<f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw>
 											</div>
 										</f:if>
-										<f:if condition="{settings.query.features.highlighting}">
+										<f:if condition="{settings.features.highlighting}">
 											<f:if condition="{hit.highlight}">
 												<div class="result-highlight">
 													<f:for each="{hit.highlight}" as="highlight">
