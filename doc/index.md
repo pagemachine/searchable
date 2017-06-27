@@ -12,14 +12,18 @@
 
     Guide on how Searchable handles languages
 
-## General Configuration
+## Configuration Reference
 
 * [Extension Manager Settings](configuration/em-settings.md)
 
     Settings adjustable via Extension Manager, mainly connection settings such as the ES host
 
-## Indexer Configuration Reference
-
 * [DataCollector](configuration/data-collector.md)
 
     DataCollector configuration array
+
+## Customizing and extending
+
+* [Feature Classes](configuration/features.md)
+
+    How to use feature classes to append your own code to mapping, records and queries
