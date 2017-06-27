@@ -102,3 +102,6 @@ if (!empty($_EXTCONF)) {
 
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
+
+//Register FlexForm Hook
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['getFlexFormDSClass']['searchable'] = \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;

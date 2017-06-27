@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-06-27T14:18:48+00:00" product-name="searchable">
+		<header/>
+		<body>
+			<trans-unit id="flexform.features">
+				<source>Features</source>
+			</trans-unit>
+			<trans-unit id="flexform.features.highlighting">
+				<source>Result Highlighting</source>
+			</trans-unit>
+			<trans-unit id="flexform.features.termSuggest">
+				<source>Term Suggestions ("did you mean")</source>
+			</trans-unit>
+			<trans-unit id="flexform.features.completionSuggest">
+				<source>Completion Suggestions ("autosuggest")</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
