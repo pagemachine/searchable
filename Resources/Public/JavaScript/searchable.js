@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
 
-	$(".tx-searchable #term").autocomplete({
+	$(".tx-searchable .searchable-autosuggest").autocomplete({
 		serviceUrl: '/',
 		paramName: 'term',
 		params: {
