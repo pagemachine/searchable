@@ -24,6 +24,6 @@
 
 ## Customizing and extending
 
-* [Feature Classes](configuration/features.md)
+* [Feature Classes](extending/features.md)
 
     How to use feature classes to append your own code to mapping, records and queries
