@@ -22,7 +22,8 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
     protected static $defaultConfiguration = [
         //The fields to include into the highlighting field
         'fields' => [],
-        'highlightField' => 'searchable_highlight'
+        'highlightField' => 'searchable_highlight',
+        'stripTags' => true
     ];
 
     /**
@@ -64,7 +65,7 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
 
         if (!empty($highlightContent)) {
 
-            $record[$this->config['highlightField']] = implode(" ", $highlightContent);
+            $record[$this->config['highlightField']] = $this->config['stripTags'] ? strip_tags(implode(" ", $highlightContent)) : implode(" ", $highlightContent);
         }
 
 
