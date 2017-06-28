@@ -37,10 +37,18 @@ class Connection {
                     ->getHostsSettings()
                 )->build();
         }
-
         return self::$client;
-
     }
 
+    /**
+     * Tries to (re-)build the client to check if nodes are available
+     *
+     * @return boolean
+     */
+    public static function isHealthy()
+    {
+        $ping = self::getClient()->ping();
+        return $ping;
+    }
 
 }

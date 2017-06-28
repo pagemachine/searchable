@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Command;
 
+use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -51,6 +52,9 @@ class SearchableCommandController extends CommandController
      */
     public function indexFullCommand($type = null) {
 
+        $this->outputLine();
+        $this->checkHealth();
+
         $this->runFullIndexing = true;
         $this->type = $type;
 
@@ -64,6 +68,9 @@ class SearchableCommandController extends CommandController
      * @return void
      */
     public function indexPartialCommand($type = null) {
+
+        $this->outputLine();
+        $this->checkHealth();
 
         $this->runFullIndexing = false;
         $this->type = $type;
@@ -80,6 +87,7 @@ class SearchableCommandController extends CommandController
     public function resetIndexCommand($language = null) {
 
         $this->outputLine();
+        $this->checkHealth();
 
         $indexers = $this->indexerFactory->makeIndexers();
 
@@ -108,6 +116,9 @@ class SearchableCommandController extends CommandController
      * @return void
      */
     public function setupCommand() {
+
+        $this->outputLine();
+        $this->checkHealth();
 
         $indexManager = IndexManager::getInstance();
 
@@ -281,5 +292,19 @@ class SearchableCommandController extends CommandController
             }   
         }
         $this->output->progressFinish();        
+    }
+
+    /**
+     * Checks if ES is online
+     *
+     * @return void
+     */
+    protected function checkHealth()
+    {
+        if (!Connection::isHealthy())
+        {
+            $this->outputLine("<error>Elasticsearch is offline, aborting.</error>");
+            $this->quit();
+        }        
     }
 }
