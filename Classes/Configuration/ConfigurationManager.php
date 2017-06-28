@@ -312,12 +312,12 @@ class ConfigurationManager implements SingletonInterface {
      */
     protected function addToplevelUpdateConfiguration($typeName, $table) {
 
-        $this->updateConfiguration['database']['toplevel'][$table] = $typeName;
+        $this->updateConfiguration['database']['toplevel'][$table][] = $typeName;
 
         //Special case handling for pages since language overlays are in a separate table
         if ($table == 'pages') {
 
-            $this->updateConfiguration['database']['toplevel']['pages_language_overlay'] = $typeName;
+            $this->updateConfiguration['database']['toplevel']['pages_language_overlay'][] = $typeName;
         }
     }
 

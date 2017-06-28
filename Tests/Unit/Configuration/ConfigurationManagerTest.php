@@ -313,8 +313,8 @@ class ConfigurationManagerTest extends UnitTestCase
         $expectedUpdateConfiguration = [
             'database' => [
                 'toplevel' => [
-                    'pagestable' => 'pages',
-                    'extensiontable' => 'extensiontype'
+                    'pagestable' => ['pages'],
+                    'extensiontable' => ['extensiontype']
                 ],
                 'sublevel' => [
                     'contenttable' => [
