@@ -23,9 +23,12 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
         'fields' => [],
         // The field to store the values for completion in
         'completionField' => 'searchable_autosuggest',
+        // Which analyzer to use for the suggestion field. Defaults to "simple", which will only find letters.
+        // If you want to find f.ex. integers as well, use "standard".
+        'analyzer' => 'simple',
         // Prevents the whole source from being loaded for each suggestion. Should always be true if used with AJAX/search-as-you-type
         'limitSource' => true,
-        // If set, splits a sentence into different words so each word of the sentence 
+        // If set, splits a sentence into different words so each word of the sentence
         'splitIntoWords' => false,
         // Regex to use for splitting. Default is every unicode language letter (\p{L}) and digits (\d)
         'splitRegex' => '/([^\p{L}\d])+/u',
@@ -48,6 +51,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     {
         $mapping['properties'][$configuration['completionField']] = [
             'type' => 'completion',
+            'analyzer' => $configuration['analyzer'],
         ];
 
         return $mapping;
@@ -68,7 +72,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
             if ($this->config['splitIntoWords']) {
 
                 $content = $this->splitFields($content);
-            }   
+            }
         }
         $content = $this->collectFieldFromSubRecords($record, $this->config['completionField'], $content, true);
 
