@@ -120,6 +120,10 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
                 'field' => $this->config['completionField']
             ]
         ];
+        if ($this->config['limitSource']) {
+
+            $parameters['body']['_source'] = $this->config['completionField'];
+        }
         $query->setParameters($parameters);
 
         return $query;
