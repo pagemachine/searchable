@@ -15,6 +15,8 @@ class DynamicFlexFormHook
     /**
      * Array of allowed plugin keys for dynamic FlexForm transformation
      *
+     * TYPO3 7 legacy support
+     * @deprecated
      * @var array
      */
     protected $allowedListTypes = [
@@ -23,8 +25,21 @@ class DynamicFlexFormHook
     ];
 
     /**
+     * Array of allowed flexform identifiers for transformation
+     *
+     * @var array
+     */
+    protected $allowedIdentifiers = [
+        'searchable_searchbar,list',
+        'searchable_results,list'
+    ];
+
+    /**
      * Hook function of \TYPO3\CMS\Backend\Utility\BackendUtility
      * Used to add items based on TypoScript configuration
+     *
+     * TYPO3 7 legacy support
+     * @deprecated
      *
      * @param array &$dataStructure Flexform structure
      * @param array $conf some strange configuration
@@ -38,6 +53,24 @@ class DynamicFlexFormHook
 
             $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($row['list_type']);
         }
+    }
+
+    /**
+     * Hook used to add items based on TypoScript configuration
+     *
+     * @param  array $dataStructure
+     * @param  array $identifier
+     * @return array $dataStructure
+     */
+    public function parseDataStructureByIdentifierPostProcess($dataStructure, $identifier)
+    {
+
+        if ($identifier['tableName'] == 'tt_content' && $identifier['fieldName'] = 'pi_flexform' && in_array($identifier['dataStructureKey'], $this->allowedIdentifiers))
+        {
+            list($pluginKey, $listType) = explode(",", $identifier['dataStructureKey']);
+            $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($pluginKey);
+        }
+        return $dataStructure;
     }
 
     /**
@@ -122,6 +155,6 @@ class DynamicFlexFormHook
                 \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($pluginConfiguration, $overruleConfiguration);
             }
         }
-        return $pluginConfiguration;   
+        return $pluginConfiguration;
     }
 }
