@@ -1,7 +1,7 @@
 <f:layout name="Default" />
 <f:section name="main">
 
-	<form action="<f:uri.page pageUid='{settings.resultPage}'/>" class="form-inline" method="GET">
+	<form action="{f:uri.page(pageUid:settings.resultPage)}" class="form-inline" method="GET">
 		<div class="form-group">
 			<label for="term"><f:translate key="searchbar.label">Search</f:translate>: </label>
 			<f:form.textfield name="tx_searchable[term]" id="term" class="form-control {f:if(condition:settings.features.completionSuggest, then:'searchable-autosuggest')}" value="{term}"/>

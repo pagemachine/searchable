@@ -2,11 +2,11 @@
 	<f:if condition="{result.suggest.suggestion.0.options}">
 
 		<div class="suggestions">
-			<f:translate key="results.didyoumean">Did you mean</f:translate>: 
+			<f:translate key="results.didyoumean">Did you mean</f:translate>:
 			<f:for each="{result.suggest.suggestion.0.options}" as="option">
-				<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : option.text}}" class="suggestion">{option.text}</f:link.page>
+				<f:link.page additionalParams="{tx_searchable : {term : option.text}}" class="suggestion">{option.text}</f:link.page>
 			</f:for>
 		</div>
-
 	</f:if>
+
 </f:if>
