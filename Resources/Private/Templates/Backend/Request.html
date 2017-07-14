@@ -9,12 +9,12 @@
 			<div class="form-group">
 				<label for="url">Request: </label>
 				<f:form.textfield name="url" id="url" class="form-control" style="width: 500px;" value="{url}"/>
-				
+
 			</div>
 			<div class="form-group">
 				<label for="url">Body: </label>
 				<f:form.textarea name="body" id="body" class="form-control" style="width: 500px;" rows="5" value="{body}"/>
-				
+
 			</div>
 			<div class="form-group">
 				<f:form.submit value="Submit" class="btn btn-primary" />
@@ -22,9 +22,18 @@
 
 		</f:form>
 
-		<f:if condition="{response}">
-			<pre>{response}</pre>
+		<f:if condition="{status}">
+			<div class="panel panel-{color}">
+				<div class="panel-heading">Status code: {status}</div>
+				<f:if condition="{response}">
+					<div class="panel-body">
+						<pre>{response}</pre>
+					</div>
+				</f:if>
+			</div>
+
 		</f:if>
+
 
 	<div>
 		<f:link.action action="start" class="btn btn-default">Return</f:link.action>

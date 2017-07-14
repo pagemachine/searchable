@@ -6,7 +6,6 @@ use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
-use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -31,7 +30,7 @@ class BackendController extends ActionController {
 
     /**
      * Backend controller overview action to show general information about the elasticsearch instance
-     * 
+     *
      * @return void
      */
     public function startAction() {
@@ -44,10 +43,10 @@ class BackendController extends ActionController {
 
             $this->view->assign("health", $stats['health']);
             $this->view->assign("indices", $stats['indices']);
-            
+
         } catch (\Exception $e) {
 
-            $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR); 
+            $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR);
         }
 
     }
@@ -75,7 +74,7 @@ class BackendController extends ActionController {
 
         return $updates;
     }
-    
+
     /**
      * Function to run search tests in the backend.
      * @todo remove this when everything works or extend to a debuggig device
@@ -101,33 +100,113 @@ class BackendController extends ActionController {
     public function requestAction($url = '', $body = '') {
 
         if ($url != '') {
-            $request = GeneralUtility::makeInstance(HttpRequest::class, $url);
 
-            if ($body != '') {
+            $result = $this->request($url, $body);
 
-                $request->setBody($body);
-            }
-            $result = $request->send();
-
-
-            $this->view->assign("response", 
+            $this->view->assign("response",
                 print_r(
                     json_decode(
-                        $result->getBody(),
+                        $result['body'],
                         true
                     ),
                     true
                 )
-            );        
+            );
+
+            switch($result['status']) {
+
+                case '200':
+                    $resultColor = 'success';
+                    break;
+                case '404':
+                    $resultColor = 'danger';
+                    break;
+                default:
+                    $resultColor = 'warning';
+                    break;
+            }
+
+            $this->view->assignMultiple([
+                'status' => $result['status'],
+                'color' => $resultColor
+            ]);
+
         } else {
             $url = "http://localhost:9200/typo3/";
         }
 
         $this->view->assign("url", $url);
         $this->view->assign("body", $body);
+    }
 
+    /**
+     * Processes a direct request to ES
+     *
+     * @param  string $url
+     * @param  string $body
+     * @return array
+     */
+    protected function request($url, $body)
+    {
+        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 8001000) {
 
+            return $this->doRequest($url, $body);
+        }
+        else {
+            return $this->doRequestLegacy($url, $body);
+        }
+    }
 
+    /**
+     * Request processing for TYPO3 >= 8
+     *
+     * @param  string $url
+     * @param  string $body
+     * @return array
+     */
+    protected function doRequest($url, $body)
+    {
+        $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
+
+        $response = $requestFactory->request(
+            $url,
+            'GET',
+            [
+                'body' => $body ?: '',
+                'http_errors' => false
+            ]
+        );
+
+        return [
+            'status' => $response->getStatusCode(),
+            'body' => $response->getBody()->getContents()
+        ];
+    }
+
+    /**
+     * Legacy processing for TYPO3 7
+     *
+     * TYPO3 7 legacy support
+     * @deprecated
+     *
+     * @param  string $url
+     * @param  string $body
+     * @return array
+     */
+    protected function doRequestLegacy($url, $body)
+    {
+        $request = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\HttpRequest::class, $url);
+
+        if ($body != '') {
+
+            $request->setBody($body);
+        }
+        $result = $request->send();
+
+        return [
+            'status' => $result->getStatus(),
+            'body' => $result->getBody()
+        ];
     }
 
 }
