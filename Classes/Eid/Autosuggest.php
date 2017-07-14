@@ -27,9 +27,6 @@ class Autosuggest {
         $query = GeneralUtility::makeInstance(AutosuggestQuery::class);
 
         $query
-            ->setFeatureSettings([
-                'completionSuggest' => 1
-            ])
             ->setTerm($term);
 
         $result = $query->execute();
@@ -61,9 +58,6 @@ class Autosuggest {
         $query = GeneralUtility::makeInstance(AutosuggestQuery::class);
 
         $query
-            ->setFeatureSettings([
-                'completionSuggest' => 1
-            ])
             ->setTerm($term);
 
         $result = $query->execute();

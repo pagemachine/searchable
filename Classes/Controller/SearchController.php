@@ -38,7 +38,7 @@ class SearchController extends ActionController {
 
     /**
      * Performs a search and returns the result
-     * 
+     *
      * @param string $term
      * @param int $page
      * @return void
@@ -47,6 +47,7 @@ class SearchController extends ActionController {
 
         if ($term) {
             $this->searchQuery
+                ->setPluginMode(true)
                 ->setFeatureSettings($this->settings['features'])
                 ->setTerm($term)
                 ->setPage($page);

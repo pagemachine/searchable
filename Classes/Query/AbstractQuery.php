@@ -18,18 +18,18 @@ abstract class AbstractQuery {
 
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
-     * 
+     *
      * @var array $parameters
      */
     protected $parameters = [];
-    
+
     /**
      * @return array
      */
     public function getParameters() {
       return $this->parameters;
     }
-    
+
     /**
      * @param array $parameters
      * @return void
@@ -37,7 +37,7 @@ abstract class AbstractQuery {
     public function setParameters($parameters) {
       $this->parameters = $parameters;
     }
-    
+
     /**
      * @param string $key
      * @return mixed
@@ -46,7 +46,7 @@ abstract class AbstractQuery {
     {
         return isset($this->parameters[$key]) ? $this->parameters[$key] : null;
     }
-    
+
     /**
      * @param string $key
      * @param mixed $parameter
@@ -78,7 +78,7 @@ abstract class AbstractQuery {
      * @var array $featureSettings
      */
     protected $featureSettings;
-    
+
     /**
      * @return array
      */
@@ -86,7 +86,7 @@ abstract class AbstractQuery {
     {
         return $this->featureSettings;
     }
-    
+
     /**
      * @param array $featureSettings
      * @return void
@@ -94,6 +94,30 @@ abstract class AbstractQuery {
     public function setFeatureSettings($featureSettings)
     {
         $this->featureSettings = $featureSettings;
+        return $this;
+    }
+
+
+    /**
+     * @var bool $pluginMode
+     */
+    protected $pluginMode = false;
+
+    /**
+     * @return bool
+     */
+    public function getPluginMode()
+    {
+        return $this->pluginMode;
+    }
+
+    /**
+     * @param bool $pluginMode
+     * @return void
+     */
+    public function setPluginMode($pluginMode)
+    {
+        $this->pluginMode = $pluginMode;
         return $this;
     }
 
@@ -122,7 +146,7 @@ abstract class AbstractQuery {
     /**
      * Execute method, should be overriden with the concrete command to the client
      * and return the response
-     * 
+     *
      * @return array
      */
     public function execute() {
@@ -146,7 +170,9 @@ abstract class AbstractQuery {
     }
 
     /**
-     * Checks if a feature is enabled for this query
+     * Checks if a feature is enabled for this query.
+     * This only applies if the query is in plugin mode (where the controller decides which feature to use).
+     * Otherwise all features assigned in $_EXTCONF will be executed
      *
      * @param string  $featureName
      * @return boolean
@@ -154,8 +180,8 @@ abstract class AbstractQuery {
     public function isFeatureEnabled($featureName) {
 
         if (
-            isset($this->featureSettings[$featureName])
-            && $this->featureSettings[$featureName] == 1
+            !$this->pluginMode ||
+            (isset($this->featureSettings[$featureName]) && $this->featureSettings[$featureName] == 1)
             ) {
 
             return true;
