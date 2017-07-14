@@ -16,7 +16,7 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface {
      * @var string $term
      */
     protected $term = "";
-    
+
     /**
      * @return string
      */
@@ -24,10 +24,10 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface {
     {
         return $this->term;
     }
-    
+
     /**
      * @param string $term
-     * @return SearchQuery
+     * @return AutosuggestQuery
      */
     public function setTerm($term)
     {

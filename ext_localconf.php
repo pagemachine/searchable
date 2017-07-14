@@ -61,7 +61,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         'number_of_replicas' => 0
     ],
     'query' => [
-        PAGEmachine\Searchable\Query\SearchQuery::class => [ 
+        PAGEmachine\Searchable\Query\SearchQuery::class => [
             'features' => [
                 'highlighting' => [
                     'className' => PAGEmachine\Searchable\Feature\ResultHighlightFeature::class,
@@ -103,5 +103,13 @@ if (!empty($_EXTCONF)) {
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
 
-//Register FlexForm Hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['getFlexFormDSClass']['searchable'] = \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;
+//Register Hook for dynamic Plugin FlexForms
+if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8005000) {
+
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['getFlexFormDSClass']['searchable'] =
+        \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;
+}
+else {
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['searchable'] =
+        \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;
+}
