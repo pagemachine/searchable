@@ -22,23 +22,9 @@ class Autosuggest {
      */
     public function processRequestLegacy()
     {
-        $term = $_GET['term'];
+        $term = GeneralUtility::_GET('term');
 
-        $query = GeneralUtility::makeInstance(AutosuggestQuery::class);
-
-        $query
-            ->setTerm($term);
-
-        $result = $query->execute();
-
-        $suggestions = [];
-
-        if (!empty($result['suggest']['searchable_autosuggest'][0]['options'])) {
-
-            foreach ($result['suggest']['searchable_autosuggest'][0]['options'] as $suggestion) {
-                $suggestions[] = $suggestion['text'];
-            }
-        }
+        $suggestions = $this->getResults($term);
 
         header('Content-type: application/json');
         echo json_encode(['suggestions' => $suggestions]);
@@ -55,6 +41,22 @@ class Autosuggest {
     {
         $term = $request->getQueryParams()['term'];
 
+        $suggestions = $this->getResults($term);
+
+        $response = $response->withHeader('Content-type', 'application/json');
+        $response->getBody()->write(json_encode(['suggestions' => $suggestions]));
+        return $response;
+    }
+
+    /**
+     * Returns results for given term
+     *
+     * @param  string $term
+     * @return array $suggestions
+     */
+    protected function getResults($term)
+    {
+
         $query = GeneralUtility::makeInstance(AutosuggestQuery::class);
 
         $query
@@ -71,9 +73,7 @@ class Autosuggest {
             }
         }
 
-        $response = $response->withHeader('Content-type', 'application/json');
-        $response->getBody()->write(json_encode(['suggestions' => $suggestions]));
-        return $response;
+        return $suggestions;
     }
 
 }
