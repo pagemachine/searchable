@@ -36,6 +36,7 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
     public function createLinksForBatch($records)
     {
         $configurationArray = [];
+        $metaField = ExtconfService::getInstance()->getMetaFieldname();
 
         foreach ($records as $key => $record) {
 
@@ -49,7 +50,7 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
 
         foreach ($links as $key => $link) {
 
-            $records[$key]['searchable_meta']['renderedLink'] = $link;
+            $records[$key][$metaField]['renderedLink'] = $link;
 
         }
 
