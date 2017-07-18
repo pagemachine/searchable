@@ -15,14 +15,14 @@ class BulkQuery extends AbstractQuery {
      * @var string $index
      */
     protected $index;
-    
+
     /**
      * @return string
      */
     public function getIndex() {
       return $this->index;
     }
-    
+
     /**
      * @param string $index
      * @return void
@@ -36,14 +36,14 @@ class BulkQuery extends AbstractQuery {
      * @var string $type
      */
     protected $type;
-    
+
     /**
      * @return string
      */
     public function getType() {
       return $this->type;
     }
-    
+
     /**
      * @param string $type
      * @return void
@@ -80,10 +80,10 @@ class BulkQuery extends AbstractQuery {
 
     /**
      * Adds a new row to the indexer parameters
-     * 
+     *
      * @param integer $uid The uid of the current record
      * @param array $body
-     * 
+     *
      * @return void
      */
     public function addRow($uid, $body) {
@@ -102,9 +102,17 @@ class BulkQuery extends AbstractQuery {
 
     }
 
+    public function addRows($uidField, $records)
+    {
+        foreach ($records as $record) {
+
+            $this->addRow($record[$uidField], $record);
+        }
+    }
+
     /**
      * Executes a bulk insertion query
-     * 
+     *
      * @return void
      */
     public function execute() {
@@ -135,7 +143,7 @@ class BulkQuery extends AbstractQuery {
         $params = [
             'index' => $this->index,
             'type' => $this->type,
-            'id' => $id  
+            'id' => $id
         ];
 
         if ($this->client->exists($params)) {

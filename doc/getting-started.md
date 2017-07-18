@@ -22,6 +22,7 @@ Make sure you have added the bitbucket repository to your `composer.json`:
 Now simply install it via Extension Manager or TYPO3 console.
 
 ## Setup
+* Add the elasticsearch connection data and the host name of your site via Extension Manager Settings
 * Include **Typoscript** and **Constants** into your template (static includes)
 * Create a search page and and *Search* Plugin element inside
 * Configure your **indices** and **indexers** (see the next chapter)
@@ -39,7 +40,7 @@ To create a simple setup for a non-multilanguage page, first configure a **defau
       ]
     ];
 
-Now we need to define the **indexers** we want to run. 
+Now we need to define the **indexers** we want to run.
 Usually everything that produces a single search result URL (*pages* and toplevel extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, *tags*, will be appended as **subtypes** in the toplevel indexer configuration.
 
 Let's create a simple setup for page indexing:

@@ -28,6 +28,11 @@ class PagesIndexerTest extends UnitTestCase {
     protected $pagesCollector;
 
     /**
+     * @var LinkBuilderInterface
+     */
+    protected $linkBuilder;
+
+    /**
      * @var BulkQuery
      */
     protected $query;
@@ -49,8 +54,7 @@ class PagesIndexerTest extends UnitTestCase {
         $previewRenderer = $this->prophesize(PreviewRendererInterface::class);
         $previewRenderer->render(Argument::type("array"))->willReturn("<p>This is a preview!</p>");
 
-        $linkBuilder = $this->prophesize(LinkBuilderInterface::class);
-        $linkBuilder->createLinkConfiguration(Argument::type("array"))->willReturn(["link" => "config"]);
+        $this->linkBuilder = $this->prophesize(LinkBuilderInterface::class);
 
         $config = [
             'collector' => [
@@ -63,7 +67,7 @@ class PagesIndexerTest extends UnitTestCase {
 
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'] = "_meta";
 
-        $this->pagesIndexer = new PagesIndexer("typo3", 0, $config, $this->query->reveal(), $objectManager->reveal(), $previewRenderer->reveal(), $linkBuilder->reveal());
+        $this->pagesIndexer = new PagesIndexer("typo3", 0, $config, $this->query->reveal(), $objectManager->reveal(), $previewRenderer->reveal(), $this->linkBuilder->reveal());
     }
 
     /**
@@ -71,7 +75,7 @@ class PagesIndexerTest extends UnitTestCase {
      */
     public function addsPagesToIndex() {
 
-        $pageList = [ 
+        $pageList = [
             [
                 'uid' => '3',
                 'doktype' => '1',
@@ -81,15 +85,30 @@ class PagesIndexerTest extends UnitTestCase {
 
         $this->pagesCollector->getRecords()->willReturn($pageList);
 
-        $this->query->addRow(3, [
+
+        $this->linkBuilder->createLinksForBatch(Argument::type("array"))->willReturn([
+            [
                 'uid' => '3',
                 'doktype' => '1',
                 'title' => 'SimplePage',
                 '_meta' => [
                     'preview' => '<p>This is a preview!</p>',
-                    'link' => ['link' => 'config']
+                    'renderedLink' => '<a href="fnsdk">foo</a>'
                 ]
-            ])->shouldBeCalled();
+            ]
+        ]);
+
+        $this->query->addRows('uid', [
+            [
+                'uid' => '3',
+                'doktype' => '1',
+                'title' => 'SimplePage',
+                '_meta' => [
+                    'preview' => '<p>This is a preview!</p>',
+                    'renderedLink' => '<a href="fnsdk">foo</a>'
+                ]
+            ]
+        ])->shouldBeCalled();
 
         $this->query->execute()->shouldBeCalled();
         $this->query->resetBody()->shouldBeCalled();

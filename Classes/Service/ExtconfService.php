@@ -42,7 +42,7 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
-     * 
+     *
      * @param  integer $language
      * @return string $index
      */
@@ -59,7 +59,7 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns the index settings for a given index
-     * 
+     *
      * @param  string $indexName
      * @return array $settings
      */
@@ -104,7 +104,7 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns all defined types
-     * 
+     *
      * @return array
      */
     public static function getIndexers() {
@@ -114,7 +114,7 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns the meta fieldname used for preview, link etc.
-     * 
+     *
      * @return array
      */
     public static function getMetaFieldname() {
@@ -126,7 +126,7 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns raw indexer configuration
-     * 
+     *
      * @return array
      */
     public function getIndexerConfiguration() {
@@ -145,7 +145,7 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns the hosts configuration
-     * 
+     *
      * @return array
      */
     public function getHostsSettings() {
@@ -157,13 +157,22 @@ class ExtconfService implements SingletonInterface {
 
     /**
      * Returns the globally registered query configuration
-     * 
+     *
      * @return array
      */
     public function getQueryConfiguration() {
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['query'];
     }
 
+    /**
+     * Returns the frontend domain to use for link building
+     *
+     * @return string
+     */
+    public function getFrontendDomain() {
+
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['indexing']['domain'];
+    }
 
 
 }
