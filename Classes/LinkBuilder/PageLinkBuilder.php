@@ -34,7 +34,7 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
             'noCacheHash' => false,
             'section' => '',
             'linkAccessRestrictedPages' => false,
-            'absolute' => true,
+            'absolute' => false,
             'addQueryString' => false,
             'argumentsToBeExcludedFromQueryString' => [],
             'addQueryStringMethod' => null
