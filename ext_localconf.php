@@ -71,7 +71,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                 ],
                 'termSuggest' => [
                     'className' => PAGEmachine\Searchable\Feature\TermSuggestFeature::class,
-                ],
+                ]
             ]
         ],
         PAGEmachine\Searchable\Query\AutosuggestQuery::class => [
@@ -80,7 +80,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                     'className' => PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
                 ],
             ]
-        ]
+        ],
     ]
 ];
 
@@ -106,6 +106,7 @@ if (!empty($_EXTCONF)) {
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_linkbuilder'] = \PAGEmachine\Searchable\Eid\LinkBuilder::class . '::processRequest';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = \PAGEmachine\Searchable\Eid\Search::class . '::processRequest';
 
 //Register Hook for dynamic Plugin FlexForms
 if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8005000) {
