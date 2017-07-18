@@ -41,7 +41,7 @@ class Autosuggest extends AbstractEidHandler {
             }
         }
 
-        return $suggestions;
+        return ['suggestions' => $suggestions];
     }
 
 }
