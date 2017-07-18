@@ -15,6 +15,14 @@ if (TYPO3_MODE === 'BE') {
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
     'PAGEmachine.' . $_EXTKEY,
+    'LiveSearchbar',
+    ['Search' => 'liveSearchbar'],
+    ['Search' => 'liveSearchbar']
+);
+
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    'PAGEmachine.' . $_EXTKEY,
     'Results',
     ['Search' => 'results'],
     ['Search' => 'results']

@@ -20,6 +20,4 @@ $(document).ready(function(){
 		},
 		triggerSelectOnValidInput: false
 	});
-
-
 });

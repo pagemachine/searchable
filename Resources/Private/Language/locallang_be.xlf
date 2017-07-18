@@ -15,6 +15,12 @@
 			<trans-unit id="results_description">
 				<source>This plugin renders the search results</source>
 			</trans-unit>
+			<trans-unit id="live_searchbar_title">
+				<source>Searchable: Live Search bar (AJAX)</source>
+			</trans-unit>
+			<trans-unit id="live_searchbar_description">
+				<source>Use this plugin to include a live search bar (AJAX search-as-you-type)</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
