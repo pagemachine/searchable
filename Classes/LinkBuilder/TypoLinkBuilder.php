@@ -44,11 +44,11 @@ class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
      */
     public function convertToTypoLinkConfig($configuration, $record)
     {
-        if (!empty($linkConfiguration['additionalParams'])) {
+        if (!empty($configuration['additionalParams'])) {
 
-            $linkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $linkConfiguration['additionalParams']);
+            $configuration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
         }
 
-        return ['title' => $this->getLinkTitle($record), 'conf' => $linkConfiguration];
+        return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];
     }
 }
