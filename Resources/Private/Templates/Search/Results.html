@@ -21,7 +21,7 @@
 						<f:for each="{result.hits.hits}" as="hit">
 								<div class="result">
 
-										<h3><f:format.raw>{hit._source.searchable_meta.renderedLink}</f:format.raw></h3>
+										<h3><a href="{hit._source.searchable_meta.renderedLink}">{hit._source.searchable_meta.linkTitle}</a></h3>
 
 										<f:if condition="{settings.result.showPreview}">
 											<div class="result-preview">

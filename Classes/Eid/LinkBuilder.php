@@ -45,7 +45,7 @@ class LinkBuilder {
 
             foreach ($configuration as $key => $recordConfig)
             {
-                $links[$key] = $this->getLink($recordConfig['title'], $recordConfig['conf']);
+                $links[$key] = $this->getLink($recordConfig['conf']);
             }
 
         }
@@ -71,7 +71,7 @@ class LinkBuilder {
 
             foreach ($configuration as $key => $recordConfig)
             {
-                $links[$key] = $this->getLink($recordConfig['title'], $recordConfig['conf']);
+                $links[$key] = $this->getLink($recordConfig['conf']);
             }
 
         }
@@ -88,11 +88,11 @@ class LinkBuilder {
      * @param  array $configuration TypoLink configuration
      * @return string
      */
-    public function getLink($title, $configuration)
+    public function getLink($configuration)
     {
         if ($configuration['parameter']) {
 
-            $url = $this->contentObjectRenderer->typolink($title, $configuration);
+            $url = $this->contentObjectRenderer->typolink_URL($configuration);
 
             if ($url == '') {
 

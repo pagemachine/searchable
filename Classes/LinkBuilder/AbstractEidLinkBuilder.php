@@ -51,6 +51,7 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
         foreach ($links as $key => $link) {
 
             $records[$key][$metaField]['renderedLink'] = $link;
+            $records[$key][$metaField]['linkTitle'] = $this->getLinkTitle($records[$key]);
 
         }
 
