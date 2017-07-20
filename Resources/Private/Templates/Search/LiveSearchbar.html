@@ -1,20 +1,41 @@
 <f:layout name="Default" />
 <f:section name="main">
-	<form class="form" id="searchable-ajaxform">
-    <div class="searchable-typeahead">
-        <div class="searchable-typeahead-field form-group">
+	<form class="form-inline" id="searchable-ajaxform">
+		<div class="form-group">
+			<label for="term"><f:translate key="searchbar.label">Search</f:translate>: </label>
+			<input type="text" name="tx_searchable[term]" id="term" class="form-control" value="{term}" placeholder="{f:translate(key:'searchbar.label')}" type="search" autocomplete="off" />
 
-            <span class="searchable-typeahead-query">
-                <input class="js-typeahead searchable-ajaxsearch form-control"
-                       name="term"
-                       type="search"
-                       autocomplete="off"
-                       placeholder="{f:translate(key:'searchbar.label')}">
-            </span>
+		</div>
 
-        </div>
-    </div>
 	</form>
+
+	<div class="results" id="searchable-results">
+
+	</div>
+
+	<div id="searchable-result-template" style="display: none;">
+		<div class="result">
+
+				<h3><a href="[[renderedLink]]">[[linkTitle]]</a></h3>
+
+				<f:if condition="{settings.result.showPreview}">
+					<div class="result-preview">
+							[[preview]]
+					</div>
+				</f:if>
+				<f:if condition="{settings.features.highlighting}">
+					<div class="result-highlight">
+						[[highlight]]
+					</div>
+				</f:if>
+
+				<div class="result-meta">
+						<span class="result-score"><f:translate key="results.score">Score</f:translate>: [[score]]</span>
+				</div>
+
+		</div>
+
+	</div>
 
 
 </f:section>

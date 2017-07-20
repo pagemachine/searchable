@@ -61,8 +61,5 @@ page.includeJSFooterlibs.jQuery.if.isTrue = {$plugin.tx_searchable.settings.incl
 page.includeJSFooter.jQueryAutocomplete = EXT:searchable/Resources/Public/JavaScript/jquery.autocomplete.min.js
 page.includeJSFooter.jQueryAutocomplete.if.isTrue = {$plugin.tx_searchable.settings.includejQueryAutocomplete}
 
-page.includeJSFooter.jQueryTypeahead = EXT:searchable/Resources/Public/JavaScript/jquery.typeahead.min.js
-page.includeJSFooter.jQueryTypeahead.if.isTrue = {$plugin.tx_searchable.settings.includejQueryTypeahead}
-
 page.includeJSFooter.URI = EXT:searchable/Resources/Public/JavaScript/URI.js
 page.includeJSFooter.searchable = EXT:searchable/Resources/Public/JavaScript/searchable.js

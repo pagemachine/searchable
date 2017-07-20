@@ -18,9 +18,6 @@ plugin.tx_searchable {
         # cat=plugin.tx_searchable/enable/a; type=boolean; label=Include jQuery Autocomplete (used for Autosuggest loading)
         includejQueryAutocomplete = 1
 
-        # cat=plugin.tx_searchable/enable/a; type=boolean; label=Include jQuery Typeahead (used for Live Search)
-        includejQueryTypeahead = 1
-
         # cat=plugin.tx_searchable//a; type=int+; label=Search result page
         resultPage =
         # cat=plugin.tx_searchable//a; type=int+; label=Results per page
