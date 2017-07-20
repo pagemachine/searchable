@@ -24,6 +24,8 @@
 
         var result = [];
 
+        var timer;
+
         /**
          * Initializes the search plugin
          *
@@ -42,8 +44,12 @@
                 currentPage = currentPage + 1;
             })
 
-            //Start AJAX Search loop
-            callAjaxSearch("");
+            //Reset the timer each time a keyup is registered
+            $(settings.input).on("keyup", function(){
+
+                clearTimeout(timer);
+                timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
+            })
         }
 
         /**
@@ -80,7 +86,7 @@
                 search();
             }
 
-            setTimeout(function(){callAjaxSearch()}, settings.delay);
+            timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
         }
 
         function clear() {
