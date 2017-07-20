@@ -14,7 +14,7 @@ insert_final_newline = true
 
 # CSS-Files
 [*.css]
-indent_style = tab
+indent_style = space
 indent_size = 4
 
 # HTML-Files
@@ -29,12 +29,12 @@ indent_size = 4
 
 # JS-Files
 [*.js]
-indent_style = tab
+indent_style = space
 indent_size = 4
 
 # JSON-Files
 [*.json]
-indent_style = tab
+indent_style = space
 indent_size = 4
 
 # PHP-Files
