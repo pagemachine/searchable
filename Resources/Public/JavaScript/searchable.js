@@ -74,5 +74,11 @@ $(document).ready(function(){
 	        hint: "searchable-typeahead-hint",
 	        cancelButton: "searchable-typeahead-cancel-button"
     	},
+    	callback: {
+    		onSubmit: function(node, form, item, event) {
+
+    			event.preventDefault();
+    		}
+    	}
 	});
 });
