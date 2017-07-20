@@ -22,7 +22,7 @@ Make sure you have added the bitbucket repository to your `composer.json`:
 Now simply install it via Extension Manager or TYPO3 console.
 
 ## Setup
-* Add the elasticsearch connection data and the host name of your site via Extension Manager Settings
+* Add the elasticsearch connection data and the host name of your site via Extension Manager Settings (See: [EM Settings](configuration/em-settings.md))
 * Include **Typoscript** and **Constants** into your template (static includes)
 * Create a search page and and *Search* Plugin element inside
 * Configure your **indices** and **indexers** (see the next chapter)

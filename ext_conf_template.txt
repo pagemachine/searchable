@@ -1,4 +1,8 @@
 connection {
-	# cat=basic; type=string; label=Comma-separated list of host names
+	# cat=basic; type=string; label=Comma-separated list of elasticsearch host names
 	hosts = http://localhost:9200
+}
+indexing {
+	# cat=basic; type=string; label=Frontend domain of your site
+	domain = http://localhost:80/
 }
