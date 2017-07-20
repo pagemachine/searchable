@@ -39,6 +39,10 @@
 				<source>load more</source>
 				<target>mehr anzeigen</target>
 			</trans-unit>
+			<trans-unit id="results.noresults">
+				<source>No results found.</source>
+				<target>Keine Ergebnisse gefunden.</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

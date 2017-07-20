@@ -30,6 +30,9 @@
 			<trans-unit id="results.loadmore">
 				<source>load more</source>
 			</trans-unit>
+			<trans-unit id="results.noresults">
+				<source>No results found.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

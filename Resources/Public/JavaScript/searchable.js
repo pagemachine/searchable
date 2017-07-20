@@ -6,6 +6,7 @@
             input : "#term",
             result: "#searchable-results",
             morebutton: "#searchable-loadmore",
+            noresults: "#searchable-noresults",
             template: {
                 id : "#searchable-result-template"
             },
@@ -114,11 +115,14 @@
 
         function populate() {
 
-            if (result) {
+            if (result && result.results.hits.hits.length > 0) {
+                $(settings.noresults).hide();
                 for (var i=0; i < result.results.hits.hits.length; i++) {
                     $(settings.result).append(renderResult(result.results.hits.hits[i]));
 
                 }
+            } else {
+                $(settings.noresults).show();
             }
         }
 

@@ -33,6 +33,14 @@
     text-align: center;
 }
 
+.tx-searchable #searchable-noresults {
+
+    margin: 20px 10px;
+    padding-top: 20px;
+    border-top: 1px solid #DDD;
+    font-style: italic;
+}
+
 /* Autocomplete CSS */
 
 .searchable-autocomplete-suggestions {
