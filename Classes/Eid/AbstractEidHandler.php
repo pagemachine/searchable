@@ -16,6 +16,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 abstract class AbstractEidHandler {
 
     /**
+     * Additional options for this handler
+     *
+     * @var array
+     */
+    protected $options = [];
+
+    /**
      * Processes a autosuggest request (< TYPO3 V8)
      *
      * @return void
@@ -23,6 +30,7 @@ abstract class AbstractEidHandler {
     public function processRequestLegacy()
     {
         $term = GeneralUtility::_GET('term');
+        $this->options = GeneralUtility::_GET('options');
 
         $result = $this->getResults($term);
 
@@ -40,6 +48,8 @@ abstract class AbstractEidHandler {
     public function processRequest(ServerRequestInterface $request, ResponseInterface $response)
     {
         $term = $request->getQueryParams()['term'];
+        $this->options = $request->getQueryParams()['options'];
+
         $result = $this->getResults($term);
 
         $response = $response->withHeader('Content-type', 'application/json');

@@ -5,13 +5,23 @@
         var settings = $.extend({
             input : "#term",
             result: "#searchable-results",
+            morebutton: "#searchable-loadmore",
             template: {
                 id : "#searchable-result-template"
             },
-            delay: 500
+            delay: 500,
+            infiniteScroll: true
         }, options);
 
         var formObject = this;
+
+        var lastPage = 1;
+        var currentPage = 1;
+
+        var searchTerm = "";
+        var lastTerm = "";
+
+        var result = [];
 
         /**
          * Initializes the search plugin
@@ -25,45 +35,102 @@
                 e.preventDefault();
             });
 
+            //Setup more button
+            $(settings.morebutton).on("click", function(){
+
+                currentPage = currentPage + 1;
+            })
+
             //Start AJAX Search loop
-            callAjaxSearch("", options);
+            callAjaxSearch("");
         }
 
         /**
          * Calls the ajax search in fixed intervals
          *
-         * @param  {String} prevTerm
-         * @param  {Object} options
          */
-        function callAjaxSearch(prevTerm, options) {
+        function callAjaxSearch() {
 
-            var searchTerm = $(options.input).val();
+            searchTerm = $(settings.input).val();
 
-            if (searchTerm != prevTerm) {
+            //No term - clear results
+            if (searchTerm == "") {
 
-                $(options.result).empty();
+                clear();
             }
-            if (searchTerm.length > 0 && searchTerm != prevTerm) {
+            //Different term than last time - clear everything and start search
+            else if (searchTerm != lastTerm) {
 
-                $.ajax("/?eID=searchable_search", {
-                    dataType: 'json',
-                    data: {
-                        term: searchTerm
-                    },
-                    success: function(data, textStatus, jqXHR) {
+                clear();
+                resetPage();
+                search();
 
-                        for (var i=0; i < data.length; i++) {
-                            $(options.result).append(renderResult(data[i], options));
+            }
+            //Same term but different page - append content (if infinite scroll is active)
+            else if (currentPage != lastPage) {
 
-                        }
+                if (!settings.infiniteScroll) {
 
-                        setTimeout(callAjaxSearch(searchTerm, options), options.delay);
+                    clear();
+                }
+
+                search();
+            }
+
+            setTimeout(function(){callAjaxSearch()}, settings.delay);
+        }
+
+        function clear() {
+
+            $(settings.result).empty();
+        }
+
+        function resetPage() {
+
+            currentPage = 1;
+            lastPage = 1;
+        }
+
+        function search() {
+
+            xhr = $.ajax("/?eID=searchable_search", {
+                dataType: 'json',
+                data: {
+                    term: searchTerm,
+                    options: {
+                        page : currentPage
                     }
-                });
+                },
+                success: function(data, textStatus, jqXHR) {
+
+                    lastTerm = searchTerm;
+                    lastPage = currentPage;
+                    result = data;
+                    populate();
+                    updateUI();
+                }
+            });
+        }
+
+        function populate() {
+
+            if (result) {
+                for (var i=0; i < result.results.hits.hits.length; i++) {
+                    $(settings.result).append(renderResult(result.results.hits.hits[i]));
+
+                }
+            }
+        }
+
+        function updateUI() {
+
+            if (result.totalPages > currentPage) {
+
+                $(settings.morebutton).show();
             }
             else {
 
-                setTimeout(function(){callAjaxSearch(searchTerm, options)}, options.delay);
+                $(settings.morebutton).hide();
             }
         }
 
@@ -71,12 +138,11 @@
          * Renders results
          *
          * @param  {Object} data Raw data
-         * @param  {Object} options
          * @return {String} The rendered result template
          */
-        function renderResult(data, options) {
+        function renderResult(data) {
 
-            var template = $(options.template.id).html();
+            var template = $(settings.template.id).html();
 
             template = template.replaceSearchableMarker("renderedLink", data._source.searchable_meta.renderedLink);
             template = template.replaceSearchableMarker("linkTitle", data._source.searchable_meta.linkTitle);
@@ -87,6 +153,12 @@
             return template;
         }
 
+        /**
+         * Renders the result highlight
+         *
+         * @param  {Object} data
+         * @return {String}
+         */
         function renderHighlight(data) {
 
             if (data.highlight) {
@@ -99,6 +171,13 @@
         return this;
     }
 
+    /**
+     * Replaces markers in strings
+     *
+     * @param  {String} marker
+     * @param  {String} value
+     * @return {String}
+     */
     String.prototype.replaceSearchableMarker = function(marker, value) {
 
         return this.replace("[[" + marker + "]]", value);
@@ -128,13 +207,6 @@ $(document).ready(function(){
         triggerSelectOnValidInput: false
     });
 
-    $("#searchable-ajaxform").searchable({
-        input : "#term",
-        result: "#searchable-results",
-        template: {
-            id : "#searchable-result-template"
-        },
-        delay: 500
-    });
+    $("#searchable-ajaxform").searchable();
 
 });

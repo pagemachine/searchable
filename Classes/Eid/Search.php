@@ -27,11 +27,16 @@ class Search extends AbstractEidHandler {
         $query = GeneralUtility::makeInstance(SearchQuery::class);
 
         $query
-            ->setTerm($term);
+            ->setTerm($term)
+            ->setPage($this->options['page'] ?: 1);
 
         $result = $query->execute();
 
-        return $result['hits']['hits'];
+        return [
+            'results' => $result,
+            'totalPages' => $query->getPageCount(),
+            'currentPage' => $this->options['page']
+        ];
     }
 
 }
