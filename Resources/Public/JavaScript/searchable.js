@@ -58,6 +58,8 @@
             if (searchTerm == "") {
 
                 clear();
+                resetPage();
+                updateUI();
             }
             //Different term than last time - clear everything and start search
             else if (searchTerm != lastTerm) {
@@ -84,6 +86,7 @@
         function clear() {
 
             $(settings.result).empty();
+            result = [];
         }
 
         function resetPage() {
@@ -128,7 +131,7 @@
 
         function updateUI() {
 
-            if (result.totalPages > currentPage) {
+            if (result && result.totalPages > currentPage) {
 
                 $(settings.morebutton).show();
             }
