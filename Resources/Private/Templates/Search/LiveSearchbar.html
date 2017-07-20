@@ -1,7 +1,7 @@
 <f:layout name="Default" />
 <f:section name="main">
-	<form class="form-inline" id="searchable-ajaxform">
-		<div class="form-group">
+	<form class="form-inline searchable-searchform" id="searchable-ajaxform">
+		<div class="form-group term-group">
 			<label for="term"><f:translate key="searchbar.label">Search</f:translate>: </label>
 			<input type="text" name="tx_searchable[term]" id="term" class="form-control" value="{term}" placeholder="{f:translate(key:'searchbar.label')}" type="search" autocomplete="off" />
 
@@ -13,7 +13,10 @@
 
 	</div>
 
-	<span class="btn btn-default" id="searchable-loadmore" style="display: none;">Load more</span>
+	<div class="searchable-morewrapper">
+	<span class="btn btn-primary" id="searchable-loadmore" style="display: none;">Load more</span>
+	</div>
+
 
 	<div id="searchable-result-template" style="display: none;">
 		<div class="result">

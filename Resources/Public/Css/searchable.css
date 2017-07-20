@@ -1,3 +1,7 @@
+.tx-searchable .searchable-searchform {
+    margin: 20px 10px;
+}
+
 .tx-searchable .result-preview {
     margin-bottom: 10px;
 }
@@ -9,6 +13,24 @@
 
 .tx-searchable .searchable-highlight {
     background-color: #FF0;
+}
+
+.tx-searchable .results {
+
+    margin: 20px 10px;
+}
+
+.tx-searchable .result {
+
+    margin: 20px 10px;
+    padding-top: 20px;
+    border-top: 1px solid #DDD;
+}
+
+.tx-searchable .searchable-morewrapper {
+
+    margin: 20px 10px;
+    text-align: center;
 }
 
 /* Autocomplete CSS */
