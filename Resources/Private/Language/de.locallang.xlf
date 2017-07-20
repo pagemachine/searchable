@@ -35,6 +35,10 @@
 				<source>Did you mean</source>
 				<target>Meinten Sie</target>
 			</trans-unit>
+			<trans-unit id="results.loadmore">
+				<source>load more</source>
+				<target>mehr anzeigen</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
