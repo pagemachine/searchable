@@ -13,40 +13,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Eid-based autosuggest class
  */
-class Autosuggest {
+class Autosuggest extends AbstractEidHandler {
 
-    /**
-     * Processes a autosuggest request (< TYPO3 V8)
-     *
-     * @return void
-     */
-    public function processRequestLegacy()
-    {
-        $term = GeneralUtility::_GET('term');
-
-        $suggestions = $this->getResults($term);
-
-        header('Content-type: application/json');
-        echo json_encode(['suggestions' => $suggestions]);
-    }
-
-    /**
-     * Process request
-     *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return null|ResponseInterface
-     */
-    public function processRequest(ServerRequestInterface $request, ResponseInterface $response)
-    {
-        $term = $request->getQueryParams()['term'];
-
-        $suggestions = $this->getResults($term);
-
-        $response = $response->withHeader('Content-type', 'application/json');
-        $response->getBody()->write(json_encode(['suggestions' => $suggestions]));
-        return $response;
-    }
 
     /**
      * Returns results for given term
@@ -73,7 +41,7 @@ class Autosuggest {
             }
         }
 
-        return $suggestions;
+        return ['suggestions' => $suggestions];
     }
 
 }

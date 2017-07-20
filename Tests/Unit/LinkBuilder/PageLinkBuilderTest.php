@@ -29,141 +29,46 @@ class PageLinkBuilderTest extends UnitTestCase {
     /**
      * @test
      */
-    public function createsFixedLinkConfiguration() {
+    public function convertsFromViewHelperConfigToTypoLinkConfig()
+    {
+        $this->pageLinkBuilder = new PageLinkBuilder();
 
-        $record = [];
-
-        $configuration = [
-            'titleField' => 'footitle',
-            'fixedParts' => [
-                'pageUid' => 2,
-                'additionalParams' => ['foo' => 'bar'],
-                'pageType' => 123,
-                'noCache' => true,
-                'noCacheHash' => true,
-                'section' => 'asection',
-                'linkAccessRestrictedPages' => true,
-                'absolute' => true,
-                'addQueryString' => true,
-                'argumentsToBeExcludedFromQueryString' => ['dev', 'null'],
-                'addQueryStringMethod' => 'someMethod'
+        $config = [
+            'pageUid' => 123,
+            'additionalParams' => [
+                'foo' => 'bar'
             ],
-            'dynamicParts' => [
-            ]
-        ];
-
-        $expectedLinkConfiguration = [
-            'pageUid' => 2,
-            'additionalParams' => ['foo' => 'bar'],
-            'pageType' => 123,
+            'pageType' => 456,
             'noCache' => true,
-            'noCacheHash' => true,
-            'section' => 'asection',
+            'useCacheHash' => false,
+            'section' => 'xyz',
             'linkAccessRestrictedPages' => true,
             'absolute' => true,
             'addQueryString' => true,
-            'argumentsToBeExcludedFromQueryString' => ['dev', 'null'],
-            'addQueryStringMethod' => 'someMethod',
-            'title' => 'Link'
+            'argumentsToBeExcludedFromQueryString' => [
+                'someArgument'
+            ],
+            'addQueryStringMethod' => 'GET'
         ];
 
-        $this->pageLinkBuilder = new PageLinkBuilder($configuration);
-
-        $linkConfiguration = $this->pageLinkBuilder->createLinkConfiguration($record);
-
-        $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
-        
-    }
-
-    /**
-     * @test
-     */
-    public function createsDynamicLinkTitle() {
-
-        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
-        $configuration['titleField'] = 'foobar';
-
-
-        $record = [
-            'foobar' => 'baz'
+        $expectedTypolinkConfig = [
+            'parameter' => '123,456',
+            'additionalParams' => '&foo=bar',
+            'no_cache' => 1,
+            'section' => 'xyz',
+            'linkAccessRestrictedPages' => 1,
+            'forceAbsoluteUrl' => 1,
+            'addQueryString' => 1,
+            'addQueryString.' => [
+                'exclude' => 'someArgument',
+                'method' => 'GET'
+            ],
         ];
 
-        $this->pageLinkBuilder = new PageLinkBuilder($configuration);
-        $linkConfiguration = $this->pageLinkBuilder->createLinkConfiguration($record);
+        $typolinkConfig = $this->pageLinkBuilder->convertToTypoLinkConfig($config, []);
 
-        $this->assertArraySubset(['title' => 'baz'], $linkConfiguration);
-
-    }
-
-    /**
-     * @test
-     */
-    public function replacesDynamicFields() {
-
-        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
-
-        $configuration['dynamicParts'] = [ 'pageUid' => 'page'];
-
-        $record = [
-            'page' => '123'
-        ];
-
-        $this->pageLinkBuilder = new PageLinkBuilder($configuration);
-        $linkConfiguration = $this->pageLinkBuilder->createLinkConfiguration($record);
-
-        $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
+        $this->assertEquals($expectedTypolinkConfig, $typolinkConfig['conf']);
 
     }
-
-    /**
-     * @test
-     */
-    public function replacesNestedDynamicFields() {
-
-        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
-
-        $configuration['dynamicParts'] = [
-            'pageUid' => 'page',
-            'additionalParams' => [
-                'param1' => 'property1',
-                'param2' => 'property2'
-            ]
-        ];
-
-        $record = [
-            'page' => '123',
-            'property1' => 'value1',
-            'property2' => 'value2'
-        ];
-
-        $this->pageLinkBuilder = new PageLinkBuilder($configuration);
-        $linkConfiguration = $this->pageLinkBuilder->createLinkConfiguration($record);
-
-        $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
-        $this->assertArraySubset(['additionalParams' => ['param1' => 'value1', 'param2' => 'value2']], $linkConfiguration);
-
-    }
-
-    /**
-     * @test
-     */
-    public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead() {
-
-        $configuration = PageLinkBuilder::getDefaultConfiguration([], []);
-
-        $configuration['fixedParts']['pageUid'] = '123';
-        $configuration['dynamicParts']['pageUid'] = 'page';
-
-        $record = [];
-
-        $this->pageLinkBuilder = new PageLinkBuilder($configuration);
-        $linkConfiguration = $this->pageLinkBuilder->createLinkConfiguration($record);
-
-        $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
-
-        
-    }
-
-
 
 }

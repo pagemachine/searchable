@@ -15,6 +15,14 @@ if (TYPO3_MODE === 'BE') {
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
     'PAGEmachine.' . $_EXTKEY,
+    'LiveSearchbar',
+    ['Search' => 'liveSearchbar'],
+    ['Search' => 'liveSearchbar']
+);
+
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    'PAGEmachine.' . $_EXTKEY,
     'Results',
     ['Search' => 'results'],
     ['Search' => 'results']
@@ -42,6 +50,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'extensionManagement' => [
         'connection' => [
             'hosts' => 'http://localhost:9200'
+        ],
+        'indexing' => [
+            'domain' => 'http://localhost:80'
         ]
     ],
     // The fieldname to store meta information in (link, preview etc.). This field will be added to all created ES types and set to index = false
@@ -68,7 +79,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                 ],
                 'termSuggest' => [
                     'className' => PAGEmachine\Searchable\Feature\TermSuggestFeature::class,
-                ],
+                ]
             ]
         ],
         PAGEmachine\Searchable\Query\AutosuggestQuery::class => [
@@ -77,7 +88,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
                     'className' => PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
                 ],
             ]
-        ]
+        ],
     ]
 ];
 
@@ -102,6 +113,8 @@ if (!empty($_EXTCONF)) {
 
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_linkbuilder'] = \PAGEmachine\Searchable\Eid\LinkBuilder::class . '::processRequest';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = \PAGEmachine\Searchable\Eid\Search::class . '::processRequest';
 
 //Register Hook for dynamic Plugin FlexForms
 if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8005000) {

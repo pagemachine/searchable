@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -11,7 +12,7 @@ use PAGEmachine\Searchable\Service\ConfigurationMergerService;
  * PageLinkBuilder
  * Creates a link configuration array to be passed on to a Fluid link.page ViewHelper
  */
-class PageLinkBuilder extends AbstractLinkBuilder implements LinkBuilderInterface {
+class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface {
 
     /**
      * The default title if the title field is empty
@@ -43,69 +44,73 @@ class PageLinkBuilder extends AbstractLinkBuilder implements LinkBuilderInterfac
     ];
 
     /**
-     * Creates a link
-     * 
-     * @param  array $record
-     * @return array
-     */
-    public function createLinkConfiguration($record) {
-
-        $linkConfiguration = $this->config['fixedParts'];
-
-        if (!empty($this->config['dynamicParts'])) {
-
-            $dynamicConfiguration = $this->replaceFieldsRecursive($this->config['dynamicParts'], $record);
-
-            $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $dynamicConfiguration);
-        }
-
-        $linkConfiguration['title'] = $this->getLinkTitle($record);
-
-
-        return $linkConfiguration;
-    }
-
-    /**
+     * Converts builder-specific configuration to TypoLink configuration
      *
      * @param  array $configuration
      * @param  array $record
      * @return array
      */
-    protected function replaceFieldsRecursive($configuration, $record) {
+    public function convertToTypoLinkConfig($configuration, $record)
+    {
+        $linkConfiguration = $this->convertFromPageViewHelperConfig($configuration);
 
-        foreach ($configuration as $key => $value) {
-
-            if (is_array($value)) {
-
-                $configuration[$key] = $this->replaceFieldsRecursive($value, $record);
-            } else if (is_string($value) && $record[$value] != null) {
-
-                $configuration[$key] = $record[$value];
-            } else {
-
-                unset($configuration[$key]);
-            }
-
-        }
-
-        return $configuration;
+        return ['title' => $this->getLinkTitle($record), 'conf' => $linkConfiguration];
     }
 
     /**
-     * Fetches the link title
+     * Converts Link\PageViewHelper config to TypoLink config
+     * @see \TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder::buildTypolinkConfiguration
      *
-     * @param  array  $record
-     * @return string
+     * @param  array $configuration
+     * @return array
      */
-    protected function getLinkTitle($record = []) {
+    protected function convertFromPageViewHelperConfig($configuration)
+    {
+        $typolinkConfiguration = [];
 
-        $title = $record[$this->config['titleField']];
+        $typolinkConfiguration['parameter'] = $configuration['pageUid'];
 
-        if ($title == null) {
+        if ($configuration['pageType'] !== 0) {
+            $typolinkConfiguration['parameter'] .= ',' . $configuration['pageType'];
 
-            $title = $this->defaultTitle;
+        }
+        if (!empty($configuration['additionalParams'])) {
+
+            $typolinkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
         }
 
-        return $title;
+        if ($configuration['addQueryString'] === true) {
+
+            $typolinkConfiguration['addQueryString'] = 1;
+
+            if (!empty($configuration['argumentsToBeExcludedFromQueryString'])) {
+                $typolinkConfiguration['addQueryString.'] = [
+                    'exclude' => implode(',', $configuration['argumentsToBeExcludedFromQueryString'])
+                ];
+            }
+            if ($configuration['addQueryStringMethod']) {
+                $typolinkConfiguration['addQueryString.']['method'] = $configuration['addQueryStringMethod'];
+            }
+        }
+        if ($configuration['noCache'] === true) {
+
+            $typolinkConfiguration['no_cache'] = 1;
+
+        } elseif ($configuration['useCacheHash']) {
+
+            $typolinkConfiguration['useCacheHash'] = 1;
+
+        }
+        if ($configuration['section'] !== '') {
+            $typolinkConfiguration['section'] = $configuration['section'];
+        }
+        if ($configuration['linkAccessRestrictedPages'] === true) {
+            $typolinkConfiguration['linkAccessRestrictedPages'] = 1;
+        }
+        if ($configuration['absolute'] == true) {
+
+            $typolinkConfiguration['forceAbsoluteUrl'] = 1;
+        }
+        return $typolinkConfiguration;
     }
 }

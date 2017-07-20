@@ -77,14 +77,14 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @var array
      */
     protected $features = [];
-    
+
     /**
      * @return String
      */
     public function getIndex() {
       return $this->index;
     }
-    
+
     /**
      * @param String $index
      * @return void
@@ -98,14 +98,14 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @var String $type
      */
     protected $type;
-    
+
     /**
      * @return String
      */
     public function getType() {
       return $this->type;
     }
-    
+
     /**
      * @param String $type
      * @return void
@@ -119,14 +119,14 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @var int $language
      */
     protected $language;
-    
+
     /**
      * @return int
      */
     public function getLanguage() {
       return $this->language;
     }
-    
+
     /**
      * @param int $language
      * @return void
@@ -140,14 +140,14 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @var array $config
      */
     protected $config;
-    
+
     /**
      * @return array
      */
     public function getConfig() {
       return $this->config;
     }
-    
+
     /**
      * @param array $config
      * @return void
@@ -183,12 +183,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
         $this->setFeatures($features);
-         
+
     }
 
     /**
      * Sets the preview renderer
-     * 
+     *
      * @param PreviewRendererInterface|null $previewRenderer
      */
     protected function setPreviewRenderer(PreviewRendererInterface $previewRenderer = null) {
@@ -212,7 +212,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
     /**
      * Sets the link builder
-     * 
+     *
      * @param LinkBuilderInterface|null $linkBuilder
      */
     protected function setLinkBuilder(LinkBuilderInterface $linkBuilder = null) {
@@ -259,7 +259,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
     protected function addSystemFields($record = []) {
         $systemFields = [];
 
-        $systemFields['link'] = $this->linkBuilder->createLinkConfiguration($record);
         $systemFields['preview'] = $this->previewRenderer->render($record);
 
         $record[ExtconfService::getMetaFieldname()] = $systemFields;
@@ -269,7 +268,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
     /**
      * Main function for indexing
-     * 
+     *
      * @return \Generator
      */
     public function run() {
@@ -277,26 +276,35 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
         $counter = 0;
         $overallCounter = 0;
 
+        $records = [];
+
         foreach ($this->dataCollector->getRecords() as $fullRecord) {
 
-            $fullRecord = $this->addSystemFields($fullRecord);
-
-            $this->query->addRow($fullRecord['uid'], $fullRecord);
+            $records[] = $this->addSystemFields($fullRecord);
 
             $counter++;
             $overallCounter++;
 
             if ($counter >= 20) {
 
+                $records = $this->linkBuilder->createLinksForBatch($records);
+
+                $this->query->addRows('uid', $records);
+
                 $this->query->execute();
                 $this->query->resetBody();
 
                 $counter = 0;
+                $records = [];
                 yield $overallCounter;
             }
         }
 
         if ($counter != 0) {
+
+            $records = $this->linkBuilder->createLinksForBatch($records);
+
+            $this->query->addRows('uid', $records);
 
             $this->query->execute();
             $this->query->resetBody();
@@ -307,7 +315,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
     /**
      * Runs an update
-     * 
+     *
      * @return \Generator
      */
     public function runUpdate() {
@@ -318,6 +326,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
         $updateQuery = new UpdateQuery();
 
         $updates = $updateQuery->getUpdates($this->index, $this->type);
+
+        $records = [];
 
         if (!empty($updates)) {
             foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
@@ -331,15 +341,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
                     $counter++;
                     $overallCounter++;
 
-                    $fullRecord = $this->addSystemFields($fullRecord);
-
-                    $this->query->addRow($fullRecord['uid'], $fullRecord);
+                    $records[] = $this->addSystemFields($fullRecord);
 
                     if ($counter >= 20) {
+
+                        $records = $this->linkBuilder->createLinksForBatch($records);
+
+                        $this->query->addRows('uid', $records);
 
                         $this->query->execute();
                         $this->query->resetBody();
 
+                        $records = [];
                         $counter = 0;
                         yield $overallCounter;
                     }
@@ -347,6 +360,10 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
             }
 
             if ($counter != 0) {
+
+                $records = $this->linkBuilder->createLinksForBatch($records);
+
+                $this->query->addRows('uid', $records);
 
                 $this->query->execute();
                 $this->query->resetBody();

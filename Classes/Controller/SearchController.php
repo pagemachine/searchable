@@ -37,6 +37,16 @@ class SearchController extends ActionController {
     }
 
     /**
+     * Renders the search form for a live search
+     *
+     * @return void
+     */
+    public function liveSearchbarAction() {
+
+        $this->view->assign("settings", $this->settings);
+    }
+
+    /**
      * Performs a search and returns the result
      *
      * @param string $term
