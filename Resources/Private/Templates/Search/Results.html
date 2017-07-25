@@ -50,18 +50,18 @@
 				</div>
 				<div class="pagination">
 					<f:if condition="{previousPage}">
-						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : previousPage}}"><f:translate key="results.previous">Prev</f:translate></f:link.page>
+						<f:link.page additionalParams="{tx_searchable : {term : term, page : previousPage}}"><f:translate key="results.previous">Prev</f:translate></f:link.page>
 					</f:if>
 					<f:for each="{totalPages}" as="whatever" key="page">
 						<f:if condition="{page} == {currentPage}">
 							<f:then>{page}</f:then>
 							<f:else>
-								<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : page}}">{page}</f:link.page>
+								<f:link.page additionalParams="{tx_searchable : {term : term, page : page}}">{page}</f:link.page>
 							</f:else>
 						</f:if>
 					</f:for>
 					<f:if condition="{nextPage}">
-						<f:link.page pageUid="{settings.resultPage}" additionalParams="{tx_searchable : {term : term, page : nextPage}}"><f:translate key="results.next">Next</f:translate></f:link.page>
+						<f:link.page additionalParams="{tx_searchable : {term : term, page : nextPage}}"><f:translate key="results.next">Next</f:translate></f:link.page>
 					</f:if>
 				</div>
 
