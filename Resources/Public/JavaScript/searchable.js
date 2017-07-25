@@ -10,7 +10,7 @@
             template: {
                 id : "#searchable-result-template"
             },
-            delay: 500,
+            delay: 300,
             infiniteScroll: true
         }, options);
 
