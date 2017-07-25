@@ -809,7 +809,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v2.8.22",
+            "version": "v2.8.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
