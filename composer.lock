@@ -113,16 +113,16 @@
         },
         {
             "name": "elasticsearch/elasticsearch",
-            "version": "v5.2.0",
+            "version": "v5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "dc57bbcd4be2c9061ebe5be59058ea8bdebc904e"
+                "reference": "50e5b1c63db68839b8acc1f4766769570a27a448"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/dc57bbcd4be2c9061ebe5be59058ea8bdebc904e",
-                "reference": "dc57bbcd4be2c9061ebe5be59058ea8bdebc904e",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/50e5b1c63db68839b8acc1f4766769570a27a448",
+                "reference": "50e5b1c63db68839b8acc1f4766769570a27a448",
                 "shasum": ""
             },
             "require": {
@@ -164,7 +164,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2017-04-12T20:40:50+00:00"
+            "time": "2017-07-19T18:44:30+00:00"
         },
         {
             "name": "guzzlehttp/ringphp",
