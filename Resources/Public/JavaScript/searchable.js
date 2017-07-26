@@ -11,7 +11,12 @@
                 id : "#searchable-result-template"
             },
             delay: 300,
-            infiniteScroll: true
+            infiniteScroll: true,
+            callbacks: {
+                modifyResultList: false, //Callback after the results are fetched
+                modifySingleResult: false //Callback before a single result is rendered. Takes one argument: "data" and should return it
+            }
+
         }, options);
 
         var formObject = this;
@@ -130,10 +135,23 @@
 
         function populate() {
 
+            if (typeof(settings.callbacks.modifyResultList) === "function") {
+
+                result = settings.callbacks.modifyResultList(result);
+            }
+
             if (result && result.results.hits.hits.length > 0) {
                 $(settings.noresults).hide();
                 for (var i=0; i < result.results.hits.hits.length; i++) {
-                    $(settings.result).append(renderResult(result.results.hits.hits[i]));
+
+                    if (typeof(settings.callbacks.modifySingleResult) === "function") {
+
+                        data = settings.callbacks.modifySingleResult(result.results.hits.hits[i]);
+                    }
+                    else {
+                        data = result.results.hits.hits[i];
+                    }
+                    $(settings.result).append(renderResult(data));
 
                 }
             } else {
