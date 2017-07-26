@@ -17,7 +17,7 @@
 
         }, options);
 
-        var formObject = this;
+        var formObject = $(this);
 
         var lastPage = 1;
         var currentPage = 1;
@@ -37,29 +37,34 @@
          */
         function init() {
 
-            template = settings.template;
+            if (formObject.length != 0) {
 
-            // Prepare template
-            Mustache.parse(template, ['[[', ']]']);
+                template = settings.template;
 
-            //Prevent form submit
-            formObject.on("submit", function(e) {
+                // Prepare template
+                Mustache.parse(template, ['[[', ']]']);
 
-                e.preventDefault();
-            });
+                //Prevent form submit
+                formObject.on("submit", function(e) {
 
-            //Setup more button
-            $(settings.morebutton).on("click", function(){
+                    e.preventDefault();
+                });
 
-                currentPage = currentPage + 1;
-            })
+                //Setup more button
+                $(settings.morebutton).on("click", function(){
 
-            //Reset the timer each time a keyup is registered
-            $(settings.input).on("keyup", function(){
+                    currentPage = currentPage + 1;
+                });
 
-                clearTimeout(timer);
-                timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
-            })
+                //Reset the timer each time a keyup is registered
+                $(settings.input).on("keyup", function(){
+
+                    clearTimeout(timer);
+                    timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
+                });
+            }
+
+
         }
 
         /**
@@ -76,6 +81,8 @@
                 clear();
                 resetPage();
                 updateUI();
+
+
             }
             //Different term than last time - clear everything and start search
             else if (searchTerm != lastTerm) {
@@ -94,7 +101,9 @@
                 }
 
                 search();
+
             }
+
 
             timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
         }
@@ -182,9 +191,8 @@
 
             return output;
         }
-
         init();
-        return this;
+        return $(this);
     }
 
 }( jQuery ));
