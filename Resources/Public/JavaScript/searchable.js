@@ -7,9 +7,7 @@
             result: "#searchable-results",
             morebutton: "#searchable-loadmore",
             noresults: "#searchable-noresults",
-            template: {
-                id : "#searchable-result-template"
-            },
+            template: $("#searchable-result-template").html(),
             delay: 300,
             infiniteScroll: true,
             callbacks: {
@@ -39,8 +37,9 @@
          */
         function init() {
 
+            template = settings.template;
+
             // Prepare template
-            template = $(settings.template.id).html();
             Mustache.parse(template, ['[[', ']]']);
 
             //Prevent form submit
