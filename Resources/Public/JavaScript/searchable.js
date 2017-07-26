@@ -26,11 +26,17 @@
 
         var timer;
 
+        var template = "";
+
         /**
          * Initializes the search plugin
          *
          */
         function init() {
+
+            // Prepare template
+            template = $(settings.template.id).html();
+            Mustache.parse(template, ['[[', ']]']);
 
             //Prevent form submit
             formObject.on("submit", function(e) {
@@ -155,45 +161,13 @@
          */
         function renderResult(data) {
 
-            var template = $(settings.template.id).html();
+            var output = Mustache.render(template, data);
 
-            template = template.replaceSearchableMarker("renderedLink", data._source.searchable_meta.renderedLink);
-            template = template.replaceSearchableMarker("linkTitle", data._source.searchable_meta.linkTitle);
-            template = template.replaceSearchableMarker("preview", data._source.searchable_meta.preview);
-            template = template.replaceSearchableMarker("highlight", renderHighlight(data));
-            template = template.replaceSearchableMarker("score", data._score);
-
-            return template;
-        }
-
-        /**
-         * Renders the result highlight
-         *
-         * @param  {Object} data
-         * @return {String}
-         */
-        function renderHighlight(data) {
-
-            if (data.highlight) {
-                return "..." + data.highlight.searchable_highlight.join("...") + "...";
-            }
-            return "";
+            return output;
         }
 
         init();
         return this;
-    }
-
-    /**
-     * Replaces markers in strings
-     *
-     * @param  {String} marker
-     * @param  {String} value
-     * @return {String}
-     */
-    String.prototype.replaceSearchableMarker = function(marker, value) {
-
-        return this.replace("[[" + marker + "]]", value);
     }
 
 }( jQuery ));

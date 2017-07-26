@@ -17,28 +17,33 @@
 		<span class="btn btn-primary" id="searchable-loadmore" style="display: none;"><f:translate key="results.loadmore">load more</f:translate></span>
 	</div>
 
-	<div id="searchable-result-template" style="display: none;">
+
+	<script id="searchable-result-template" type="x-tmpl-mustache">
 		<div class="result">
 
-				<h3><a href="[[renderedLink]]">[[linkTitle]]</a></h3>
+				<h3><a href="[[_source.searchable_meta.renderedLink]]">[[_source.searchable_meta.linkTitle]]</a></h3>
 
 				<f:if condition="{settings.result.showPreview}">
 					<div class="result-preview">
-							[[preview]]
+							[[&_source.searchable_meta.preview]]
 					</div>
 				</f:if>
 				<f:if condition="{settings.features.highlighting}">
 					<div class="result-highlight">
-						[[highlight]]
+						[[#highlight]]
+							[[#searchable_highlight]]
+								...[[&.]]
+							[[/searchable_highlight]]
+						[[/highlight]]
 					</div>
 				</f:if>
 
 				<div class="result-meta">
-						<span class="result-score"><f:translate key="results.score">Score</f:translate>: [[score]]</span>
+						<span class="result-score"><f:translate key="results.score">Score</f:translate>: [[_score]]</span>
 				</div>
 
 		</div>
-	</div>
+	</script>
 
 	<div id="searchable-noresults" style="display: none;">
 		<f:translate key="results.noresults">No results found.</f:translate>
