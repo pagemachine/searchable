@@ -23,8 +23,13 @@ class SearchableRecordGroup implements FormDataGroupInterface
         //Replace TcaSelectItems DataProvider with a custom one that does not fetch all available items for relations
         unset($dataProvider[\TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class]);
         $dataProvider[\PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaSelectRelations::class] = [
-            'depends' => []
+            'depends' => [],
+            'before' => [
+                \TYPO3\CMS\Backend\Form\FormDataProvider\TcaInputPlaceholders::class,
+                \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectTreeItems::class
+            ]
         ];
+
 
         //Unset DataProvider which determines the items to process. This information will be handed over in the compiler input array
         unset($dataProvider[\TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessShowitem::class]);
