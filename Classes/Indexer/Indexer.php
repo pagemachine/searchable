@@ -178,7 +178,11 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         $this->dataCollector = $this->objectManager->get($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
 
-        $this->query = $query ?: new BulkQuery($this->index, $this->type);
+        $this->query = $query ?: new BulkQuery(
+            $this->index,
+            $this->type,
+            $config['pipeline']
+        );
 
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
