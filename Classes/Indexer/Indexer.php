@@ -287,12 +287,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
             if ($counter >= 20) {
 
-                $records = $this->linkBuilder->createLinksForBatch($records);
-
-                $this->query->addRows('uid', $records);
-
-                $this->query->execute();
-                $this->query->resetBody();
+                $this->sendBatch($records);
 
                 $counter = 0;
                 $records = [];
@@ -302,12 +297,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         if ($counter != 0) {
 
-            $records = $this->linkBuilder->createLinksForBatch($records);
+            $this->sendBatch($records);
 
-            $this->query->addRows('uid', $records);
-
-            $this->query->execute();
-            $this->query->resetBody();
             yield $overallCounter;
         }
 
@@ -345,12 +336,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
                     if ($counter >= 20) {
 
-                        $records = $this->linkBuilder->createLinksForBatch($records);
-
-                        $this->query->addRows('uid', $records);
-
-                        $this->query->execute();
-                        $this->query->resetBody();
+                        $this->sendBatch($records);
 
                         $records = [];
                         $counter = 0;
@@ -361,14 +347,27 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
             if ($counter != 0) {
 
-                $records = $this->linkBuilder->createLinksForBatch($records);
+                $this->sendBatch($records);
 
-                $this->query->addRows('uid', $records);
-
-                $this->query->execute();
-                $this->query->resetBody();
                 yield $overallCounter;
             }
         }
+    }
+
+    /**
+     * Sends a batch
+     *
+     * @param  array $records
+     * @return void
+     */
+    protected function sendBatch($records)
+    {
+
+        $records = $this->linkBuilder->createLinksForBatch($records);
+
+        $this->query->addRows('uid', $records);
+
+        $this->query->execute();
+        $this->query->resetBody();
     }
 }
