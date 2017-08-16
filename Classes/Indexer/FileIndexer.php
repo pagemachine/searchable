@@ -21,6 +21,7 @@ class FileIndexer extends TcaIndexer {
     protected static $defaultConfiguration = [
         'pipeline' => 'attachment',
         'fileField' => 'file',
+        'bulkSize' => 2,
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
             'config' => [
