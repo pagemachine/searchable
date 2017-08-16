@@ -14,6 +14,9 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
      * @var array
      */
     protected static $defaultConfiguration = [
+        'pid' => null,
+        'sysLanguageOverlay' => 1,
+        'mode' => 'whitelist',
         'table' => 'sys_file_metadata',
         'fields' => [
             'title',
