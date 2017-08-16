@@ -23,30 +23,10 @@ class FileIndexer extends TcaIndexer {
         'fileField' => 'file',
         'bulkSize' => 2,
         'collector' => [
-            'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
-            'config' => [
-                'table' => 'sys_file_metadata',
-                'fields' => [
-                    'title',
-                    'description',
-                    'file'
-                ],
-                'subCollectors' => [
-                    'file' => [
-                        'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
-                        'config' => [
-                            'field' => 'file',
-                            'fields' => []
-                        ]
-                    ]
-                ]
-            ]
+            'className' => \PAGEmachine\Searchable\DataCollector\FileDataCollector::class
         ],
         'link' => [
             'className' => \PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder::class,
-            'config' => [
-
-            ],
         ],
         'mapper' => [
             'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
