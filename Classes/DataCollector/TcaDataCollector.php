@@ -50,6 +50,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         'sysLanguageOverlay' => 1,
         'mode' => 'whitelist',
         'fields' => [
+        ],
+        // DB query modification. Set custom restrictions to the record selection process
+        'select' => [
+            'additionalTables' => [],
+            'additionalWhereClauses' => []
         ]
     ];
 
@@ -329,28 +334,38 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param  boolean $applyLanguageRestriction
      * @return array
      */
-    protected function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)
+    public function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)
     {
         $statement = [
             'select' => [$this->config['table'].'.uid'],
             'from' => [$this->config['table']],
             'where' => [
-                '1=1 ',
+                0 => '1=1 ',
                 //enablefields
-                $this->pageRepository->enableFields($this->config['table']),
-                BackendUtility::deleteClause($this->config['table']),
+                'enablefields' => $this->pageRepository->enableFields($this->config['table']),
+                'deleted' => BackendUtility::deleteClause($this->config['table']),
                 //PID restriction
-                ($this->config['pid'] !== null ? ' AND ' . $this->config['table'] . '.pid = ' . $this->config['pid'] : ''),
+                'pid' => ($this->config['pid'] !== null ? ' AND ' . $this->config['table'] . '.pid = ' . $this->config['pid'] : ''),
             ],
         ];
 
         if ($applyLanguageRestriction) {
-            $statement['where'][] = ' AND ' . $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'] . ' IN' . "(0,-1)";
+            $statement['where']['language'] = ' AND ' . $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'] . ' IN' . "(0,-1)";
         }
 
         if ($additionalWhere) {
 
-            $statement['where'][] = $additionalWhere;
+            $statement['where']['additional'] = $additionalWhere;
+        }
+
+        if (!empty($this->config['select']['additionalTables'])) {
+
+            $statement['from'] = array_merge($statement['from'], $this->config['select']['additionalTables']);
+        }
+
+        if (!empty($this->config['select']['additionalWhereClauses'])) {
+
+            $statement['where'] = array_merge($statement['where'], $this->config['select']['additionalWhereClauses']);
         }
 
         return $statement;
