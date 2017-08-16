@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Command;
 
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\IndexManager;
+use PAGEmachine\Searchable\PipelineManager;
 use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -105,7 +106,7 @@ class SearchableCommandController extends CommandController
 
                 $indexManager->resetIndex($index);
                 $this->outputLine("Index '" . $index . "' was successfully cleared.");
-            }            
+            }
         }
     }
 
@@ -121,6 +122,7 @@ class SearchableCommandController extends CommandController
         $this->checkHealth();
 
         $indexManager = IndexManager::getInstance();
+        $pipelineManager = PipelineManager::getInstance();
 
         $response = $indexManager->createIndex(
             ExtconfService::getInstance()->getUpdateIndex()
@@ -178,6 +180,12 @@ class SearchableCommandController extends CommandController
                 $this->outputLine("\tIndex '" . $index . "': " . (!empty($response) ? "<info>Created.</info>" : "<comment>Exists.</comment>"));
             }
         }
+
+        //Create pipelines
+        $this->outputLine();
+        $this->output("Creating pipelines... ");
+        $pipelineManager->createPipelines();
+        $this->outputLine("<info>done</info>.");
 
         $this->outputLine();
         $this->outputLine("<info>Searchable setup finished.</info>");
@@ -237,7 +245,7 @@ class SearchableCommandController extends CommandController
                     $this->runSingleIndexer($indexer);
                 }
                 $this->outputLine();
-            } 
+            }
             else {
 
                 $this->outputLine("<comment>WARNING: No indexers found for language " . $language . ". Doing nothing.</comment>");
@@ -281,17 +289,17 @@ class SearchableCommandController extends CommandController
             foreach ($indexer->run() as $resultMessage) {
 
                 $this->output->progressSet($resultMessage);
-            }                    
-        } 
+            }
+        }
         else {
 
             foreach ($indexer->runUpdate() as $resultMessage) {
 
                 $this->output->progressSet($resultMessage);
 
-            }   
+            }
         }
-        $this->output->progressFinish();        
+        $this->output->progressFinish();
     }
 
     /**
@@ -305,6 +313,6 @@ class SearchableCommandController extends CommandController
         {
             $this->outputLine("<error>Elasticsearch is offline, aborting.</error>");
             $this->quit();
-        }        
+        }
     }
 }

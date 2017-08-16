@@ -32,7 +32,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      *
      * @var \PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager
      * @inject
-     */    
+     */
     protected $resolverManager;
 
     /**
@@ -50,6 +50,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         'sysLanguageOverlay' => 1,
         'mode' => 'whitelist',
         'fields' => [
+        ],
+        // DB query modification. Set custom restrictions to the record selection process
+        'select' => [
+            'additionalTables' => [],
+            'additionalWhereClauses' => []
         ]
     ];
 
@@ -133,13 +138,13 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                     return true;
                 }
 
-            }            
+            }
         }
 
         return false;
     }
-    
-    
+
+
     /**
      * @return array
      */
@@ -156,14 +161,14 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     {
         $tca = $this->getTcaConfiguration();
 
-        $pidRestriction = $this->config['pid'] !== null ? ' AND pid = ' . $this->config['pid'] : '';
+        $queryParts = $this->buildUidListQueryParts(null, true);
 
         $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-            "uid", 
-            $this->config['table'], 
-            $tca['ctrl']['languageField'] . ' IN' . "(0,-1)" . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+            implode(',', $queryParts['select']),
+            implode(',', $queryParts['from']),
+            implode('', $queryParts['where'])
         );
-        
+
         while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
 
             yield $this->getRecord($rawRecord['uid']);
@@ -180,14 +185,14 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $tca = $this->getTcaConfiguration();
 
-        $pidRestriction = $this->config['pid'] != null ? ' AND pid = ' . $this->config['pid'] : '';
-
         foreach ($updateUidList as $uid) {
 
+            $queryParts = $this->buildUidListQueryParts("uid=" . $uid);
+
             $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-                "uid", 
-                $this->config['table'], 
-                "uid=" . $uid . $pidRestriction . $this->pageRepository->enableFields($this->config['table']) . BackendUtility::deleteClause($this->config['table'])
+                implode(',', $queryParts['select']),
+                implode(',', $queryParts['from']),
+                implode('', $queryParts['where'])
             );
 
             if ($record) {
@@ -209,7 +214,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
     /**
      * Fetches a single record
-     * 
+     *
      * @param integer $identifier
      * @return array
      */
@@ -269,7 +274,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             $type = $this->processedTca['columns'][$key]['config']['type'];
 
             //plain types
-            switch ($type) 
+            switch ($type)
             {
                 case TcaType::RADIO:
                     $record[$key] = $plainValueProcessor->processRadioField($field, $this->processedTca['columns'][$key]['config']);
@@ -297,7 +302,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 //Add processed column
                 $record[$key] = $resolvedField;
 
-            }            
+            }
         }
 
         //Cleanup - remove empty fields
@@ -321,4 +326,48 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         return $this->fieldWhitelist;
     }
 
+    /**
+     * Bulds query parts for the record selection query
+     * Modify this method if you want to apply custom restrictions
+     *
+     * @param  string  $additionalWhere
+     * @param  boolean $applyLanguageRestriction
+     * @return array
+     */
+    public function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)
+    {
+        $statement = [
+            'select' => [$this->config['table'].'.uid'],
+            'from' => [$this->config['table']],
+            'where' => [
+                0 => '1=1 ',
+                //enablefields
+                'enablefields' => $this->pageRepository->enableFields($this->config['table']),
+                'deleted' => BackendUtility::deleteClause($this->config['table']),
+                //PID restriction
+                'pid' => ($this->config['pid'] !== null ? ' AND ' . $this->config['table'] . '.pid = ' . $this->config['pid'] : ''),
+            ],
+        ];
+
+        if ($applyLanguageRestriction) {
+            $statement['where']['language'] = ' AND ' . $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'] . ' IN' . "(0,-1)";
+        }
+
+        if ($additionalWhere) {
+
+            $statement['where']['additional'] = $additionalWhere;
+        }
+
+        if (!empty($this->config['select']['additionalTables'])) {
+
+            $statement['from'] = array_merge($statement['from'], $this->config['select']['additionalTables']);
+        }
+
+        if (!empty($this->config['select']['additionalWhereClauses'])) {
+
+            $statement['where'] = array_merge($statement['where'], $this->config['select']['additionalWhereClauses']);
+        }
+
+        return $statement;
+    }
 }

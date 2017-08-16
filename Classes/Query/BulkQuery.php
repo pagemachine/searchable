@@ -52,16 +52,40 @@ class BulkQuery extends AbstractQuery {
       $this->type = $type;
     }
 
+
+    /**
+     * @var string $pipeline
+     */
+    protected $pipeline;
+
+    /**
+     * @return string
+     */
+    public function getPipeline()
+    {
+        return $this->pipeline;
+    }
+
+    /**
+     * @param string $pipeline
+     * @return void
+     */
+    public function setPipeline($pipeline)
+    {
+        $this->pipeline = $pipeline;
+    }
+
     /**
      * @param string $index
      * @param string $type
      */
-    public function __construct($index, $type) {
+    public function __construct($index, $type, $pipeline = null) {
 
         parent::__construct();
 
         $this->index = $index;
         $this->type = $type;
+        $this->pipeline = $pipeline;
 
         $this->init();
     }
@@ -76,6 +100,11 @@ class BulkQuery extends AbstractQuery {
             'type' => $this->getType(),
             'body' => []
         ];
+
+        if ($this->getPipeline() != null) {
+
+            $this->parameters['pipeline'] = $this->getPipeline();
+        }
     }
 
     /**

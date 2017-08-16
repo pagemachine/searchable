@@ -178,7 +178,11 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         $this->dataCollector = $this->objectManager->get($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
 
-        $this->query = $query ?: new BulkQuery($this->index, $this->type);
+        $this->query = $query ?: new BulkQuery(
+            $this->index,
+            $this->type,
+            $config['pipeline']
+        );
 
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
@@ -273,6 +277,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      */
     public function run() {
 
+        $bulkSize = $this->config['bulkSize'] ?: 20;
+
         $counter = 0;
         $overallCounter = 0;
 
@@ -285,14 +291,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
             $counter++;
             $overallCounter++;
 
-            if ($counter >= 20) {
+            if ($counter >= $bulkSize) {
 
-                $records = $this->linkBuilder->createLinksForBatch($records);
-
-                $this->query->addRows('uid', $records);
-
-                $this->query->execute();
-                $this->query->resetBody();
+                $this->sendBatch($records);
 
                 $counter = 0;
                 $records = [];
@@ -302,12 +303,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         if ($counter != 0) {
 
-            $records = $this->linkBuilder->createLinksForBatch($records);
+            $this->sendBatch($records);
 
-            $this->query->addRows('uid', $records);
-
-            $this->query->execute();
-            $this->query->resetBody();
             yield $overallCounter;
         }
 
@@ -319,6 +316,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @return \Generator
      */
     public function runUpdate() {
+
+        $bulkSize = $this->config['bulkSize'] ?: 20;
 
         $counter = 0;
         $overallCounter = 0;
@@ -343,14 +342,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
                     $records[] = $this->addSystemFields($fullRecord);
 
-                    if ($counter >= 20) {
+                    if ($counter >= $bulkSize) {
 
-                        $records = $this->linkBuilder->createLinksForBatch($records);
-
-                        $this->query->addRows('uid', $records);
-
-                        $this->query->execute();
-                        $this->query->resetBody();
+                        $this->sendBatch($records);
 
                         $records = [];
                         $counter = 0;
@@ -361,14 +355,27 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
             if ($counter != 0) {
 
-                $records = $this->linkBuilder->createLinksForBatch($records);
+                $this->sendBatch($records);
 
-                $this->query->addRows('uid', $records);
-
-                $this->query->execute();
-                $this->query->resetBody();
                 yield $overallCounter;
             }
         }
+    }
+
+    /**
+     * Sends a batch
+     *
+     * @param  array $records
+     * @return void
+     */
+    protected function sendBatch($records)
+    {
+
+        $records = $this->linkBuilder->createLinksForBatch($records);
+
+        $this->query->addRows('uid', $records);
+
+        $this->query->execute();
+        $this->query->resetBody();
     }
 }
