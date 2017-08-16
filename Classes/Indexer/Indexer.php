@@ -277,6 +277,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      */
     public function run() {
 
+        $bulkSize = $this->config['bulkSize'] ?: 20;
+
         $counter = 0;
         $overallCounter = 0;
 
@@ -289,7 +291,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
             $counter++;
             $overallCounter++;
 
-            if ($counter >= 20) {
+            if ($counter >= $bulkSize) {
 
                 $this->sendBatch($records);
 
@@ -315,6 +317,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      */
     public function runUpdate() {
 
+        $bulkSize = $this->config['bulkSize'] ?: 20;
+
         $counter = 0;
         $overallCounter = 0;
 
@@ -338,7 +342,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
                     $records[] = $this->addSystemFields($fullRecord);
 
-                    if ($counter >= 20) {
+                    if ($counter >= $bulkSize) {
 
                         $this->sendBatch($records);
 
