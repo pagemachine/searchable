@@ -174,5 +174,15 @@ class ExtconfService implements SingletonInterface {
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['indexing']['domain'];
     }
 
+    /**
+     * Returns pipelines configuration
+     *
+     * @return array
+     */
+    public function getPipelines()
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['pipelines'];
+    }
+
 
 }

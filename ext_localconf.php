@@ -66,6 +66,8 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'indices' => [],
     //Add your indexer configurations here. Each indexer represents a toplevel object type like news, pages etc.
     'indexers' => [],
+    //Define pipelines here. Pipelines can be used to modify content during indexing
+    'pipelines' => [],
     //Default index settings used for every index. If you define custom settings, these will be merged with them
     'defaultIndexSettings' => [
         'number_of_shards' => 2,
