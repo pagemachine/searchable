@@ -54,7 +54,7 @@ class FormDataRecord implements SingletonInterface
     /**
      * Fetches a single record
      *
-     * @param integer $uid
+     * @param int $uid
      * @param string $table
      * @return array
      */

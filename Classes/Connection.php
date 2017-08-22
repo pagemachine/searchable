@@ -41,7 +41,7 @@ class Connection
     /**
      * Tries to (re-)build the client to check if nodes are available
      *
-     * @return boolean
+     * @return bool
      */
     public static function isHealthy()
     {

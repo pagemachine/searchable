@@ -175,7 +175,7 @@ abstract class AbstractQuery
      * Otherwise all features assigned in $_EXTCONF will be executed
      *
      * @param string  $featureName
-     * @return boolean
+     * @return bool
      */
     public function isFeatureEnabled($featureName)
     {

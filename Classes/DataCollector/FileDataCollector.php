@@ -43,7 +43,7 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
      * Adds mimetype restriction via mm query
      *
      * @param  string  $additionalWhere
-     * @param  boolean $applyLanguageRestriction
+     * @param  bool $applyLanguageRestriction
      * @return array
      */
     public function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)

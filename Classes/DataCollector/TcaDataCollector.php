@@ -121,7 +121,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * Returns true if a subcollector exists for given column (this is the TCA column, not the subtype fieldname!)
      *
      * @param  string $field
-     * @return boolean
+     * @return bool
      */
     public function subCollectorExistsForColumn($column)
     {
@@ -204,7 +204,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * Fetches a single record
      *
-     * @param integer $identifier
+     * @param int $identifier
      * @return array
      */
     public function getRecord($identifier)
@@ -314,7 +314,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * Modify this method if you want to apply custom restrictions
      *
      * @param  string  $additionalWhere
-     * @param  boolean $applyLanguageRestriction
+     * @param  bool $applyLanguageRestriction
      * @return array
      */
     public function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)

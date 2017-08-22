@@ -33,7 +33,7 @@ class SearchableCommandController extends CommandController
 
     /**
      * Determines if a full indexing is performed
-     * @var boolean
+     * @var bool
      */
     protected $runFullIndexing = false;
 
@@ -249,7 +249,7 @@ class SearchableCommandController extends CommandController
     /**
      * Runs a single indexer
      * @param  IndexerInterface $indexer
-     * @param  boolean          $full
+     * @param  bool          $full
      * @return void
      */
     protected function runSingleIndexer(IndexerInterface $indexer)

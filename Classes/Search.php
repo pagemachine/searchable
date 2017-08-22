@@ -44,7 +44,7 @@ class Search implements SingletonInterface
      * Search everything (all indices and types) for the term
      * @param  string $term
      * @param  array $options
-     * @param  boolean $respectLanguage If set, the search will be limited to the current FE language (if there is an index for it) or the default language
+     * @param  bool $respectLanguage If set, the search will be limited to the current FE language (if there is an index for it) or the default language
      * @param  int $forceLanguage Forces the given language id
      * @return array
      */
@@ -76,7 +76,7 @@ class Search implements SingletonInterface
 
             $params['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         }
-        
+
 
         $result = $this->client->search($params);
         return $result;
@@ -102,7 +102,7 @@ class Search implements SingletonInterface
             ],
         ];
         $result = $this->client->search($params);
-        
+
 
         $updates = [];
 

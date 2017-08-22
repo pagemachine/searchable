@@ -22,7 +22,7 @@ class IndexerFactory implements SingletonInterface
     /**
      * Builds an array of indexers
      *
-     * @param  integer $language
+     * @param  int $language
      * @return array
      */
     public function makeIndexers($language = 0)
@@ -47,7 +47,7 @@ class IndexerFactory implements SingletonInterface
 
     /**
      * Builds a single indexer
-     * @param  integer $language language to set up
+     * @param  int $language language to set up
      * @param  string  $type     The type the index is for
      * @return IndexerInterface
      */

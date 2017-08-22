@@ -114,7 +114,7 @@ class BulkQuery extends AbstractQuery
     /**
      * Adds a new row to the indexer parameters
      *
-     * @param integer $uid The uid of the current record
+     * @param int $uid The uid of the current record
      * @param array $body
      *
      * @return void

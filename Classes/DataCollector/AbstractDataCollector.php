@@ -55,7 +55,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
         $this->config = $config;
     }
 
-    
+
     /**
      * @return array
      */
@@ -69,7 +69,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * @var int $language
      */
     protected $language = 0;
-    
+
     /**
      * @return int
      */
@@ -77,7 +77,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
     {
         return $this->language;
     }
-    
+
     /**
      * @param int $language
      * @return void
@@ -91,7 +91,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * @var array $subCollectors
      */
     protected $subCollectors = [];
-    
+
     /**
      * @return array
      */
@@ -104,7 +104,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * @var array $features
      */
     protected $features = [];
-    
+
     /**
      * Adds a new SubCollector for subtypes
      *
@@ -137,7 +137,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * Returns true if a subcollector exists for given field
      *
      * @param  string $field
-     * @return boolean
+     * @return bool
      */
     public function subCollectorExists($field)
     {

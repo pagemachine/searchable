@@ -71,7 +71,7 @@ class FieldListUtility implements SingletonInterface
      * @param  string  $fieldname
      * @param array $fieldList
      * @param string $mode
-     * @return boolean
+     * @return bool
      */
     public function shouldInclude($fieldname, $fieldList, $mode)
     {

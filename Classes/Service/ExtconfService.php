@@ -43,7 +43,7 @@ class ExtconfService implements SingletonInterface
     /**
      * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
      *
-     * @param  integer $language
+     * @param  int $language
      * @return string $index
      */
     public static function getIndex($language = 0)
@@ -89,8 +89,8 @@ class ExtconfService implements SingletonInterface
     /**
      * Returns true if an index for the given language exists, otherwise false
      *
-     * @param  integer $language
-     * @return boolean
+     * @param  int $language
+     * @return bool
      */
     public static function hasIndex($language = 0)
     {
