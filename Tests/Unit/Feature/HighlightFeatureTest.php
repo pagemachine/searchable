@@ -23,7 +23,6 @@ class HighlightFeatureTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $this->feature = new HighlightFeature();
     }
 
@@ -93,7 +92,6 @@ class HighlightFeatureTest extends UnitTestCase
      */
     public function mapsRecursively()
     {
-
         $configuration = [
             'fields' => [
                 'fieldone',

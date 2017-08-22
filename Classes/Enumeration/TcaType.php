@@ -27,7 +27,6 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
      */
     public static function isPlain($type)
     {
-
         return in_array($type, [
             self::INPUT,
             self::TEXT,
@@ -44,7 +43,6 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
      */
     public static function isRelation($type)
     {
-
         return in_array($type, [
             self::SELECT,
             self::INLINE,
@@ -59,7 +57,6 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
      */
     public static function isUnsupported($type)
     {
-
         return in_array($type, [
             self::NONE,
             self::PASSTHROUGH,
@@ -76,7 +73,6 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
      */
     public function convertToESType()
     {
-
         switch ($this->__toString()) {
             case self::INPUT:
             case self::TEXT:

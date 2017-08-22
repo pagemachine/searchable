@@ -18,7 +18,6 @@ class DefaultPreviewRenderer extends AbstractPreviewRenderer implements PreviewR
      */
     public function render($record)
     {
-
         $preview = implode(", ", $record);
 
         return $preview;

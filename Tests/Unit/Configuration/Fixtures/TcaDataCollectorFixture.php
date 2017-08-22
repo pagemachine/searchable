@@ -21,13 +21,11 @@ class TcaDataCollectorFixture extends TcaDataCollector
      */
     public function getRecord($identifier)
     {
-
         return [];
     }
 
     public function getRecords()
     {
-
         return [];
     }
 }

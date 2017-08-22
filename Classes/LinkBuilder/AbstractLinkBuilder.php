@@ -32,7 +32,6 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      */
     public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
     {
-
         return static::$defaultConfiguration;
     }
 
@@ -46,7 +45,6 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      */
     public function __construct($config = null)
     {
-
         $this->config = $config;
     }
 
@@ -58,7 +56,6 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      */
     public function createLinkConfiguration($record)
     {
-
         $linkConfiguration = $this->config['fixedParts'];
 
         if (!empty($this->config['dynamicParts'])) {
@@ -78,7 +75,6 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      */
     protected function replaceFieldsRecursive($configuration, $record)
     {
-
         foreach ($configuration as $key => $value) {
             if (is_array($value)) {
                 $configuration[$key] = $this->replaceFieldsRecursive($value, $record);

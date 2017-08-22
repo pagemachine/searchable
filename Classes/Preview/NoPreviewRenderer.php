@@ -19,7 +19,6 @@ class NoPreviewRenderer extends AbstractPreviewRenderer implements PreviewRender
      */
     public function render($record)
     {
-
         return '';
     }
 }

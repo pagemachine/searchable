@@ -22,7 +22,6 @@ class OverlayUtility implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(OverlayUtility::class);
     }
 
@@ -32,7 +31,6 @@ class OverlayUtility implements SingletonInterface
      */
     public function __construct(PageRepository $pageRepository = null)
     {
-
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
     }
 
@@ -48,9 +46,8 @@ class OverlayUtility implements SingletonInterface
      */
     public function languageOverlay($table, $record, $language, $fieldWhitelist = [], $overlayMode = 1)
     {
-
         $tca = $GLOBALS['TCA'][$table];
-        
+
         $rawOverlay = $this->pageRepository->getRecordOverlay($table, [
             'uid' => $record['uid'],
             'pid' => $record['pid'],
@@ -100,7 +97,6 @@ class OverlayUtility implements SingletonInterface
      */
     public function pagesLanguageOverlay($record, $language)
     {
-
         $rawOverlay = $this->pageRepository->getPageOverlay($record, $language);
 
         // PageRepository says this is not a valid record in this language, so don't return it

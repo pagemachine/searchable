@@ -63,13 +63,11 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
      */
     public function convertToTypoLinkConfig($configuration, $record)
     {
-
         return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];
     }
 
     public function getFrontendLinks($configuration)
     {
-
         $domain = ExtconfService::getInstance()->getFrontendDomain();
 
         $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
@@ -100,7 +98,6 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
      */
     protected function getLinkTitle($record = [])
     {
-
         $title = $record[$this->config['titleField']];
 
         if ($title == null) {

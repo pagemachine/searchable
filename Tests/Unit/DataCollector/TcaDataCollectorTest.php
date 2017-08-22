@@ -47,7 +47,6 @@ class TcaDataCollectorTest extends UnitTestCase
      */
     protected function setUp()
     {
-
         $this->formDataRecord = $this->prophesize(FormDataRecord::class);
         $this->plainValueProcessor = $this->prophesize(PlainValueProcessor::class);
 
@@ -258,7 +257,6 @@ class TcaDataCollectorTest extends UnitTestCase
      */
     public function processesTranslations()
     {
-
         $configuration = [
             'table' => 'example_table',
             'sysLanguageOverlay' => 1,
@@ -275,7 +273,7 @@ class TcaDataCollectorTest extends UnitTestCase
                 ],
             ],
         ];
-        
+
         $GLOBALS['TCA']['example_table'] = $recordTca;
 
         $baseRow = [

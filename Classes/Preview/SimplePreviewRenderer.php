@@ -20,7 +20,6 @@ class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRe
      */
     public function __construct($config)
     {
-
         $this->config = $config;
     }
 
@@ -32,7 +31,6 @@ class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRe
      */
     public function render($record)
     {
-
         $rawfield = $record[$this->config['field']];
 
         $processedField = substr($rawfield, 0, 200) . "...";

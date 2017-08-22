@@ -27,7 +27,6 @@ class IndexerFactory implements SingletonInterface
      */
     public function makeIndexers($language = 0)
     {
-
         $indexers = [];
 
         if (ExtconfService::hasIndex($language)) {

@@ -37,7 +37,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     public function initializeObject()
     {
-
         $this->prepareView();
     }
 
@@ -49,7 +48,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     public function render($record)
     {
-
         if ($this->config['fields']) {
             $assignFields = [];
 
@@ -72,7 +70,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected function prepareView()
     {
-
         $configuration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
 
         $this->view->setTemplateRootPaths($configuration['view']['templateRootPaths']);

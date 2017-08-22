@@ -21,7 +21,6 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(self::class);
     }
 
@@ -36,7 +35,6 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
     {
-
         $records = [];
 
         foreach ($record[$fieldname] as $rawChild) {

@@ -74,7 +74,6 @@ class ConfigurationManagerTest extends UnitTestCase
      */
     public function doesNothingIfNoClassIsAvailable()
     {
-
         $configuration = [
             'pages' => [
                 'config' => [
@@ -234,7 +233,7 @@ class ConfigurationManagerTest extends UnitTestCase
                         0 => [
                             'className' => TestFeatureFixture::class,
                         ],
-                        
+
                     ],
                     'mapping' => [
                         'properties' => [

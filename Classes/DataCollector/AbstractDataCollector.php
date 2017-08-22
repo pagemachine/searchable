@@ -28,7 +28,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
     {
-
         return static::$defaultConfiguration;
     }
 
@@ -51,7 +50,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function setConfig($config = [])
     {
-
         $this->config = $config;
     }
 
@@ -113,7 +111,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function addSubCollector($field, DataCollectorInterface $collector)
     {
-
         $this->subCollectors[$field] = $collector;
     }
 
@@ -125,7 +122,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function getSubCollectorForField($field)
     {
-
         if (!empty($this->subCollectors[$field]) && $this->subCollectors[$field] instanceof DataCollectorInterface) {
             return $this->subCollectors[$field];
         }
@@ -141,7 +137,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function subCollectorExists($field)
     {
-
         if (!empty($this->subCollectors[$field]) && $this->subCollectors[$field] instanceof DataCollectorInterface) {
             return true;
         }
@@ -156,7 +151,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function __construct($configuration = [], $language = 0, ObjectManager $objectManager = null)
     {
-
         $this->language = $language;
 
         $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
@@ -175,7 +169,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function initializeObject()
     {
-
         $this->buildSubCollectors();
     }
 
@@ -186,7 +179,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function buildSubCollectors()
     {
-
         $this->subCollectors = [];
 
         if (!empty($this->config['subCollectors'])) {
@@ -210,7 +202,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function buildSubCollector($classname, $collectorConfig = [])
     {
-
         $subCollector = $this->objectManager->get($classname, $collectorConfig, $this->language);
 
         return $subCollector;

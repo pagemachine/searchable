@@ -70,7 +70,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
     {
-
         $defaultConfiguration = static::$defaultConfiguration;
 
         //If this is a subcollector, try fetching the table name from the parent TCA
@@ -94,7 +93,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function addSubCollector($field, DataCollectorInterface $collector)
     {
-
         parent::addSubCollector($field, $collector);
 
         $column = $collector->getConfig()['field'];
@@ -113,7 +111,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getProcessedTca()
     {
-
         return $this->processedTca;
     }
 
@@ -125,7 +122,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function subCollectorExistsForColumn($column)
     {
-
         if (!empty($this->config['subCollectors'])) {
             foreach ($this->config['subCollectors'] as $subconfig) {
                 if ($subconfig['config']['field'] == $column) {
@@ -176,7 +172,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getUpdatedRecords($updateUidList)
     {
-
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
@@ -209,7 +204,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecord($identifier)
     {
-
         $data = FormDataRecord::getInstance()->getRecord($identifier, $this->config['table'], $this->getFieldWhitelist());
 
         if (empty($data)) {
@@ -238,7 +232,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected function languageoverlay($record)
     {
-
         return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->getFieldWhitelist(), $this->config['sysLanguageOverlay']);
     }
 
@@ -302,7 +295,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getFieldWhitelist()
     {
-
         if ($this->fieldWhitelist == null) {
             $this->fieldWhitelist = FieldListUtility::getInstance()->createFieldList($this->config['fields'], $this->getTcaConfiguration(), $this->config['mode']);
         }

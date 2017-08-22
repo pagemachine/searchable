@@ -130,7 +130,6 @@ abstract class AbstractQuery
      */
     public function __construct(Client $client = null, Logger $logger = null, $features = null)
     {
-
         $this->client = $client ?: Connection::getClient();
         $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
 
@@ -152,7 +151,6 @@ abstract class AbstractQuery
      */
     public function execute()
     {
-
         return [];
     }
 
@@ -179,7 +177,6 @@ abstract class AbstractQuery
      */
     public function isFeatureEnabled($featureName)
     {
-
         if (!$this->pluginMode ||
             (isset($this->featureSettings[$featureName]) && $this->featureSettings[$featureName] == 1)
             ) {

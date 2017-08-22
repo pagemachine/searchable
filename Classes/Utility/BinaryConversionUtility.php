@@ -19,7 +19,6 @@ class BinaryConversionUtility
      */
     public static function convertCheckboxValue($value, $itemCount = 31)
     {
-
         $checkedItemKeys = [];
 
         for ($i=0; $i < $itemCount; $i++) {

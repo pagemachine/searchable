@@ -35,7 +35,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
     {
-
         return static::$defaultConfiguration;
     }
 
@@ -175,7 +174,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
     {
-
         $this->index = $index;
         $this->config = $config;
         $this->language = $language;
@@ -204,7 +202,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function setPreviewRenderer(PreviewRendererInterface $previewRenderer = null)
     {
-
         if ($previewRenderer) {
             $this->previewRenderer = $previewRenderer;
         } else {
@@ -223,7 +220,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function setLinkBuilder(LinkBuilderInterface $linkBuilder = null)
     {
-
         if ($linkBuilder) {
             $this->linkBuilder = $linkBuilder;
         } else {
@@ -242,7 +238,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function setFeatures($features)
     {
-
         $features = $features ?: $this->config['features'];
 
         if (!empty($features)) {
@@ -275,7 +270,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
-
         $bulkSize = $this->config['bulkSize'] ?: 20;
 
         $counter = 0;
@@ -312,7 +306,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function runUpdate()
     {
-
         $bulkSize = $this->config['bulkSize'] ?: 20;
 
         $counter = 0;
@@ -360,7 +353,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function sendBatch($records)
     {
-
         $records = $this->linkBuilder->createLinksForBatch($records);
 
         $this->query->addRows('uid', $records);

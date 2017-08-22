@@ -63,7 +63,6 @@ class DynamicFlexFormHook
      */
     public function parseDataStructureByIdentifierPostProcess($dataStructure, $identifier)
     {
-
         if ($identifier['tableName'] == 'tt_content' && $identifier['fieldName'] == 'pi_flexform' && in_array($identifier['dataStructureKey'], $this->allowedIdentifiers)) {
             list($pluginKey, $listType) = explode(",", $identifier['dataStructureKey']);
             $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($pluginKey);
@@ -79,7 +78,6 @@ class DynamicFlexFormHook
      */
     protected function buildFlexSettingsFromTSSettings($plugin)
     {
-
         $configuration = $this->getPluginSettings($plugin);
 
         $sheet = [

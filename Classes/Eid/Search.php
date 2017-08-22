@@ -21,7 +21,6 @@ class Search extends AbstractEidHandler
      */
     protected function getResults($term)
     {
-
         $query = GeneralUtility::makeInstance(SearchQuery::class);
 
         $query

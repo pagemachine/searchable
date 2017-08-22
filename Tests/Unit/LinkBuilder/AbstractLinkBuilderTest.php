@@ -28,7 +28,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
      */
     public function createsFixedLinkConfiguration()
     {
-
         $record = [];
 
         $configuration = [
@@ -57,7 +56,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
      */
     public function replacesDynamicFields()
     {
-
         $configuration = [
             'fixedParts' => [],
             'dynamicParts' => [
@@ -83,7 +81,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
      */
     public function replacesNestedDynamicFields()
     {
-
         $configuration = [
             'fixedParts' => [],
         ];
@@ -114,7 +111,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
      */
     public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead()
     {
-
         $configuration = [
             'fixedParts' => [],
         ];

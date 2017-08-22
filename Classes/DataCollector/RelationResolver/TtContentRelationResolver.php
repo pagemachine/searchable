@@ -29,7 +29,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(self::class);
     }
 
@@ -38,7 +37,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      */
     public function __construct(PageRepository $pageRepository = null)
     {
-
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
     }
 
@@ -53,7 +51,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
     {
-
         $processedField = [];
 
         $contentUids = $this->fetchContentUids($record['uid']);
@@ -72,7 +69,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      */
     protected function fetchContentUids($pid)
     {
-
         $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', 'tt_content', 'pid = ' . $pid . ' AND ' . $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] . ' IN(0,-1)' . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
 
         return $content;

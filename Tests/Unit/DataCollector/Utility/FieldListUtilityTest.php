@@ -32,7 +32,6 @@ class FieldListUtilityTest extends UnitTestCase
      */
     public function evaluatesWhitelistItem($item, $list, $allowed)
     {
-
         $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_WHITELIST));
     }
 
@@ -56,7 +55,6 @@ class FieldListUtilityTest extends UnitTestCase
      */
     public function evaluatesBlacklistItem($item, $list, $allowed)
     {
-
         $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_BLACKLIST));
     }
 

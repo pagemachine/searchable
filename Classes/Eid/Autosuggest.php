@@ -21,7 +21,6 @@ class Autosuggest extends AbstractEidHandler
      */
     protected function getResults($term)
     {
-
         $query = GeneralUtility::makeInstance(AutosuggestQuery::class);
 
         $query

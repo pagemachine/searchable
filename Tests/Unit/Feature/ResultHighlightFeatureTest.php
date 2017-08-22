@@ -23,7 +23,6 @@ class ResultHighlightFeatureTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $this->feature = new ResultHighlightFeature();
     }
 

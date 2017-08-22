@@ -30,7 +30,6 @@ class SearchController extends ActionController
      */
     public function searchbarAction($term = null)
     {
-
         $this->view->assign("settings", $this->settings);
         $this->view->assign("term", $term);
     }
@@ -42,7 +41,6 @@ class SearchController extends ActionController
      */
     public function liveSearchbarAction()
     {
-
         $this->view->assign("settings", $this->settings);
     }
 
@@ -55,7 +53,6 @@ class SearchController extends ActionController
      */
     public function resultsAction($term = null, $page = 1)
     {
-
         if ($term) {
             $this->searchQuery
                 ->setPluginMode(true)

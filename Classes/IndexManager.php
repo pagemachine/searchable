@@ -29,7 +29,6 @@ class IndexManager implements SingletonInterface
      */
     public function __construct(Client $client = null)
     {
-
         $this->client = $client ?: Connection::getClient();
     }
 
@@ -38,7 +37,6 @@ class IndexManager implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(IndexManager::class);
     }
 
@@ -49,7 +47,6 @@ class IndexManager implements SingletonInterface
      */
     public function getStats()
     {
-
         $stats['health'] = $this->client->cluster()->health();
 
         $info = [];
@@ -83,7 +80,6 @@ class IndexManager implements SingletonInterface
      */
     public function resetIndex($index)
     {
-
         $deleteParams = [
             'index' => $index,
         ];
@@ -102,7 +98,6 @@ class IndexManager implements SingletonInterface
      */
     public function createIndex($index)
     {
-
         if ($this->client->indices()->exists(['index' => $index])) {
             return [];
         }
@@ -130,7 +125,6 @@ class IndexManager implements SingletonInterface
      */
     public function resetUpdateIndex()
     {
-
         $this->resetIndex(
             ExtconfService::getInstance()->getUpdateIndex()
         );

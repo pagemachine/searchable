@@ -126,7 +126,6 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
      */
     protected function registerToplevelUpdate($table, $where)
     {
-
         $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
         //If table is toplevel, mark the corresponding document(s) as updated
@@ -148,7 +147,6 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
      */
     protected function registerSublevelUpdates($table, $where)
     {
-
         $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
         if (array_key_exists($table, $updateConfiguration['database']['sublevel']) && !empty($updateConfiguration['database']['sublevel'][$table])) {
@@ -167,7 +165,6 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
      */
     protected function getQuery()
     {
-
         if ($this->updateQuery == null) {
             $this->updateQuery = new UpdateQuery();
         }

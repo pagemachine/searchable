@@ -23,7 +23,6 @@ class ConfigurationManager implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(ConfigurationManager::class);
     }
 
@@ -67,7 +66,6 @@ class ConfigurationManager implements SingletonInterface
      */
     public function getIndexerConfiguration()
     {
-
         if ($this->processedConfiguration == null) {
             $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
             $mapping = [];
@@ -91,7 +89,6 @@ class ConfigurationManager implements SingletonInterface
      */
     public function getMapping($index)
     {
-
         if ($this->processedMapping == null) {
             $this->getIndexerConfiguration();
         }
@@ -107,7 +104,6 @@ class ConfigurationManager implements SingletonInterface
      */
     public function getQueryConfiguration($queryClassName)
     {
-
         if ($this->processedQueryConfiguration == null) {
             $queryConfiguration = ExtconfService::getInstance()->getQueryConfiguration();
 
@@ -133,7 +129,6 @@ class ConfigurationManager implements SingletonInterface
      */
     public function getUpdateConfiguration()
     {
-
         if ($this->processedConfiguration == null) {
             $this->getIndexerConfiguration();
         }
@@ -147,7 +142,6 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function processIndexerLevel($indexerConfiguration)
     {
-
         $indexerConfiguration = $this->addClassDefaultConfiguration($indexerConfiguration, []);
 
         if (!empty($indexerConfiguration['config'])) {
@@ -192,7 +186,6 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addClassDefaultConfiguration($configuration, $parentConfiguration)
     {
-
         if (is_string($configuration['className']) && !empty($configuration['className'])) {
             // Class will only be called if it implements a specific interface.
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
@@ -219,7 +212,6 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addMapping($indexerConfiguration)
     {
-
         //Apply mapper
         if (is_string($indexerConfiguration['config']['mapper']['className']) && !empty($indexerConfiguration['config']['mapper']['className'])) {
             // Class will only be called if it implements a specific interface.
@@ -245,7 +237,6 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addRecursiveCollectorConfig($configuration, $parentConfiguration, $typeName, $collectorPath = "")
     {
-
         $configuration = $this->addClassDefaultConfiguration($configuration, $parentConfiguration);
 
         if (!empty($configuration['config'])) {
@@ -285,7 +276,6 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addToplevelUpdateConfiguration($typeName, $table)
     {
-
         $this->updateConfiguration['database']['toplevel'][$table][] = $typeName;
 
         //Special case handling for pages since language overlays are in a separate table
@@ -303,7 +293,6 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addSublevelUpdateConfiguration($typeName, $sublevelPath, $table)
     {
-
         $this->updateConfiguration['database']['sublevel'][$table][$typeName] = $sublevelPath;
 
         //Special case handling for pages since language overlays are in a separate table

@@ -31,7 +31,6 @@ class UpdateQuery extends AbstractQuery
      */
     public function __construct()
     {
-
         parent::__construct();
         $this->index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
 
@@ -58,7 +57,6 @@ class UpdateQuery extends AbstractQuery
      */
     public function addUpdate($type, $property, $id)
     {
-
         // Use querystring hash as id to mark each update only once
         $docid = sha1($type . "." . $property . ":" . $id);
 
@@ -83,7 +81,6 @@ class UpdateQuery extends AbstractQuery
      */
     public function getUpdates($index, $type)
     {
-
         $recordids = [];
 
         $this->init();
@@ -94,7 +91,7 @@ class UpdateQuery extends AbstractQuery
                 'match_all' => new \stdClass(),
             ],
         ];
-        
+
 
         $result = $this->client->search($this->parameters);
 

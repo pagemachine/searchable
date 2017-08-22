@@ -23,7 +23,6 @@ class FileLinkBuilderTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $this->linkBuilder = new FileLinkBuilder();
     }
 

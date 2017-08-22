@@ -82,7 +82,6 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
      */
     protected static function addRecursiveCopyTo($fieldArray, $mapping, $configuration)
     {
-
         if (!empty($fieldArray)) {
             foreach ($fieldArray as $key => $field) {
                 if (is_array($field)) {

@@ -85,7 +85,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getRecords()
     {
-
         foreach ($this->getPageRecords($this->config['pid']) as $page) {
             yield $page;
         }
@@ -140,7 +139,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getUpdatedRecords($updateUidList)
     {
-
         $this->config['pid'] = null;
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
@@ -156,7 +154,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function languageoverlay($record)
     {
-
         return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language);
     }
 }

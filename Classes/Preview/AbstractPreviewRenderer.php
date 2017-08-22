@@ -29,7 +29,6 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface
      */
     public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
     {
-
         return static::$defaultConfiguration;
     }
 
@@ -43,7 +42,6 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface
      */
     public function __construct($config)
     {
-
         $this->config = $config;
     }
 }

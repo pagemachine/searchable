@@ -50,7 +50,6 @@ class SearchableCommandController extends CommandController
      */
     public function indexFullCommand($type = null)
     {
-
         $this->outputLine();
         $this->checkHealth();
 
@@ -68,7 +67,6 @@ class SearchableCommandController extends CommandController
      */
     public function indexPartialCommand($type = null)
     {
-
         $this->outputLine();
         $this->checkHealth();
 
@@ -86,7 +84,6 @@ class SearchableCommandController extends CommandController
      */
     public function resetIndexCommand($language = null)
     {
-
         $this->outputLine();
         $this->checkHealth();
 
@@ -114,7 +111,6 @@ class SearchableCommandController extends CommandController
      */
     public function setupCommand()
     {
-
         $this->outputLine();
         $this->checkHealth();
 
@@ -184,7 +180,6 @@ class SearchableCommandController extends CommandController
      */
     protected function collectScheduledIndexers()
     {
-
         $indices = ExtconfService::getIndices();
 
         foreach ($indices as $language => $index) {
@@ -208,7 +203,6 @@ class SearchableCommandController extends CommandController
      */
     protected function runIndexers()
     {
-
         $starttime = microtime(true);
 
         $this->outputLine();

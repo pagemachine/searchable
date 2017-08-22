@@ -18,7 +18,6 @@ class SearchableRecordGroup implements FormDataGroupInterface
      */
     public function __construct()
     {
-
         $dataProvider = $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'];
 
         //Replace TcaSelectItems DataProvider with a custom one that does not fetch all available items for relations
@@ -58,7 +57,6 @@ class SearchableRecordGroup implements FormDataGroupInterface
      */
     public function compile(array $result)
     {
-
         foreach ($this->dataProviders as $providerClassName => $_) {
             /** @var FormDataProviderInterface $provider */
             $provider = GeneralUtility::makeInstance($providerClassName);

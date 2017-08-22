@@ -42,7 +42,6 @@ trait FieldCollectionTrait
      */
     protected function collectFieldFromSubRecords(&$record, $fieldname, $collection = [], $unset = false)
     {
-
         foreach ($record as $column => $value) {
             if (is_array($value) && !isset($value['uid'])) {
                 foreach ($value as $childKey => $childRecord) {
@@ -57,7 +56,7 @@ trait FieldCollectionTrait
             } elseif (is_array($value)) {
                 if (!empty($value[$fieldname])) {
                     $collection = $this->mergeOrAddField($collection, $value[$fieldname]);
-                    
+
                     if ($unset) {
                         unset($record[$column][$fieldname]);
                     }
@@ -76,7 +75,6 @@ trait FieldCollectionTrait
      */
     protected function mergeOrAddField($collection, $field)
     {
-
         if (is_array($field)) {
             $collection = array_merge($collection, $field);
         } else {

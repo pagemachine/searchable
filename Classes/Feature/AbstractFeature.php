@@ -30,7 +30,6 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
      */
     public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
     {
-
         return static::$defaultConfiguration;
     }
 
@@ -44,7 +43,6 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
      */
     public function __construct($config = null)
     {
-
         $this->config = $config;
     }
 

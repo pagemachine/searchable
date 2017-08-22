@@ -23,7 +23,6 @@ class PageLinkBuilderTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $this->pageLinkBuilder = new PageLinkBuilder();
     }
 

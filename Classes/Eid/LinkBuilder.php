@@ -23,7 +23,6 @@ class LinkBuilder
 
     public function __construct()
     {
-
         \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
         $this->createTSFE();
         $this->contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);

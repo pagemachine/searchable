@@ -44,7 +44,6 @@ class DefaultMapper implements MapperInterface
      */
     protected static function getMetaMapping()
     {
-
         return ["enabled" => false];
     }
 }

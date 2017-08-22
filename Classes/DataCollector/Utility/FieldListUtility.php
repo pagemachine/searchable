@@ -18,7 +18,6 @@ class FieldListUtility implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(FieldListUtility::class);
     }
 
@@ -55,7 +54,6 @@ class FieldListUtility implements SingletonInterface
      */
     protected function getWhitelistSystemFields($tca)
     {
-
         $systemFields = [
             'uid',
             'pid',
@@ -75,7 +73,6 @@ class FieldListUtility implements SingletonInterface
      */
     public function shouldInclude($fieldname, $fieldList, $mode)
     {
-
         $returnValue = $mode == self::MODE_WHITELIST ? true : false;
 
         if (in_array($fieldname, $fieldList)) {

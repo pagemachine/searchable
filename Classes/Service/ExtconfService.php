@@ -19,7 +19,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(ExtconfService::class);
     }
 
@@ -48,7 +47,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndex($language = 0)
     {
-
         $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language]['name'];
 
         if (empty($index)) {
@@ -65,7 +63,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexSettings($indexName)
     {
-
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $index) {
             if ($index['name'] == $indexName && isset($index['settings'])) {
                 return $index['settings'];
@@ -82,7 +79,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function getDefaultIndexSettings()
     {
-
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultIndexSettings'] ?: [];
     }
 
@@ -94,7 +90,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function hasIndex($language = 0)
     {
-
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language])) {
             return true;
         }
@@ -109,7 +104,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexers()
     {
-
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
     }
 
@@ -120,7 +114,6 @@ class ExtconfService implements SingletonInterface
      */
     public static function getMetaFieldname()
     {
-
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'];
     }
 
@@ -131,7 +124,6 @@ class ExtconfService implements SingletonInterface
      */
     public function getIndexerConfiguration()
     {
-
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
     }
 
@@ -141,7 +133,6 @@ class ExtconfService implements SingletonInterface
      */
     public function getUpdateIndex()
     {
-
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
     }
 
@@ -152,7 +143,6 @@ class ExtconfService implements SingletonInterface
      */
     public function getHostsSettings()
     {
-
         $hosts = explode(",", $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts']);
 
         return $hosts;
@@ -175,7 +165,6 @@ class ExtconfService implements SingletonInterface
      */
     public function getFrontendDomain()
     {
-
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['indexing']['domain'];
     }
 

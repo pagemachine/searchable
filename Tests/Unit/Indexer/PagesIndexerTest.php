@@ -40,7 +40,6 @@ class PagesIndexerTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $this->query = $this->prophesize(BulkQuery::class);
 
         $this->query->execute()->willReturn("Success");
@@ -74,7 +73,6 @@ class PagesIndexerTest extends UnitTestCase
      */
     public function addsPagesToIndex()
     {
-
         $pageList = [
             [
                 'uid' => '3',

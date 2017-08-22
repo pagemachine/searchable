@@ -84,7 +84,6 @@ class BulkQuery extends AbstractQuery
      */
     public function __construct($index, $type, $pipeline = null)
     {
-
         parent::__construct();
 
         $this->index = $index;
@@ -121,7 +120,6 @@ class BulkQuery extends AbstractQuery
      */
     public function addRow($uid, $body)
     {
-
         //Build meta row for new row
         $this->parameters['body'][] = [
             'index' => [
@@ -149,7 +147,6 @@ class BulkQuery extends AbstractQuery
      */
     public function execute()
     {
-
         if (!empty($this->parameters['body'])) {
 
             /**
@@ -172,7 +169,6 @@ class BulkQuery extends AbstractQuery
      */
     public function delete($id)
     {
-
         $params = [
             'index' => $this->index,
             'type' => $this->type,
@@ -195,7 +191,6 @@ class BulkQuery extends AbstractQuery
      */
     public function resetBody()
     {
-
         $this->parameters['body'] = [];
     }
 }

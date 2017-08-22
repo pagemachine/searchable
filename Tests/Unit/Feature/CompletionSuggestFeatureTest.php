@@ -23,7 +23,6 @@ class CompletionSuggestFeatureTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $this->feature = new CompletionSuggestFeature([
             'fields' => [
                 'fieldone',

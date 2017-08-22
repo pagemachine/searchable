@@ -35,7 +35,6 @@ class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
      */
     public function render($arguments = [])
     {
-
         $uriBuilder = $this->controllerContext->getUriBuilder();
         $uri = $uriBuilder->reset()
             ->setTargetPageUid($arguments['pageUid'] ?: null)

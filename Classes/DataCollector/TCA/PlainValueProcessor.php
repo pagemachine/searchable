@@ -20,7 +20,6 @@ class PlainValueProcessor implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(self::class);
     }
 
@@ -34,7 +33,6 @@ class PlainValueProcessor implements SingletonInterface
      */
     public function processCheckboxField($value, $fieldTca)
     {
-
         $items = [];
 
         $itemCount = count($fieldTca['items']);
@@ -62,7 +60,6 @@ class PlainValueProcessor implements SingletonInterface
      */
     public function processRadioField($value, $fieldTca)
     {
-
         $label = "";
 
         if (is_array($fieldTca['items'])) {
@@ -87,7 +84,6 @@ class PlainValueProcessor implements SingletonInterface
     */
     protected function getLanguageService()
     {
-
         return $GLOBALS['LANG'];
     }
 }

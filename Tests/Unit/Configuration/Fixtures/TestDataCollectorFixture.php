@@ -23,13 +23,11 @@ class TestDataCollectorFixture extends AbstractDataCollector
      */
     public function getRecord($identifier)
     {
-
         return [];
     }
 
     public function getRecords()
     {
-
         return [];
     }
 }

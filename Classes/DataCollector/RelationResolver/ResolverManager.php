@@ -21,7 +21,7 @@ class ResolverManager implements SingletonInterface
             'select' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver::class,
             'inline' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver::class,
         ],
-        
+
     ];
 
     /**
@@ -34,7 +34,6 @@ class ResolverManager implements SingletonInterface
      */
     public function findResolverForRelation($fieldname, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
     {
-
         $parentConfiguration = $parentCollector->getConfig();
         $subConfiguration = $childCollector->getConfig();
         $tca = $GLOBALS['TCA'][$parentConfiguration['table']];

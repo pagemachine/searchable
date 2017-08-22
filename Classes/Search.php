@@ -27,7 +27,6 @@ class Search implements SingletonInterface
      */
     public function __construct(Client $client = null)
     {
-
         $this->client = $client ?: Connection::getClient();
     }
 
@@ -36,7 +35,6 @@ class Search implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(Search::class);
     }
 
@@ -50,7 +48,6 @@ class Search implements SingletonInterface
      */
     public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null)
     {
-
         $params = [
             'body' => [
                 'query' => [
@@ -89,7 +86,6 @@ class Search implements SingletonInterface
      */
     public function searchUpdates($table)
     {
-
         $params = [
             'index' => ExtconfService::getInstance()->getUpdateIndex(),
             'type' => 'updates',

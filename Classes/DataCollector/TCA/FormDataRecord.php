@@ -36,7 +36,6 @@ class FormDataRecord implements SingletonInterface
      */
     public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null)
     {
-
         $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(SearchableRecordGroup::class);
         $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
     }
@@ -47,7 +46,6 @@ class FormDataRecord implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(self::class);
     }
 
@@ -60,7 +58,6 @@ class FormDataRecord implements SingletonInterface
      */
     public function getRecord($uid, $table, $fieldlist)
     {
-
         $formDataCompilerInput = [
             'tableName' => $table,
             'vanillaUid' => (int)$uid,

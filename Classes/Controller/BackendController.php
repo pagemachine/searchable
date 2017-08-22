@@ -36,7 +36,6 @@ class BackendController extends ActionController
      */
     public function startAction()
     {
-
         try {
             $this->view->assign("updates", $this->fetchScheduledUpdates());
 
@@ -56,7 +55,6 @@ class BackendController extends ActionController
      */
     protected function fetchScheduledUpdates()
     {
-
         $client = Connection::getClient();
 
         $updates = $client->search([
@@ -82,7 +80,6 @@ class BackendController extends ActionController
      */
     public function searchAction($term)
     {
-
         $result = Search::getInstance()->search($term);
 
         $this->view->assign('result', $result);
@@ -98,7 +95,6 @@ class BackendController extends ActionController
      */
     public function requestAction($url = '', $body = '')
     {
-
         if ($url != '') {
             $result = $this->request($url, $body);
 

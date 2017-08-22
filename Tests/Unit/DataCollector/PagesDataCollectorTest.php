@@ -39,7 +39,6 @@ class PagesDataCollectorTest extends UnitTestCase
      */
     public function setUp()
     {
-
         $GLOBALS['TCA']['pages'] = [
             'columns' => [
                 'title' => [
@@ -88,7 +87,6 @@ class PagesDataCollectorTest extends UnitTestCase
      */
     public function collectsPageListSingleLevel()
     {
-
         $pageList = [
             0 => [
                 'uid' => '3',
@@ -129,7 +127,6 @@ class PagesDataCollectorTest extends UnitTestCase
      */
     public function collectsPageListRecursive()
     {
-
         $pageList = [
             0 => [
                 'uid' => '3',

@@ -29,7 +29,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return isset($this->parameters['body'][$key]) ? $this->parameters[$key] : null;
     }
-    
+
     /**
      * @param string $key
      * @param mixed $parameter
@@ -47,7 +47,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var bool $respectLanguage
      */
     protected $respectLanguage = true;
-    
+
     /**
      * @return bool
      */
@@ -55,7 +55,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->respectLanguage;
     }
-    
+
     /**
      * @param bool $respectLanguage
      * @return void
@@ -70,7 +70,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var int $language
      */
     protected $language = null;
-    
+
     /**
      * @return int
      */
@@ -78,7 +78,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->language;
     }
-    
+
     /**
      * @param int $language
      * @return void
@@ -94,7 +94,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var int $from
      */
     protected $from = 0;
-    
+
     /**
      * @return int
      */
@@ -102,7 +102,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->from;
     }
-    
+
     /**
      * @param int $from
      * @return void
@@ -118,7 +118,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var int $size
      */
     protected $size = 10;
-    
+
     /**
      * @return int
      */
@@ -126,7 +126,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->size;
     }
-    
+
     /**
      * @param int $size
      * @return void
@@ -152,7 +152,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var string $searchType
      */
     protected $searchType = "multi_match";
-    
+
     /**
      * @return string
      */
@@ -160,7 +160,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->searchType;
     }
-    
+
     /**
      * @param string $searchType
      * @return void
@@ -176,7 +176,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var array $searchFields
      */
     protected $searchFields = ["_all"];
-    
+
     /**
      * @return array
      */
@@ -184,7 +184,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->searchFields;
     }
-    
+
     /**
      * @param array $searchFields
      * @return SearchQuery
@@ -200,7 +200,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var string $term
      */
     protected $term = "";
-    
+
     /**
      * @return string
      */
@@ -208,7 +208,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     {
         return $this->term;
     }
-    
+
     /**
      * @param string $term
      * @return SearchQuery
@@ -224,7 +224,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * @var array $result
      */
     protected $result;
-    
+
     /**
      * @return array
      */
@@ -276,7 +276,6 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      */
     public function getPageCount()
     {
-
         if (!empty($this->result)) {
             return (int)ceil($this->result['hits']['total'] / $this->size);
         }

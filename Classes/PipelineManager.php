@@ -27,7 +27,6 @@ class PipelineManager implements SingletonInterface
      */
     public function __construct(Client $client = null)
     {
-
         $this->client = $client ?: Connection::getClient();
     }
 
@@ -36,7 +35,6 @@ class PipelineManager implements SingletonInterface
      */
     public static function getInstance()
     {
-
         return GeneralUtility::makeInstance(PipelineManager::class);
     }
 
