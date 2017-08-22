@@ -25,6 +25,10 @@
     <exclude-pattern>*Migrations/Phinx/*.php</exclude-pattern>
   </rule>
 
+  <rule ref="Generic.NamingConventions.UpperCaseConstantName.ConstantNotUpperCase">
+    <exclude-pattern>Tests/bootstrap.php</exclude-pattern>
+  </rule>
+
   <rule ref="Generic.PHP.NoSilencedErrors">
     <properties>
       <property name="error" type="bool" value="true"/>
