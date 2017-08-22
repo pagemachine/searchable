@@ -12,6 +12,7 @@
   <file>ext_emconf.php</file>
   <file>Classes/</file>
   <file>Tests/</file>
+  <exclude-pattern>Tests/bootstrap.php</exclude-pattern>
 
   <rule ref="PSR2">
     <exclude name="Generic.Files.LineLength"/>
@@ -23,10 +24,6 @@
 
   <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
     <exclude-pattern>*Migrations/Phinx/*.php</exclude-pattern>
-  </rule>
-
-  <rule ref="Generic.NamingConventions.UpperCaseConstantName.ConstantNotUpperCase">
-    <exclude-pattern>Tests/bootstrap.php</exclude-pattern>
   </rule>
 
   <rule ref="Generic.PHP.NoSilencedErrors">
