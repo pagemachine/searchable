@@ -78,7 +78,8 @@ class SearchableCommandController extends CommandController
     }
 
     /**
-     * Resets the index for one language or all languages
+     * Reset index for one or all languages
+     *
      * @param string $index
      * @return void
      */
