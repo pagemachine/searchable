@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable;
 
-use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\Service\ExtconfService;
 
@@ -12,8 +11,8 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Manages the ES connection with settings
  */
-class Connection {
-
+class Connection
+{
     /**
      * The cached ES client
      *
@@ -30,7 +29,6 @@ class Connection {
     public static function getClient()
     {
         if (self::$client == null) {
-
             self::$client = ClientBuilder::create()
                 ->setHosts(
                     ExtconfService::getInstance()
@@ -50,5 +48,4 @@ class Connection {
         $ping = self::getClient()->ping();
         return $ping;
     }
-
 }

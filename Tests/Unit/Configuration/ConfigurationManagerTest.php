@@ -1,15 +1,14 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration;
 
+use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TcaDataCollectorFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestDataCollectorFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestFeatureFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestIndexerFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestMapperFixture;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use \PAGEmachine\Searchable\Configuration\ConfigurationManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -51,7 +50,7 @@ class ConfigurationManagerTest extends UnitTestCase
             'pages' => [
                 'className' => TestIndexerFixture::class,
                 'config' => [
-                    'type' => 'pages'
+                    'type' => 'pages',
                 ],
             ],
         ];
@@ -62,7 +61,7 @@ class ConfigurationManagerTest extends UnitTestCase
                 'className' => TestIndexerFixture::class,
                 'config' => [
                     'type' => 'pages',
-                    'customOption' => 1
+                    'customOption' => 1,
                 ],
             ],
         ];
@@ -73,19 +72,19 @@ class ConfigurationManagerTest extends UnitTestCase
     /**
      * @test
      */
-    public function doesNothingIfNoClassIsAvailable() {
+    public function doesNothingIfNoClassIsAvailable()
+    {
 
         $configuration = [
             'pages' => [
                 'config' => [
-                    'type' => 'pages'
+                    'type' => 'pages',
                 ],
             ],
         ];
         $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
 
         $this->assertEquals($configuration, $this->configurationManager->getIndexerConfiguration());
-
     }
 
     /**
@@ -101,9 +100,9 @@ class ConfigurationManagerTest extends UnitTestCase
                     'collector' => [
                         'className' => TestDataCollectorFixture::class,
                         'config' => [
-                            'extconfOption' => 'foobar'
-                        ]
-                    ]
+                            'extconfOption' => 'foobar',
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -120,21 +119,21 @@ class ConfigurationManagerTest extends UnitTestCase
                         'config' => [
                             'extconfOption' => 'foobar',
                             'option1' => 1,
-                            'option2' => 2
-                        ]
-                    ]
+                            'option2' => 2,
+                        ],
+                    ],
                 ],
             ],
         ];
 
-        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());        
-        
+        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
     /**
      * @test
      */
-    public function mergesMultipleConfigurationsOnTheSameLevel() {
+    public function mergesMultipleConfigurationsOnTheSameLevel()
+    {
         $configuration = [
             'pages' => [
                 'className' => TestIndexerFixture::class,
@@ -148,12 +147,12 @@ class ConfigurationManagerTest extends UnitTestCase
                                 'myType' => [
                                     'className' => TestDataCollectorFixture::class,
                                     'config' => [
-                                        'subExtconfOption' => 'barbaz'
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                                        'subExtconfOption' => 'barbaz',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -177,23 +176,24 @@ class ConfigurationManagerTest extends UnitTestCase
                                     'config' => [
                                         'subExtconfOption' => 'barbaz',
                                         'option1' => 1,
-                                        'option2' => 2
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                                        'option2' => 2,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
 
-        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());  
+        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
     /**
      * @test
      */
-    public function createsMappingWithUserPrecedence() {
+    public function createsMappingWithUserPrecedence()
+    {
         $configuration = [
             'pages' => [
                 'className' => TestIndexerFixture::class,
@@ -206,8 +206,8 @@ class ConfigurationManagerTest extends UnitTestCase
                         'properties' => [
                             'existingKey' => 'existingValue',
                             'overrideKey' => 'overrideValue',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -223,7 +223,8 @@ class ConfigurationManagerTest extends UnitTestCase
     /**
      * @test
      */
-    public function enrichesMappingByFeatures() {
+    public function enrichesMappingByFeatures()
+    {
         $configuration = [
             'pages' => [
                 'className' => TestIndexerFixture::class,
@@ -232,15 +233,15 @@ class ConfigurationManagerTest extends UnitTestCase
                     'features' => [
                         0 => [
                             'className' => TestFeatureFixture::class,
-                        ]
+                        ],
                         
                     ],
                     'mapping' => [
                         'properties' => [
                             'existingKey' => 'existingValue',
                             'overrideKey' => 'overrideValue',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -250,13 +251,14 @@ class ConfigurationManagerTest extends UnitTestCase
 
         $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
         $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
-        $this->assertEquals('featurevalue', $mapping['pages']['featureproperty']);       
+        $this->assertEquals('featurevalue', $mapping['pages']['featureproperty']);
     }
 
     /**
      * @test
      */
-    public function createsUpdateConfiguration() {
+    public function createsUpdateConfiguration()
+    {
         $configuration = [
             'pages' => [
                 'className' => TestIndexerFixture::class,
@@ -272,11 +274,11 @@ class ConfigurationManagerTest extends UnitTestCase
                                     'config' => [
                                         'table' => 'contenttable',
                                         'field' => 'content',
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'extensioncontent' => [
@@ -292,21 +294,21 @@ class ConfigurationManagerTest extends UnitTestCase
                                     'className' => TestDataCollectorFixture::class,
                                     'config' => [
                                         'table' => 'contenttable',
-                                        'field' => 'content'
-                                    ]
+                                        'field' => 'content',
+                                    ],
                                 ],
                                 'myType2' => [
                                     'className' => TestDataCollectorFixture::class,
                                     'config' => [
                                         'table' => 'othertable',
-                                        'field' => 'othercontent'
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],            
-            ]
+                                        'field' => 'othercontent',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
         $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
 
@@ -314,22 +316,20 @@ class ConfigurationManagerTest extends UnitTestCase
             'database' => [
                 'toplevel' => [
                     'pagestable' => ['pages'],
-                    'extensiontable' => ['extensiontype']
+                    'extensiontable' => ['extensiontype'],
                 ],
                 'sublevel' => [
                     'contenttable' => [
                         'pages' => 'content',
-                        'extensiontype' => 'content'
+                        'extensiontype' => 'content',
                     ],
                     'othertable' => [
-                        'extensiontype' => 'othercontent'
-                    ]
-                ]
-            ]
+                        'extensiontype' => 'othercontent',
+                    ],
+                ],
+            ],
         ];
 
-        $this->assertEquals($expectedUpdateConfiguration, $this->configurationManager->getUpdateConfiguration());  
+        $this->assertEquals($expectedUpdateConfiguration, $this->configurationManager->getUpdateConfiguration());
     }
-
-    
 }

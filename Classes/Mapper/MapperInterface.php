@@ -1,13 +1,12 @@
 <?php
 namespace PAGEmachine\Searchable\Mapper;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
 
-interface MapperInterface {
-
+interface MapperInterface
+{
     /**
      * Creates a mapping array for the given index
      *
@@ -15,5 +14,4 @@ interface MapperInterface {
      * @return array $mapping
      */
     public static function getMapping($indexerConfiguration);
-
 }

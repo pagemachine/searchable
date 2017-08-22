@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -9,8 +8,8 @@ namespace PAGEmachine\Searchable\Preview;
 /**
  * Simple preview renderer.
  */
-class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
-
+class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
+{
     /**
      * @var array
      */
@@ -19,18 +18,20 @@ class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRe
     /**
      * @param array $config
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
 
         $this->config = $config;
     }
 
     /**
      * Renders the preview
-     * 
+     *
      * @param  array $config
      * @return string
      */
-    public function render($record) {
+    public function render($record)
+    {
 
         $rawfield = $record[$this->config['field']];
 
@@ -38,6 +39,4 @@ class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRe
 
         return $processedField;
     }
-
-
 }

@@ -11,9 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for AbstractLinkBuilder
  */
-class AbstractLinkBuilderTest extends UnitTestCase {
-
-
+class AbstractLinkBuilderTest extends UnitTestCase
+{
     /**
      * @var AbstractLinkBuilder
      */
@@ -27,7 +26,8 @@ class AbstractLinkBuilderTest extends UnitTestCase {
     /**
      * @test
      */
-    public function createsFixedLinkConfiguration() {
+    public function createsFixedLinkConfiguration()
+    {
 
         $record = [];
 
@@ -35,71 +35,71 @@ class AbstractLinkBuilderTest extends UnitTestCase {
             'titleField' => 'footitle',
             'fixedParts' => [
                 'someUid' => 2,
-                'additionalParams' => ['foo' => 'bar']
+                'additionalParams' => ['foo' => 'bar'],
             ],
             'dynamicParts' => [
-            ]
+            ],
         ];
 
         $expectedLinkConfiguration = [
             'someUid' => 2,
-            'additionalParams' => ['foo' => 'bar']
+            'additionalParams' => ['foo' => 'bar'],
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record);
 
         $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
-
     }
 
     /**
      * @test
      */
-    public function replacesDynamicFields() {
+    public function replacesDynamicFields()
+    {
 
         $configuration = [
             'fixedParts' => [],
             'dynamicParts' => [
-                'pageUid' => 'page'
-            ]
+                'pageUid' => 'page',
+            ],
         ];
 
         $record = [
-            'page' => '123'
+            'page' => '123',
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record);
 
         $this->assertEquals([
-            'pageUid' => '123'
+            'pageUid' => '123',
         ], $linkConfiguration);
-
     }
 
 
     /**
      * @test
      */
-    public function replacesNestedDynamicFields() {
+    public function replacesNestedDynamicFields()
+    {
 
         $configuration = [
-            'fixedParts' => []
+            'fixedParts' => [],
         ];
 
         $configuration['dynamicParts'] = [
             'pageUid' => 'page',
             'additionalParams' => [
                 'param1' => 'property1',
-                'param2' => 'property2'
-            ]
+                'param2' => 'property2',
+            ],
         ];
 
         $record = [
             'page' => '123',
             'property1' => 'value1',
-            'property2' => 'value2'
+            'property2' => 'value2',
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
@@ -112,10 +112,11 @@ class AbstractLinkBuilderTest extends UnitTestCase {
     /**
      * @test
      */
-    public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead() {
+    public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead()
+    {
 
         $configuration = [
-            'fixedParts' => []
+            'fixedParts' => [],
         ];
 
         $configuration['fixedParts']['pageUid'] = '123';

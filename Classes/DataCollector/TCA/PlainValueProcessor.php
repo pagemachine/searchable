@@ -12,13 +12,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Helper class to process plain values such as checkbox or radio fields (TCA related)
  */
-class PlainValueProcessor implements SingletonInterface {
-
+class PlainValueProcessor implements SingletonInterface
+{
     /**
      *
      * @return PlainValueProcessor
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(self::class);
     }
@@ -31,7 +32,8 @@ class PlainValueProcessor implements SingletonInterface {
      * @param  array $fieldTca
      * @return string
      */
-    public function processCheckboxField($value, $fieldTca) {
+    public function processCheckboxField($value, $fieldTca)
+    {
 
         $items = [];
 
@@ -39,11 +41,9 @@ class PlainValueProcessor implements SingletonInterface {
         $activeItemKeys = BinaryConversionUtility::convertCheckboxValue($value, $itemCount);
 
         foreach ($activeItemKeys as $key) {
-
             $label = $fieldTca['items'][$key][0];
 
             if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
-
                 $label = $this->getLanguageService()->sL($label);
             }
 
@@ -51,7 +51,6 @@ class PlainValueProcessor implements SingletonInterface {
         }
 
         return implode(", ", $items);
-
     }
 
     /**
@@ -61,7 +60,8 @@ class PlainValueProcessor implements SingletonInterface {
      * @param  array $fieldTca
      * @return string
      */
-    public function processRadioField($value, $fieldTca) {
+    public function processRadioField($value, $fieldTca)
+    {
 
         $label = "";
 
@@ -75,23 +75,19 @@ class PlainValueProcessor implements SingletonInterface {
         }
 
         if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
-
             $label = $this->getLanguageService()->sL($label);
         }
 
         return $label;
-
     }
 
 
     /**
      * @return \TYPO3\CMS\Lang\LanguageService
     */
-    protected function getLanguageService() {
+    protected function getLanguageService()
+    {
 
         return $GLOBALS['LANG'];
     }
-
-
-
 }

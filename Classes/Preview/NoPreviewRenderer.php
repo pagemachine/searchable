@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -10,18 +9,17 @@ namespace PAGEmachine\Searchable\Preview;
  * NoPreviewRenderer
  * Simply returns an empty string. Use this renderer if you only want to return highlighted results
  */
-class NoPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
-
+class NoPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
+{
     /**
      * Renders the preview
      *
      * @param  array $config
      * @return string
      */
-    public function render($record) {
+    public function render($record)
+    {
 
         return '';
     }
-
-
 }

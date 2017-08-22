@@ -2,13 +2,11 @@
 namespace PAGEmachine\Searchable\Command;
 
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
-use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use \TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
+use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -16,11 +14,10 @@ use \TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
 class SearchableCommandController extends CommandController
 {
-
     /**
      * @var bool
      */
-    protected $requestAdminPermissions = TRUE;
+    protected $requestAdminPermissions = true;
 
     /**
      * @var \PAGEmachine\Searchable\Indexer\IndexerFactory
@@ -51,7 +48,8 @@ class SearchableCommandController extends CommandController
      * @param  string $type If set, only runs indexing for the given type
      * @return void
      */
-    public function indexFullCommand($type = null) {
+    public function indexFullCommand($type = null)
+    {
 
         $this->outputLine();
         $this->checkHealth();
@@ -68,7 +66,8 @@ class SearchableCommandController extends CommandController
      * @param  string $type If set, only runs indexing for the given type
      * @return void
      */
-    public function indexPartialCommand($type = null) {
+    public function indexPartialCommand($type = null)
+    {
 
         $this->outputLine();
         $this->checkHealth();
@@ -85,7 +84,8 @@ class SearchableCommandController extends CommandController
      * @param string $index
      * @return void
      */
-    public function resetIndexCommand($language = null) {
+    public function resetIndexCommand($language = null)
+    {
 
         $this->outputLine();
         $this->checkHealth();
@@ -95,15 +95,11 @@ class SearchableCommandController extends CommandController
         $indexManager = IndexManager::getInstance();
 
         if ($language != null) {
-
             $indexManager->resetIndex(ExtconfService::getIndex($language));
 
             $this->outputLine("Index '" . ExtconfService::getIndex($language) . "' was successfully cleared.");
-        }
-        else {
-
+        } else {
             foreach (ExtconfService::getIndices() as $index) {
-
                 $indexManager->resetIndex($index);
                 $this->outputLine("Index '" . $index . "' was successfully cleared.");
             }
@@ -116,7 +112,8 @@ class SearchableCommandController extends CommandController
      *
      * @return void
      */
-    public function setupCommand() {
+    public function setupCommand()
+    {
 
         $this->outputLine();
         $this->checkHealth();
@@ -131,10 +128,8 @@ class SearchableCommandController extends CommandController
         $this->outputLine("Checking for existing Update Index...");
 
         if (empty($response)) {
-
             $this->outputLine("<comment>\tUpdate Index already exists.</comment>");
         } else {
-
             $this->outputLine("<info>Update Index created.</info>");
         }
 
@@ -144,9 +139,7 @@ class SearchableCommandController extends CommandController
 
         try {
             $indexers = $this->indexerFactory->makeIndexers();
-
         } catch (\Exception $e) {
-
             $this->outputline("<error>Something is wrong with your indexer configuration:</error>");
             $this->outputline(get_class($e));
             $this->outputline($e->getMessage());
@@ -154,15 +147,11 @@ class SearchableCommandController extends CommandController
             $this->outputLine("<error>Could not continue setup due to errors, aborting.</error>");
 
             return;
-
         }
 
         if (!empty($indexers)) {
-
             $this->outputLine("Done.");
-        }
-        else {
-
+        } else {
             $this->outputLine("<comment>\tWARNING: No indexers defined.</comment>");
         }
 
@@ -172,9 +161,7 @@ class SearchableCommandController extends CommandController
         $indices = ExtconfService::getIndices();
 
         if (!empty($indices)) {
-
             foreach ($indices as $language => $index) {
-
                 $response = $indexManager->createIndex($index);
 
                 $this->outputLine("\tIndex '" . $index . "': " . (!empty($response) ? "<info>Created.</info>" : "<comment>Exists.</comment>"));
@@ -195,24 +182,19 @@ class SearchableCommandController extends CommandController
      * Collects scheduled indexers depending on settings
      * @return void
      */
-    protected function collectScheduledIndexers() {
+    protected function collectScheduledIndexers()
+    {
 
         $indices = ExtconfService::getIndices();
 
         foreach ($indices as $language => $index) {
-
             if ($this->type == null) {
-
-                 foreach ($this->indexerFactory->makeIndexers($language) as $indexer) {
-
+                foreach ($this->indexerFactory->makeIndexers($language) as $indexer) {
                     $this->scheduledIndexers[$language][] = $indexer;
-                 }
-            }
-            else {
-
+                }
+            } else {
                 $indexer = $this->indexerFactory->makeIndexer($language, $this->type);
                 if ($indexer != null) {
-
                     $this->scheduledIndexers[$language][] = $indexer;
                 }
             }
@@ -224,7 +206,8 @@ class SearchableCommandController extends CommandController
      *
      * @return void
      */
-    protected function runIndexers() {
+    protected function runIndexers()
+    {
 
         $starttime = microtime(true);
 
@@ -235,19 +218,14 @@ class SearchableCommandController extends CommandController
         $this->outputLine();
 
         foreach ($this->scheduledIndexers as $language => $indexers) {
-
             if (!empty($indexers)) {
-
                 $this->outputLine("<comment>Language %s:</comment>", [$language]);
 
                 foreach ($indexers as $indexer) {
-
                     $this->runSingleIndexer($indexer);
                 }
                 $this->outputLine();
-            }
-            else {
-
+            } else {
                 $this->outputLine("<comment>WARNING: No indexers found for language " . $language . ". Doing nothing.</comment>");
             }
         }
@@ -255,9 +233,7 @@ class SearchableCommandController extends CommandController
         if ($this->type == null) {
             IndexManager::getInstance()->resetUpdateIndex();
             $this->outputLine("<info>Update Index was reset.</info>");
-        }
-        else {
-
+        } else {
             $this->outputLine("<info>Keeping update index since not all types were updated.</info>");
         }
 
@@ -268,8 +244,6 @@ class SearchableCommandController extends CommandController
         $this->outputLine("<options=bold>Memory (MB):</> " . (memory_get_peak_usage(true) / 1000000));
         $this->outputLine();
         $this->outputLine("<info>Indexing finished.</info>");
-
-
     }
 
     /**
@@ -281,22 +255,16 @@ class SearchableCommandController extends CommandController
     protected function runSingleIndexer(IndexerInterface $indexer)
     {
         $this->outputLine();
-        $this->outputLine("<comment> Type '%s':</comment>", [$indexer->getType()] );
+        $this->outputLine("<comment> Type '%s':</comment>", [$indexer->getType()]);
         $this->output->progressStart();
 
         if ($this->runFullIndexing) {
-
             foreach ($indexer->run() as $resultMessage) {
-
                 $this->output->progressSet($resultMessage);
             }
-        }
-        else {
-
+        } else {
             foreach ($indexer->runUpdate() as $resultMessage) {
-
                 $this->output->progressSet($resultMessage);
-
             }
         }
         $this->output->progressFinish();
@@ -309,8 +277,7 @@ class SearchableCommandController extends CommandController
      */
     protected function checkHealth()
     {
-        if (!Connection::isHealthy())
-        {
+        if (!Connection::isHealthy()) {
             $this->outputLine("<error>Elasticsearch is offline, aborting.</error>");
             $this->quit();
         }

@@ -1,16 +1,14 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\TCA\DataProvider;
 
-
-use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Backend\Form\FormDataProvider\AbstractItemProvider;
+use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 
 /**
  * Custom implementation of TcaSelectItems. Resolves the relation only without fetching the whoule array of available items
  */
 class TcaInlineCopyToDbRecord extends AbstractItemProvider implements FormDataProviderInterface
 {
-
     /**
      * Resolve inline fields
      *
@@ -20,7 +18,6 @@ class TcaInlineCopyToDbRecord extends AbstractItemProvider implements FormDataPr
     public function addData(array $result)
     {
         foreach ($result['processedTca']['columns'] as $fieldName => $fieldConfig) {
-
             if (!$this->isInlineField($fieldConfig)) {
                 continue;
             }
@@ -29,7 +26,6 @@ class TcaInlineCopyToDbRecord extends AbstractItemProvider implements FormDataPr
                 $result['databaseRow'][$fieldName] = [];
 
                 foreach ($result['processedTca']['columns'][$fieldName]['children'] as $child) {
-
                     $result['databaseRow'][$fieldName][] = $child['databaseRow'];
                 }
             }

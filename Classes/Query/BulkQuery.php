@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -9,8 +8,8 @@ namespace PAGEmachine\Searchable\Query;
 /**
  * Helper class to build up the parameter array for bulk indexing
  */
-class BulkQuery extends AbstractQuery {
-
+class BulkQuery extends AbstractQuery
+{
     /**
      * @var string $index
      */
@@ -19,16 +18,18 @@ class BulkQuery extends AbstractQuery {
     /**
      * @return string
      */
-    public function getIndex() {
-      return $this->index;
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**
      * @param string $index
      * @return void
      */
-    public function setIndex($index) {
-      $this->index = $index;
+    public function setIndex($index)
+    {
+        $this->index = $index;
     }
 
 
@@ -40,16 +41,18 @@ class BulkQuery extends AbstractQuery {
     /**
      * @return string
      */
-    public function getType() {
-      return $this->type;
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
      * @param string $type
      * @return void
      */
-    public function setType(string $type) {
-      $this->type = $type;
+    public function setType(string $type)
+    {
+        $this->type = $type;
     }
 
 
@@ -79,7 +82,8 @@ class BulkQuery extends AbstractQuery {
      * @param string $index
      * @param string $type
      */
-    public function __construct($index, $type, $pipeline = null) {
+    public function __construct($index, $type, $pipeline = null)
+    {
 
         parent::__construct();
 
@@ -94,15 +98,15 @@ class BulkQuery extends AbstractQuery {
      * Creates the basic information for bulk indexing
      * @return void
      */
-    public function init() {
+    public function init()
+    {
         $this->parameters =  [
             'index' => $this->getIndex(),
             'type' => $this->getType(),
-            'body' => []
+            'body' => [],
         ];
 
         if ($this->getPipeline() != null) {
-
             $this->parameters['pipeline'] = $this->getPipeline();
         }
     }
@@ -115,26 +119,25 @@ class BulkQuery extends AbstractQuery {
      *
      * @return void
      */
-    public function addRow($uid, $body) {
+    public function addRow($uid, $body)
+    {
 
         //Build meta row for new row
         $this->parameters['body'][] = [
             'index' => [
                 '_index' => $this->index,
                 '_type' => $this->type,
-                '_id' => $uid
-            ]
+                '_id' => $uid,
+            ],
 
         ];
 
         $this->parameters['body'][] = $body;
-
     }
 
     public function addRows($uidField, $records)
     {
         foreach ($records as $record) {
-
             $this->addRow($record[$uidField], $record);
         }
     }
@@ -144,7 +147,8 @@ class BulkQuery extends AbstractQuery {
      *
      * @return void
      */
-    public function execute() {
+    public function execute()
+    {
 
         if (!empty($this->parameters['body'])) {
 
@@ -154,7 +158,6 @@ class BulkQuery extends AbstractQuery {
             $response = $this->client->bulk($this->getParameters());
 
             if ($response['errors']) {
-
                 $this->logger->error("Bulk Query response contains errors: ", $response);
             }
         }
@@ -167,20 +170,19 @@ class BulkQuery extends AbstractQuery {
      * @param  int $id
      * @return void
      */
-    public function delete($id) {
+    public function delete($id)
+    {
 
         $params = [
             'index' => $this->index,
             'type' => $this->type,
-            'id' => $id
+            'id' => $id,
         ];
 
         if ($this->client->exists($params)) {
-
             $response = $this->client->delete($params);
 
             if ($response['errors']) {
-
                 $this->logger->error("Delete Query response contains errors: ", $response);
             }
         }
@@ -191,10 +193,9 @@ class BulkQuery extends AbstractQuery {
      *
      * @return void
      */
-    public function resetBody() {
+    public function resetBody()
+    {
 
         $this->parameters['body'] = [];
     }
-
-
 }

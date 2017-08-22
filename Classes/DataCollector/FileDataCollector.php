@@ -8,8 +8,8 @@ namespace PAGEmachine\Searchable\DataCollector;
 /**
  * Class for fetching pages data
  */
-class FileDataCollector extends TcaDataCollector implements DataCollectorInterface {
-
+class FileDataCollector extends TcaDataCollector implements DataCollectorInterface
+{
     /**
      * @var array
      */
@@ -21,20 +21,20 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
         'fields' => [
             'title',
             'description',
-            'file'
+            'file',
         ],
         'subCollectors' => [
             'file' => [
                 'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
                 'config' => [
                     'field' => 'file',
-                    'fields' => []
-                ]
-            ]
+                    'fields' => [],
+                ],
+            ],
         ],
         'mimetypes' => [
             '"text/plain"',
-            '"application/pdf"'
+            '"application/pdf"',
         ],
     ];
 

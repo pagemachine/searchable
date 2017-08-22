@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
 use PAGEmachine\Searchable\Query\QueryInterface;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -11,8 +12,8 @@ use PAGEmachine\Searchable\Query\QueryInterface;
  * CompletionSuggestFeature
  * Creates mapping, indexing and search parameters for CompletionSuggesters (Autosuggest functionality)
  */
-class CompletionSuggestFeature extends AbstractFeature implements FeatureInterface {
-
+class CompletionSuggestFeature extends AbstractFeature implements FeatureInterface
+{
     use FieldCollectionTrait;
 
     /**
@@ -66,18 +67,15 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     public function modifyRecord($record)
     {
         if (!empty($this->config['fields'])) {
-
             $content = $this->collectFields($record, $this->config['fields']);
 
             if ($this->config['splitIntoWords']) {
-
                 $content = $this->splitFields($content);
             }
         }
         $content = $this->collectFieldFromSubRecords($record, $this->config['completionField'], $content, true);
 
         if (!empty($content)) {
-
             $record[$this->config['completionField']]['input'] = $content;
         }
         return $record;
@@ -93,16 +91,13 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     {
         $splittedContent = [];
         if (!empty($fields)) {
-
             foreach ($fields as $field) {
-
                 $split = preg_split($this->config['splitRegex'], $field);
                 $splittedContent = array_merge($splittedContent, $split);
             }
         }
 
         return $splittedContent;
-
     }
 
     /**
@@ -117,16 +112,14 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
         $parameters['body']['suggest'][$this->config['completionField']] = [
             'prefix' => $query->getTerm(),
             'completion' => [
-                'field' => $this->config['completionField']
-            ]
+                'field' => $this->config['completionField'],
+            ],
         ];
         if ($this->config['limitSource']) {
-
             $parameters['body']['_source'] = $this->config['completionField'];
         }
         $query->setParameters($parameters);
 
         return $query;
     }
-
 }

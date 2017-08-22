@@ -4,7 +4,6 @@ namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 use PAGEmachine\Searchable\Feature\AbstractFeature;
 use PAGEmachine\Searchable\Feature\FeatureInterface;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -12,7 +11,6 @@ use PAGEmachine\Searchable\Feature\FeatureInterface;
 
 class TestFeatureFixture extends AbstractFeature implements FeatureInterface
 {
-
     /**
      * Entry point to modify mapping
      *

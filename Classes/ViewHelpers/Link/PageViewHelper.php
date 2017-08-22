@@ -9,8 +9,8 @@ namespace PAGEmachine\Searchable\ViewHelpers\Link;
  * PageViewHelper
  * Works like the default link.page ViewHelper from fluid, but allows to pass all arguments as an array
  */
-class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
-
+class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+{
     /**
      * @var string
      */
@@ -28,12 +28,13 @@ class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
         $this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document', false);
     }
 
-	/**
-	 *
-	 * @param  array  $arguments
-	 * @return array
-	 */
-	public function render($arguments = []) {
+    /**
+     *
+     * @param  array  $arguments
+     * @return array
+     */
+    public function render($arguments = [])
+    {
 
         $uriBuilder = $this->controllerContext->getUriBuilder();
         $uri = $uriBuilder->reset()
@@ -57,10 +58,5 @@ class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
             $result = $this->renderChildren();
         }
         return $result;
-	}
-
-
-
-
-
+    }
 }

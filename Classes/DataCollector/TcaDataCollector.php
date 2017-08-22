@@ -1,16 +1,12 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Enumeration\TcaType;
-use PAGEmachine\Searchable\Search;
-use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -19,8 +15,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class for fetching TCA-based data according to the given config
  */
-class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface {
-
+class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface
+{
     /**
      *
      * @var \TYPO3\CMS\Frontend\Page\PageRepository
@@ -54,8 +50,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         // DB query modification. Set custom restrictions to the record selection process
         'select' => [
             'additionalTables' => [],
-            'additionalWhereClauses' => []
-        ]
+            'additionalWhereClauses' => [],
+        ],
     ];
 
     /**
@@ -72,18 +68,16 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
      * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
+    {
 
         $defaultConfiguration = static::$defaultConfiguration;
 
         //If this is a subcollector, try fetching the table name from the parent TCA
         if (!$currentSubconfiguration['table'] && !$defaultConfiguration['table']) {
-
             if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
-
                 $defaultConfiguration['table'] = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table'];
             } else {
-
                 throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
             }
         }
@@ -98,7 +92,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param string                 $field        Fieldname to apply this collector to
      * @param DataCollectorInterface $subCollector
      */
-    public function addSubCollector($field, DataCollectorInterface $collector) {
+    public function addSubCollector($field, DataCollectorInterface $collector)
+    {
 
         parent::addSubCollector($field, $collector);
 
@@ -116,7 +111,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * @return array
      */
-    public function getProcessedTca() {
+    public function getProcessedTca()
+    {
 
         return $this->processedTca;
     }
@@ -127,17 +123,14 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param  string $field
      * @return boolean
      */
-    public function subCollectorExistsForColumn($column) {
+    public function subCollectorExistsForColumn($column)
+    {
 
         if (!empty($this->config['subCollectors'])) {
-
             foreach ($this->config['subCollectors'] as $subconfig) {
-
                 if ($subconfig['config']['field'] == $column) {
-
                     return true;
                 }
-
             }
         }
 
@@ -148,8 +141,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * @return array
      */
-    public function getTcaConfiguration() {
-      return $GLOBALS['TCA'][$this->config['table']];
+    public function getTcaConfiguration()
+    {
+        return $GLOBALS['TCA'][$this->config['table']];
     }
 
     /**
@@ -170,7 +164,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         );
 
         while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
-
             yield $this->getRecord($rawRecord['uid']);
         }
     }
@@ -181,12 +174,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param  array $updateUidList
      * @return \Generator
      */
-    public function getUpdatedRecords($updateUidList) {
+    public function getUpdatedRecords($updateUidList)
+    {
 
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
-
             $queryParts = $this->buildUidListQueryParts("uid=" . $uid);
 
             $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
@@ -196,20 +189,16 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             );
 
             if ($record) {
-
                 $fullRecord = $this->getRecord($record['uid']);
 
                 if (!empty($fullRecord)) {
-
                     yield $fullRecord;
                     continue;
                 }
             }
 
             yield ['uid' => $uid, 'deleted' => 1];
-
         }
-
     }
 
     /**
@@ -218,12 +207,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param integer $identifier
      * @return array
      */
-    public function getRecord($identifier) {
+    public function getRecord($identifier)
+    {
 
         $data = FormDataRecord::getInstance()->getRecord($identifier, $this->config['table'], $this->getFieldWhitelist());
 
         if (empty($data)) {
-
             return [];
         }
 
@@ -247,7 +236,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * @param  array $record
      * @return array
      */
-    protected function languageoverlay($record) {
+    protected function languageoverlay($record)
+    {
 
         return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->getFieldWhitelist(), $this->config['sysLanguageOverlay']);
     }
@@ -264,9 +254,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         //Preprocess fields
         foreach ($record as $key => $field) {
-
-            if (empty($field) || (!in_array($key, $this->getFieldWhitelist()) && !$this->subCollectorExistsForColumn($key)))
-            {
+            if (empty($field) || (!in_array($key, $this->getFieldWhitelist()) && !$this->subCollectorExistsForColumn($key))) {
                 unset($record[$key]);
                 continue;
             }
@@ -274,8 +262,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             $type = $this->processedTca['columns'][$key]['config']['type'];
 
             //plain types
-            switch ($type)
-            {
+            switch ($type) {
                 case TcaType::RADIO:
                     $record[$key] = $plainValueProcessor->processRadioField($field, $this->processedTca['columns'][$key]['config']);
                     break;
@@ -288,9 +275,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         //Fill subtypes at last
         if (!empty($this->config['subCollectors'])) {
-
             foreach ($this->config['subCollectors'] as $key => $subconfig) {
-
                 $fieldname = $subconfig['config']['field'];
 
                 $resolver = $this->relationResolvers[$key];
@@ -301,7 +286,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
                 //Add processed column
                 $record[$key] = $resolvedField;
-
             }
         }
 
@@ -309,7 +293,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $record = array_filter($record);
 
         return $record;
-
     }
 
     /**
@@ -317,10 +300,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      *
      * @return array
      */
-    public function getFieldWhitelist() {
+    public function getFieldWhitelist()
+    {
 
         if ($this->fieldWhitelist == null) {
-
             $this->fieldWhitelist = FieldListUtility::getInstance()->createFieldList($this->config['fields'], $this->getTcaConfiguration(), $this->config['mode']);
         }
         return $this->fieldWhitelist;
@@ -354,17 +337,14 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         if ($additionalWhere) {
-
             $statement['where']['additional'] = $additionalWhere;
         }
 
         if (!empty($this->config['select']['additionalTables'])) {
-
             $statement['from'] = array_merge($statement['from'], $this->config['select']['additionalTables']);
         }
 
         if (!empty($this->config['select']['additionalWhereClauses'])) {
-
             $statement['where'] = array_merge($statement['where'], $this->config['select']['additionalWhereClauses']);
         }
 

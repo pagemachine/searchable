@@ -21,7 +21,7 @@ class DynamicFlexFormHook
      */
     protected $allowedListTypes = [
         'searchable_searchbar',
-        'searchable_results'
+        'searchable_results',
     ];
 
     /**
@@ -31,7 +31,7 @@ class DynamicFlexFormHook
      */
     protected $allowedIdentifiers = [
         'searchable_searchbar,list',
-        'searchable_results,list'
+        'searchable_results,list',
     ];
 
     /**
@@ -50,7 +50,6 @@ class DynamicFlexFormHook
     public function getFlexFormDS_postProcessDS(&$dataStructure, $conf, $row, $table)
     {
         if ($table === 'tt_content' && $row['CType'] === 'list' && in_array($row['list_type'], $this->allowedListTypes) && is_array($dataStructure)) {
-
             $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($row['list_type']);
         }
     }
@@ -65,8 +64,7 @@ class DynamicFlexFormHook
     public function parseDataStructureByIdentifierPostProcess($dataStructure, $identifier)
     {
 
-        if ($identifier['tableName'] == 'tt_content' && $identifier['fieldName'] = 'pi_flexform' && in_array($identifier['dataStructureKey'], $this->allowedIdentifiers))
-        {
+        if ($identifier['tableName'] == 'tt_content' && $identifier['fieldName'] = 'pi_flexform' && in_array($identifier['dataStructureKey'], $this->allowedIdentifiers)) {
             list($pluginKey, $listType) = explode(",", $identifier['dataStructureKey']);
             $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($pluginKey);
         }
@@ -87,18 +85,16 @@ class DynamicFlexFormHook
         $sheet = [
             'ROOT' => [
                 'TCEforms' => [
-                    'sheetTitle' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features'
+                    'sheetTitle' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features',
                 ],
-                'el' => []
-            ]
+                'el' => [],
+            ],
         ];
 
 
 
         if (!empty($configuration['settings']['features'])) {
-
             foreach ($configuration['settings']['features'] as $feature => $value) {
-
                 $sheet['ROOT']['el']['settings.features.' . $feature] = $this->buildSingleField($feature, $value);
             }
         }
@@ -119,9 +115,9 @@ class DynamicFlexFormHook
                 'label' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features.' . $fieldname,
                 'config' => [
                     'type' => 'check',
-                    'default' => $value
-                ]
-            ]
+                    'default' => $value,
+                ],
+            ],
         ];
 
         return $field;

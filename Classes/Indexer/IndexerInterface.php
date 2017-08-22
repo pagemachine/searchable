@@ -5,20 +5,20 @@ namespace PAGEmachine\Searchable\Indexer;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-interface IndexerInterface {
-
+interface IndexerInterface
+{
     /**
      * Main function for indexing
-     * 
+     *
      * @return \Generator
      */
     public function run();
 
      /**
      * Update function for indexing
-     * 
+     *
      * @return \Generator
-     */   
+     */
     public function runUpdate();
 
     /**
@@ -64,5 +64,4 @@ interface IndexerInterface {
      * @return void
      */
     public function setConfig($config);
-
 }

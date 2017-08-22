@@ -2,8 +2,6 @@
 namespace PAGEmachine\Searchable\Eid;
 
 use PAGEmachine\Searchable\Query\SearchQuery;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -13,8 +11,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Eid-based search class
  */
-class Search extends AbstractEidHandler {
-
+class Search extends AbstractEidHandler
+{
     /**
      * Returns results for given term
      *
@@ -35,8 +33,7 @@ class Search extends AbstractEidHandler {
         return [
             'results' => $result,
             'totalPages' => $query->getPageCount(),
-            'currentPage' => $this->options['page']
+            'currentPage' => $this->options['page'],
         ];
     }
-
 }

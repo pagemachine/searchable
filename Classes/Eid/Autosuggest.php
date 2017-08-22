@@ -2,8 +2,6 @@
 namespace PAGEmachine\Searchable\Eid;
 
 use PAGEmachine\Searchable\Query\AutosuggestQuery;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -13,9 +11,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Eid-based autosuggest class
  */
-class Autosuggest extends AbstractEidHandler {
-
-
+class Autosuggest extends AbstractEidHandler
+{
     /**
      * Returns results for given term
      *
@@ -35,7 +32,6 @@ class Autosuggest extends AbstractEidHandler {
         $suggestions = [];
 
         if (!empty($result['suggest']['searchable_autosuggest'][0]['options'])) {
-
             foreach ($result['suggest']['searchable_autosuggest'][0]['options'] as $suggestion) {
                 $suggestions[] = $suggestion['text'];
             }
@@ -43,5 +39,4 @@ class Autosuggest extends AbstractEidHandler {
 
         return ['suggestions' => $suggestions];
     }
-
 }

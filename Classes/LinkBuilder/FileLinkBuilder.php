@@ -1,9 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\LinkBuilder;
 
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -12,8 +9,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * FileLinkBuilder
  * Creates a file link (using t3://file) and processes it via eID to a real link
  */
-class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface {
-
+class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+{
     /**
      * DefaultConfiguration
      * Add your own default configuration here if necessary
@@ -23,7 +20,7 @@ class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
     protected static $defaultConfiguration = [
         'titleField' => 'title',
         'fixedParts' => [],
-        'fileRecordField' => 'file'
+        'fileRecordField' => 'file',
     ];
 
 
@@ -39,14 +36,9 @@ class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
         $fileRecord = $this->config['fileRecordField'] ? $record[$this->config['fileRecordField']] : $record;
 
         if (!isset($fileRecord['uid'])) {
-
             if (isset($fileRecord[0]['uid'])) {
-
                 $fileRecord = $fileRecord[0];
-
-            }
-            else {
-
+            } else {
                 //Something should happen if there is no file found
             }
         }

@@ -14,8 +14,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Abstract helper class for elasticsearch querying
  */
-abstract class AbstractQuery {
-
+abstract class AbstractQuery
+{
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
      *
@@ -26,16 +26,18 @@ abstract class AbstractQuery {
     /**
      * @return array
      */
-    public function getParameters() {
-      return $this->parameters;
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     /**
      * @param array $parameters
      * @return void
      */
-    public function setParameters($parameters) {
-      $this->parameters = $parameters;
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
     }
 
     /**
@@ -126,7 +128,8 @@ abstract class AbstractQuery {
      * @param Logger|null $logger
      * @param array $features
      */
-    public function __construct(Client $client = null, Logger $logger = null, $features = null) {
+    public function __construct(Client $client = null, Logger $logger = null, $features = null)
+    {
 
         $this->client = $client ?: Connection::getClient();
         $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
@@ -135,10 +138,8 @@ abstract class AbstractQuery {
         $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(get_class($this))['features'];
 
         if (!empty($features)) {
-
             foreach ($features as $key => $feature) {
                 $this->features[$key] = GeneralUtility::makeInstance($feature['className'], $feature['config']);
-
             }
         }
     }
@@ -149,7 +150,8 @@ abstract class AbstractQuery {
      *
      * @return array
      */
-    public function execute() {
+    public function execute()
+    {
 
         return [];
     }
@@ -161,9 +163,7 @@ abstract class AbstractQuery {
     protected function applyFeatures()
     {
         foreach ($this->features as $name => $feature) {
-
             if ($this->isFeatureEnabled($name)) {
-
                 $feature->modifyQuery($this);
             }
         }
@@ -177,16 +177,14 @@ abstract class AbstractQuery {
      * @param string  $featureName
      * @return boolean
      */
-    public function isFeatureEnabled($featureName) {
+    public function isFeatureEnabled($featureName)
+    {
 
-        if (
-            !$this->pluginMode ||
+        if (!$this->pluginMode ||
             (isset($this->featureSettings[$featureName]) && $this->featureSettings[$featureName] == 1)
             ) {
-
             return true;
         }
         return false;
     }
-
 }

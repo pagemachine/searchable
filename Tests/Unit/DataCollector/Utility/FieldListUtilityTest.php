@@ -33,7 +33,7 @@ class FieldListUtilityTest extends UnitTestCase
     public function evaluatesWhitelistItem($item, $list, $allowed)
     {
 
-        $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_WHITELIST));   
+        $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_WHITELIST));
     }
 
     /**
@@ -45,9 +45,8 @@ class FieldListUtilityTest extends UnitTestCase
         return [
             'item included' => ['allowed', ['allowed', 'foo', 'bar'], true],
             'item not included' => ['notallowed', ['allowed', 'foo', 'bar'], false],
-            'empty whitelist' => ['notallowed', [], false]
+            'empty whitelist' => ['notallowed', [], false],
         ];
-
     }
 
 
@@ -58,7 +57,7 @@ class FieldListUtilityTest extends UnitTestCase
     public function evaluatesBlacklistItem($item, $list, $allowed)
     {
 
-        $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_BLACKLIST));   
+        $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_BLACKLIST));
     }
 
     /**
@@ -70,11 +69,7 @@ class FieldListUtilityTest extends UnitTestCase
         return [
             'item included' => ['notallowed', ['notallowed', 'foo', 'bar'], false],
             'item not included' => ['allowed', ['notallowed', 'foo', 'bar'], true],
-            'empty blacklist' => ['allowed', [], true]
+            'empty blacklist' => ['allowed', [], true],
         ];
-
     }
-
-
-    
 }

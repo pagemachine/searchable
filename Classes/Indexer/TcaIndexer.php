@@ -8,23 +8,22 @@ namespace PAGEmachine\Searchable\Indexer;
 /**
  * Simple TCA based indexer reading fields and processing them
  */
-class TcaIndexer extends Indexer {
-
+class TcaIndexer extends Indexer
+{
     /**
      * @var array
      */
     protected static $defaultConfiguration = [
         'collector' => [
-            'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class
+            'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
         ],
         'mapper' => [
-            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
+            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class,
         ],
         'mapping' => [
             '_all' => [
-                'store' => true
+                'store' => true,
             ],
-        ]
+        ],
     ];
-
 }

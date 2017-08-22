@@ -5,8 +5,8 @@ namespace PAGEmachine\Searchable\Enumeration;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
-
+class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
+{
     const INPUT = "input";
     const TEXT = "text";
     const CHECK = "check";
@@ -25,13 +25,14 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
      * @param $type
      * @return boolean
      */
-    public static function isPlain($type) {
+    public static function isPlain($type)
+    {
 
         return in_array($type, [
             self::INPUT,
             self::TEXT,
             self::CHECK,
-            self::RADIO
+            self::RADIO,
         ]);
     }
 
@@ -41,12 +42,13 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
      * @param $type
      * @return boolean
      */
-    public static function isRelation($type) {
+    public static function isRelation($type)
+    {
 
         return in_array($type, [
             self::SELECT,
-            self::INLINE
-        ]);        
+            self::INLINE,
+        ]);
     }
 
     /**
@@ -55,16 +57,16 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
      * @param $type
      * @return boolean
      */
-    public static function isUnsupported($type) {
+    public static function isUnsupported($type)
+    {
 
         return in_array($type, [
             self::NONE,
             self::PASSTHROUGH,
             self::USER,
             self::FLEX,
-            self::GROUP //Group type is not supported yet even if it is a valid relation
-        ]);   
-
+            self::GROUP, //Group type is not supported yet even if it is a valid relation
+        ]);
     }
 
     /**
@@ -72,10 +74,10 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
      *
      * @return string
      */
-    public function convertToESType() {
+    public function convertToESType()
+    {
 
         switch ($this->__toString()) {
-
             case self::INPUT:
             case self::TEXT:
                 return 'text';
@@ -86,13 +88,5 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration {
             default:
                 return 'text';
         }
-
     }
-
-
-
-
-
-
-    
 }

@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
-use PAGEmachine\Searchable\Query\QueryInterface;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -16,8 +15,8 @@ use PAGEmachine\Searchable\Query\QueryInterface;
  * @deprecated, will be removed in V3
  * Use HighlightFeature instead
  */
-class ResultHighlightFeature extends HighlightFeature implements FeatureInterface {
-
+class ResultHighlightFeature extends HighlightFeature implements FeatureInterface
+{
     use FieldCollectionTrait;
 
     /**
@@ -27,7 +26,7 @@ class ResultHighlightFeature extends HighlightFeature implements FeatureInterfac
         //The fields to include into the highlighting field
         'fields' => [],
         'highlightField' => 'searchable_highlight',
-        'strip_tags' => true
+        'strip_tags' => true,
     ];
 
     /**
@@ -42,7 +41,7 @@ class ResultHighlightFeature extends HighlightFeature implements FeatureInterfac
         $mapping['properties'][$configuration['highlightField']] = [
             'type' => 'text',
             'include_in_all' => false,
-            'store' => true
+            'store' => true,
         ];
 
         return $mapping;
@@ -57,13 +56,11 @@ class ResultHighlightFeature extends HighlightFeature implements FeatureInterfac
     public function modifyRecord($record)
     {
         if (!empty($this->config['fields'])) {
-
             $highlightContent = $this->collectFields($record, $this->config['fields']);
         }
         $highlightContent = $this->collectFieldFromSubRecords($record, $this->config['highlightField'], $highlightContent, true);
 
         if (!empty($highlightContent)) {
-
             $record[$this->config['highlightField']] = $this->config['stripTags'] ? strip_tags(implode(" ", $highlightContent)) : implode(" ", $highlightContent);
         }
 

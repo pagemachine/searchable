@@ -11,15 +11,15 @@ use PAGEmachine\Searchable\Service\ExtconfService;
  * DefaultMapper
  * Creates necessary meta fields and appends them to the mapping array
  */
-class DefaultMapper implements MapperInterface {
-
+class DefaultMapper implements MapperInterface
+{
     /**
      * DefaultMapping
      *
      * @var array
      */
     protected static $defaultMapping = [
-        'properties' => []
+        'properties' => [],
     ];
 
     /**
@@ -35,7 +35,6 @@ class DefaultMapper implements MapperInterface {
         $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
 
         return $mapping;
-
     }
 
     /**
@@ -43,9 +42,9 @@ class DefaultMapper implements MapperInterface {
      *
      * @return array
      */
-    protected static function getMetaMapping() {
+    protected static function getMetaMapping()
+    {
 
         return ["enabled" => false];
     }
-
 }

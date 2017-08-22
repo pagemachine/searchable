@@ -11,8 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for HighlightFeature
  */
-class HighlightFeatureTest extends UnitTestCase {
-
+class HighlightFeatureTest extends UnitTestCase
+{
     /**
      * @var HighlightFeature
      */
@@ -21,7 +21,8 @@ class HighlightFeatureTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->feature = new HighlightFeature();
     }
@@ -35,7 +36,7 @@ class HighlightFeatureTest extends UnitTestCase {
             'fields' => [
                 'fieldone',
             ],
-            'highlightField' => 'searchable_highlight'
+            'highlightField' => 'searchable_highlight',
         ];
 
 
@@ -44,13 +45,12 @@ class HighlightFeatureTest extends UnitTestCase {
         $expectedMapping = [
             'properties' => [
                 'fieldone' => [
-                    'copy_to' => 'searchable_highlight'
-                ]
-            ]
+                    'copy_to' => 'searchable_highlight',
+                ],
+            ],
         ];
 
         $this->assertArraySubset($expectedMapping, $mapping);
-
     }
 
     /**
@@ -62,15 +62,15 @@ class HighlightFeatureTest extends UnitTestCase {
             'fields' => [
                 'fieldone',
             ],
-            'highlightField' => 'searchable_highlight'
+            'highlightField' => 'searchable_highlight',
         ];
 
         $mapping = [
             'properties' => [
                 'fieldone' => [
-                    'type' => 'text'
-                ]
-            ]
+                    'type' => 'text',
+                ],
+            ],
         ];
 
 
@@ -80,9 +80,9 @@ class HighlightFeatureTest extends UnitTestCase {
             'properties' => [
                 'fieldone' => [
                     'type' => 'text',
-                    'copy_to' => 'searchable_highlight'
-                ]
-            ]
+                    'copy_to' => 'searchable_highlight',
+                ],
+            ],
         ];
 
         $this->assertArraySubset($expectedMapping, $mapping);
@@ -98,25 +98,25 @@ class HighlightFeatureTest extends UnitTestCase {
             'fields' => [
                 'fieldone',
                 'sublevel' => [
-                    'fieldtwo'
-                ]
+                    'fieldtwo',
+                ],
             ],
-            'highlightField' => 'searchable_highlight'
+            'highlightField' => 'searchable_highlight',
         ];
 
         $mapping = [
             'properties' => [
                 'fieldone' => [
-                    'type' => 'text'
+                    'type' => 'text',
                 ],
                 'sublevel' => [
                     'properties' => [
                         'fieldtwo' => [
-                            'type' => 'text'
-                        ]
-                    ]
-                ]
-            ]
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $mapping = HighlightFeature::modifyMapping($mapping, $configuration);
@@ -131,11 +131,11 @@ class HighlightFeatureTest extends UnitTestCase {
                     'properties' => [
                         'fieldtwo' => [
                             'type' => 'text',
-                            'copy_to' => 'searchable_highlight'
-                        ]
-                    ]
-                ]
-            ]
+                            'copy_to' => 'searchable_highlight',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $this->assertArraySubset($expectedMapping, $mapping);

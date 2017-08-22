@@ -1,11 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
-use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
-use PAGEmachine\Searchable\Query\BulkQuery;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -13,8 +8,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * File Indexer - reads from sys_file_metadata and uses a pipeline to send over files as well
  */
-class FileIndexer extends TcaIndexer {
-
+class FileIndexer extends TcaIndexer
+{
     /**
      * @var array
      */
@@ -23,19 +18,19 @@ class FileIndexer extends TcaIndexer {
         'fileField' => 'file',
         'bulkSize' => 2,
         'collector' => [
-            'className' => \PAGEmachine\Searchable\DataCollector\FileDataCollector::class
+            'className' => \PAGEmachine\Searchable\DataCollector\FileDataCollector::class,
         ],
         'link' => [
             'className' => \PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder::class,
         ],
         'mapper' => [
-            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class
+            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class,
         ],
         'mapping' => [
             '_all' => [
-                'store' => true
+                'store' => true,
             ],
-        ]
+        ],
     ];
 
     /**
@@ -51,17 +46,13 @@ class FileIndexer extends TcaIndexer {
         $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
 
         foreach ($records as $key => $record) {
-
             if (!empty($record[$this->config['fileField']])) {
-
                 foreach ($record[$this->config['fileField']] as $fileRecord) {
-
-
                     $file = $resourceFactory->getFileObject($fileRecord['uid']);
 
                     $records[$key]['attachments'][] = [
                         'filename' => $file->getProperty('name'),
-                        'data' => base64_encode($file->getContents())
+                        'data' => base64_encode($file->getContents()),
                     ];
                 }
 

@@ -11,8 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for PageLinkBuilder
  */
-class PageLinkBuilderTest extends UnitTestCase {
-
+class PageLinkBuilderTest extends UnitTestCase
+{
     /**
      * @var PageLinkBuilder
      */
@@ -21,7 +21,8 @@ class PageLinkBuilderTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->pageLinkBuilder = new PageLinkBuilder();
     }
@@ -36,7 +37,7 @@ class PageLinkBuilderTest extends UnitTestCase {
         $config = [
             'pageUid' => 123,
             'additionalParams' => [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
             'pageType' => 456,
             'noCache' => true,
@@ -46,9 +47,9 @@ class PageLinkBuilderTest extends UnitTestCase {
             'absolute' => true,
             'addQueryString' => true,
             'argumentsToBeExcludedFromQueryString' => [
-                'someArgument'
+                'someArgument',
             ],
-            'addQueryStringMethod' => 'GET'
+            'addQueryStringMethod' => 'GET',
         ];
 
         $expectedTypolinkConfig = [
@@ -61,14 +62,12 @@ class PageLinkBuilderTest extends UnitTestCase {
             'addQueryString' => 1,
             'addQueryString.' => [
                 'exclude' => 'someArgument',
-                'method' => 'GET'
+                'method' => 'GET',
             ],
         ];
 
         $typolinkConfig = $this->pageLinkBuilder->convertToTypoLinkConfig($config, []);
 
         $this->assertEquals($expectedTypolinkConfig, $typolinkConfig['conf']);
-
     }
-
 }

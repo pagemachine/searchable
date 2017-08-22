@@ -16,7 +16,8 @@ class SearchableRecordGroup implements FormDataGroupInterface
     /**
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
 
         $dataProvider = $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'];
 
@@ -26,8 +27,8 @@ class SearchableRecordGroup implements FormDataGroupInterface
             'depends' => [],
             'before' => [
                 \TYPO3\CMS\Backend\Form\FormDataProvider\TcaInputPlaceholders::class,
-                \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectTreeItems::class
-            ]
+                \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectTreeItems::class,
+            ],
         ];
 
 
@@ -39,7 +40,7 @@ class SearchableRecordGroup implements FormDataGroupInterface
 
         //Add custom inline provider to copy children to database record
         $dataProvider[\PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaInlineCopyToDbRecord::class] = [
-            'depends' => [TYPO3\CMS\Backend\Form\FormDataProvider\TcaInline::class]
+            'depends' => [TYPO3\CMS\Backend\Form\FormDataProvider\TcaInline::class],
         ];
 
 

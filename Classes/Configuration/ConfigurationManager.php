@@ -16,15 +16,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Builds and manages the complete indexer configuration
  */
-class ConfigurationManager implements SingletonInterface {
-
+class ConfigurationManager implements SingletonInterface
+{
     /**
      * @return ConfigurationManager
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(ConfigurationManager::class);
-
     }
 
     /**
@@ -38,7 +38,7 @@ class ConfigurationManager implements SingletonInterface {
      * Holds the processed mapping for each index
      *
      * @var array
-     */    
+     */
     protected $processedMapping = null;
 
     /**
@@ -55,8 +55,8 @@ class ConfigurationManager implements SingletonInterface {
     protected $updateConfiguration = [
         'database' => [
             'toplevel' => [],
-            'sublevel' => []
-        ]
+            'sublevel' => [],
+        ],
     ];
 
 
@@ -65,10 +65,10 @@ class ConfigurationManager implements SingletonInterface {
      *
      * @return array
      */
-    public function getIndexerConfiguration() {
+    public function getIndexerConfiguration()
+    {
 
         if ($this->processedConfiguration == null) {
-
             $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
             $mapping = [];
 
@@ -79,26 +79,24 @@ class ConfigurationManager implements SingletonInterface {
 
             $this->processedConfiguration = $configuration;
             $this->processedMapping = $mapping;
-
         }
         return $this->processedConfiguration;
     }
 
     /**
-     * Merges 
+     * Merges
      *
      * @param  string $index The index to pull the mapping from
      * @return array
      */
-    public function getMapping($index) {
+    public function getMapping($index)
+    {
 
         if ($this->processedMapping == null) {
-
             $this->getIndexerConfiguration();
         }
 
         return $this->processedMapping;
-
     }
 
     /**
@@ -107,18 +105,15 @@ class ConfigurationManager implements SingletonInterface {
      * @param string $queryClassName
      * @return array
      */
-    public function getQueryConfiguration($queryClassName) {
+    public function getQueryConfiguration($queryClassName)
+    {
 
         if ($this->processedQueryConfiguration == null) {
-
             $queryConfiguration = ExtconfService::getInstance()->getQueryConfiguration();
 
             foreach ($queryConfiguration as $queryName => $config) {
-
                 if (!empty($config['features'])) {
-
                     foreach ($config['features'] as $key => $feature) {
-
                         $queryConfiguration[$queryName]['features'][$key] = $this->addClassDefaultConfiguration($feature, $queryConfiguration);
                     }
                 }
@@ -132,14 +127,14 @@ class ConfigurationManager implements SingletonInterface {
 
     /**
      * Returns an array containing all relevant tables for updating
-     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent 
+     * This is basically an inverted array, flattening all subcollectors and connecting them to the toplevel parent
      *
      * @return array
      */
-    public function getUpdateConfiguration() {
+    public function getUpdateConfiguration()
+    {
 
         if ($this->processedConfiguration == null) {
-
             $this->getIndexerConfiguration();
         }
         return $this->updateConfiguration;
@@ -150,37 +145,31 @@ class ConfigurationManager implements SingletonInterface {
      * @param  array $indexerConfiguration
      * @return array
      */
-    protected function processIndexerLevel($indexerConfiguration) {
+    protected function processIndexerLevel($indexerConfiguration)
+    {
 
         $indexerConfiguration = $this->addClassDefaultConfiguration($indexerConfiguration, []);
 
         if (!empty($indexerConfiguration['config'])) {
-
             if (!empty($indexerConfiguration['config']['collector'])) {
-
                 $indexerConfiguration['config']['collector'] = $this->addRecursiveCollectorConfig($indexerConfiguration['config']['collector'], $indexerConfiguration, $indexerConfiguration['config']['type']);
             }
 
             if (!empty($indexerConfiguration['config']['preview'])) {
-
                 $indexerConfiguration['config']['preview'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['preview'], $indexerConfiguration);
             }
 
             if (!empty($indexerConfiguration['config']['link'])) {
-
                 $indexerConfiguration['config']['link'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['link'], $indexerConfiguration);
             }
 
             if (!empty($indexerConfiguration['config']['features'])) {
-
                 foreach ($indexerConfiguration['config']['features'] as $key => $feature) {
-
                     $indexerConfiguration['config']['features'][$key] = $this->addClassDefaultConfiguration($feature, $indexerConfiguration);
 
                     if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
-
                         $indexerConfiguration['config']['mapping'] = $feature['className']::modifyMapping(
-                            $indexerConfiguration['config']['mapping'], 
+                            $indexerConfiguration['config']['mapping'],
                             $indexerConfiguration['config']['features'][$key]['config']
                         );
                     }
@@ -188,13 +177,11 @@ class ConfigurationManager implements SingletonInterface {
             }
 
             if (!empty($indexerConfiguration['config']['mapper'])) {
-
                 $indexerConfiguration['config']['mapping'] = $this->addMapping($indexerConfiguration);
             }
         }
 
         return $indexerConfiguration;
-
     }
 
     /**
@@ -203,22 +190,20 @@ class ConfigurationManager implements SingletonInterface {
      * @param array $configuration
      * @param array $parentConfiguration
      */
-    protected function addClassDefaultConfiguration($configuration, $parentConfiguration) {
+    protected function addClassDefaultConfiguration($configuration, $parentConfiguration)
+    {
 
         if (is_string($configuration['className']) && !empty($configuration['className'])) {
-
             // Class will only be called if it implements a specific interface.
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
             if (in_array(DynamicConfigurationInterface::class, class_implements($configuration['className']))) {
-
                 $defaultConfiguration = $configuration['className']::getDefaultConfiguration($configuration['config'], $parentConfiguration['config']);
 
                 if (is_array($defaultConfiguration)) {
-
                     $configuration['config'] = $configuration['config'] ?: [];
 
                     $configuration['config'] = ConfigurationMergerService::merge($defaultConfiguration, $configuration['config']);
-                }                       
+                }
             }
         }
 
@@ -227,25 +212,23 @@ class ConfigurationManager implements SingletonInterface {
 
     /**
      * Calls the defined mapper class to add mapping
-     * @todo 
+     * @todo
      *
      * @param array $indexerConfiguration
      * @return array $mapping
      */
-    protected function addMapping($indexerConfiguration) {
+    protected function addMapping($indexerConfiguration)
+    {
 
         //Apply mapper
         if (is_string($indexerConfiguration['config']['mapper']['className']) && !empty($indexerConfiguration['config']['mapper']['className'])) {
-
             // Class will only be called if it implements a specific interface.
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
             if (in_array(MapperInterface::class, class_implements($indexerConfiguration['config']['mapper']['className']))) {
-
                 $mapping = ConfigurationMergerService::merge(
                     $indexerConfiguration['config']['mapper']['className']::getMapping($indexerConfiguration),
                     ($indexerConfiguration['config']['mapping'] ?: [])
                 );
-
             }
         }
 
@@ -260,45 +243,35 @@ class ConfigurationManager implements SingletonInterface {
      * @param string $typeName
      * @param string $collectorPath
      */
-    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration, $typeName, $collectorPath = "") {
+    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration, $typeName, $collectorPath = "")
+    {
 
         $configuration = $this->addClassDefaultConfiguration($configuration, $parentConfiguration);
 
         if (!empty($configuration['config'])) {
-
             if (!empty($configuration['config']['table'])) {
-
                 if ($configuration['config']['field']) {
-
                     $collectorPath = $collectorPath ? $collectorPath . "." . $configuration['config']['field'] : $configuration['config']['field'];
                     $this->addSublevelUpdateConfiguration($typeName, $collectorPath, $configuration['config']['table']);
-
                 } else {
-
-                    $this->addToplevelUpdateConfiguration($typeName, $configuration['config']['table']);                    
+                    $this->addToplevelUpdateConfiguration($typeName, $configuration['config']['table']);
                 }
-                
             }
 
             if (!empty($configuration['config']['resolver'])) {
-
                 $configuration['config']['resolver'] =  $this->addClassDefaultConfiguration($configuration['config']['resolver'], $configuration);
             }
 
             if (!empty($configuration['config']['subCollectors'])) {
-
                 foreach ($configuration['config']['subCollectors'] as $key => $subCollectorConfig) {
-
                     $configuration['config']['subCollectors'][$key] = $this->addRecursiveCollectorConfig($subCollectorConfig, $configuration, $typeName, $collectorPath);
                 }
             }
             if (!empty($configuration['config']['features'])) {
-
                 foreach ($configuration['config']['features'] as $key => $feature) {
-
                     $configuration['config']['features'][$key] = $this->addClassDefaultConfiguration($feature, $configuration);
                 }
-            }  
+            }
         }
 
         return $configuration;
@@ -310,13 +283,13 @@ class ConfigurationManager implements SingletonInterface {
      * @param string $typeName
      * @param string $table
      */
-    protected function addToplevelUpdateConfiguration($typeName, $table) {
+    protected function addToplevelUpdateConfiguration($typeName, $table)
+    {
 
         $this->updateConfiguration['database']['toplevel'][$table][] = $typeName;
 
         //Special case handling for pages since language overlays are in a separate table
         if ($table == 'pages') {
-
             $this->updateConfiguration['database']['toplevel']['pages_language_overlay'][] = $typeName;
         }
     }
@@ -328,15 +301,14 @@ class ConfigurationManager implements SingletonInterface {
      * @param string $sublevelPath
      * @param string $table
      */
-    protected function addSublevelUpdateConfiguration($typeName, $sublevelPath, $table) {
+    protected function addSublevelUpdateConfiguration($typeName, $sublevelPath, $table)
+    {
 
         $this->updateConfiguration['database']['sublevel'][$table][$typeName] = $sublevelPath;
 
         //Special case handling for pages since language overlays are in a separate table
         if ($table == 'pages') {
-
             $this->updateConfiguration['database']['sublevel']['pages_language_overlay'][$typeName] = $sublevelPath;
         }
     }
-
 }

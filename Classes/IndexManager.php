@@ -16,8 +16,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Manages some index level functions such as clearing the index
  */
-class IndexManager implements SingletonInterface {
-
+class IndexManager implements SingletonInterface
+{
     /**
      * Elasticsearch client
      * @var Client
@@ -27,7 +27,8 @@ class IndexManager implements SingletonInterface {
     /**
      * @param Client|null $client
      */
-    public function __construct(Client $client = null) {
+    public function __construct(Client $client = null)
+    {
 
         $this->client = $client ?: Connection::getClient();
     }
@@ -35,10 +36,10 @@ class IndexManager implements SingletonInterface {
     /**
      * @return IndexManager
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(IndexManager::class);
-
     }
 
     /**
@@ -46,27 +47,26 @@ class IndexManager implements SingletonInterface {
      *
      * @return array
      */
-    public function getStats() {
+    public function getStats()
+    {
 
         $stats['health'] = $this->client->cluster()->health();
 
         $info = [];
 
         foreach (ExtconfService::getIndices() as $language => $index) {
-
             $info[$language] = [
                 'name' => $index,
                 'language' => $language,
             ];
 
             foreach (ExtconfService::getIndexers() as $type => $config) {
-
                 $info[$language]['types'][$type] = [
                     'name' => $type,
                     'documents' => $this->client->count([
                         'index' => $index,
-                        'type' => $type
-                    ])['count']
+                        'type' => $type,
+                    ])['count'],
                 ];
             }
         }
@@ -81,14 +81,14 @@ class IndexManager implements SingletonInterface {
      * @param  string $index
      * @return array
      */
-    public function resetIndex($index) {
+    public function resetIndex($index)
+    {
 
         $deleteParams = [
-            'index' => $index
+            'index' => $index,
         ];
 
         if ($this->client->indices()->exists($deleteParams)) {
-
             $response = $this->client->indices()->delete($deleteParams);
         }
 
@@ -100,24 +100,23 @@ class IndexManager implements SingletonInterface {
      * @param  string $index
      * @return array
      */
-    public function createIndex($index) {
+    public function createIndex($index)
+    {
 
         if ($this->client->indices()->exists(['index' => $index])) {
-
             return [];
         }
 
         $params = [
             'index' => $index,
             'body' => [
-                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index))
-            ]
+                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index)),
+            ],
         ];
 
         $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
         if (!empty($mapping)) {
-
             $params['body']['mappings'] = $mapping;
         }
 
@@ -126,20 +125,14 @@ class IndexManager implements SingletonInterface {
 
     /**
      * Resets the update index
-     * 
+     *
      * @return void
      */
-    public function resetUpdateIndex() {
+    public function resetUpdateIndex()
+    {
 
         $this->resetIndex(
             ExtconfService::getInstance()->getUpdateIndex()
         );
-
-
     }
-
-
-
-
-
 }

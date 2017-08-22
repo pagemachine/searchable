@@ -6,31 +6,32 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class OverlayUtility implements SingletonInterface {
-
+class OverlayUtility implements SingletonInterface
+{
     /**
      * @var PageRepository
      */
     protected $pageRepository;
 
-	/**
-	 * @return OverlayUtility
-	 */
-	public static function getInstance() {
+    /**
+     * @return OverlayUtility
+     */
+    public static function getInstance()
+    {
 
-		return GeneralUtility::makeInstance(OverlayUtility::class);
-	}
+        return GeneralUtility::makeInstance(OverlayUtility::class);
+    }
 
     /**
      *
      * @param PageRepository|null $pageRepository
      */
-    public function __construct(PageRepository $pageRepository = null) {
+    public function __construct(PageRepository $pageRepository = null)
+    {
 
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
     }
@@ -45,32 +46,30 @@ class OverlayUtility implements SingletonInterface {
      * @param  mixed          $overlayMode
      * @return array
      */
-    public function languageOverlay($table, $record, $language, $fieldWhitelist = [], $overlayMode = 1) {
+    public function languageOverlay($table, $record, $language, $fieldWhitelist = [], $overlayMode = 1)
+    {
 
         $tca = $GLOBALS['TCA'][$table];
         
         $rawOverlay = $this->pageRepository->getRecordOverlay($table, [
             'uid' => $record['uid'],
             'pid' => $record['pid'],
-            $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']][0]
+            $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']][0],
             ], $language, $overlayMode);
 
 
         // PageRepository says this is not a valid record in this language, so don't return it
         // Examples: R(1), language 0 | R(0), language 1, olMode 'hideNonTranslated' | R(1), language 0 (invalid combination)
         if ($rawOverlay == null) {
-
             return [];
         }
 
         if ((int)$overlayMode === 0 && $rawOverlay[$tca['ctrl']['languageField']] != $language) {
-
             return [];
         }
 
         //If there is no difference between source and raw OL id, no overlay is needed. Return record as-is
         if (!isset($rawOverlay['_LOCALIZED_UID']) || $rawOverlay['_LOCALIZED_UID'] == $record['uid']) {
-
             return $record;
         }
 
@@ -79,15 +78,12 @@ class OverlayUtility implements SingletonInterface {
         $translationRecord = $translationData['databaseRow'];
 
         foreach ($record as $key => $field) {
-
             if ($key == "uid" || $key == "pid") {
-
                 continue;
             }
 
             //If the FE overlay differs from the raw base record, replace the field with the translated field in the processed record
             if ($this->shouldFieldBeOverlaid($table, $key, $translationData['defaultLanguageRow'][$key])) {
-
                 $record[$key] = $translationRecord[$key];
             }
         }
@@ -102,13 +98,13 @@ class OverlayUtility implements SingletonInterface {
      * @param  int            $language
      * @return array
      */
-    public function pagesLanguageOverlay($record, $language) {
+    public function pagesLanguageOverlay($record, $language)
+    {
 
         $rawOverlay = $this->pageRepository->getPageOverlay($record, $language);
 
         // PageRepository says this is not a valid record in this language, so don't return it
         if ($rawOverlay == null) {
-
             return [];
         }
 
@@ -153,5 +149,4 @@ class OverlayUtility implements SingletonInterface {
 
         return $shouldFieldBeOverlaid;
     }
-
 }

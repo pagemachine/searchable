@@ -13,13 +13,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  *
  */
-class InlineRelationResolver implements SingletonInterface, RelationResolverInterface {
-
+class InlineRelationResolver implements SingletonInterface, RelationResolverInterface
+{
     /**
      *
      * @return SelectRelationResolver
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(self::class);
     }
@@ -33,7 +34,8 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
      * @param  DataCollectorInterface $parentCollector
      * @return array $processedField
      */
-    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
+    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
+    {
 
         $records = [];
 
@@ -45,9 +47,5 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
         }
 
         return $records;
-
     }
-
-
-
 }

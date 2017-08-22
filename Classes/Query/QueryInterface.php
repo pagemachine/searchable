@@ -8,8 +8,8 @@ namespace PAGEmachine\Searchable\Query;
 /**
  * QueryInterface
  */
-interface QueryInterface {
-
+interface QueryInterface
+{
     /**
      * @return array
      */

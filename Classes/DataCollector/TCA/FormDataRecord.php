@@ -4,7 +4,6 @@ namespace PAGEmachine\Searchable\DataCollector\TCA;
 use TYPO3\CMS\Backend\Form\Exception\DatabaseDefaultLanguageException;
 use TYPO3\CMS\Backend\Form\Exception\DatabaseRecordException;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
-use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -15,8 +14,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class for fetching TCA-based data according to the given config
  */
-class FormDataRecord implements SingletonInterface {
-
+class FormDataRecord implements SingletonInterface
+{
     /**
      * SearchableRecordGroup group (backend/form)
      *
@@ -35,7 +34,8 @@ class FormDataRecord implements SingletonInterface {
      * @param SearchableRecordGroup|null
      * @param FormDataCompiler|null
      */
-    public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null) {
+    public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null)
+    {
 
         $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(SearchableRecordGroup::class);
         $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
@@ -45,44 +45,38 @@ class FormDataRecord implements SingletonInterface {
      *
      * @return FormDataRecord
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(self::class);
     }
 
     /**
      * Fetches a single record
-     * 
+     *
      * @param integer $uid
      * @param string $table
      * @return array
      */
-    public function getRecord($uid, $table, $fieldlist) {
+    public function getRecord($uid, $table, $fieldlist)
+    {
 
         $formDataCompilerInput = [
             'tableName' => $table,
             'vanillaUid' => (int)$uid,
             'command' => 'edit',
-            'columnsToProcess' => $fieldlist
+            'columnsToProcess' => $fieldlist,
         ];
 
         try {
-
             $data = $this->formDataCompiler->compile($formDataCompilerInput);
         //Be nice and catch all errors related to inconsistent data (sometimes strange things happen with extbase relations)
-        }
-        catch (DatabaseRecordException $e) {
-
+        } catch (DatabaseRecordException $e) {
             $data = [];
-        }
-        // Catch errors if translation parent is not found 
+        } // Catch errors if translation parent is not found
         catch (DatabaseDefaultLanguageException $e) {
-
             $data = [];
         }
         return $data;
-
-
     }
-
 }

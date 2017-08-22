@@ -12,8 +12,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for TermSuggestFeature
  */
-class TermSuggestFeatureTest extends UnitTestCase {
-
+class TermSuggestFeatureTest extends UnitTestCase
+{
     /**
      * @var TermSuggestFeature
      */
@@ -22,7 +22,8 @@ class TermSuggestFeatureTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->feature = new TermSuggestFeature();
     }
@@ -38,10 +39,10 @@ class TermSuggestFeatureTest extends UnitTestCase {
                 'query' => [
                     'multi_match' => [
                         'fields' => ['foo', 'bar'],
-                        'query' => 'searchword'
-                    ]
-                ]
-            ]
+                        'query' => 'searchword',
+                    ],
+                ],
+            ],
         ]);
         $query->getTerm()->willReturn('searchword');
 
@@ -50,18 +51,18 @@ class TermSuggestFeatureTest extends UnitTestCase {
                 'query' => [
                     'multi_match' => [
                         'fields' => ['foo', 'bar'],
-                        'query' => 'searchword'
-                    ]
+                        'query' => 'searchword',
+                    ],
                 ],
                 'suggest' => [
                     'suggestion' => [
                         'text' => 'searchword',
                         'term' => [
-                            'field' => '_all'
-                        ]
-                    ]
-                ]
-            ]
+                            'field' => '_all',
+                        ],
+                    ],
+                ],
+            ],
         ])->shouldBeCalled();
         $this->feature->modifyQuery($query->reveal());
     }

@@ -2,8 +2,6 @@
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -12,8 +10,8 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 /**
  * Class for fetching pages data
  */
-class PagesDataCollector extends TcaDataCollector implements DataCollectorInterface {
-
+class PagesDataCollector extends TcaDataCollector implements DataCollectorInterface
+{
     protected static $defaultConfiguration = [
         'table' => 'pages',
         'pid' => 0,
@@ -24,17 +22,17 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'includeHideInMenu' => false,
         'mode' => 'whitelist',
         'fields' => [
-            'title'
+            'title',
         ],
         'features' => [
             'completion' => [
                 'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
                 'config' => [
                     'fields' => [
-                        'title'
-                    ]
-                ]
-            ]
+                        'title',
+                    ],
+                ],
+            ],
         ],
         'subCollectors' => [
             'content' => [
@@ -43,17 +41,17 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                     'field' => 'content',
                     'table' => 'tt_content',
                     'resolver' => [
-                        'className' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class
+                        'className' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class,
                     ],
                     'fields' => [
                         'header',
                         'subheader',
-                        'bodytext'
+                        'bodytext',
                     ],
-                ]
-            ]
+                ],
+            ],
 
-        ]
+        ],
     ];
 
     /**
@@ -71,7 +69,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     public function getDoktypes()
     {
         if ($this->doktypes == null) {
-
             $this->doktypes = implode(
                 ",",
                 array_merge($this->config['doktypes'], $this->config['transientDoktypes'])
@@ -86,10 +83,10 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @return \Generator
      */
-    public function getRecords() {
+    public function getRecords()
+    {
 
         foreach ($this->getPageRecords($this->config['pid']) as $page) {
-
             yield $page;
         }
     }
@@ -99,7 +96,8 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @return \Generator
      */
-    protected function getPageRecords($pid = null) {
+    protected function getPageRecords($pid = null)
+    {
         $whereClause =
             ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
@@ -115,12 +113,9 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         );
 
         if (!empty($rawList)) {
-
             foreach ($rawList as $uid => $page) {
-
                 //Check if doktype is indexable or transient
                 if (in_array($page['doktype'], $this->config['doktypes'])) {
-
                     yield $this->getRecord($uid);
                 }
 
@@ -128,13 +123,10 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 $subpages = $this->getPageRecords($uid);
 
                 if (!empty($subpages)) {
-
                     foreach ($subpages as $page) {
-
                         yield $page;
                     }
                 }
-
             }
         }
     }
@@ -146,15 +138,14 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      * @param  array $updateUidList
      * @return \Generator
      */
-    public function getUpdatedRecords($updateUidList) {
+    public function getUpdatedRecords($updateUidList)
+    {
 
         $this->config['pid'] = null;
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
-
             yield $record;
         }
-
     }
 
     /**
@@ -163,9 +154,9 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      * @param  array $record
      * @return array
      */
-    protected function languageoverlay($record) {
+    protected function languageoverlay($record)
+    {
 
         return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language);
     }
-
 }

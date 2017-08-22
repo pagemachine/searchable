@@ -1,8 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\LinkBuilder;
 
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
-use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -13,8 +11,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * TypoLinkBuilder
  * Creates a link based on typolink configuration
  */
-class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface {
-
+class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+{
     /**
      * The default title if the title field is empty
      *
@@ -29,10 +27,10 @@ class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
         'titleField' => '',
         'fixedParts' => [
             'parameter' => null,
-            'additionalParams' => []
+            'additionalParams' => [],
         ],
         'dynamicParts' => [
-        ]
+        ],
     ];
 
     /**
@@ -45,7 +43,6 @@ class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
     public function convertToTypoLinkConfig($configuration, $record)
     {
         if (!empty($configuration['additionalParams'])) {
-
             $configuration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
         }
 

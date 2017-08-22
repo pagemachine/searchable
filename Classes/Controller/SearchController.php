@@ -1,16 +1,14 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use PAGEmachine\Searchable\Query\SearchQuery;
-use PAGEmachine\Searchable\Search;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class SearchController extends ActionController {
-
+class SearchController extends ActionController
+{
     /**
      * Search Query
      *
@@ -30,7 +28,8 @@ class SearchController extends ActionController {
      * @param string $term
      * @return void
      */
-    public function searchbarAction($term = null) {
+    public function searchbarAction($term = null)
+    {
 
         $this->view->assign("settings", $this->settings);
         $this->view->assign("term", $term);
@@ -41,7 +40,8 @@ class SearchController extends ActionController {
      *
      * @return void
      */
-    public function liveSearchbarAction() {
+    public function liveSearchbarAction()
+    {
 
         $this->view->assign("settings", $this->settings);
     }
@@ -53,7 +53,8 @@ class SearchController extends ActionController {
      * @param int $page
      * @return void
      */
-    public function resultsAction($term = null, $page = 1) {
+    public function resultsAction($term = null, $page = 1)
+    {
 
         if ($term) {
             $this->searchQuery
@@ -74,9 +75,7 @@ class SearchController extends ActionController {
             'previousPage' => ($page > 1 ? $page - 1 : null),
             'nextPage' => (array_key_exists($page+1, $pagesArray) ? $page + 1 : null),
             'totalPages' => $pagesArray,
-            'result' => $result
+            'result' => $result,
         ]);
-
     }
-
 }

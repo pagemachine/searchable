@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\LinkBuilder;
 
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -12,8 +11,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * PageLinkBuilder
  * Creates a link configuration array to be passed on to a Fluid link.page ViewHelper
  */
-class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface {
-
+class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+{
     /**
      * The default title if the title field is empty
      *
@@ -37,10 +36,10 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
             'absolute' => false,
             'addQueryString' => false,
             'argumentsToBeExcludedFromQueryString' => [],
-            'addQueryStringMethod' => null
+            'addQueryStringMethod' => null,
         ],
         'dynamicParts' => [
-        ]
+        ],
     ];
 
     /**
@@ -72,20 +71,17 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
 
         if ($configuration['pageType'] !== 0) {
             $typolinkConfiguration['parameter'] .= ',' . $configuration['pageType'];
-
         }
         if (!empty($configuration['additionalParams'])) {
-
             $typolinkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
         }
 
         if ($configuration['addQueryString'] === true) {
-
             $typolinkConfiguration['addQueryString'] = 1;
 
             if (!empty($configuration['argumentsToBeExcludedFromQueryString'])) {
                 $typolinkConfiguration['addQueryString.'] = [
-                    'exclude' => implode(',', $configuration['argumentsToBeExcludedFromQueryString'])
+                    'exclude' => implode(',', $configuration['argumentsToBeExcludedFromQueryString']),
                 ];
             }
             if ($configuration['addQueryStringMethod']) {
@@ -93,13 +89,9 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
             }
         }
         if ($configuration['noCache'] === true) {
-
             $typolinkConfiguration['no_cache'] = 1;
-
         } elseif ($configuration['useCacheHash']) {
-
             $typolinkConfiguration['useCacheHash'] = 1;
-
         }
         if ($configuration['section'] !== '') {
             $typolinkConfiguration['section'] = $configuration['section'];
@@ -108,7 +100,6 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
             $typolinkConfiguration['linkAccessRestrictedPages'] = 1;
         }
         if ($configuration['absolute'] == true) {
-
             $typolinkConfiguration['forceAbsoluteUrl'] = 1;
         }
         return $typolinkConfiguration;

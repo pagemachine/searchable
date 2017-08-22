@@ -14,8 +14,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * The main class for searching
  */
-class Search implements SingletonInterface {
-
+class Search implements SingletonInterface
+{
     /**
      * Elasticsearch client
      * @var Client
@@ -25,7 +25,8 @@ class Search implements SingletonInterface {
     /**
      * @param Client|null $client
      */
-    public function __construct(Client $client = null) {
+    public function __construct(Client $client = null)
+    {
 
         $this->client = $client ?: Connection::getClient();
     }
@@ -33,10 +34,10 @@ class Search implements SingletonInterface {
     /**
      * @return Search
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(Search::class);
-
     }
 
     /**
@@ -47,32 +48,30 @@ class Search implements SingletonInterface {
      * @param  int $forceLanguage Forces the given language id
      * @return array
      */
-    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null) {
+    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null)
+    {
 
         $params = [
             'body' => [
                 'query' => [
                     'match' => [
-                        '_all' => $term
-                    ]
+                        '_all' => $term,
+                    ],
                 ],
                 //Only load meta fields, not the whole source
                 '_source' => [
-                    'searchable_meta'
-                ]
-            ]
+                    'searchable_meta',
+                ],
+            ],
         ];
 
         if (!empty($options)) {
-
             foreach ($options as $key => $option) {
-
                 $params['body'][$key] = $option;
             }
         }
 
         if ($respectLanguage === true) {
-
             $language = $forceLanguage ?: $GLOBALS['TSFE']->sys_language_uid;
 
             $params['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
@@ -88,7 +87,8 @@ class Search implements SingletonInterface {
      * @param  string $table
      * @return array
      */
-    public function searchUpdates($table) {
+    public function searchUpdates($table)
+    {
 
         $params = [
             'index' => ExtconfService::getInstance()->getUpdateIndex(),
@@ -96,10 +96,10 @@ class Search implements SingletonInterface {
             'body' => [
                 'query' => [
                     'match' => [
-                        'table' => $table
-                    ]
-                ]
-            ]
+                        'table' => $table,
+                    ],
+                ],
+            ],
         ];
         $result = $this->client->search($params);
         
@@ -107,18 +107,11 @@ class Search implements SingletonInterface {
         $updates = [];
 
         if ($result['hits']['total'] > 0) {
-
             foreach ($result['hits']['hits'] as $hit) {
-
                 $updates[] = $hit['_source'];
             }
         }
 
         return $updates;
-
     }
-
-
-
-
 }

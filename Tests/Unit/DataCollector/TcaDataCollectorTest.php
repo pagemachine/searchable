@@ -70,40 +70,40 @@ class TcaDataCollectorTest extends UnitTestCase
     {
         $recordTca = [
             'ctrl' => [
-                'languageField' => 'languageField'
+                'languageField' => 'languageField',
             ],
             'columns' => [
                 'title' => [
                     'config' => [
-                        'type' => 'input'
-                    ]
+                        'type' => 'input',
+                    ],
                 ],
                 'checkboxfield' => [
                     'config' => [
-                        'type' => 'check'
-                    ]
+                        'type' => 'check',
+                    ],
                 ],
                 'radiofield' => [
                     'config' => [
-                        'type' => 'radio'
-                    ]
+                        'type' => 'radio',
+                    ],
                 ],
                 'excludeme' => [
                     'config' => [
-                        'type' => 'input'
-                    ]
+                        'type' => 'input',
+                    ],
                 ],
                 'unusedrelation' => [
                     'config' => [
-                        'type' => 'select'
-                    ]
+                        'type' => 'select',
+                    ],
                 ],
                 'emptyfield' => [
                     'config' => [
-                        'type' => 'input'
-                    ]
-                ]
-            ]
+                        'type' => 'input',
+                    ],
+                ],
+            ],
         ];
 
         $GLOBALS['TCA']['example_table'] = $recordTca;
@@ -118,7 +118,7 @@ class TcaDataCollectorTest extends UnitTestCase
                 'radiofield' => '3',
                 'emptyfield' => '',
             ],
-            'processedTca' => $recordTca
+            'processedTca' => $recordTca,
         ];
 
         $configuration = [
@@ -128,8 +128,8 @@ class TcaDataCollectorTest extends UnitTestCase
             'fields' => [
                 'excludeme',
                 'excludemetoo',
-                'unusedrelation'
-            ]
+                'unusedrelation',
+            ],
 
         ];
 
@@ -142,7 +142,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'title',
             'checkboxfield',
             'radiofield',
-            'emptyfield'
+            'emptyfield',
         ])->shouldBeCalled()->willReturn($record);
 
         $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"), 1)
@@ -158,12 +158,10 @@ class TcaDataCollectorTest extends UnitTestCase
             'pid' => 567,
             'title' => 'foobar',
             'checkboxfield' => 'checkboxvalue',
-            'radiofield' => 'radiovalue'
+            'radiofield' => 'radiovalue',
         ];
 
         $this->assertEquals($expectedOutput, $this->tcaDataCollector->getRecord(123));
-
-        
     }
 
     /**
@@ -189,23 +187,23 @@ class TcaDataCollectorTest extends UnitTestCase
                     'config' => [
                         'field' => 'selectfield',
                         'sysLanguageOverlay' => 1,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
 
         ];
 
         $recordTca = [
             'ctrl' => [
-                'languageField' => 'languageField'
+                'languageField' => 'languageField',
             ],
             'columns' => [
                 'selectfield' => [
                     'config' => [
-                        'foreign_table' => 'selecttable'
-                    ]
-                ]
-            ]
+                        'foreign_table' => 'selecttable',
+                    ],
+                ],
+            ],
         ];
 
         $GLOBALS['TCA']['example_table'] = $recordTca;
@@ -215,10 +213,10 @@ class TcaDataCollectorTest extends UnitTestCase
                 'uid' => 1,
                 'pid' => 2,
                 'selectfield' => [
-                    1 => 2
-                ]
+                    1 => 2,
+                ],
             ],
-            'processedTca' => $recordTca
+            'processedTca' => $recordTca,
         ];
 
         $this->tcaDataCollector->__construct($configuration, 0, $this->objectManager->reveal());
@@ -232,7 +230,7 @@ class TcaDataCollectorTest extends UnitTestCase
         $resolver = $this->prophesize(SelectRelationResolver::class);
         $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, $this->tcaDataCollector)->willReturn([[
             'uid' => 123,
-            'title' => 'foobar'
+            'title' => 'foobar',
         ]]);
 
         $resolverManager = $this->prophesize(ResolverManager::class);
@@ -247,35 +245,35 @@ class TcaDataCollectorTest extends UnitTestCase
             'es_selectfield' => [
                 [
                     'uid' => 123,
-                    'title' => 'foobar'
-                ]
-            ]
+                    'title' => 'foobar',
+                ],
+            ],
         ];
 
         $this->assertEquals($expectedOutput, $this->tcaDataCollector->getRecord(123));
-        
     }
 
     /**
      * @test
      */
-    public function processesTranslations() {
+    public function processesTranslations()
+    {
 
         $configuration = [
             'table' => 'example_table',
             'sysLanguageOverlay' => 1,
             'mode' => 'whitelist',
-            'fields' => ['title']
+            'fields' => ['title'],
         ];
 
         $recordTca = [
             'columns' => [
                 'title' => [
                     'config' => [
-                        'type' => 'input'
-                    ]
-                ]
-            ]
+                        'type' => 'input',
+                    ],
+                ],
+            ],
         ];
         
         $GLOBALS['TCA']['example_table'] = $recordTca;
@@ -283,18 +281,18 @@ class TcaDataCollectorTest extends UnitTestCase
         $baseRow = [
             'uid' => 1,
             'pid' => 2,
-            'title' => 'englishtitle'
+            'title' => 'englishtitle',
         ];
 
         $translatedRow = [
             'uid' => 1,
             'pid' => 2,
-            'title' => 'germantitle'
+            'title' => 'germantitle',
         ];
 
         $record = [
             'databaseRow' => $baseRow,
-            'processedTca' => $recordTca
+            'processedTca' => $recordTca,
         ];
 
         $this->tcaDataCollector->__construct($configuration, 1);
@@ -304,9 +302,5 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->overlayUtility->languageOverlay('example_table', $baseRow, 1, Argument::type("array"), 1)->shouldBeCalled()->willReturn($translatedRow);
 
         $this->assertEquals($translatedRow, $this->tcaDataCollector->getRecord(1));
-
     }
-
-
 }
-

@@ -8,6 +8,6 @@ namespace PAGEmachine\Searchable;
 /**
  * Searchable Generic Exception
  */
-class Exception extends \Exception {
-
+class Exception extends \Exception
+{
 }

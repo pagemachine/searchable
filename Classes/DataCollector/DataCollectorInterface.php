@@ -8,38 +8,38 @@ namespace PAGEmachine\Searchable\DataCollector;
 /**
  * DataCollectorInterface
  */
-interface DataCollectorInterface {
+interface DataCollectorInterface
+{
+    /**
+     * Returns all subCollectors
+     *
+     * @return array
+     */
+    public function getSubCollectors();
 
-	/**
-	 * Returns all subCollectors
-	 *
-	 * @return array
-	 */
-	public function getSubCollectors();
+    /**
+     * Adds a new SubCollector for subtypes
+     *
+     * @param string                 $field        Fieldname to apply this collector to
+     * @param DataCollectorInterface $subCollector
+     */
+    public function addSubCollector($field, DataCollectorInterface $subCollector);
 
-	/**
-	 * Adds a new SubCollector for subtypes
-	 *
-	 * @param string                 $field        Fieldname to apply this collector to
-	 * @param DataCollectorInterface $subCollector
-	 */
-	public function addSubCollector($field, DataCollectorInterface $subCollector);
-
-	/**
-	 * Returns a subcollector by given field
-	 *
-	 * @param  string $field
-	 * @return DataCollectorInterface $subCollector
-	 */
-	public function getSubCollectorForField($field);
+    /**
+     * Returns a subcollector by given field
+     *
+     * @param  string $field
+     * @return DataCollectorInterface $subCollector
+     */
+    public function getSubCollectorForField($field);
 
 
-	/**
-	 * Returns the merged configuration (default + custom)
-	 *
-	 * @return array
-	 */
-	public function getConfig();
+    /**
+     * Returns the merged configuration (default + custom)
+     *
+     * @return array
+     */
+    public function getConfig();
 
     /**
      * Fetches a list of records
@@ -58,10 +58,9 @@ interface DataCollectorInterface {
 
     /**
      * Fetches a single record
-     * 
+     *
      * @param  int $identifier
      * @return array
      */
     public function getRecord($identifier);
-
 }

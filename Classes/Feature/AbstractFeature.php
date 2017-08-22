@@ -11,8 +11,8 @@ use PAGEmachine\Searchable\Query\QueryInterface;
 /**
  * AbstractFeature
  */
-abstract class AbstractFeature implements DynamicConfigurationInterface {
-
+abstract class AbstractFeature implements DynamicConfigurationInterface
+{
     /**
      * DefaultConfiguration
      * Add your own default configuration here if necessary
@@ -28,9 +28,10 @@ abstract class AbstractFeature implements DynamicConfigurationInterface {
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
      * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
+    {
 
-       return static::$defaultConfiguration;
+        return static::$defaultConfiguration;
     }
 
     /**
@@ -41,7 +42,8 @@ abstract class AbstractFeature implements DynamicConfigurationInterface {
     /**
      * @param array $config
      */
-    public function __construct($config = null) {
+    public function __construct($config = null)
+    {
 
         $this->config = $config;
     }

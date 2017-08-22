@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Database\PostProcessQueryHookInterface;
 
 class DatabaseConnectionHook implements PostProcessQueryHookInterface
 {
-
     /**
      * @var UpdateQuery
      */
@@ -53,7 +52,6 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
 
         //Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
         if ($table == 'tt_content') {
-
             $this->registerToplevelUpdate("pages", "uid=" . $fieldsValues['pid']);
         }
     }
@@ -105,7 +103,7 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
             return;
         }
         $this->registerToplevelUpdate($table, $where);
-        $this->registerSublevelUpdates($table, $where);        
+        $this->registerSublevelUpdates($table, $where);
     }
 
     /**
@@ -126,23 +124,20 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
      * @param string $table
      * @param string $where
      */
-    protected function registerToplevelUpdate($table, $where) {
+    protected function registerToplevelUpdate($table, $where)
+    {
 
         $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
         //If table is toplevel, mark the corresponding document(s) as updated
         if (isset($updateConfiguration['database']['toplevel'][$table])) {
-
             $uidMatch = [];
             if (preg_match("/^uid\s?=\s?([0-9]*)$/", $where, $uidMatch)) {
-
-              foreach ($updateConfiguration['database']['toplevel'][$table] as $type) {
-
-                $this->getQuery()->addUpdate($type, "uid", $uidMatch[1]);
-              }
+                foreach ($updateConfiguration['database']['toplevel'][$table] as $type) {
+                    $this->getQuery()->addUpdate($type, "uid", $uidMatch[1]);
+                }
             }
         }
-
     }
 
     /**
@@ -151,17 +146,15 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
      * @param string $table
      * @param string $where
      */
-    protected function registerSublevelUpdates($table, $where) {
+    protected function registerSublevelUpdates($table, $where)
+    {
 
         $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
 
         if (array_key_exists($table, $updateConfiguration['database']['sublevel']) && !empty($updateConfiguration['database']['sublevel'][$table])) {
-
             foreach ($updateConfiguration['database']['sublevel'][$table] as $typeName => $path) {
-
                 $uidMatch = [];
                 if (preg_match("/^uid\s?=\s?([0-9]*)$/", $where, $uidMatch)) {
-
                     $this->getQuery()->addUpdate($typeName, $path . ".uid", $uidMatch[1]);
                 }
             }
@@ -172,14 +165,13 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
      * Returns the query and constructs it if necessary
      * @return UpdateQuery
      */
-    protected function getQuery() {
+    protected function getQuery()
+    {
 
         if ($this->updateQuery == null) {
-
             $this->updateQuery = new UpdateQuery();
         }
 
         return $this->updateQuery;
-
     }
 }

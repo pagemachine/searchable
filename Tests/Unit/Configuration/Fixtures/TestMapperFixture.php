@@ -3,7 +3,6 @@ namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -11,7 +10,6 @@ use PAGEmachine\Searchable\Mapper\DefaultMapper;
 
 class TestMapperFixture extends DefaultMapper
 {
-
     /**
      * Creates the mapping
      *
@@ -26,8 +24,5 @@ class TestMapperFixture extends DefaultMapper
         $mapping['properties']['newKey'] = 'newMapperValue';
 
         return $mapping;
-
     }
-
-
 }

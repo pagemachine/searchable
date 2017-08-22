@@ -3,7 +3,6 @@ namespace PAGEmachine\Searchable\Preview;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -11,9 +10,8 @@ use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 /**
  * Simple preview renderer.
  */
-abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface {
-
-
+abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface
+{
     /**
      * DefaultConfiguration
      * Add your own default configuration here if necessary
@@ -29,9 +27,10 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface 
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
      * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
+    {
 
-       return static::$defaultConfiguration;
+        return static::$defaultConfiguration;
     }
 
     /**
@@ -42,9 +41,9 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface 
     /**
      * @param array $config
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
 
         $this->config = $config;
     }
-
 }

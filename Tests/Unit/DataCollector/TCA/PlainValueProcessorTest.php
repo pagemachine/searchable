@@ -37,7 +37,7 @@ class PlainValueProcessorTest extends UnitTestCase
                 ['foo', ''],
                 ['baz', ''],
                 ['foobar', ''],
-                ['foobarbaz', '']
+                ['foobarbaz', ''],
             ],
         ];
 
@@ -60,7 +60,7 @@ class PlainValueProcessorTest extends UnitTestCase
             'items' => [
                 ['foo', 1],
                 ['baz', 2],
-                ['foobar', 3]
+                ['foobar', 3],
             ],
         ];
 
@@ -71,7 +71,6 @@ class PlainValueProcessorTest extends UnitTestCase
         $output = $this->plainValueProcessor->processRadioField($value, $fieldTca);
 
         $this->assertEquals($expectedOutput, $output);
-        
     }
 
     /**
@@ -83,7 +82,7 @@ class PlainValueProcessorTest extends UnitTestCase
             'type' => 'radio',
             'items' => [
                 ['foo', 'foo'],
-                ['bazlabel', 'bazvalue']
+                ['bazlabel', 'bazvalue'],
             ],
         ];
 
@@ -94,7 +93,5 @@ class PlainValueProcessorTest extends UnitTestCase
         $output = $this->plainValueProcessor->processRadioField($value, $fieldTca);
 
         $this->assertEquals($expectedOutput, $output);
-        
     }
-    
 }

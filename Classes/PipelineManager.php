@@ -14,8 +14,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Manages some index level functions such as clearing the index
  */
-class PipelineManager implements SingletonInterface {
-
+class PipelineManager implements SingletonInterface
+{
     /**
      * Elasticsearch client
      * @var Client
@@ -25,7 +25,8 @@ class PipelineManager implements SingletonInterface {
     /**
      * @param Client|null $client
      */
-    public function __construct(Client $client = null) {
+    public function __construct(Client $client = null)
+    {
 
         $this->client = $client ?: Connection::getClient();
     }
@@ -33,7 +34,8 @@ class PipelineManager implements SingletonInterface {
     /**
      * @return PipelineManager
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(PipelineManager::class);
     }
@@ -46,7 +48,6 @@ class PipelineManager implements SingletonInterface {
     public function createPipelines()
     {
         foreach (ExtconfService::getInstance()->getPipelines() as $name => $pipelineConfig) {
-
             $this->createPipeline($name, $pipelineConfig);
         }
     }
@@ -62,7 +63,7 @@ class PipelineManager implements SingletonInterface {
     {
         $result = $this->client->ingest()->putPipeline([
             'id' => $name,
-            'body' => $configuration
+            'body' => $configuration,
         ]);
 
         return $result;

@@ -8,6 +8,6 @@ namespace PAGEmachine\Searchable;
 /**
  * UndefinedIndexException
  */
-class UndefinedIndexException extends Exception {
-
+class UndefinedIndexException extends Exception
+{
 }

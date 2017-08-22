@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Feature;
 
-use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
 use PAGEmachine\Searchable\Query\QueryInterface;
 
 /*
@@ -14,8 +13,8 @@ use PAGEmachine\Searchable\Query\QueryInterface;
  * Uses the ES copy_to mapping option to fill the highlight field
  * See: https://www.elastic.co/guide/en/elasticsearch/reference/current/copy-to.html
  */
-class HighlightFeature extends AbstractFeature implements FeatureInterface {
-
+class HighlightFeature extends AbstractFeature implements FeatureInterface
+{
     /**
      * @var array
      */
@@ -44,7 +43,7 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface {
             'type' => 'text',
             'include_in_all' => false,
             // Highlight field needs to be stored as copied content is not included in _source
-            'store' => true
+            'store' => true,
         ];
 
         $mapping = self::addRecursiveCopyTo($configuration['fields'], $mapping, $configuration);
@@ -66,8 +65,8 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface {
             'pre_tags' => ["<span class='searchable-highlight'>"],
             'post_tags' => ["</span>"],
             'fields' => [
-                $this->config['highlightField'] => new \stdClass()
-            ]
+                $this->config['highlightField'] => new \stdClass(),
+            ],
         ];
         $query->setParameters($parameters);
 
@@ -81,19 +80,14 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface {
      * @param array $mapping
      * @param array $configuration
      */
-    protected static function addRecursiveCopyTo($fieldArray, $mapping, $configuration) {
+    protected static function addRecursiveCopyTo($fieldArray, $mapping, $configuration)
+    {
 
         if (!empty($fieldArray)) {
-
             foreach ($fieldArray as $key => $field) {
-
                 if (is_array($field)) {
-
                     $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
-
-                }
-                else {
-
+                } else {
                     $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
                 }
             }
@@ -101,5 +95,4 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface {
 
         return $mapping;
     }
-
 }

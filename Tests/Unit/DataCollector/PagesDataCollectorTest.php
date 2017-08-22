@@ -12,8 +12,8 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 /**
  * Testcase for PagesDataCollector
  */
-class PagesDataCollectorTest extends UnitTestCase {
-
+class PagesDataCollectorTest extends UnitTestCase
+{
     /**
      * @var PagesDataCollector
      */
@@ -37,16 +37,17 @@ class PagesDataCollectorTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $GLOBALS['TCA']['pages'] = [
             'columns' => [
                 'title' => [
                     'config' => [
-                        'type' => 'input'
-                    ]
-                ]
-            ]
+                        'type' => 'input',
+                    ],
+                ],
+            ],
         ];
 
         $configuration = [
@@ -59,10 +60,10 @@ class PagesDataCollectorTest extends UnitTestCase {
             'includeHideInMenu' => false,
             'mode' => 'whitelist',
             'fields' => [
-                'title'
+                'title',
             ],
             'subCollectors' => [
-            ]
+            ],
         ];
 
         $this->objectManager = $this->prophesize(ObjectManager::class);
@@ -71,7 +72,7 @@ class PagesDataCollectorTest extends UnitTestCase {
         $this->pagesDataCollector = $this->getMockBuilder(PagesDataCollector::class)
         ->setConstructorArgs([$configuration, 0, $this->objectManager->reveal()])
         ->setMethods([
-                'getRecord'
+                'getRecord',
             ])
         ->getMock();
 
@@ -85,26 +86,27 @@ class PagesDataCollectorTest extends UnitTestCase {
     /**
      * @test
      */
-    public function collectsPageListSingleLevel() {
+    public function collectsPageListSingleLevel()
+    {
 
         $pageList = [
             0 => [
                 'uid' => '3',
                 'pid' => '0',
                 'doktype' => '1',
-                'title' => 'SimplePage'
+                'title' => 'SimplePage',
             ],
             1 => [
                 'uid' => '4',
                 'pid' => '0',
                 'doktype' => '1',
-                'title' => 'SimplePage2'
-            ]
+                'title' => 'SimplePage2',
+            ],
         ];
 
         $valueMap = [
             [3, $pageList[0]],
-            [4, $pageList[1]]
+            [4, $pageList[1]],
 
         ];
 
@@ -120,31 +122,30 @@ class PagesDataCollectorTest extends UnitTestCase {
         $this->assertEquals($pageList[0], $records->current());
         $records->next();
         $this->assertEquals($pageList[1], $records->current());
-
-
     }
 
     /**
      * @test
      */
-    public function collectsPageListRecursive() {
+    public function collectsPageListRecursive()
+    {
 
         $pageList = [
             0 => [
                 'uid' => '3',
                 'doktype' => '1',
-                'title' => 'SimplePage'
+                'title' => 'SimplePage',
             ],
             1 => [
                 'uid' => '4',
                 'doktype' => '1',
-                'title' => 'SimpleSubpage'
-            ]
+                'title' => 'SimpleSubpage',
+            ],
         ];
 
         $valueMap = [
             [3, $pageList[0]],
-            [4, $pageList[1]]
+            [4, $pageList[1]],
 
         ];
 
@@ -160,10 +161,5 @@ class PagesDataCollectorTest extends UnitTestCase {
         $this->assertEquals($pageList[0], $records->current());
         $records->next();
         $this->assertEquals($pageList[1], $records->current());
-
-
-
     }
-
-  
 }

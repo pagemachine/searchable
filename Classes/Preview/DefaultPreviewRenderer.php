@@ -8,20 +8,19 @@ namespace PAGEmachine\Searchable\Preview;
 /**
  * Default preview renderer.
  */
-class DefaultPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
-
+class DefaultPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
+{
     /**
      * Renders the preview
-     * 
+     *
      * @param  array $record
      * @return string
      */
-    public function render($record) {
+    public function render($record)
+    {
 
         $preview = implode(", ", $record);
 
         return $preview;
     }
-
-
 }

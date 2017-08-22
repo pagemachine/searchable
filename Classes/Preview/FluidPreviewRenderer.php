@@ -1,11 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-
-
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -14,8 +10,8 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 /**
  * Fluid Preview Renderer. Uses a Fluid Standalone View to render previews
  */
-class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface {
-
+class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
+{
     /**
      * @var \TYPO3\CMS\Fluid\View\StandaloneView
      * @inject
@@ -32,32 +28,32 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      * @var array
      */
     protected $config = [
-        'templateName' => 'Preview/Default'
+        'templateName' => 'Preview/Default',
 
     ];
 
     /**
      * @return void
      */
-    public function initializeObject() {
+    public function initializeObject()
+    {
 
         $this->prepareView();
     }
 
     /**
      * Renders the preview
-     * 
+     *
      * @param  array $config
      * @return string
      */
-    public function render($record) {
+    public function render($record)
+    {
 
         if ($this->config['fields']) {
-
             $assignFields = [];
 
             foreach ($this->config['fields'] as $fieldname) {
-
                 $assignFields[$fieldname] = $record[$fieldname];
             }
 
@@ -74,7 +70,8 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      * Prepares the view
      * @return void
      */
-    protected function prepareView() {
+    protected function prepareView()
+    {
 
         $configuration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
 
@@ -83,8 +80,5 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
         $this->view->setPartialRootPaths($configuration['view']['partialRootPaths']);
 
         $this->view->setTemplate($this->config['templateName']);
-
     }
-
-
 }

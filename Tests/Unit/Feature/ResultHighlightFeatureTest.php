@@ -11,8 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for ResultHighlightFeature
  */
-class ResultHighlightFeatureTest extends UnitTestCase {
-
+class ResultHighlightFeatureTest extends UnitTestCase
+{
     /**
      * @var ResultHighlightFeature
      */
@@ -21,7 +21,8 @@ class ResultHighlightFeatureTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->feature = new ResultHighlightFeature();
     }
@@ -36,7 +37,7 @@ class ResultHighlightFeatureTest extends UnitTestCase {
                 'fieldone',
                 'fieldtwo',
             ],
-            'highlightField' => 'searchable_highlight'
+            'highlightField' => 'searchable_highlight',
         ]);
 
         $record = [
@@ -46,7 +47,6 @@ class ResultHighlightFeatureTest extends UnitTestCase {
         $record = $this->feature->modifyRecord($record);
 
         $this->assertEquals('one two', $record['searchable_highlight']);
-
     }
 
     /**
@@ -57,8 +57,8 @@ class ResultHighlightFeatureTest extends UnitTestCase {
         $this->feature = new ResultHighlightFeature([
             'highlightField' => 'searchable_highlight',
             'fields' => [
-                'fieldone'
-            ]
+                'fieldone',
+            ],
         ]);
 
         $record = [
@@ -66,10 +66,10 @@ class ResultHighlightFeatureTest extends UnitTestCase {
             'children' => [
                 0 => [
                     'uid' => 1,
-                    'searchable_highlight' => 'two'
-                ]
+                    'searchable_highlight' => 'two',
+                ],
 
-            ]
+            ],
         ];
         $record = $this->feature->modifyRecord($record);
 
@@ -85,16 +85,16 @@ class ResultHighlightFeatureTest extends UnitTestCase {
         $this->feature = new ResultHighlightFeature([
             'highlightField' => 'searchable_highlight',
             'fields' => [
-                'fieldone'
-            ]
+                'fieldone',
+            ],
         ]);
 
         $record = [
             'fieldone' => 'one',
             'child' => [
                 'uid' => 1,
-                'searchable_highlight' => 'two'
-            ]
+                'searchable_highlight' => 'two',
+            ],
         ];
         $record = $this->feature->modifyRecord($record);
 

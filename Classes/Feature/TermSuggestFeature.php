@@ -11,8 +11,8 @@ use PAGEmachine\Searchable\Query\QueryInterface;
  * TermSuggestFeature
  * Creates mapping, indexing and search parameters for term suggestions ("did you mean")
  */
-class TermSuggestFeature extends AbstractFeature implements FeatureInterface {
-
+class TermSuggestFeature extends AbstractFeature implements FeatureInterface
+{
     /**
      * @var array
      */
@@ -37,13 +37,11 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface {
         $parameters['body']['suggest']['suggestion'] = [
             'text' => $query->getTerm(),
             'term' => [
-                'field' => '_all'
-            ]
+                'field' => '_all',
+            ],
         ];
         $query->setParameters($parameters);
 
         return $query;
     }
-
-
 }

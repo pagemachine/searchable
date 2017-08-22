@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Eid;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -13,8 +12,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Abstract eID handler
  */
-abstract class AbstractEidHandler {
-
+abstract class AbstractEidHandler
+{
     /**
      * Additional options for this handler
      *
@@ -67,5 +66,4 @@ abstract class AbstractEidHandler {
     {
         return [];
     }
-
 }

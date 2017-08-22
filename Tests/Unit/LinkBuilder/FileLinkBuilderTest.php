@@ -11,8 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for FileLinkBuilder
  */
-class FileLinkBuilderTest extends UnitTestCase {
-
+class FileLinkBuilderTest extends UnitTestCase
+{
     /**
      * @var FileLinkBuilder
      */
@@ -21,7 +21,8 @@ class FileLinkBuilderTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->linkBuilder = new FileLinkBuilder();
     }
@@ -34,14 +35,14 @@ class FileLinkBuilderTest extends UnitTestCase {
         $config = [
             'titleField' => 'title',
             'fixedParts' => [],
-            'fileRecordField' => null
+            'fileRecordField' => null,
         ];
 
         $record = [
             'uid' => 22,
             'somethingelse' => [
-                'uid' => 25
-            ]
+                'uid' => 25,
+            ],
         ];
 
         $this->linkBuilder = new FileLinkBuilder($config);
@@ -59,14 +60,14 @@ class FileLinkBuilderTest extends UnitTestCase {
         $config = [
             'titleField' => 'title',
             'fixedParts' => [],
-            'fileRecordField' => 'file'
+            'fileRecordField' => 'file',
         ];
 
         $record = [
             'uid' => 22,
             'file' => [
-                'uid' => 25
-            ]
+                'uid' => 25,
+            ],
         ];
 
         $this->linkBuilder = new FileLinkBuilder($config);
@@ -84,16 +85,16 @@ class FileLinkBuilderTest extends UnitTestCase {
         $config = [
             'titleField' => 'title',
             'fixedParts' => [],
-            'fileRecordField' => 'file'
+            'fileRecordField' => 'file',
         ];
 
         $record = [
             'uid' => 22,
             'file' => [
                 0 => [
-                    'uid' => 25
-                ]
-            ]
+                    'uid' => 25,
+                ],
+            ],
         ];
 
         $this->linkBuilder = new FileLinkBuilder($config);
@@ -102,5 +103,4 @@ class FileLinkBuilderTest extends UnitTestCase {
 
         $this->assertEquals('t3://file?uid=25', $linkConfiguration['conf']['parameter']);
     }
-
 }

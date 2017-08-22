@@ -5,8 +5,8 @@ namespace PAGEmachine\Searchable\Configuration;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-interface DynamicConfigurationInterface {
-
+interface DynamicConfigurationInterface
+{
     /**
      * This function will be called by the ConfigurationManager.
      * It can be used to add default configuration
@@ -14,5 +14,5 @@ interface DynamicConfigurationInterface {
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
      * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration);    
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration);
 }

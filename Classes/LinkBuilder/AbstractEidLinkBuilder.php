@@ -2,9 +2,7 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -14,8 +12,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * AbstractEidLinkBuilder
  */
-abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements DynamicConfigurationInterface {
-
+abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements DynamicConfigurationInterface
+{
     /**
      * DefaultConfiguration
      * Add your own default configuration here if necessary
@@ -24,7 +22,7 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
      */
     protected static $defaultConfiguration = [
         'titleField' => 'title',
-        'fixedParts' => []
+        'fixedParts' => [],
     ];
 
     /**
@@ -39,7 +37,6 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
         $metaField = ExtconfService::getInstance()->getMetaFieldname();
 
         foreach ($records as $key => $record) {
-
             $linkConfiguration = $this->createLinkConfiguration($record);
             $linkConfiguration = $this->convertToTypoLinkConfig($linkConfiguration, $record);
 
@@ -49,10 +46,8 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
         $links = $this->getFrontendLinks($configurationArray);
 
         foreach ($links as $key => $link) {
-
             $records[$key][$metaField]['renderedLink'] = $link;
             $records[$key][$metaField]['linkTitle'] = $this->getLinkTitle($records[$key]);
-
         }
 
         return $records;
@@ -72,7 +67,8 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
         return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];
     }
 
-    public function getFrontendLinks($configuration){
+    public function getFrontendLinks($configuration)
+    {
 
         $domain = ExtconfService::getInstance()->getFrontendDomain();
 
@@ -83,13 +79,13 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
             'POST',
             [
                 'query' => [
-                    'eID' => 'searchable_linkbuilder'
+                    'eID' => 'searchable_linkbuilder',
                 ],
                 'form_params' => [
-                    'configuration' => $configuration
+                    'configuration' => $configuration,
                 ],
                 'body' => $body ?: '',
-                'http_errors' => false
+                'http_errors' => false,
             ]
         );
 
@@ -102,16 +98,15 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
      * @param  array  $record
      * @return string
      */
-    protected function getLinkTitle($record = []) {
+    protected function getLinkTitle($record = [])
+    {
 
         $title = $record[$this->config['titleField']];
 
         if ($title == null) {
-
             $title = $this->defaultTitle;
         }
 
         return $title;
     }
-
 }

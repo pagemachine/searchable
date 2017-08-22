@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Indexer;
 
-use Elasticsearch\Client;
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
@@ -10,13 +9,12 @@ use PAGEmachine\Searchable\Query\BulkQuery;
 use Prophecy\Argument;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
 * Testcase for PagesIndexer
 */
-class PagesIndexerTest extends UnitTestCase {
-
+class PagesIndexerTest extends UnitTestCase
+{
     /**
      * @var PagesIndexer
      */
@@ -40,7 +38,8 @@ class PagesIndexerTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->query = $this->prophesize(BulkQuery::class);
 
@@ -60,9 +59,9 @@ class PagesIndexerTest extends UnitTestCase {
             'collector' => [
                 'className' => PagesDataCollector::class,
                 'config' => [
-                    'pid' => 12
-                ]
-            ]
+                    'pid' => 12,
+                ],
+            ],
         ];
 
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'] = "_meta";
@@ -73,14 +72,15 @@ class PagesIndexerTest extends UnitTestCase {
     /**
      * @test
      */
-    public function addsPagesToIndex() {
+    public function addsPagesToIndex()
+    {
 
         $pageList = [
             [
                 'uid' => '3',
                 'doktype' => '1',
-                'title' => 'SimplePage'
-            ]
+                'title' => 'SimplePage',
+            ],
         ];
 
         $this->pagesCollector->getRecords()->willReturn($pageList);
@@ -93,9 +93,9 @@ class PagesIndexerTest extends UnitTestCase {
                 'title' => 'SimplePage',
                 '_meta' => [
                     'preview' => '<p>This is a preview!</p>',
-                    'renderedLink' => '<a href="fnsdk">foo</a>'
-                ]
-            ]
+                    'renderedLink' => '<a href="fnsdk">foo</a>',
+                ],
+            ],
         ]);
 
         $this->query->addRows('uid', [
@@ -105,9 +105,9 @@ class PagesIndexerTest extends UnitTestCase {
                 'title' => 'SimplePage',
                 '_meta' => [
                     'preview' => '<p>This is a preview!</p>',
-                    'renderedLink' => '<a href="fnsdk">foo</a>'
-                ]
-            ]
+                    'renderedLink' => '<a href="fnsdk">foo</a>',
+                ],
+            ],
         ])->shouldBeCalled();
 
         $this->query->execute()->shouldBeCalled();
@@ -115,14 +115,7 @@ class PagesIndexerTest extends UnitTestCase {
 
 
         foreach ($this->pagesIndexer->run() as $runMessage) {
-
             //do nothing
-
         }
-
     }
-
-
-
-
 }

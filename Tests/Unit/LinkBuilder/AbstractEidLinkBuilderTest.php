@@ -11,9 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for AbstractEidLinkBuilder
  */
-class AbstractEidLinkBuilderTest extends UnitTestCase {
-
-
+class AbstractEidLinkBuilderTest extends UnitTestCase
+{
     /**
      * @var AbstractEidLinkBuilder
      */
@@ -32,16 +31,16 @@ class AbstractEidLinkBuilderTest extends UnitTestCase {
         $record = ['title' => 'sometitle'];
 
         $builderConfig = [
-            'titleField' => 'title'
+            'titleField' => 'title',
         ];
 
         $linkConfig = [
-            'foo' => 'bar'
+            'foo' => 'bar',
         ];
 
         $typolinkConfig = [
             'title' => 'sometitle',
-            'conf' => ['foo' => 'bar']
+            'conf' => ['foo' => 'bar'],
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractEidLinkBuilder::class, ['config' => $builderConfig]);
@@ -49,5 +48,4 @@ class AbstractEidLinkBuilderTest extends UnitTestCase {
 
         $this->assertEquals($typolinkConfig, $linkConfiguration);
     }
-
 }

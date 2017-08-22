@@ -13,10 +13,10 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 
 /**
- * 
+ *
  */
-class TtContentRelationResolver implements SingletonInterface, RelationResolverInterface {
-
+class TtContentRelationResolver implements SingletonInterface, RelationResolverInterface
+{
     /**
      *
      * @var \TYPO3\CMS\Frontend\Page\PageRepository
@@ -27,7 +27,8 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      *
      * @return TtContentRelationResolver
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(self::class);
     }
@@ -35,10 +36,10 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     /**
      * @param PageRepository|null $pageRepository
      */
-    public function __construct(PageRepository $pageRepository = null) {
+    public function __construct(PageRepository $pageRepository = null)
+    {
 
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
-
     }
 
     /**
@@ -50,35 +51,30 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      * @param  DataCollectorInterface $parentCollector
      * @return array $processedField
      */
-    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
+    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
+    {
 
         $processedField = [];
 
         $contentUids = $this->fetchContentUids($record['uid']);
         foreach ($contentUids as $content) {
-
             $processedField[] = $childCollector->getRecord($content['uid']);
         }
 
         return $processedField;
-
     }
 
     /**
      * Fetches content uids to transfer to datacollector
-     * 
+     *
      * @param  int $pid
      * @return array
      */
-    protected function fetchContentUids($pid) {
+    protected function fetchContentUids($pid)
+    {
 
         $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', 'tt_content', 'pid = ' . $pid . ' AND ' . $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] . ' IN(0,-1)' . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
 
         return $content;
-
-
     }
-
-
-
 }

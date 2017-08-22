@@ -3,7 +3,6 @@ namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 
 use PAGEmachine\Searchable\Indexer\Indexer;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -12,6 +11,6 @@ use PAGEmachine\Searchable\Indexer\Indexer;
 class TestIndexerFixture extends Indexer
 {
     protected static $defaultConfiguration = [
-        'customOption' => 1
+        'customOption' => 1,
     ];
 }

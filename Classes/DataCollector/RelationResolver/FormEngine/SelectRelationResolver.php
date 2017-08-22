@@ -11,15 +11,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 
 /**
- * 
+ *
  */
-class SelectRelationResolver implements SingletonInterface, RelationResolverInterface {
-
+class SelectRelationResolver implements SingletonInterface, RelationResolverInterface
+{
     /**
      *
      * @return SelectRelationResolver
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         return GeneralUtility::makeInstance(self::class);
     }
@@ -33,30 +34,26 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
      * @param  DataCollectorInterface $parentCollector
      * @return array $processedField
      */
-    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector) {
+    public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
+    {
 
         $parentConfiguration = $parentCollector->getConfig();
         $fieldTca = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$fieldname];
 
         $rawField = $record[$fieldname];
 
-    	$records = [];
+        $records = [];
 
         if ($fieldTca['config']['foreign_table']) {
-
             $records = [];
             if (!empty($rawField) && is_array($rawField)) {
-
                 foreach ($rawField as $key => $value) {
-
                     if (!is_numeric($value) || (int)$value < 0) {
-
                         $records[$key] = $value;
                     }
 
                     $childRecord = $childCollector->getRecord($value);
                     if (!empty($childRecord)) {
-
                         $records[$key] = $childRecord;
                     }
                 }
@@ -64,9 +61,5 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
         }
 
         return $records;
-
     }
-
-
-
 }

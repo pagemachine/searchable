@@ -8,10 +8,10 @@ use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
  */
 
 /**
- * 
+ *
  */
-interface RelationResolverInterface {
-
+interface RelationResolverInterface
+{
     /**
      * Resolves relation
      *
@@ -22,5 +22,4 @@ interface RelationResolverInterface {
      * @return array $processedField
      */
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector);
-
 }

@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Eid;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -15,8 +14,8 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 /**
  * eID Link Builder
  */
-class LinkBuilder {
-
+class LinkBuilder
+{
     /**
      * @var ContentObjectRenderer
      */
@@ -42,12 +41,9 @@ class LinkBuilder {
         $links = [];
 
         if ($configuration) {
-
-            foreach ($configuration as $key => $recordConfig)
-            {
+            foreach ($configuration as $key => $recordConfig) {
                 $links[$key] = $this->getLink($recordConfig['conf']);
             }
-
         }
 
         header('Content-type: application/json');
@@ -68,12 +64,9 @@ class LinkBuilder {
         $links = [];
 
         if ($configuration) {
-
-            foreach ($configuration as $key => $recordConfig)
-            {
+            foreach ($configuration as $key => $recordConfig) {
                 $links[$key] = $this->getLink($recordConfig['conf']);
             }
-
         }
 
         $response = $response->withHeader('Content-type', 'application/json');
@@ -91,11 +84,9 @@ class LinkBuilder {
     public function getLink($configuration)
     {
         if ($configuration['parameter']) {
-
             $url = $this->contentObjectRenderer->typolink_URL($configuration);
 
             if ($url == '') {
-
                 $url = '/';
             }
             return $url;

@@ -9,12 +9,13 @@ use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class BackendController extends ActionController {
-
+class BackendController extends ActionController
+{
     /**
      * @var \PAGEmachine\Searchable\Indexer\IndexerFactory
      * @inject
@@ -33,22 +34,19 @@ class BackendController extends ActionController {
      *
      * @return void
      */
-    public function startAction() {
+    public function startAction()
+    {
 
-         try {
-
+        try {
             $this->view->assign("updates", $this->fetchScheduledUpdates());
 
             $stats = IndexManager::getInstance()->getStats();
 
             $this->view->assign("health", $stats['health']);
             $this->view->assign("indices", $stats['indices']);
-
         } catch (\Exception $e) {
-
             $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR);
         }
-
     }
 
     /**
@@ -56,7 +54,8 @@ class BackendController extends ActionController {
      *
      * @return array
      */
-    protected function fetchScheduledUpdates() {
+    protected function fetchScheduledUpdates()
+    {
 
         $client = Connection::getClient();
 
@@ -65,9 +64,9 @@ class BackendController extends ActionController {
             'type' => '',
             'body' => [
                 'query' => [
-                    'match_all' => new \stdClass()
+                    'match_all' => new \stdClass(),
                 ],
-            ]
+            ],
         ]);
 
         $updates['count'] = $client->count(['index' => ExtconfService::getInstance()->getUpdateIndex()])['count'];
@@ -81,13 +80,13 @@ class BackendController extends ActionController {
      * @param string $term
      * @return void
      */
-    public function searchAction($term) {
+    public function searchAction($term)
+    {
 
         $result = Search::getInstance()->search($term);
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);
-
     }
 
     /**
@@ -97,13 +96,14 @@ class BackendController extends ActionController {
      * @param  string $body
      * @return string $answer
      */
-    public function requestAction($url = '', $body = '') {
+    public function requestAction($url = '', $body = '')
+    {
 
         if ($url != '') {
-
             $result = $this->request($url, $body);
 
-            $this->view->assign("response",
+            $this->view->assign(
+                "response",
                 print_r(
                     json_decode(
                         $result['body'],
@@ -113,8 +113,7 @@ class BackendController extends ActionController {
                 )
             );
 
-            switch($result['status']) {
-
+            switch ($result['status']) {
                 case '200':
                     $resultColor = 'success';
                     break;
@@ -128,9 +127,8 @@ class BackendController extends ActionController {
 
             $this->view->assignMultiple([
                 'status' => $result['status'],
-                'color' => $resultColor
+                'color' => $resultColor,
             ]);
-
         } else {
             $url = "http://localhost:9200/typo3/";
         }
@@ -149,10 +147,8 @@ class BackendController extends ActionController {
     protected function request($url, $body)
     {
         if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 8001000) {
-
             return $this->doRequest($url, $body);
-        }
-        else {
+        } else {
             return $this->doRequestLegacy($url, $body);
         }
     }
@@ -173,13 +169,13 @@ class BackendController extends ActionController {
             'GET',
             [
                 'body' => $body ?: '',
-                'http_errors' => false
+                'http_errors' => false,
             ]
         );
 
         return [
             'status' => $response->getStatusCode(),
-            'body' => $response->getBody()->getContents()
+            'body' => $response->getBody()->getContents(),
         ];
     }
 
@@ -198,15 +194,13 @@ class BackendController extends ActionController {
         $request = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\HttpRequest::class, $url);
 
         if ($body != '') {
-
             $request->setBody($body);
         }
         $result = $request->send();
 
         return [
             'status' => $result->getStatus(),
-            'body' => $result->getBody()
+            'body' => $result->getBody(),
         ];
     }
-
 }

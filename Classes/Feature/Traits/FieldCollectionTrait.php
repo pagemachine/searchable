@@ -8,15 +8,16 @@ namespace PAGEmachine\Searchable\Feature\Traits;
 /**
  * FieldCollectionTrait
  */
-trait FieldCollectionTrait {
-
+trait FieldCollectionTrait
+{
     /**
      * function to collect fields from a record
      *
      * @param array $record
      * @param array $fields
      */
-    protected function collectFields($record, $fields, $content = []) {
+    protected function collectFields($record, $fields, $content = [])
+    {
         /**
          * @var array
          */
@@ -39,38 +40,28 @@ trait FieldCollectionTrait {
      * @param  bool  $unset
      * @return array $collection
      */
-    protected function collectFieldFromSubRecords(&$record, $fieldname, $collection = [], $unset = false) {
+    protected function collectFieldFromSubRecords(&$record, $fieldname, $collection = [], $unset = false)
+    {
 
         foreach ($record as $column => $value) {
-
             if (is_array($value) && !isset($value['uid'])) {
-
                 foreach ($value as $childKey => $childRecord) {
-
                     if (!empty($childRecord[$fieldname])) {
-
                         $collection = $this->mergeOrAddField($collection, $childRecord[$fieldname]);
 
                         if ($unset) {
-
                             unset($record[$column][$childKey][$fieldname]);
                         }
-                        
                     }
                 }
-            }
-            else if (is_array($value)) {
-
+            } elseif (is_array($value)) {
                 if (!empty($value[$fieldname])) {
-
                     $collection = $this->mergeOrAddField($collection, $value[$fieldname]);
                     
                     if ($unset) {
-
                         unset($record[$column][$fieldname]);
                     }
-                    
-                }                
+                }
             }
         }
 
@@ -83,16 +74,15 @@ trait FieldCollectionTrait {
      * @param mixed $field
      * @return array $collection
      */
-    protected function mergeOrAddField($collection, $field) {
+    protected function mergeOrAddField($collection, $field)
+    {
 
         if (is_array($field)) {
-
             $collection = array_merge($collection, $field);
-        }
-        else {
+        } else {
             $collection[] = $field;
         }
 
-        return $collection;       
+        return $collection;
     }
 }

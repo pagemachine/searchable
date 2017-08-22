@@ -10,15 +10,15 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Query class for searching
  */
-class SearchQuery extends AbstractQuery implements QueryInterface {
-
+class SearchQuery extends AbstractQuery implements QueryInterface
+{
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
-     * 
+     *
      * @var array $parameters
      */
     protected $parameters = [
-        'body' => []
+        'body' => [],
     ];
 
     /**
@@ -237,7 +237,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface {
     /**
      * Execute method, should be overriden with the concrete command to the client
      * and return the response
-     * 
+     *
      * @return array $response
      */
     public function execute()
@@ -245,18 +245,15 @@ class SearchQuery extends AbstractQuery implements QueryInterface {
         $this->build();
 
         try {
-          $response = $this->client->search($this->getParameters());
+            $response = $this->client->search($this->getParameters());
 
-          if ($response['errors']) {
+            if ($response['errors']) {
+                $this->logger->error("Search Query response contains errors: ", $response);
+            }
 
-              $this->logger->error("Search Query response contains errors: ", $response);
-          }
-
-          $this->result = $response;
-          return $response;         
-        } 
-        catch (\Exception $e) {
-
+            $this->result = $response;
+            return $response;
+        } catch (\Exception $e) {
             $this->logger->error("Elasticsearch-PHP encountered an error while searching: " . $e->getMessage());
             return [];
         }
@@ -270,7 +267,6 @@ class SearchQuery extends AbstractQuery implements QueryInterface {
     public function setDefaultSettings($settings = [])
     {
         $this->setSize($settings['resultsPerPage']);
-
     }
 
     /**
@@ -278,10 +274,10 @@ class SearchQuery extends AbstractQuery implements QueryInterface {
      *
      * @return int
      */
-    public function getPageCount() {
+    public function getPageCount()
+    {
 
         if (!empty($this->result)) {
-
             return (int)ceil($this->result['hits']['total'] / $this->size);
         }
 
@@ -299,15 +295,14 @@ class SearchQuery extends AbstractQuery implements QueryInterface {
             'query' => [
                 $this->searchType => [
                     'fields' => $this->searchFields,
-                    'query' => $this->term
-                ]
+                    'query' => $this->term,
+                ],
             ],
             'from' => $this->from,
-            'size' => $this->size
+            'size' => $this->size,
         ];
 
         if ($this->respectLanguage === true) {
-
             $language = $this->language ?: $GLOBALS['TSFE']->sys_language_uid;
 
             $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
@@ -315,5 +310,4 @@ class SearchQuery extends AbstractQuery implements QueryInterface {
 
         $this->applyFeatures();
     }
-
 }

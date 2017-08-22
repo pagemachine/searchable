@@ -10,8 +10,8 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Query class for searching
  */
-class AutosuggestQuery extends SearchQuery implements QueryInterface {
-
+class AutosuggestQuery extends SearchQuery implements QueryInterface
+{
     /**
      * @var string $term
      */
@@ -46,7 +46,6 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface {
         ];
 
         if ($this->respectLanguage === true) {
-
             $language = $this->language ?: $GLOBALS['TSFE']->sys_language_uid;
 
             $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();

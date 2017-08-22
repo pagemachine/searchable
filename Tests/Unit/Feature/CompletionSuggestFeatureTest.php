@@ -11,8 +11,8 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 /**
  * Testcase for CompletionSuggestFeature
  */
-class CompletionSuggestFeatureTest extends UnitTestCase {
-
+class CompletionSuggestFeatureTest extends UnitTestCase
+{
     /**
      * @var CompletionSuggestFeature
      */
@@ -21,15 +21,16 @@ class CompletionSuggestFeatureTest extends UnitTestCase {
     /**
      * Set up this testcase
      */
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->feature = new CompletionSuggestFeature([
             'fields' => [
                 'fieldone',
                 'fieldtwo',
-                'fieldthree'
+                'fieldthree',
             ],
-            'completionField' => 'autosuggest'
+            'completionField' => 'autosuggest',
         ]);
     }
 
@@ -45,7 +46,6 @@ class CompletionSuggestFeatureTest extends UnitTestCase {
         $record = $this->feature->modifyRecord($record);
 
         $this->assertEquals(['one', 'two'], $record['autosuggest']['input']);
-        
     }
 
     /**
@@ -59,9 +59,9 @@ class CompletionSuggestFeatureTest extends UnitTestCase {
                 'uid' => 100,
                 'autosuggest' => [
                     'two',
-                    'three'
-                ]
-            ]
+                    'three',
+                ],
+            ],
         ];
         $record = $this->feature->modifyRecord($record);
 
@@ -81,10 +81,10 @@ class CompletionSuggestFeatureTest extends UnitTestCase {
                     'uid' => 100,
                     'autosuggest' => [
                         'two',
-                        'three'
-                    ]
-                ]
-            ]
+                        'three',
+                    ],
+                ],
+            ],
         ];
         $record = $this->feature->modifyRecord($record);
 

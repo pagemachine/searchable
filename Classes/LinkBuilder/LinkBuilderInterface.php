@@ -1,13 +1,12 @@
 <?php
 namespace PAGEmachine\Searchable\LinkBuilder;
 
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
 
-interface LinkBuilderInterface {
-
+interface LinkBuilderInterface
+{
     /**
      * Creates a link
      *
@@ -24,5 +23,4 @@ interface LinkBuilderInterface {
      * @return array $records
      */
     public function createLinksForBatch($records);
-
 }

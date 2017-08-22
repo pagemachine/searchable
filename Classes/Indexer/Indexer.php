@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
@@ -10,7 +9,6 @@ use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -18,8 +16,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-class Indexer implements IndexerInterface, DynamicConfigurationInterface {
-
+class Indexer implements IndexerInterface, DynamicConfigurationInterface
+{
     /**
      * DefaultConfiguration
      * Add your own default configuration here if necessary
@@ -35,9 +33,10 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @param array $currentSubconfiguration The subconfiguration at this classes' level. This is the part that can be modified
      * @param array $parentConfiguration
      */
-    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration) {
+    public static function getDefaultConfiguration($currentSubconfiguration, $parentConfiguration)
+    {
 
-       return static::$defaultConfiguration;
+        return static::$defaultConfiguration;
     }
 
     /**
@@ -81,16 +80,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
     /**
      * @return String
      */
-    public function getIndex() {
-      return $this->index;
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**
      * @param String $index
      * @return void
      */
-    public function setIndex($index) {
-      $this->index = $index;
+    public function setIndex($index)
+    {
+        $this->index = $index;
     }
 
 
@@ -102,16 +103,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
     /**
      * @return String
      */
-    public function getType() {
-      return $this->type;
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
      * @param String $type
      * @return void
      */
-    public function setType($type) {
-      $this->type = $type;
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
 
@@ -123,16 +126,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
     /**
      * @return int
      */
-    public function getLanguage() {
-      return $this->language;
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
     /**
      * @param int $language
      * @return void
      */
-    public function setLanguage($language) {
-      $this->language = $language;
+    public function setLanguage($language)
+    {
+        $this->language = $language;
     }
 
 
@@ -144,16 +149,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
     /**
      * @return array
      */
-    public function getConfig() {
-      return $this->config;
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**
      * @param array $config
      * @return void
      */
-    public function setConfig($config) {
-      $this->config = $config;
+    public function setConfig($config)
+    {
+        $this->config = $config;
     }
 
     /**
@@ -166,7 +173,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      * @param PreviewRendererInterface|null $previewRenderer
      * @param array       $features
      */
-    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null) {
+    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
+    {
 
         $this->index = $index;
         $this->config = $config;
@@ -187,7 +195,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
         $this->setPreviewRenderer($previewRenderer);
         $this->setLinkBuilder($linkBuilder);
         $this->setFeatures($features);
-
     }
 
     /**
@@ -195,23 +202,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      *
      * @param PreviewRendererInterface|null $previewRenderer
      */
-    protected function setPreviewRenderer(PreviewRendererInterface $previewRenderer = null) {
+    protected function setPreviewRenderer(PreviewRendererInterface $previewRenderer = null)
+    {
 
         if ($previewRenderer) {
-
             $this->previewRenderer = $previewRenderer;
         } else {
-
             if (!empty($this->config['preview']['className'])) {
-
                 $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
             } else {
-
                 $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
             }
         }
-
-
     }
 
     /**
@@ -219,22 +221,18 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      *
      * @param LinkBuilderInterface|null $linkBuilder
      */
-    protected function setLinkBuilder(LinkBuilderInterface $linkBuilder = null) {
+    protected function setLinkBuilder(LinkBuilderInterface $linkBuilder = null)
+    {
 
         if ($linkBuilder) {
-
             $this->linkBuilder = $linkBuilder;
         } else {
-
             if (!empty($this->config['link']['className'])) {
-
                 $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
             } else {
-
                 $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
             }
         }
-
     }
 
     /**
@@ -242,14 +240,13 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      *
      * @param array $features
      */
-    protected function setFeatures($features) {
+    protected function setFeatures($features)
+    {
 
         $features = $features ?: $this->config['features'];
 
         if (!empty($features)) {
-
             foreach ($features as $key => $featureConfig) {
-
                 $this->features[$key] = $this->objectManager->get($featureConfig['className'], $featureConfig['config']);
             }
         }
@@ -260,7 +257,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      *
      * @param array $record
      */
-    protected function addSystemFields($record = []) {
+    protected function addSystemFields($record = [])
+    {
         $systemFields = [];
 
         $systemFields['preview'] = $this->previewRenderer->render($record);
@@ -275,7 +273,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      *
      * @return \Generator
      */
-    public function run() {
+    public function run()
+    {
 
         $bulkSize = $this->config['bulkSize'] ?: 20;
 
@@ -285,14 +284,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
         $records = [];
 
         foreach ($this->dataCollector->getRecords() as $fullRecord) {
-
             $records[] = $this->addSystemFields($fullRecord);
 
             $counter++;
             $overallCounter++;
 
             if ($counter >= $bulkSize) {
-
                 $this->sendBatch($records);
 
                 $counter = 0;
@@ -302,12 +299,10 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
         }
 
         if ($counter != 0) {
-
             $this->sendBatch($records);
 
             yield $overallCounter;
         }
-
     }
 
     /**
@@ -315,7 +310,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
      *
      * @return \Generator
      */
-    public function runUpdate() {
+    public function runUpdate()
+    {
 
         $bulkSize = $this->config['bulkSize'] ?: 20;
 
@@ -330,20 +326,15 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
 
         if (!empty($updates)) {
             foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
-
                 if ($fullRecord['deleted'] == 1) {
-
                     $this->query->delete($fullRecord['uid']);
-                }
-                else {
-
+                } else {
                     $counter++;
                     $overallCounter++;
 
                     $records[] = $this->addSystemFields($fullRecord);
 
                     if ($counter >= $bulkSize) {
-
                         $this->sendBatch($records);
 
                         $records = [];
@@ -354,7 +345,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface {
             }
 
             if ($counter != 0) {
-
                 $this->sendBatch($records);
 
                 yield $overallCounter;
