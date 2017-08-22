@@ -27,9 +27,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             'title'
         ],
         'features' => [
-            'highlighting' => [
-                'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
-            ],
             'completion' => [
                 'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
                 'config' => [
@@ -53,17 +50,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                         'subheader',
                         'bodytext'
                     ],
-                    'features' => [
-                        'highlighting' => [
-                            'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class,
-                            'config' => [
-                                'fields' => [
-                                    'subheader',
-                                    'bodytext'
-                                ]
-                            ]
-                        ]
-                    ]
                 ]
             ]
 
@@ -96,7 +82,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     }
 
     /**
-     * 
+     *
      *
      * @return \Generator
      */
@@ -109,7 +95,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     }
 
     /**
-     * 
+     *
      *
      * @return \Generator
      */
@@ -117,7 +103,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         $whereClause =
             ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
-            $this->config['groupWhereClause'] . 
+            $this->config['groupWhereClause'] .
             ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
             ;
 
@@ -146,11 +132,11 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                     foreach ($subpages as $page) {
 
                         yield $page;
-                    }                    
+                    }
                 }
 
             }
-        }        
+        }
     }
 
     /**

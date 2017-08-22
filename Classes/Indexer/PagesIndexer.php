@@ -18,7 +18,7 @@ class PagesIndexer extends Indexer {
         'link' => [
             'className' => \PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder::class,
             'config' => [
-                'titleField' => 'title', 
+                'titleField' => 'title',
                 'dynamicParts' => [
                     'pageUid' => 'uid'
                 ]
@@ -36,7 +36,16 @@ class PagesIndexer extends Indexer {
         ],
         'features' => [
             'highlighting' => [
-                'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class
+                'className' => \PAGEmachine\Searchable\Feature\HighlightFeature::class,
+                'config' => [
+                    'fields' => [
+                        'content' => [
+                            'subheader',
+                            'bodytext'
+                        ]
+
+                    ]
+                ]
             ],
             'completion' => [
                 'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class
@@ -50,6 +59,9 @@ class PagesIndexer extends Indexer {
                 'content' => [
                     'properties' => [
                         'header' => [
+                            'type' => 'text'
+                        ],
+                        'subheader' => [
                             'type' => 'text'
                         ],
                         'bodytext' => [

@@ -46,7 +46,7 @@ class ResultHighlightFeatureTest extends UnitTestCase {
         $record = $this->feature->modifyRecord($record);
 
         $this->assertEquals('one two', $record['searchable_highlight']);
-        
+
     }
 
     /**
@@ -68,7 +68,7 @@ class ResultHighlightFeatureTest extends UnitTestCase {
                     'uid' => 1,
                     'searchable_highlight' => 'two'
                 ]
-                
+
             ]
         ];
         $record = $this->feature->modifyRecord($record);

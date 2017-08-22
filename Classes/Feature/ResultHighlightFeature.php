@@ -11,8 +11,12 @@ use PAGEmachine\Searchable\Query\QueryInterface;
 /**
  * ResultHighlightFeature
  * Creates mapping, indexing and search parameters for result highlighting
+ * Collects all fields and copies them manually to the highlight field
+ *
+ * @deprecated, will be removed in V3
+ * Use HighlightFeature instead
  */
-class ResultHighlightFeature extends AbstractFeature implements FeatureInterface {
+class ResultHighlightFeature extends HighlightFeature implements FeatureInterface {
 
     use FieldCollectionTrait;
 
@@ -23,14 +27,8 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
         //The fields to include into the highlighting field
         'fields' => [],
         'highlightField' => 'searchable_highlight',
-        'stripTags' => true
+        'strip_tags' => true
     ];
-
-    /**
-     *
-     * @var string
-     */
-    public static $featureName = "highlighting";
 
     /**
      * Entry point to modify mapping
@@ -43,7 +41,8 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
     {
         $mapping['properties'][$configuration['highlightField']] = [
             'type' => 'text',
-            'include_in_all' => false
+            'include_in_all' => false,
+            'store' => true
         ];
 
         return $mapping;
@@ -59,7 +58,7 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
     {
         if (!empty($this->config['fields'])) {
 
-            $highlightContent = $this->collectFields($record, $this->config['fields']);               
+            $highlightContent = $this->collectFields($record, $this->config['fields']);
         }
         $highlightContent = $this->collectFieldFromSubRecords($record, $this->config['highlightField'], $highlightContent, true);
 
@@ -71,28 +70,4 @@ class ResultHighlightFeature extends AbstractFeature implements FeatureInterface
 
         return $record;
     }
-
-    /**
-     * Modifies a query before it is executed
-     *
-     * @param QueryInterface $query
-     * @return array
-     */
-    public function modifyQuery(QueryInterface $query)
-    {
-        $parameters = $query->getParameters();
-        $parameters['body']['query']['multi_match']['fields'][] = $this->config['highlightField'];
-        $parameters['body']['highlight'] = [
-            'pre_tags' => ["<span class='searchable-highlight'>"],
-            'post_tags' => ["</span>"],
-            'fields' => [
-                $this->config['highlightField'] => new \stdClass()
-            ]
-        ];
-        $query->setParameters($parameters);
-
-        return $query;
-    }
-
-
 }
