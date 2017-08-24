@@ -33,17 +33,16 @@ if (TYPO3_MODE === 'BE') {
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_db.php']['queryProcessors']['searchable'] = \PAGEmachine\Searchable\Hook\DatabaseConnectionHook::class;
 
-//Add custom logger
-$GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['Query']['writerConfiguration'] = array(
-    // configuration for ERROR level log entries
-  \TYPO3\CMS\Core\Log\LogLevel::ERROR => array(
-      // add a FileWriter
-    'TYPO3\\CMS\\Core\\Log\\Writer\\FileWriter' => array(
-        // configuration for the writer
-      'logFile' => 'typo3temp/logs/searchable.log'
-    )
-  )
-);
+// Add custom logging
+if (empty($GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'])) {
+    $GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'] = [
+        \TYPO3\CMS\Core\Log\LogLevel::ERROR => [
+            \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+                'logFile' => 'typo3temp/logs/searchable.log',
+            ],
+        ],
+    ];
+}
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     // Configuration coming from Extension Manager
