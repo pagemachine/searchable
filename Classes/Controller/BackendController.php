@@ -80,7 +80,7 @@ class BackendController extends ActionController
      */
     public function searchAction($term)
     {
-        $result = Search::getInstance()->search($term);
+        $result = Search::getInstance()->search($term, false);
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);
