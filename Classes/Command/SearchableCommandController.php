@@ -207,7 +207,7 @@ class SearchableCommandController extends CommandController
         $starttime = microtime(true);
 
         $this->outputLine();
-        $this->outputLine("<info>Starting indexing, %s indices found.</info>", [count($this->scheduledIndexers[0])]);
+        $this->outputLine("<info>Starting indexing, %s indexers found.</info>", [count($this->scheduledIndexers[0])]);
         $this->outputLine("<info>Indexing mode: " . ($this->runFullIndexing ? "Full" : "Partial" . "</info>"));
 
         $this->outputLine();
