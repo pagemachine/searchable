@@ -10,7 +10,7 @@
 			<div class="form-group">
 				<label for="term">Search: </label>
 				<f:form.textfield name="term" id="term" class="form-control" />
-				
+
 			</div>
 			<f:form.submit value="Submit" class="btn btn-primary" />
 
@@ -23,6 +23,7 @@
 				<tr>
 					<th>ID</th>
 					<th>Type</th>
+					<th>Linktitle</th>
 					<th>Preview</th>
 					<th>Score</th>
 				</tr>
@@ -31,6 +32,7 @@
 					<tr>
 						<td>{hit._id}</td>
 						<td>{hit._type}</td>
+						<td>{hit._source.searchable_meta.linkTitle}</td>
 						<td><f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw></td>
 						<td>{hit._score}</td>
 					</tr>
