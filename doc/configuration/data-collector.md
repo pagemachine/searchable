@@ -13,6 +13,8 @@ DataCollectors handle fetching and conversion of (database) data.
 | sysLanguageOverlay | int/string | yes | 0/1/*hideNonTranslated*, default: 1 | Determines whether to use sysLanguageOverlay for translated records. See the [TYO3 Documentation](https://docs.typo3.org/typo3cms/TyposcriptReference/Setup/Config/Index.html#sys-language-overlay) for details about this setting. Usually this should have the same value as your TypoScript setting (`config.sys_language_overlay`). |
 | subCollectors | array | no | Default: *empty* | Define SubCollectors for relations here. Just like the toplevel collector config, each subCollector is an array containing two keys: `className` (where you add the collector class) and `config` (where you can use all settings listed here, even sub-subCollectors). The array key defines the field name in the elasticsearch index. Note that the *table* setting is not needed in subCollectors since the child table is defined via TCA. However, you need to tell searchable which field in the parent table represents the relation (see below).  |
 | field (SubCollectors only) | string | yes |  | The field in the parent table that holds the relation to the child record. This is required since the TCA of the corresponding column tells the collector important information about the relation. |
+| select.additionalWhereClauses | array(string) | no | *empty* | Additional where-clauses to filter out content you don't want to index. Each clause should start with " AND ". |
+| select.additionalTables | array(string) | no | *empty* | Additional tables in the select query (FROM). Can be used in addition to *additionalWhereClauses* (for example when filtering by relations). |
 
 ### Example
 
@@ -67,3 +69,10 @@ These settings are specific for the PagesDataCollector. The PagesDataCollector h
             ]
         ]
     ];
+
+## FileDataCollector settings
+
+
+| Option | Type | Required | Values | Description |
+|----------|---------|----------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| mimetypes | array (string) | yes | Default: *text/plain, application/pdf* | Filter indexed files by mimetype. Customize if you know what you're doing (or what the elasticsearch attachment plugin can handle). |
