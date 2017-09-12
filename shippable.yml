@@ -1,20 +1,25 @@
-language: php
-
-php:
-  - "7.0"
+language: none
 
 env:
   global:
     - secure: nqjlHD6EZxyfRBqdr3AiI7VcfMsU+6K4YFFvzvSjbagFrX+bVgrIGT7A3D0vkZ+xgUvkIYTRS+PaXeBvz6arcW/xI1aNof/ZkQUWIVHHY+Nz0YsCrxH4mdvJK4otDFqW5VQRE72rxeFzjRXj5TZACJZuD5lq/AfVP0GeEC2N2qJMBa2vxV+27cfcQEYsZG2S02xsvzIxuuKHsnKg27eKGPNqOGkqgOIXnKp2Gyj5Yr1RLSHaCJjOrP30jkjFKzqPHxkhEkUH/y/wbKBtaO9TPBPOEgAXldDvIcDIfpqRI8hlisaYi5vFN/Y2YDk+VzYdsL1elZyBCmuMMAZhPWX4tg==
   matrix:
-    - TYPO3_VERSION=^7.6
-    - TYPO3_VERSION=^8.7
+    - PHP_VERSION: "7.0"
+      TYPO3_VERSION: ^7.6
+    - PHP_VERSION: "7.0"
+      TYPO3_VERSION: ^8.7
 
 
 build:
   cache: true
   cache_dir_list:
     - $HOME/.composer/cache
+    
+  pre_ci_boot:
+    image_name: typo3gmbh/php${PHP_VERSION/./}
+    image_tag: latest
+    pull: true
+    options: "-e HOME=/root"
 
   ci:
     - npm install
