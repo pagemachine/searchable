@@ -6,8 +6,11 @@ namespace PAGEmachine\Searchable\Database;
  */
 
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
+use PAGEmachine\Searchable\Database\Query\QueryBuilder;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use TYPO3\CMS\Core\Database\Connection as BaseConnection;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Connection which tracks inserts/updates for partial index updates
@@ -18,6 +21,16 @@ class Connection extends BaseConnection
      * @var UpdateQuery
      */
     protected $updateQuery;
+
+    /**
+     * Creates a new instance of a SQL query builder.
+     *
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    public function createQueryBuilder(): BaseQueryBuilder
+    {
+        return GeneralUtility::makeInstance(QueryBuilder::class, $this);
+    }
 
     /**
      * Inserts a table row with specified data.
@@ -140,5 +153,19 @@ class Connection extends BaseConnection
         }
 
         return $this->updateQuery;
+    }
+
+    /**
+     * Unquotes an identifier
+     *
+     * @param string $identifier The identifier name to be unquoted
+     * @return string The unquoted identifier string
+     * @see \Doctrine\DBAL\Platforms\AbstractPlatform::quoteIdentifier()
+     */
+    public function unquoteIdentifier(string $identifier): string
+    {
+        $c = $this->getDatabasePlatform()->getIdentifierQuoteCharacter();
+
+        return trim(str_replace($c . $c, $c, $identifier), $c);
     }
 }
