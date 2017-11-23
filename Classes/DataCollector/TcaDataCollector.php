@@ -329,7 +329,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         if ($additionalWhere) {
-            $statement['where']['additional'] = $additionalWhere;
+            $statement['where']['additional'] = ' AND ' . $additionalWhere;
         }
 
         if (!empty($this->config['select']['additionalTables'])) {
