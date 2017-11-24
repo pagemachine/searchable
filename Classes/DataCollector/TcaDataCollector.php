@@ -175,7 +175,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
-            $queryParts = $this->buildUidListQueryParts("uid=" . $uid);
+            $queryParts = $this->buildUidListQueryParts(sprintf('%s.uid = %d', $this->config['table'], $uid));
 
             $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
                 implode(',', $queryParts['select']),
