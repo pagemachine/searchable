@@ -27,8 +27,8 @@ class DatabaseRecordUpdateQuery
      */
     public function __construct(UpdateQuery $updateQuery = null, array $updateConfiguration = null)
     {
-        $this->updateQuery = $updateQuery ?? new UpdateQuery();
-        $this->updateConfiguration = $updateConfiguration ?? ConfigurationManager::getInstance()->getUpdateConfiguration();
+        $this->updateQuery = $updateQuery ?: new UpdateQuery();
+        $this->updateConfiguration = $updateConfiguration ?: ConfigurationManager::getInstance()->getUpdateConfiguration();
     }
 
     /**
@@ -40,7 +40,8 @@ class DatabaseRecordUpdateQuery
      */
     public function updateToplevel($table, $uid)
     {
-        foreach ($this->updateConfiguration['database']['toplevel'][$table] ?? [] as $type) {
+        $configuration = !empty($this->updateConfiguration['database']['toplevel'][$table]) ? $this->updateConfiguration['database']['toplevel'][$table] : [];
+        foreach ($configuration as $type) {
             $this->updateQuery->addUpdate($type, 'uid', (int)$uid);
         }
     }
@@ -54,7 +55,8 @@ class DatabaseRecordUpdateQuery
      */
     public function updateSublevel($table, $uid)
     {
-        foreach ($this->updateConfiguration['database']['sublevel'][$table] ?? [] as $type => $path) {
+        $configuration = !empty($this->updateConfiguration['database']['sublevel'][$table]) ? $this->updateConfiguration['database']['sublevel'][$table] : [];
+        foreach ($configuration as $type => $path) {
             $this->updateQuery->addUpdate($type, $path . '.uid', (int)$uid);
         }
     }
