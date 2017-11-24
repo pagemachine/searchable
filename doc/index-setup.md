@@ -1,4 +1,4 @@
-# Index Management
+# Index Setup
 
 Searchable follows the approach to use one Elasticsearch index for each language. However, it does not create indices automatically.
 You have to configure it in the `indices` section of the extension configuration:
@@ -28,7 +28,7 @@ You can find a list of available settings in the [Index Modules](https://www.ela
 ## Setting default Analyzers
 
 [Analyzers](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html) are very important to provide more intelligent search results, f.ex. by taking the current language into account. A recommended analysis setting for a 2-language-setup could look like this:
-    
+
     //Analyzer setup for index 0 (english)
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['0']['settings']['analysis'] = [
       'analyzer' => [
