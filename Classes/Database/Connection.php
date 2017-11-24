@@ -5,9 +5,8 @@ namespace PAGEmachine\Searchable\Database;
  * This file is part of the PAGEmachine Searchable project.
  */
 
-use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Database\Query\QueryBuilder;
-use PAGEmachine\Searchable\Query\UpdateQuery;
+use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\Connection as BaseConnection;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -18,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class Connection extends BaseConnection
 {
     /**
-     * @var UpdateQuery
+     * @var DatabaseRecordUpdateQuery
      */
     protected $updateQuery;
 
@@ -48,11 +47,11 @@ class Connection extends BaseConnection
     {
         $result = parent::insert(...func_get_args());
 
-        $this->registerToplevelUpdate($tableName, (int)$this->lastInsertId($tableName));
+        $this->getQuery()->updateToplevel($tableName, (int)$this->lastInsertId($tableName));
 
         // Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
         if ($tableName == 'tt_content' && !empty($data['pid'])) {
-            $this->registerToplevelUpdate('pages', (int)$data['pid']);
+            $this->getQuery()->updateToplevel('pages', (int)$data['pid']);
         }
 
         return $result;
@@ -76,8 +75,8 @@ class Connection extends BaseConnection
         $result = parent::update(...func_get_args());
 
         if (!empty($identifier['uid'])) {
-            $this->registerToplevelUpdate($tableName, (int)$identifier['uid']);
-            $this->registerSublevelUpdates($tableName, (int)$identifier['uid']);
+            $this->getQuery()->updateToplevel($tableName, (int)$identifier['uid']);
+            $this->getQuery()->updateSublevel($tableName, (int)$identifier['uid']);
         }
 
         return $result;
@@ -100,56 +99,20 @@ class Connection extends BaseConnection
         $result = parent::delete(...func_get_args());
 
         if (!empty($identifier['uid'])) {
-            $this->registerToplevelUpdate($tableName, (int)$identifier['uid']);
-            $this->registerSublevelUpdates($tableName, (int)$identifier['uid']);
+            $this->getQuery()->updateToplevel($tableName, (int)$identifier['uid']);
+            $this->getQuery()->updateSublevel($tableName, (int)$identifier['uid']);
         }
 
         return $result;
     }
 
     /**
-     * Register a toplevel update
-     *
-     * @param string $table
-     * @param int $uid
-     * @return void
+     * @return DatabaseRecordUpdateQuery
      */
-    protected function registerToplevelUpdate(string $table, int $uid)
-    {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if (!empty($updateConfiguration['database']['toplevel'][$table])) {
-            foreach ($updateConfiguration['database']['toplevel'][$table] as $type) {
-                $this->getQuery()->addUpdate($type, 'uid', $uid);
-            }
-        }
-    }
-
-    /**
-     * Register sublevel updates
-     *
-     * @param string $table
-     * @param int $uid
-     * @return void
-     */
-    protected function registerSublevelUpdates(string $table, int $uid)
-    {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if (!empty($updateConfiguration['database']['sublevel'][$table])) {
-            foreach ($updateConfiguration['database']['sublevel'][$table] as $type => $path) {
-                $this->getQuery()->addUpdate($type, $path . '.uid', $uid);
-            }
-        }
-    }
-
-    /**
-     * @return UpdateQuery
-     */
-    protected function getQuery(): UpdateQuery
+    protected function getQuery(): DatabaseRecordUpdateQuery
     {
         if ($this->updateQuery == null) {
-            $this->updateQuery = new UpdateQuery();
+            $this->updateQuery = new DatabaseRecordUpdateQuery();
         }
 
         return $this->updateQuery;

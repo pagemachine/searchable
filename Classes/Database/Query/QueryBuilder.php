@@ -6,8 +6,7 @@ namespace PAGEmachine\Searchable\Database\Query;
  */
 
 use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;
-use PAGEmachine\Searchable\Configuration\ConfigurationManager;
-use PAGEmachine\Searchable\Query\UpdateQuery;
+use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 
 /**
@@ -15,6 +14,11 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
  */
 class QueryBuilder extends BaseQueryBuilder
 {
+    /**
+     * @var DatabaseRecordUpdateQuery
+     */
+    protected $updateQuery;
+
     /**
      * Executes this query using the bound parameters and their types.
      *
@@ -26,7 +30,7 @@ class QueryBuilder extends BaseQueryBuilder
 
         if ($this->getType() === DoctrineQueryBuilder::INSERT) {
             $tableName = $this->getConnection()->unquoteIdentifier($this->getQueryPart('from')['table']);
-            $this->registerToplevelUpdate($tableName, (int)$this->getConnection()->lastInsertId($tableName));
+            $this->getQuery()->updateToplevel($tableName, (int)$this->getConnection()->lastInsertId($tableName));
         } elseif (in_array($this->getType(), [DoctrineQueryBuilder::UPDATE, DoctrineQueryBuilder::DELETE], true)) {
             $tableName = $this->getConnection()->unquoteIdentifier($this->getQueryPart('from')['table']);
             $where = (string)$this->getQueryPart('where');
@@ -40,8 +44,8 @@ class QueryBuilder extends BaseQueryBuilder
                     $uid = $this->getParameter($matches['placeholder']);
                 }
 
-                $this->registerToplevelUpdate($tableName, (int)$uid);
-                $this->registerSublevelUpdates($tableName, (int)$uid);
+                $this->getQuery()->updateToplevel($tableName, (int)$uid);
+                $this->getQuery()->updateSublevel($tableName, (int)$uid);
             }
         }
 
@@ -49,48 +53,12 @@ class QueryBuilder extends BaseQueryBuilder
     }
 
     /**
-     * Register a toplevel update
-     *
-     * @param string $table
-     * @param int $uid
-     * @return void
+     * @return DatabaseRecordUpdateQuery
      */
-    protected function registerToplevelUpdate(string $table, int $uid)
-    {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if (!empty($updateConfiguration['database']['toplevel'][$table])) {
-            foreach ($updateConfiguration['database']['toplevel'][$table] as $type) {
-                $this->getQuery()->addUpdate($type, 'uid', $uid);
-            }
-        }
-    }
-
-    /**
-     * Register sublevel updates
-     *
-     * @param string $table
-     * @param int $uid
-     * @return void
-     */
-    protected function registerSublevelUpdates(string $table, int $uid)
-    {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if (!empty($updateConfiguration['database']['sublevel'][$table])) {
-            foreach ($updateConfiguration['database']['sublevel'][$table] as $type => $path) {
-                $this->getQuery()->addUpdate($type, $path . '.uid', $uid);
-            }
-        }
-    }
-
-    /**
-     * @return UpdateQuery
-     */
-    protected function getQuery(): UpdateQuery
+    protected function getQuery(): DatabaseRecordUpdateQuery
     {
         if ($this->updateQuery == null) {
-            $this->updateQuery = new UpdateQuery();
+            $this->updateQuery = new DatabaseRecordUpdateQuery();
         }
 
         return $this->updateQuery;
