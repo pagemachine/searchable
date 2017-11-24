@@ -44,3 +44,11 @@ You can find a list of available settings in the [Index Modules](https://www.ela
         'default_search' => ['type' => 'german']
       ]
     ];
+
+## Apply setup
+
+After setting up all indices and types run the following CLI command to apply the setup:
+
+    typo3cms searchable:setup
+
+Whenever the configuration was changed, this command must be run again. It can be run at any time, since it only performs the necessary changes.
