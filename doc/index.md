@@ -8,6 +8,10 @@
 
     How to setup indices for multiple languages and apply custom settings
 
+* [Index Updating](index-update.md)
+
+    How to update indices fully or partially
+
 * [Language Handling](language-handling.md)
 
     Guide on how Searchable handles languages
