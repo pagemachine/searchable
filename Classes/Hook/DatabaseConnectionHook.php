@@ -1,8 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Hook;
 
-use PAGEmachine\Searchable\Configuration\ConfigurationManager;
-use PAGEmachine\Searchable\Query\UpdateQuery;
+use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\PostProcessQueryHookInterface;
 
 /*
@@ -12,10 +11,9 @@ use TYPO3\CMS\Core\Database\PostProcessQueryHookInterface;
 class DatabaseConnectionHook implements PostProcessQueryHookInterface
 {
     /**
-     * @var UpdateQuery
+     * @var DatabaseRecordUpdateQuery
      */
-    protected $updateQuery = null;
-
+    protected $updateQuery;
 
     /**
     * Post-processor for the SELECTquery method.
@@ -31,7 +29,7 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_SELECTquery_postProcessAction(&$select_fields, &$from_table, &$where_clause, &$groupBy, &$orderBy, &$limit, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
-        //Nothing to do here
+        // Nothing to do here
     }
 
     /**
@@ -48,11 +46,12 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
         if (!is_array($GLOBALS['TCA'])) {
             return;
         }
-        $this->registerToplevelUpdate($table, 'uid=' . $parentObject->sql_insert_id());
+
+        $this->getQuery()->updateToplevel($table, (int)$parentObject->sql_insert_id());
 
         //Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
         if ($table == 'tt_content') {
-            $this->registerToplevelUpdate("pages", "uid=" . $fieldsValues['pid']);
+            $this->getQuery()->updateToplevel('pages', (int)$fieldsValues['pid']);
         }
     }
 
@@ -68,6 +67,7 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_INSERTmultipleRows_postProcessAction(&$table, array &$fields, array &$rows, &$noQuoteFields, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        // Nothing to do here
     }
 
     /**
@@ -85,8 +85,13 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
         if (!is_array($GLOBALS['TCA'])) {
             return;
         }
-        $this->registerToplevelUpdate($table, $where);
-        $this->registerSublevelUpdates($table, $where);
+
+        $uid = $this->extractUidFromWhereClause($where);
+
+        if ($uid !== null) {
+            $this->getQuery()->updateToplevel($table, (int)$uid);
+            $this->getQuery()->updateSublevel($table, (int)$uid);
+        }
     }
 
     /**
@@ -102,8 +107,13 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
         if (!is_array($GLOBALS['TCA'])) {
             return;
         }
-        $this->registerToplevelUpdate($table, $where);
-        $this->registerSublevelUpdates($table, $where);
+
+        $uid = $this->extractUidFromWhereClause($where);
+
+        if ($uid !== null) {
+            $this->getQuery()->updateToplevel($table, (int)$uid);
+            $this->getQuery()->updateSublevel($table, (int)$uid);
+        }
     }
 
     /**
@@ -115,58 +125,35 @@ class DatabaseConnectionHook implements PostProcessQueryHookInterface
     */
     public function exec_TRUNCATEquery_postProcessAction(&$table, \TYPO3\CMS\Core\Database\DatabaseConnection $parentObject)
     {
+        // Nothing to do here
     }
 
-
     /**
-     * Adds updates to ES
+     * Extract UID from a where clause
      *
-     * @param string $table
-     * @param string $where
+     * @param string $where the where clause
+     * @return int|null
      */
-    protected function registerToplevelUpdate($table, $where)
+    protected function extractUidFromWhereClause($where)
     {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
+        $uid = null;
+        $matches = [];
+        $count = preg_match('/^uid\s?=\s?(?<uid>[0-9]*)$/', $where, $matches);
 
-        //If table is toplevel, mark the corresponding document(s) as updated
-        if (isset($updateConfiguration['database']['toplevel'][$table])) {
-            $uidMatch = [];
-            if (preg_match("/^uid\s?=\s?([0-9]*)$/", $where, $uidMatch)) {
-                foreach ($updateConfiguration['database']['toplevel'][$table] as $type) {
-                    $this->getQuery()->addUpdate($type, "uid", $uidMatch[1]);
-                }
-            }
+        if ($count === 1) {
+            $uid = (int)$matches['uid'];
         }
+
+        return $uid;
     }
 
     /**
-     * Adds updates to ES
-     *
-     * @param string $table
-     * @param string $where
-     */
-    protected function registerSublevelUpdates($table, $where)
-    {
-        $updateConfiguration = ConfigurationManager::getInstance()->getUpdateConfiguration();
-
-        if (array_key_exists($table, $updateConfiguration['database']['sublevel']) && !empty($updateConfiguration['database']['sublevel'][$table])) {
-            foreach ($updateConfiguration['database']['sublevel'][$table] as $typeName => $path) {
-                $uidMatch = [];
-                if (preg_match("/^uid\s?=\s?([0-9]*)$/", $where, $uidMatch)) {
-                    $this->getQuery()->addUpdate($typeName, $path . ".uid", $uidMatch[1]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns the query and constructs it if necessary
-     * @return UpdateQuery
+     * @return DatabaseRecordUpdateQuery
      */
     protected function getQuery()
     {
         if ($this->updateQuery == null) {
-            $this->updateQuery = new UpdateQuery();
+            $this->updateQuery = new DatabaseRecordUpdateQuery();
         }
 
         return $this->updateQuery;

@@ -4,9 +4,13 @@
 
     Installation, example configuration and setup for your first searchable page
 
-* [Index Management](index-management.md)
+* [Index Setup](index-setup.md)
 
     How to setup indices for multiple languages and apply custom settings
+
+* [Index Updating](index-update.md)
+
+    How to update indices fully or partially
 
 * [Language Handling](language-handling.md)
 
