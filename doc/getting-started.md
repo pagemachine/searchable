@@ -8,16 +8,7 @@ While elasticsearch-php is included via composer, you must take care of a runnin
 ## Installation
 To install searchable, simply require it via *composer* (command line):
 
-    composer require pagemachine/searchable:dev-master
-
-Make sure you have added the bitbucket repository to your `composer.json`:
-
-    "repositories": {
-        "searchable": {
-            "type": "vcs",
-            "url": "git@bitbucket.org:pagemachineag/searchable.git"
-        }
-    },
+    composer require pagemachine/searchable
 
 Now simply install it via Extension Manager or TYPO3 console.
 
@@ -26,8 +17,8 @@ Now simply install it via Extension Manager or TYPO3 console.
 * Include **Typoscript** and **Constants** into your template (static includes)
 * Create a search page and and *Search* Plugin element inside
 * Configure your **indices** and **indexers** (see the next chapter)
-* Run the command controller to create the configured indices (Command TBA)
-* Run `[webroot]/typo3/cli_dispatch.phpsh index:indexFull` (runs all defined Indexers)
+* Run the `[webroot]/typo3/cli_dispatch.phpsh searchable:setup` to create the configured indices
+* Run `[webroot]/typo3/cli_dispatch.phpsh searchable:indexFull` (runs all defined Indexers)
 
 
 ## Example Configuration
