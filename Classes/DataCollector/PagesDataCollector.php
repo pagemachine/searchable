@@ -132,6 +132,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
     /**
      * Unset pid (works differently with pages and should not be taken into account)
+     * Add doktype where clause
      * @todo Check for rootline if we want to be extra precise
      *
      * @param  array $updateUidList
@@ -140,6 +141,8 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     public function getUpdatedRecords($updateUidList)
     {
         $this->config['pid'] = null;
+
+        $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
             yield $record;
