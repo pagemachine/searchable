@@ -98,16 +98,7 @@ class BackendController extends ActionController
         if ($url != '') {
             $result = $this->request($url, $body);
 
-            $this->view->assign(
-                "response",
-                print_r(
-                    json_decode(
-                        $result['body'],
-                        true
-                    ),
-                    true
-                )
-            );
+            $this->view->assign('response', json_decode($result['body'], true));
 
             switch ($result['status']) {
                 case '200':

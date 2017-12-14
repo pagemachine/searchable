@@ -26,9 +26,7 @@
 			<div class="panel panel-{color}">
 				<div class="panel-heading">Status code: {status}</div>
 				<f:if condition="{response}">
-					<div class="panel-body">
-						<pre>{response}</pre>
-					</div>
+					{response -> f:debug(maxDepth: 50, inline: 1, title: 'Response')}
 				</f:if>
 			</div>
 
