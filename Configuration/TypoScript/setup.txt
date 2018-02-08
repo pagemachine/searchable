@@ -22,6 +22,9 @@ plugin.tx_searchable {
             showPreview = {$plugin.tx_searchable.settings.result.showPreview}
         }
     }
+    features {
+        requireCHashArgumentForActionArguments = 0
+    }
 }
 
 plugin.tx_searchable_searchbar < plugin.tx_searchable
