@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Eid;
 
+use PAGEmachine\Searchable\Utility\TsfeUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -24,7 +25,7 @@ class LinkBuilder
     public function __construct()
     {
         \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
-        $this->createTSFE();
+        TsfeUtility::createTSFE();
         $this->contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
     }
 
@@ -91,7 +92,6 @@ class LinkBuilder
             return $url;
         }
     }
-
 
     /**
      * Initializes TSFE. This is necessary to have proper environment for typoLink.
