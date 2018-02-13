@@ -1,6 +1,7 @@
+{namespace s=PAGEmachine\Searchable\ViewHelpers}
 <f:layout name="Default" />
 <f:section name="main">
-	<form class="form-inline searchable-searchform" id="searchable-ajaxform">
+	<form class="form-inline searchable-searchform" id="searchable-ajaxform" data-lang="{s:siteLanguage()}">
 		<div class="form-group term-group">
 			<label for="term"><f:translate key="searchbar.label">Search</f:translate>: </label>
 			<input type="text" name="tx_searchable[term]" id="term" class="form-control" value="{term}" placeholder="{f:translate(key:'searchbar.label')}" type="search" autocomplete="off" />
