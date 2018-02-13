@@ -33,6 +33,9 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                     ],
                 ],
             ],
+            'htmlStrip' => [
+                'className' => \PAGEmachine\Searchable\Feature\HtmlStripFeature::class,
+            ],
         ],
         'subCollectors' => [
             'content' => [
