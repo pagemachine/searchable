@@ -26,6 +26,7 @@ class SiteLanguageViewHelper extends AbstractViewHelper
 
     /**
      * @return TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @codeCoverageIgnore
      */
     public function getTypoScriptFrontendController()
     {
