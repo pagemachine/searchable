@@ -1,11 +1,11 @@
 <?php
 namespace PAGEmachine\Searchable\ViewHelpers;
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * SiteLanguageViewHelper
