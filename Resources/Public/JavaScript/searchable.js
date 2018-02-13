@@ -19,6 +19,8 @@
 
         var formObject = $(this);
 
+        var lang = formObject.data('lang');
+
         var lastPage = 1;
         var currentPage = 1;
 
@@ -127,7 +129,8 @@
                 data: {
                     term: searchTerm,
                     options: {
-                        page : currentPage
+                        page : currentPage,
+                        lang : lang
                     }
                 },
                 success: function(data, textStatus, jqXHR) {

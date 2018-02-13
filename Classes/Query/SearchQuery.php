@@ -145,6 +145,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     public function setPage($page)
     {
         $this->from = (int)($page - 1) * $this->size;
+        return $this;
     }
 
 

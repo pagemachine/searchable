@@ -25,7 +25,8 @@ class Search extends AbstractEidHandler
 
         $query
             ->setTerm($term)
-            ->setPage($this->options['page'] ?: 1);
+            ->setPage($this->options['page'] ?: 1)
+            ->setLanguage($this->options['lang'] ?: 0);
 
         $result = $query->execute();
 
