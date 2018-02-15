@@ -50,19 +50,27 @@ class FileIndexer extends TcaIndexer
                 foreach ($record[$this->config['fileField']] as $fileRecord) {
                     $file = $resourceFactory->getFileObject($fileRecord['uid']);
 
-                    $records[$key]['attachments'][] = [
-                        'filename' => $file->getProperty('name'),
-                        'data' => base64_encode($file->getContents()),
-                    ];
+                    try {
+                        $records[$key]['attachments'][] = [
+                            'filename' => $file->getProperty('name'),
+                            'data' => base64_encode($file->getContents()),
+                        ];
+                    } catch (\Exception $e) {
+                        // The actual file on disk does not exist for this file record.
+                        // This should be logged, but for now we just skip it.
+                        unset($records[$key]);
+                        continue;
+                    }
                 }
 
                 unset($records[$key][$this->config['fileField']]);
             }
         }
+        if (!empty($records)) {
+            $this->query->addRows('uid', $records);
 
-        $this->query->addRows('uid', $records);
-
-        $this->query->execute();
-        $this->query->resetBody();
+            $this->query->execute();
+            $this->query->resetBody();
+        }
     }
 }
