@@ -70,8 +70,47 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
     {
         $domain = ExtconfService::getInstance()->getFrontendDomain();
 
-        $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
+        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8001000) {
+            return $this->doRequestLegacy($domain, $configuration);
+        }
+        else {
+            return $this->doRequest($domain, $configuration);
+        }
+    }
 
+    /**
+     * The actual request (for TYPO3 7)
+     *
+     * @param  string $domain
+     * @param  array $configuration
+     * @return array
+     */
+    public function doRequestLegacy($domain, $configuration)
+    {
+        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                \TYPO3\CMS\Core\Http\HttpRequest::class,
+                $domain . "?eID=searchable_linkbuilder"
+        );
+
+        $request->setMethod('POST');
+        $request->addPostParameter('configuration', $configuration);
+
+        $result = $request->send();
+        $content = json_decode($result->getBody());
+
+        return $content;
+    }
+
+    /**
+     * The actual request (since TYPO3 8.1)
+     *
+     * @param  string $domain
+     * @param  array $configuration
+     * @return array
+     */
+    public function doRequest($domain, $configuration)
+    {
+        $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
         $response = $requestFactory->request(
             $domain,
             'POST',
