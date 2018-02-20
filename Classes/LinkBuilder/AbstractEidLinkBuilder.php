@@ -72,8 +72,7 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
 
         if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8001000) {
             return $this->doRequestLegacy($domain, $configuration);
-        }
-        else {
+        } else {
             return $this->doRequest($domain, $configuration);
         }
     }
@@ -88,8 +87,8 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
     public function doRequestLegacy($domain, $configuration)
     {
         $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                \TYPO3\CMS\Core\Http\HttpRequest::class,
-                $domain . "?eID=searchable_linkbuilder"
+            \TYPO3\CMS\Core\Http\HttpRequest::class,
+            $domain . "?eID=searchable_linkbuilder"
         );
 
         $request->setMethod('POST');
