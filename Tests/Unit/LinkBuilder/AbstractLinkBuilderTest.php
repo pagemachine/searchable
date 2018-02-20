@@ -26,12 +26,13 @@ class AbstractLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
-    public function createsFixedLinkConfiguration()
+    public function createsFixedLinkConfigurationWithLanguage()
     {
         $record = [];
 
         $configuration = [
             'titleField' => 'footitle',
+            'languageParam' => 'LANG',
             'fixedParts' => [
                 'someUid' => 2,
                 'additionalParams' => ['foo' => 'bar'],
@@ -42,11 +43,11 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
         $expectedLinkConfiguration = [
             'someUid' => 2,
-            'additionalParams' => ['foo' => 'bar'],
+            'additionalParams' => ['foo' => 'bar', 'LANG' => 0],
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record);
+        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
     }
@@ -57,6 +58,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     public function replacesDynamicFields()
     {
         $configuration = [
+            'languageParam' => 'L',
             'fixedParts' => [],
             'dynamicParts' => [
                 'pageUid' => 'page',
@@ -68,10 +70,13 @@ class AbstractLinkBuilderTest extends UnitTestCase
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record);
+        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertEquals([
             'pageUid' => '123',
+            'additionalParams' => [
+                'L' => 0,
+            ],
         ], $linkConfiguration);
     }
 
@@ -100,7 +105,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
         ];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record);
+        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
         $this->assertArraySubset(['additionalParams' => ['param1' => 'value1', 'param2' => 'value2']], $linkConfiguration);
@@ -121,7 +126,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
         $record = [];
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record);
+        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
     }

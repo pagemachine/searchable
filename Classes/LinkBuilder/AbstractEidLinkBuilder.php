@@ -23,21 +23,23 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
     protected static $defaultConfiguration = [
         'titleField' => 'title',
         'fixedParts' => [],
+        'languageParam' => 'L',
     ];
 
     /**
      * Creates links for a batch of records
      *
      * @param  array $records
+     * @param int $language
      * @return array $records
      */
-    public function createLinksForBatch($records)
+    public function createLinksForBatch($records, $language = 0)
     {
         $configurationArray = [];
         $metaField = ExtconfService::getInstance()->getMetaFieldname();
 
         foreach ($records as $key => $record) {
-            $linkConfiguration = $this->createLinkConfiguration($record);
+            $linkConfiguration = $this->createLinkConfiguration($record, $language);
             $linkConfiguration = $this->convertToTypoLinkConfig($linkConfiguration, $record);
 
             $configurationArray[$key] = $linkConfiguration;

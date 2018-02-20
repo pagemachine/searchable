@@ -84,7 +84,7 @@ class PagesIndexerTest extends UnitTestCase
         $this->pagesCollector->getRecords()->willReturn($pageList);
 
 
-        $this->linkBuilder->createLinksForBatch(Argument::type("array"))->willReturn([
+        $this->linkBuilder->createLinksForBatch(Argument::type("array"), 0)->willReturn([
             [
                 'uid' => '3',
                 'doktype' => '1',

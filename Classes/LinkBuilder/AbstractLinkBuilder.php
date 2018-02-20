@@ -21,6 +21,7 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      */
     protected static $defaultConfiguration = [
         'fixedParts' => [],
+        'languageParam' => 'L',
     ];
 
     /**
@@ -52,11 +53,14 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      * Creates merged link configuration
      *
      * @param  array $record
+     * @param int $language
      * @return array
      */
-    public function createLinkConfiguration($record)
+    public function createLinkConfiguration($record, $language)
     {
         $linkConfiguration = $this->config['fixedParts'];
+
+        $linkConfiguration = $this->addLanguageParameter($linkConfiguration, $language);
 
         if (!empty($this->config['dynamicParts'])) {
             $dynamicConfiguration = $this->replaceFieldsRecursive($this->config['dynamicParts'], $record);
@@ -64,6 +68,20 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
             $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $dynamicConfiguration);
         }
 
+        return $linkConfiguration;
+    }
+
+    /**
+     * Adds a language parameter to the link config
+     *
+     * @param array $linkConfiguration
+     * @param int $language
+     *
+     * @return array
+     */
+    protected function addLanguageParameter($linkConfiguration, $language)
+    {
+        $linkConfiguration['additionalParams'][$this->config['languageParam']] = $language;
         return $linkConfiguration;
     }
 
