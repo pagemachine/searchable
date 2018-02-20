@@ -37,13 +37,14 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
     {
         $records = [];
 
-        foreach ($record[$fieldname] as $rawChild) {
-            // This childCollector call is actually redundant, as the FormEngine already delivers the whole child record.
-            // However, it needs to be called to filter out fields and call further subCollectors.
-            //@TODO: Restructure DataCollectors and RelationResolvers to improve this
-            $records[] = $childCollector->getRecord($rawChild['uid']);
+        if (!empty($record[$fieldname])) {
+            foreach ($record[$fieldname] as $rawChild) {
+                // This childCollector call is actually redundant, as the FormEngine already delivers the whole child record.
+                // However, it needs to be called to filter out fields and call further subCollectors.
+                //@TODO: Restructure DataCollectors and RelationResolvers to improve this
+                $records[] = $childCollector->getRecord($rawChild['uid']);
+            }
         }
-
         return $records;
     }
 }
