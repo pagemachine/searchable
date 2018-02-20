@@ -25,6 +25,7 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
      */
     protected static $defaultConfiguration = [
         'titleField' => '',
+        'languageParam' => 'L',
         'fixedParts' => [
             'pageUid' => null,
             'additionalParams' => [],

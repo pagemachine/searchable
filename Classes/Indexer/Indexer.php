@@ -353,7 +353,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function sendBatch($records)
     {
-        $records = $this->linkBuilder->createLinksForBatch($records);
+        $records = $this->linkBuilder->createLinksForBatch($records, $this->getLanguage());
 
         $this->query->addRows('uid', $records);
 
