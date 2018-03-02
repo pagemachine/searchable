@@ -281,9 +281,9 @@ class SearchableCommandController extends CommandController
     {
         $originalEnvironment = [];
 
-        if (!empty($environment['languageKey'])) {
-            $originalEnvironment['languageKey'] = $GLOBALS['BE_USER']->uc['lang'];
-            $GLOBALS['BE_USER']->uc['lang'] = $environment['languageKey'];
+        if (!empty($environment['language'])) {
+            $originalEnvironment['language'] = $GLOBALS['BE_USER']->uc['lang'];
+            $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
         }
 
         if (!empty($environment['locale'])) {

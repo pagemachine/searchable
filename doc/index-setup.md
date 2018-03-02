@@ -29,7 +29,7 @@ You can find a list of available settings in the [Index Modules](https://www.ela
 
 Each index can have specific environment settings which are applied before each index is updated. The following environment settings are supported:
 
-* `languageKey`: a two-lettered language ISO code as required for resource translations (`locallang.xlf`) in TYPO3, e.g. `de` or `ja`
+* `language`: a two-lettered language ISO code as required for resource translations (`locallang.xlf`) in TYPO3, e.g. `de` or `ja`
 * `locale`: an identifier of an installed system locale, e.g. `de_DE.utf-8` or `ja_JP.utf-8`
 
 Setting these is essential e.g. for proper translations in preview rendering.
@@ -42,7 +42,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
   '0' => [
     'name' => 'typo3',
     'environment' => [
-      'languageKey' => 'de',
+      'language' => 'de',
       'locale' => 'de_DE.utf-8',
     ],
     'settings' => [

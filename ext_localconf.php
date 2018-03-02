@@ -63,7 +63,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'updateIndex' => [
         'name' => 'searchable_updates',
     ],
-    //Add indices here. Default format: languagekey => index
+    //Add indices here. Default format: language UID => index configuration
     'indices' => [],
     //Add your indexer configurations here. Each indexer represents a toplevel object type like news, pages etc.
     'indexers' => [],
