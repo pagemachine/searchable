@@ -73,6 +73,23 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
+     * Returns the environment for a given index
+     *
+     * @param string $indexName
+     * @return array $environment
+     */
+    public static function getIndexEnvironment($indexName)
+    {
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $index) {
+            if ($index['name'] == $indexName && isset($index['environment'])) {
+                return $index['environment'];
+            }
+        }
+
+        return [];
+    }
+
+    /**
      * Returns the default index settings
      *
      * @return array
