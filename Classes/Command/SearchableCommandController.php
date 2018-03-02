@@ -213,21 +213,22 @@ class SearchableCommandController extends CommandController
         $this->outputLine();
 
         foreach ($this->scheduledIndexers as $language => $indexers) {
-            $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
-            $originalEnvironment = $this->applyEnvironment($environment);
-
             if (!empty($indexers)) {
                 $this->outputLine("<comment>Language %s:</comment>", [$language]);
+
+                $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
+                $originalEnvironment = $this->applyEnvironment($environment);
 
                 foreach ($indexers as $indexer) {
                     $this->runSingleIndexer($indexer);
                 }
+
+                $this->applyEnvironment($originalEnvironment);
+
                 $this->outputLine();
             } else {
                 $this->outputLine("<comment>WARNING: No indexers found for language %s. Doing nothing.</comment>", [$language]);
             }
-
-            $this->applyEnvironment($originalEnvironment);
         }
 
         if ($this->type == null) {
