@@ -25,6 +25,33 @@ By default the settings will be merged with the default settings(`$GLOBALS['TYPO
 
 You can find a list of available settings in the [Index Modules](https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html) section of the official ES documentation. Some common examples will be explained here.
 
+## Environment settings
+
+Each index can have specific environment settings which are applied before each index is updated. The following environment settings are supported:
+
+* `language`: a two-lettered language ISO code as required for resource translations (`locallang.xlf`) in TYPO3, e.g. `de` or `ja`
+* `locale`: an identifier of an installed system locale, e.g. `de_DE.utf-8` or `ja_JP.utf-8`
+
+Setting these is essential e.g. for proper translations in preview rendering.
+
+This is how the index configuration could look like to set up the environment for a German index:
+
+```
+#!php
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
+  '0' => [
+    'name' => 'typo3',
+    'environment' => [
+      'language' => 'de',
+      'locale' => 'de_DE.utf-8',
+    ],
+    'settings' => [
+      // ...
+    ]
+  ],
+];
+```
+
 ## Setting default Analyzers
 
 [Analyzers](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html) are very important to provide more intelligent search results, f.ex. by taking the current language into account. A recommended analysis setting for a 2-language-setup could look like this:

@@ -216,12 +216,18 @@ class SearchableCommandController extends CommandController
             if (!empty($indexers)) {
                 $this->outputLine("<comment>Language %s:</comment>", [$language]);
 
+                $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
+                $originalEnvironment = $this->applyEnvironment($environment);
+
                 foreach ($indexers as $indexer) {
                     $this->runSingleIndexer($indexer);
                 }
+
+                $this->applyEnvironment($originalEnvironment);
+
                 $this->outputLine();
             } else {
-                $this->outputLine("<comment>WARNING: No indexers found for language " . $language . ". Doing nothing.</comment>");
+                $this->outputLine("<comment>WARNING: No indexers found for language %s. Doing nothing.</comment>", [$language]);
             }
         }
 
@@ -263,6 +269,29 @@ class SearchableCommandController extends CommandController
             }
         }
         $this->output->progressFinish();
+    }
+
+    /**
+     * Apply the given environment, e.g. language and locale
+     *
+     * @param array $environment
+     * @return array the original environment to be restored with another call
+     */
+    protected function applyEnvironment(array $environment)
+    {
+        $originalEnvironment = [];
+
+        if (!empty($environment['language'])) {
+            $originalEnvironment['language'] = $GLOBALS['BE_USER']->uc['lang'];
+            $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
+        }
+
+        if (!empty($environment['locale'])) {
+            $originalEnvironment['locale'] = setlocale(LC_ALL, 0);
+            setlocale(LC_ALL, $environment['locale']);
+        }
+
+        return $originalEnvironment;
     }
 
     /**
