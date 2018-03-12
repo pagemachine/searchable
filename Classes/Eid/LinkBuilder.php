@@ -92,21 +92,4 @@ class LinkBuilder
             return $url;
         }
     }
-
-    /**
-     * Initializes TSFE. This is necessary to have proper environment for typoLink.
-     *
-     * @return    void
-     */
-    protected function createTSFE()
-    {
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 1, '');
-        $GLOBALS['TSFE']->connectToDB();
-        $GLOBALS['TSFE']->initFEuser();
-        $GLOBALS['TSFE']->determineId();
-        $GLOBALS['TSFE']->initTemplate();
-        $GLOBALS['TSFE']->getConfigArray();
-        // Set linkVars, absRefPrefix, etc
-        \TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
-    }
 }
