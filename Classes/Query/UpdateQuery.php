@@ -87,6 +87,7 @@ class UpdateQuery extends AbstractQuery
 
         $this->parameters['type'] = $type;
         $this->parameters['body'] = [
+            'size' => '9999',
             'query' => [
                 'match_all' => new \stdClass(),
             ],
@@ -118,6 +119,7 @@ class UpdateQuery extends AbstractQuery
             $this->parameters['index'] = $index;
             $this->parameters['body'] = [
                 '_source' => false,
+                'size' => '9999',
                 'query' => [
                     'bool' => [
                         'should' => $updateParams,
