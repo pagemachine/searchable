@@ -57,15 +57,20 @@ module.tx_searchable {
 page.includeCSS.searchable = EXT:searchable/Resources/Public/Css/searchable.css
 
 # Include JQuery if activated
+[globalVar = LIT:1 = {$plugin.tx_searchable.settings.includejQuery}]
 page.includeJSFooterlibs.jQuery = EXT:searchable/Resources/Public/JavaScript/jquery-3.2.1.min.js
-page.includeJSFooterlibs.jQuery.if.isTrue = {$plugin.tx_searchable.settings.includejQuery}
+[global]
 
 # Include Autocomplete if activated
+[globalVar = LIT:1 = {$plugin.tx_searchable.settings.includejQueryAutocomplete}]
 page.includeJSFooter.jQueryAutocomplete = EXT:searchable/Resources/Public/JavaScript/jquery.autocomplete.min.js
-page.includeJSFooter.jQueryAutocomplete.if.isTrue = {$plugin.tx_searchable.settings.includejQueryAutocomplete}
+[global]
 
+# Include mustache if activated
+[globalVar = LIT:1 = {$plugin.tx_searchable.settings.includeMustache}]
 page.includeJSFooterlibs.mustache = EXT:searchable/Resources/Public/JavaScript/mustache.min.js
-page.includeJSFooterlibs.mustache.if.isTrue = {$plugin.tx_searchable.settings.includeMustache}
+[global]
 
 page.includeJSFooter.URI = EXT:searchable/Resources/Public/JavaScript/URI.js
 page.includeJSFooter.searchable = EXT:searchable/Resources/Public/JavaScript/searchable.js
+
