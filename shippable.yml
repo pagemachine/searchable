@@ -23,6 +23,7 @@ build:
   ci:
     - npm install
     - npm install -g bash-task-runner
+    - runner fix_php56
     - runner build
 
   on_success:
