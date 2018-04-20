@@ -21,6 +21,7 @@ class DynamicFlexFormHook
      */
     protected $allowedListTypes = [
         'searchable_searchbar',
+        'searchable_livesearchbar',
         'searchable_results',
     ];
 
@@ -31,6 +32,7 @@ class DynamicFlexFormHook
      */
     protected $allowedIdentifiers = [
         'searchable_searchbar,list',
+        'searchable_livesearchbar,list',
         'searchable_results,list',
     ];
 

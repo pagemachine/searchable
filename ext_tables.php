@@ -17,6 +17,7 @@ if (!defined('TYPO3_MODE')) {
     'Searchable: Live Search bar (AJAX)'
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('searchable_searchbar', 'FILE:EXT:' . $_EXTKEY . '/Configuration/Flexforms/Searchbar.xml');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('searchable_livesearchbar', 'FILE:EXT:' . $_EXTKEY . '/Configuration/Flexforms/LiveSearchbar.xml');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('searchable_results', 'FILE:EXT:' . $_EXTKEY . '/Configuration/Flexforms/Results.xml');
 
 
