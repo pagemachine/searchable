@@ -20,6 +20,7 @@
         var formObject = $(this);
 
         var lang = formObject.data('lang');
+        var features = formObject.data('features');
 
         var lastPage = 1;
         var currentPage = 1;
@@ -130,7 +131,8 @@
                     term: searchTerm,
                     options: {
                         page : currentPage,
-                        lang : lang
+                        lang : lang,
+                        features : features
                     }
                 },
                 success: function(data, textStatus, jqXHR) {

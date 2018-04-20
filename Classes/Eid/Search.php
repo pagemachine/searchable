@@ -28,6 +28,11 @@ class Search extends AbstractEidHandler
             ->setPage($this->options['page'] ?: 1)
             ->setLanguage($this->options['lang'] ?: 0);
 
+        if (isset($this->options['features'])) {
+            $query->setPluginMode(true)
+            ->setFeatureSettings($this->options['features']);
+        }
+
         $result = $query->execute();
 
         return [
