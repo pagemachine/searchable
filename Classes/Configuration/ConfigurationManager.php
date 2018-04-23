@@ -71,8 +71,11 @@ class ConfigurationManager implements SingletonInterface
             $mapping = [];
 
             foreach ($configuration as $key => $indexerConfiguration) {
+
+                $type = $indexerConfiguration['config']['type'];
+
                 $configuration[$key] = $this->processIndexerLevel($indexerConfiguration);
-                $mapping[$key] = $configuration[$key]['config']['mapping'];
+                $mapping[$type] = $configuration[$key]['config']['mapping'];
             }
 
             $this->processedConfiguration = $configuration;
