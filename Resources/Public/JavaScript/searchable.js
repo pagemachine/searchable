@@ -11,6 +11,7 @@
             delay: 300,
             infiniteScroll: true,
             callbacks: {
+                searchSuccess: false, //Callback on xhr search success
                 modifyResultList: false, //Callback after the results are fetched
                 modifySingleResult: false //Callback before a single result is rendered. Takes one argument: "data" and should return it
             }
@@ -136,6 +137,16 @@
                     }
                 },
                 success: function(data, textStatus, jqXHR) {
+
+                    if (typeof(settings.callbacks.searchSuccess) === "function") {
+
+                        settings.callbacks.searchSuccess({
+                            term: searchTerm,
+                            page: currentPage,
+                            lang: lang,
+                            features: features,
+                        }, data, this);
+                    }
 
                     lastTerm = searchTerm;
                     lastPage = currentPage;
