@@ -177,6 +177,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         foreach ($updateUidList as $uid) {
             $queryParts = $this->buildUidListQueryParts(sprintf('%s.uid = %d', $this->config['table'], $uid));
 
+            $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'];
+            $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['languageField'];
+
             $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
                 implode(',', $queryParts['select']),
                 implode(',', $queryParts['from']),
@@ -184,7 +187,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             );
 
             if ($record) {
-                $fullRecord = $this->getRecord($record['uid']);
+                $sourceLanguageUid = $record[$tca['ctrl']['languageField']] > 0 ? $record[$tca['ctrl']['transOrigPointerField']] : $record['uid'];
+
+                $fullRecord = $this->getRecord($sourceLanguageUid);
 
                 if (!empty($fullRecord)) {
                     yield $fullRecord;
