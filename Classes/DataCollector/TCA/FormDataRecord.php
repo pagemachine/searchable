@@ -70,8 +70,8 @@ class FormDataRecord implements SingletonInterface
         //Be nice and catch all errors related to inconsistent data (sometimes strange things happen with extbase relations)
         } catch (DatabaseRecordException $e) {
             $data = [];
-        } // Catch errors if translation parent is not found
-        catch (DatabaseDefaultLanguageException $e) {
+        // Catch errors if translation parent is not found
+        } catch (DatabaseDefaultLanguageException $e) {
             $data = [];
         }
         return $data;
