@@ -64,7 +64,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
                     'additionalParams' => [
                         'foo' => 'bar',
                     ],
-                ]
+                ],
             ],
             'translation language' => [
                 1,
@@ -74,7 +74,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
                         'foo' => 'bar',
                         'LANG' => 1,
                     ],
-                ]
+                ],
             ],
         ];
     }
