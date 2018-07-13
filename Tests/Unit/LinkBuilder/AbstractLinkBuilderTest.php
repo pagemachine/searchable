@@ -25,8 +25,12 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider languagesAndLinkConfigurations
+     *
+     * @param int $language
+     * @param array $expectedLinkConfiguration
      */
-    public function createsFixedLinkConfigurationWithLanguage()
+    public function createsFixedLinkConfigurationWithLanguage($language, array $expectedLinkConfiguration)
     {
         $record = [];
 
@@ -41,15 +45,38 @@ class AbstractLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $expectedLinkConfiguration = [
-            'someUid' => 2,
-            'additionalParams' => ['foo' => 'bar', 'LANG' => 0],
-        ];
-
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
+        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, $language);
 
         $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
+    }
+
+    /**
+     * @return array
+     */
+    public function languagesAndLinkConfigurations()
+    {
+        return [
+            'default language' => [
+                0,
+                [
+                    'someUid' => 2,
+                    'additionalParams' => [
+                        'foo' => 'bar',
+                    ],
+                ],
+            ],
+            'translation language' => [
+                1,
+                [
+                    'someUid' => 2,
+                    'additionalParams' => [
+                        'foo' => 'bar',
+                        'LANG' => 1,
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -71,13 +98,11 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
-
-        $this->assertEquals([
+        $expectedLinkConfiguration = [
             'pageUid' => '123',
-            'additionalParams' => [
-                'L' => 0,
-            ],
-        ], $linkConfiguration);
+        ];
+
+        $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
     }
 
 
