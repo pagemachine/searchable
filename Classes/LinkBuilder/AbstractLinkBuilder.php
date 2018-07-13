@@ -72,7 +72,7 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
     }
 
     /**
-     * Adds a language parameter to the link config
+     * Adds a language parameter to the link config for translations
      *
      * @param array $linkConfiguration
      * @param int $language
@@ -81,7 +81,10 @@ abstract class AbstractLinkBuilder implements DynamicConfigurationInterface
      */
     protected function addLanguageParameter($linkConfiguration, $language)
     {
-        $linkConfiguration['additionalParams'][$this->config['languageParam']] = $language;
+        if ($language > 0) {
+            $linkConfiguration['additionalParams'][$this->config['languageParam']] = $language;
+        }
+        
         return $linkConfiguration;
     }
 
