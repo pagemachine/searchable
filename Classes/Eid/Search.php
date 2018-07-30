@@ -22,15 +22,18 @@ class Search extends AbstractEidHandler
     protected function getResults($term)
     {
         $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $page = (int)($this->options['page'] ?: 1);
+        $language = (int)($this->options['lang'] ?: 0);
 
         $query
             ->setTerm($term)
-            ->setPage($this->options['page'] ?: 1)
-            ->setLanguage($this->options['lang'] ?: 0);
+            ->setPage($page)
+            ->setLanguage($language);
 
         if (isset($this->options['features'])) {
-            $query->setPluginMode(true)
-            ->setFeatureSettings($this->options['features']);
+            $query
+                ->setPluginMode(true)
+                ->setFeatureSettings($this->options['features']);
         }
 
         $result = $query->execute();
@@ -38,7 +41,7 @@ class Search extends AbstractEidHandler
         return [
             'results' => $result,
             'totalPages' => $query->getPageCount(),
-            'currentPage' => $this->options['page'],
+            'currentPage' => $page,
         ];
     }
 }
