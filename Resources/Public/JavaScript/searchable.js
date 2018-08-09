@@ -1,5 +1,8 @@
 (function( $ ) {
 
+    // Override Mustache tags since "{" and "}" are evaluated by Fluid
+    Mustache.tags = ['[[', ']]'];
+
     $.fn.searchable = function(options){
 
         var settings = $.extend({
@@ -44,9 +47,6 @@
             if (formObject.length != 0) {
 
                 template = settings.template;
-
-                // Prepare template
-                Mustache.parse(template, ['[[', ']]']);
 
                 //Prevent form submit
                 formObject.on("submit", function(e) {
