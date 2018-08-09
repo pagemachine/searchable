@@ -278,6 +278,10 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $records = [];
 
         foreach ($this->dataCollector->getRecords() as $fullRecord) {
+            if (empty($fullRecord)) {
+                continue;
+            }
+
             $records[] = $this->addSystemFields($fullRecord);
 
             $counter++;
