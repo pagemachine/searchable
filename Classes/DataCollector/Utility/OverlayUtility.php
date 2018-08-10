@@ -95,14 +95,15 @@ class OverlayUtility implements SingletonInterface
      *
      * @param  array          $record
      * @param  int            $language
+     * @param  int            $overlayMode
      * @return array
      */
-    public function pagesLanguageOverlay($record, $language)
+    public function pagesLanguageOverlay($record, $language, $overlayMode = 1)
     {
         $rawOverlay = $this->pageRepository->getPageOverlay($record, $language);
 
-        // PageRepository says this is not a valid record in this language, so don't return it
-        if ($rawOverlay == null) {
+        // Simulate disabled overlay mode for pages
+        if ((int)$overlayMode === 0 && $language > 0 && empty($rawOverlay['_PAGES_OVERLAY'])) {
             return [];
         }
 

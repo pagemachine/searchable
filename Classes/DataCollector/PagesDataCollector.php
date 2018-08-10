@@ -158,8 +158,8 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      * @param  array $record
      * @return array
      */
-    protected function languageoverlay($record)
+    protected function languageOverlay($record)
     {
-        return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language);
+        return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language, $this->config['sysLanguageOverlay']);
     }
 }
