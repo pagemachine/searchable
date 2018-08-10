@@ -278,6 +278,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $records = [];
 
         foreach ($this->dataCollector->getRecords() as $fullRecord) {
+            //@TODO: move to data collectors and add "yield from []" at the end there as soon as PHP7 is a requirement
             if (empty($fullRecord)) {
                 continue;
             }
