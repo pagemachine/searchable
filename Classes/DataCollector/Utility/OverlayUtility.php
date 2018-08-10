@@ -101,11 +101,6 @@ class OverlayUtility implements SingletonInterface
     {
         $rawOverlay = $this->pageRepository->getPageOverlay($record, $language);
 
-        // PageRepository says this is not a valid record in this language, so don't return it
-        if ($rawOverlay == null) {
-            return [];
-        }
-
         return $rawOverlay;
     }
 
