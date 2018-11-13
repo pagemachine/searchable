@@ -75,7 +75,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
         if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
             $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', 'tt_content', 'pid = ' . $pid . ' AND ' . $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] . ' IN(0,-1)' . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
             return $content;
-        }else{
+        } else {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
             $queryBuilder->getRestrictions()
                ->removeAll()
@@ -84,8 +84,8 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
             $queryBuilder->select('uid')
             ->from('tt_content')
             ->where(
-               $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
-               $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], '0,-1')
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
+                $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], '0,-1')
             );
             return $queryBuilder->execute();
         }

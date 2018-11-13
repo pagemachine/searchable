@@ -35,12 +35,9 @@ class TsfeUtility
             // Set linkVars, absRefPrefix, etc
             if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
                 \TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
-            }else{
+            } else {
                 $GLOBALS['TSFE']->preparePageContentGeneration();
             }
-
-
-
         }
     }
 }
