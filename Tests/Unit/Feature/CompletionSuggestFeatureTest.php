@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
-use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

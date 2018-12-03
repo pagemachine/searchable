@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 
-use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

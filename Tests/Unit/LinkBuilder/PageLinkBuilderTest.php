@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
-use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

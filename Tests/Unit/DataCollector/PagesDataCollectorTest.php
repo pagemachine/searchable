@@ -1,10 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use Prophecy\Argument;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;

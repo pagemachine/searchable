@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
-use PAGEmachine\Searchable\Feature\ResultHighlightFeature;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PAGEmachine\Searchable\Feature\ResultHighlightFeature;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

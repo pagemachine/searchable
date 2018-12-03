@@ -1,13 +1,13 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestDataCollectorFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestFeatureFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestIndexerFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestMapperFixture;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
