@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

@@ -7,7 +7,7 @@ use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use Prophecy\Argument;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**

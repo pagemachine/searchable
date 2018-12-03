@@ -6,7 +6,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
  */
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**

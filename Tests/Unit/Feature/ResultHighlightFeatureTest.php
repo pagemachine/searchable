@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\ResultHighlightFeature;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

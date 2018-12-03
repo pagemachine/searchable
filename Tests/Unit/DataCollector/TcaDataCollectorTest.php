@@ -8,7 +8,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\Argument;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

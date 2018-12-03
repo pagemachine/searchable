@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\Indexer\Indexer;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Query\BulkQuery;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
