@@ -8,9 +8,9 @@ use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
-use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -168,7 +168,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
                 yield $this->getRecord($rawRecord['uid']);
             }
-        }else{
+        } else {
             $queryBuilder = $this->buildUidListQueryBuilder(true);
 
             $statement = $queryBuilder->execute();
@@ -177,8 +177,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 yield $this->getRecord($rawRecord['uid']);
             }
         }
-
-
     }
 
     /**
@@ -203,7 +201,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                     implode(',', $queryParts['from']),
                     implode('', $queryParts['where'])
                 );
-            }else{
+            } else {
                 $queryBuilder = $this->buildUidListQueryBuilder();
                 $queryBuilder->andWhere(
                     $queryBuilder->expr()->eq($this->config['table'] . '.uid', $queryBuilder->createNamedParameter($uid))
@@ -211,7 +209,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
                 $queryBuilder->addSelect(...[
                     $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
-                    $this->config['table'] . '.' . $tca['ctrl']['languageField']
+                    $this->config['table'] . '.' . $tca['ctrl']['languageField'],
                 ]);
 
                 $statement = $queryBuilder->execute();
@@ -363,9 +361,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
 
         //PID restriction
-        if($this->config['pid'] !== null){
+        if ($this->config['pid'] !== null) {
             $whereExpressions[] = $queryBuilder->expr()->eq($this->config['table'] . '.pid', $queryBuilder->createNamedParameter($this->config['pid']));
-
         }
 
         //LanguageRestriction
