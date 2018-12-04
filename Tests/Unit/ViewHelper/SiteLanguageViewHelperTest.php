@@ -7,6 +7,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
 
 use PAGEmachine\Searchable\ViewHelpers\SiteLanguageViewHelper;
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -27,6 +28,7 @@ class SiteLanguageViewHelperTest extends TestCase
         $this->viewHelper = $this->getMockBuilder(SiteLanguageViewHelper::class)
             ->setMethods([
                     'getTypoScriptFrontendController',
+                    'getLanguageAspect',
                 ])
             ->getMock();
     }
@@ -38,7 +40,14 @@ class SiteLanguageViewHelperTest extends TestCase
     {
         $tsfe = $this->prophesize(TypoScriptFrontendController::class);
 
-        $tsfe->sys_language_uid = 1;
+        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
+            $tsfe->sys_language_uid = 1;
+        } else {
+            $languageAspect = $this->prophesize(LanguageAspect::class);
+            $languageAspect->getId()->willReturn(1);
+
+            $this->viewHelper->method("getLanguageAspect")->will($this->returnValue($languageAspect->reveal()));
+        }
 
         $this->viewHelper->method("getTypoScriptFrontendController")->will($this->returnValue($tsfe->reveal()));
 

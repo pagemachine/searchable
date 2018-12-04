@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\ViewHelpers;
 
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /*
@@ -19,7 +21,11 @@ class SiteLanguageViewHelper extends AbstractViewHelper
     public function render()
     {
         if (is_object($this->getTypoScriptFrontendController())) {
-            return $this->getTypoScriptFrontendController()->sys_language_uid;
+            if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
+                return $this->getTypoScriptFrontendController()->sys_language_uid;
+            } else {
+                return $this->getLanguageAspect()->getId();
+            }
         }
         return 0;
     }
@@ -31,5 +37,14 @@ class SiteLanguageViewHelper extends AbstractViewHelper
     public function getTypoScriptFrontendController()
     {
         return $GLOBALS['TSFE'];
+    }
+
+    /**
+     * @return TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @codeCoverageIgnore
+     */
+    public function getLanguageAspect()
+    {
+        return GeneralUtility::makeInstance(Context::class)->getAspect('language');
     }
 }
