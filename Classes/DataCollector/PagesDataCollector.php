@@ -102,7 +102,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     {
         $whereClause =
             ' AND pages.hidden = 0' .
-            ' AND pages.no_search = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
             $this->config['groupWhereClause'] .
             ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
@@ -110,15 +109,16 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         $rawList = $this->pageRepository->getMenu(
             $pid,
-            'uid, doktype, shortcut, shortcut_mode',
+            'uid, doktype, shortcut, shortcut_mode, no_search',
             'sorting',
             $whereClause
         );
 
         if (!empty($rawList)) {
             foreach ($rawList as $uid => $page) {
-                //Check if doktype is indexable or transient
-                if (in_array($page['doktype'], $this->config['doktypes'])) {
+                // Check if page is directly indexable or only transient,
+                // also skip page if search has been disabled
+                if (in_array($page['doktype'], $this->config['doktypes']) && !$page['no_search']) {
                     yield $this->getRecord($uid);
                 }
 
