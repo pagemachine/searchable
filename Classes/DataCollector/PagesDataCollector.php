@@ -102,6 +102,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     {
         $whereClause =
             ' AND pages.hidden = 0' .
+            ' AND pages.no_search = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
             $this->config['groupWhereClause'] .
             ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
