@@ -7,6 +7,11 @@ use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryHelper;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -87,7 +92,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * Add resolver when fetching subtype collectors
      *
-     * @Override
+     *
      * @param string                 $field        Fieldname to apply this collector to
      * @param DataCollectorInterface $subCollector
      */
@@ -151,16 +156,26 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     {
         $tca = $this->getTcaConfiguration();
 
-        $queryParts = $this->buildUidListQueryParts(null, true);
+        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
+            $queryParts = $this->buildUidListQueryParts(null, true);
 
-        $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-            implode(',', $queryParts['select']),
-            implode(',', $queryParts['from']),
-            implode('', $queryParts['where'])
-        );
+            $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+                implode(',', $queryParts['select']),
+                implode(',', $queryParts['from']),
+                implode('', $queryParts['where'])
+            );
 
-        while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
-            yield $this->getRecord($rawRecord['uid']);
+            while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
+                yield $this->getRecord($rawRecord['uid']);
+            }
+        } else {
+            $queryBuilder = $this->buildUidListQueryBuilder(true);
+
+            $statement = $queryBuilder->execute();
+
+            while ($rawRecord = $statement->fetch()) {
+                yield $this->getRecord($rawRecord['uid']);
+            }
         }
     }
 
@@ -175,16 +190,31 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
-            $queryParts = $this->buildUidListQueryParts(sprintf('%s.uid = %d', $this->config['table'], $uid));
+            if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
+                $queryParts = $this->buildUidListQueryParts(sprintf('%s.uid = %d', $this->config['table'], $uid));
 
-            $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'];
-            $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['languageField'];
+                $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'];
+                $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['languageField'];
 
-            $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-                implode(',', $queryParts['select']),
-                implode(',', $queryParts['from']),
-                implode('', $queryParts['where'])
-            );
+                $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+                    implode(',', $queryParts['select']),
+                    implode(',', $queryParts['from']),
+                    implode('', $queryParts['where'])
+                );
+            } else {
+                $queryBuilder = $this->buildUidListQueryBuilder();
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->eq($this->config['table'] . '.uid', $queryBuilder->createNamedParameter($uid))
+                );
+
+                $queryBuilder->addSelect(...[
+                    $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
+                    $this->config['table'] . '.' . $tca['ctrl']['languageField'],
+                ]);
+
+                $statement = $queryBuilder->execute();
+                $record = $statement->fetch();
+            }
 
             if ($record) {
                 $sourceLanguageUid = $record[$tca['ctrl']['languageField']] > 0 ? $record[$tca['ctrl']['transOrigPointerField']] : $record['uid'];
@@ -307,6 +337,60 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     }
 
     /**
+     * Returns a QueryBuilder object for the record selection query
+     * Modify this method if you want to apply custom restrictions
+     *
+     * @param  bool $applyLanguageRestriction
+     * @return queryBuilder $subCollector
+     */
+    public function buildUidListQueryBuilder($applyLanguageRestriction = false)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($this->config['table']);
+        $whereExpressions = [];
+
+        $queryBuilder
+            ->select($this->config['table'].'.uid')
+            ->from($this->config['table']);
+
+        //deleteClause
+        $queryBuilder->getRestrictions()
+           ->removeAll()
+           ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+
+        //enableFields
+        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+
+        //PID restriction
+        if ($this->config['pid'] !== null) {
+            $whereExpressions[] = $queryBuilder->expr()->eq($this->config['table'] . '.pid', $queryBuilder->createNamedParameter($this->config['pid']));
+        }
+
+        //LanguageRestriction
+        if ($applyLanguageRestriction) {
+            $whereExpressions[] = $queryBuilder->expr()->in($this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'], $queryBuilder->createNamedParameter("0,-1"));
+        }
+
+        //additionalTables
+        if (!empty($this->config['select']['additionalTables'])) {
+            foreach ($this->config['select']['additionalTables'] as $additionalTable) {
+                $queryBuilder->from($additionalTable);
+            }
+        }
+
+        //additionalWhereClauses
+        if (!empty($this->config['select']['additionalWhereClauses'])) {
+            $whereExpressions[] = QueryHelper::stripLogicalOperatorPrefix(
+                implode('', $this->config['select']['additionalWhereClauses'])
+            );
+        }
+
+        $queryBuilder->where(...$whereExpressions);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Legacy function for typo3 7.6
      * Bulds query parts for the record selection query
      * Modify this method if you want to apply custom restrictions
      *

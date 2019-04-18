@@ -5,8 +5,8 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
  * This file is part of the Pagemachine Searchable project.
  */
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**

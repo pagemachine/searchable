@@ -1,13 +1,13 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Indexer;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use Prophecy\Argument;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**

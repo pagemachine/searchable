@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
@@ -8,7 +9,6 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\Argument;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 

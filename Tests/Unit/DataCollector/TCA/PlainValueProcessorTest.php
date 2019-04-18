@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\TCA;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

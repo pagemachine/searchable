@@ -33,7 +33,9 @@ class TsfeUtility
             $GLOBALS['TSFE']->initTemplate();
             $GLOBALS['TSFE']->getConfigArray();
             // Set linkVars, absRefPrefix, etc
-            \TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
+            if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
+                \TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
+            }
         }
     }
 }
