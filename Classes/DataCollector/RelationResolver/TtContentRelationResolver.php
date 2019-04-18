@@ -55,7 +55,11 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     {
         $processedField = [];
 
-        $contentUids = $this->fetchContentUids($record['uid']);
+        $contentUids = $this->fetchContentUids(
+            $record['uid'],
+            $childCollector->getConfig()['sysLanguageOverlay'] ? null : $childCollector->getLanguage()
+        );
+
         foreach ($contentUids as $content) {
             $processedField[] = $childCollector->getRecord($content['uid']);
         }
@@ -67,9 +71,10 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      * Fetches content uids to transfer to datacollector
      *
      * @param  int $pid
+     * @param  string $languages Language constraint, if null default is assumed (0,-1)
      * @return array
      */
-    protected function fetchContentUids($pid)
+    protected function fetchContentUids($pid, $languages = null)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         $queryBuilder->getRestrictions()
@@ -80,7 +85,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
         ->from('tt_content')
         ->where(
             $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
-            $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], '0,-1')
+            $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
         );
         return $queryBuilder->execute();
     }
