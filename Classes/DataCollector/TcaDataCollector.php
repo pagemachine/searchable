@@ -156,7 +156,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     {
         $tca = $this->getTcaConfiguration();
 
-        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
+        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
             $queryParts = $this->buildUidListQueryParts(null, true);
 
             $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -190,7 +190,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
-            if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
+            if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
                 $queryParts = $this->buildUidListQueryParts(sprintf('%s.uid = %d', $this->config['table'], $uid));
 
                 $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'];

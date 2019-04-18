@@ -72,7 +72,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      */
     protected function fetchContentUids($pid)
     {
-        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
+        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
             $content = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid', 'tt_content', 'pid = ' . $pid . ' AND ' . $GLOBALS['TCA']['tt_content']['ctrl']['languageField'] . ' IN(0,-1)' . $this->pageRepository->enableFields('tt_content') . BackendUtility::deleteClause('tt_content'));
             return $content;
         } else {
