@@ -156,26 +156,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     {
         $tca = $this->getTcaConfiguration();
 
-        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
-            $queryParts = $this->buildUidListQueryParts(null, true);
+        $queryBuilder = $this->buildUidListQueryBuilder(true);
 
-            $dbQuery = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                implode(',', $queryParts['select']),
-                implode(',', $queryParts['from']),
-                implode('', $queryParts['where'])
-            );
+        $statement = $queryBuilder->execute();
 
-            while ($rawRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dbQuery)) {
-                yield $this->getRecord($rawRecord['uid']);
-            }
-        } else {
-            $queryBuilder = $this->buildUidListQueryBuilder(true);
-
-            $statement = $queryBuilder->execute();
-
-            while ($rawRecord = $statement->fetch()) {
-                yield $this->getRecord($rawRecord['uid']);
-            }
+        while ($rawRecord = $statement->fetch()) {
+            yield $this->getRecord($rawRecord['uid']);
         }
     }
 
@@ -190,31 +176,18 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
-            if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
-                $queryParts = $this->buildUidListQueryParts(sprintf('%s.uid = %d', $this->config['table'], $uid));
+            $queryBuilder = $this->buildUidListQueryBuilder();
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq($this->config['table'] . '.uid', $queryBuilder->createNamedParameter($uid))
+            );
 
-                $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'];
-                $queryParts['select'][] = $this->config['table'] . '.' . $tca['ctrl']['languageField'];
+            $queryBuilder->addSelect(...[
+                $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
+                $this->config['table'] . '.' . $tca['ctrl']['languageField'],
+            ]);
 
-                $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-                    implode(',', $queryParts['select']),
-                    implode(',', $queryParts['from']),
-                    implode('', $queryParts['where'])
-                );
-            } else {
-                $queryBuilder = $this->buildUidListQueryBuilder();
-                $queryBuilder->andWhere(
-                    $queryBuilder->expr()->eq($this->config['table'] . '.uid', $queryBuilder->createNamedParameter($uid))
-                );
-
-                $queryBuilder->addSelect(...[
-                    $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
-                    $this->config['table'] . '.' . $tca['ctrl']['languageField'],
-                ]);
-
-                $statement = $queryBuilder->execute();
-                $record = $statement->fetch();
-            }
+            $statement = $queryBuilder->execute();
+            $record = $statement->fetch();
 
             if ($record) {
                 $sourceLanguageUid = $record[$tca['ctrl']['languageField']] > 0 ? $record[$tca['ctrl']['transOrigPointerField']] : $record['uid'];
