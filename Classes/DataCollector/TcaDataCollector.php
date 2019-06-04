@@ -78,11 +78,13 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $defaultConfiguration = static::$defaultConfiguration;
 
         //If this is a subcollector, try fetching the table name from the parent TCA
-        if (!$currentSubconfiguration['table'] && !$defaultConfiguration['table']) {
-            if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
-                $defaultConfiguration['table'] = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table'];
-            } else {
-                throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+        if (!empty($GLOBALS['TCA'])) {
+            if (!$currentSubconfiguration['table'] && !$defaultConfiguration['table']) {
+                if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
+                    $defaultConfiguration['table'] = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table'];
+                } else {
+                    throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+                }
             }
         }
 
@@ -154,6 +156,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getRecords()
     {
+        // Only run if there is a valid TCA available
+        if (!$this->isTcaAvailable()) {
+            yield from [];
+        }
         $tca = $this->getTcaConfiguration();
 
         if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8007000) {
@@ -187,6 +193,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     public function getUpdatedRecords($updateUidList)
     {
+        // Only run if there is a valid TCA available
+        if (!$this->isTcaAvailable()) {
+            yield from [];
+        }
         $tca = $this->getTcaConfiguration();
 
         foreach ($updateUidList as $uid) {
@@ -430,5 +440,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         return $statement;
+    }
+
+    public function isTcaAvailable()
+    {
+        return !empty($GLOBALS['TCA']);
     }
 }
