@@ -57,7 +57,6 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
         $statement['from'][] = 'sys_file';
 
         if (!empty($this->config['mimetypes'])) {
-
             $statement['where'][] = ' AND sys_file_metadata.file = sys_file.uid';
             $statement['where'][] = ' AND sys_file.mime_type IN(' . implode(',', $this->config['mimetypes']) . ')';
         }
