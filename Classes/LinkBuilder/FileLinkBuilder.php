@@ -58,7 +58,7 @@ class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
         $title = $record[$this->config['titleField']];
 
         // Use file name if title field is empty
-        if ($title == null) {
+        if (empty($title)) {
             $title = $record['file'][0]['name'];
         }
 
