@@ -46,4 +46,22 @@ class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
 
         return parent::convertToTypoLinkConfig($configuration, $record);
     }
+
+    /**
+     * Fetches the link title
+     *
+     * @param  array  $record
+     * @return string
+     */
+    protected function getLinkTitle($record = [])
+    {
+        $title = $record[$this->config['titleField']];
+
+        // Use file name if title field is empty
+        if (empty($title)) {
+            $title = $record['file'][0]['name'];
+        }
+
+        return $title;
+    }
 }
