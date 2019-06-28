@@ -56,12 +56,11 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
         $statement = parent::buildUidListQueryParts($additionalWhere, $applyLanguageRestriction);
         $statement['from'][] = 'sys_file';
 
+        $statement['where'][] = ' AND sys_file_metadata.file = sys_file.uid';
+
         if (!empty($this->config['mimetypes'])) {
-            $statement['where'][] = ' AND sys_file_metadata.file = sys_file.uid';
             $statement['where'][] = ' AND sys_file.mime_type IN(' . implode(',', $this->config['mimetypes']) . ')';
         }
-
-
 
         return $statement;
     }
@@ -84,13 +83,15 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
             $queryBuilder->expr()->eq('sys_file_metadata.file', $queryBuilder->quoteIdentifier('sys_file.uid'))
         );
 
-        $queryBuilder->andWhere(
-            $queryBuilder->expr()->in(
-                'sys_file.mime_type',
-                $this->config['mimetypes'],
-                Connection::PARAM_STR_ARRAY
-            )
-        );
+        if (!empty($this->config['mimetypes'])) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'sys_file.mime_type',
+                    $this->config['mimetypes'],
+                    Connection::PARAM_STR_ARRAY
+                )
+            );
+        }
 
         return $queryBuilder;
     }
