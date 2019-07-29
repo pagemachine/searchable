@@ -117,7 +117,8 @@ class BackendController extends ActionController
                 'color' => $resultColor,
             ]);
         } else {
-            $url = "http://localhost:9200/typo3/";
+            $hosts = ExtconfService::getInstance()->getHostsSettings();
+            $url = sprintf('%s/typo3/', $hosts[0] ?? 'http://localhost:9200');
         }
 
         $this->view->assign("url", $url);
