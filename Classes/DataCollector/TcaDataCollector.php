@@ -191,10 +191,12 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 $queryBuilder->expr()->eq($this->config['table'] . '.uid', $queryBuilder->createNamedParameter($uid))
             );
 
-            $queryBuilder->addSelect(...[
-                $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
-                $this->config['table'] . '.' . $tca['ctrl']['languageField'],
-            ]);
+            if( $tca['ctrl']['transOrigPointerField'] && $tca['ctrl']['languageField'] ){
+                $queryBuilder->addSelect(...[
+                    $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
+                    $this->config['table'] . '.' . $tca['ctrl']['languageField'],
+                ]);
+            }
 
             $statement = $queryBuilder->execute();
             $record = $statement->fetch();
