@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -137,18 +138,28 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     /**
      * Unset pid (works differently with pages and should not be taken into account)
      * Add doktype where clause
-     * @todo Check for rootline if we want to be extra precise
      *
      * @param  array $updateUidList
      * @return \Generator
      */
     public function getUpdatedRecords($updateUidList)
     {
+        $newUpdateUidList = [];
+        foreach ($updateUidList as $key => $uid) {
+            $rootLineUtility = new RootlineUtility($uid);
+            $rootlinePages = $rootLineUtility->get();
+            foreach ($rootlinePages as $page) {
+                if ($page['uid'] === $this->config['pid']) {
+                    $newUpdateUidList[$key] = $uid;
+                }
+            }
+        }
+
         $this->config['pid'] = null;
 
         $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
 
-        foreach (parent::getUpdatedRecords($updateUidList) as $record) {
+        foreach (parent::getUpdatedRecords($newUpdateUidList) as $record) {
             yield $record;
         }
     }
