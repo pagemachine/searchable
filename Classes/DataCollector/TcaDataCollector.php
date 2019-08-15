@@ -335,14 +335,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             ->select($this->config['table'].'.uid')
             ->from($this->config['table']);
 
-        //deleteClause
-        $queryBuilder->getRestrictions()
-           ->removeAll()
-           ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-
-        //enableFields
-        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
-
         //PID restriction
         if ($this->config['pid'] !== null) {
             $whereExpressions[] = $queryBuilder->expr()->eq($this->config['table'] . '.pid', $queryBuilder->createNamedParameter($this->config['pid']));

@@ -77,10 +77,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     protected function fetchContentUids($pid, $languages = null)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-        $queryBuilder->getRestrictions()
-           ->removeAll()
-           ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder->select('uid')
         ->from('tt_content')
         ->where(
