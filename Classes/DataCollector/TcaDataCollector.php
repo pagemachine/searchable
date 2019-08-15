@@ -9,8 +9,6 @@ use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -191,7 +189,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 $queryBuilder->expr()->eq($this->config['table'] . '.uid', $queryBuilder->createNamedParameter($uid))
             );
 
-            if( $tca['ctrl']['transOrigPointerField'] && $tca['ctrl']['languageField'] ){
+            if ($tca['ctrl']['transOrigPointerField'] && $tca['ctrl']['languageField']) {
                 $queryBuilder->addSelect(...[
                     $this->config['table'] . '.' . $tca['ctrl']['transOrigPointerField'],
                     $this->config['table'] . '.' . $tca['ctrl']['languageField'],
