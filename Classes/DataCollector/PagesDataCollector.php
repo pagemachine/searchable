@@ -144,22 +144,13 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getUpdatedRecords($updateUidList)
     {
-        $newUpdateUidList = [];
-        foreach ($updateUidList as $key => $uid) {
-            $rootLineUtility = new RootlineUtility($uid);
-            $rootlinePages = $rootLineUtility->get();
-            foreach ($rootlinePages as $page) {
-                if ($page['uid'] === $this->config['pid']) {
-                    $newUpdateUidList[$key] = $uid;
-                }
-            }
-        }
+        $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
 
         $this->config['pid'] = null;
 
         $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
 
-        foreach (parent::getUpdatedRecords($newUpdateUidList) as $record) {
+        foreach (parent::getUpdatedRecords($updateUidList) as $record) {
             yield $record;
         }
     }
@@ -173,5 +164,27 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     protected function languageOverlay($record)
     {
         return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language, $this->config['sysLanguageOverlay']);
+    }
+
+    /**
+     * returns an array with pageUids that contain the rootlineUid in their rootline
+     *
+     * @param  array  $updateUidList
+     * @param  Integer  $rootlineUid
+     *
+     * @return array
+     */
+    protected function filterPageListByRootline($updateUidList, $rootlineUid){
+        $newUpdateUidList = [];
+        foreach ($updateUidList as $key => $uid) {
+            $rootLineUtility = new RootlineUtility($uid);
+            $rootlinePages = $rootLineUtility->get();
+            foreach ($rootlinePages as $page) {
+                if ($page['uid'] === $rootlineUid) {
+                    $newUpdateUidList[] = $uid;
+                }
+            }
+        }
+        return $newUpdateUidList;
     }
 }
