@@ -144,11 +144,10 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getUpdatedRecords($updateUidList)
     {
-        $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
-
         $this->config['pid'] = null;
-
         $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
+
+        $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
             yield $record;
@@ -167,24 +166,28 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     }
 
     /**
-     * returns an array with pageUids that contain the rootlineUid in their rootline
+     * Returns a list of page UIDs that are part of the given rootline page
      *
-     * @param  array  $updateUidList
-     * @param  Integer  $rootlineUid
-     *
+     * @param array $pageUids
+     * @param int $rootlinePageUid
      * @return array
      */
-    protected function filterPageListByRootline($updateUidList, $rootlineUid){
-        $newUpdateUidList = [];
-        foreach ($updateUidList as $key => $uid) {
+    protected function filterPageListByRootline(array $pageUids, int $rootlinePageUid): array
+    {
+        $filteredPageUids = [];
+
+        foreach ($pageUids as $uid) {
             $rootLineUtility = new RootlineUtility($uid);
             $rootlinePages = $rootLineUtility->get();
+
             foreach ($rootlinePages as $page) {
-                if ($page['uid'] === $rootlineUid) {
-                    $newUpdateUidList[] = $uid;
+                if ($page['uid'] === $rootlinePageUid) {
+                    $filteredPageUids[] = $uid;
+                    break;
                 }
             }
         }
-        return $newUpdateUidList;
+
+        return $filteredPageUids;
     }
 }
