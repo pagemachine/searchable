@@ -4,8 +4,6 @@ namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\RelationResolverInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -77,10 +75,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     protected function fetchContentUids($pid, $languages = null)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-        $queryBuilder->getRestrictions()
-           ->removeAll()
-           ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder->select('uid')
         ->from('tt_content')
         ->where(

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -137,7 +138,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     /**
      * Unset pid (works differently with pages and should not be taken into account)
      * Add doktype where clause
-     * @todo Check for rootline if we want to be extra precise
      *
      * @param  array $updateUidList
      * @return \Generator
@@ -145,8 +145,9 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     public function getUpdatedRecords($updateUidList)
     {
         $this->config['pid'] = null;
-
         $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
+
+        $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
             yield $record;
@@ -162,5 +163,27 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     protected function languageOverlay($record)
     {
         return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language, $this->config['sysLanguageOverlay']);
+    }
+
+    /**
+     * Returns a list of page UIDs that are part of the given rootline page
+     *
+     * @param array $pageUids
+     * @param int $rootlinePageUid
+     * @return array
+     */
+    protected function filterPageListByRootline(array $pageUids, int $rootlinePageUid): array
+    {
+        $filteredPageUids = [];
+
+        foreach ($pageUids as $uid) {
+            $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
+
+            if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
+                $filteredPageUids[] = $uid;
+            }
+        }
+
+        return $filteredPageUids;
     }
 }
