@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /*
@@ -144,10 +145,10 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getUpdatedRecords($updateUidList)
     {
+        $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
+
         $this->config['pid'] = null;
         $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
-
-        $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
             yield $record;
