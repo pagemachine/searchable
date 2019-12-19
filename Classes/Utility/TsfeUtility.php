@@ -32,6 +32,7 @@ class TsfeUtility
             $GLOBALS['TSFE']->determineId();
             $GLOBALS['TSFE']->initTemplate();
             $GLOBALS['TSFE']->getConfigArray();
+            $GLOBALS['TSFE']->preparePageContentGeneration();
         }
     }
 }
