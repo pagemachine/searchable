@@ -178,9 +178,15 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         $filteredPageUids = [];
 
         foreach ($pageUids as $uid) {
-            $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
+            try {
+                $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
 
-            if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
+                if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
+                    $filteredPageUids[] = $uid;
+                }
+            } catch (\RuntimeException $e) {
+                // If the page is deleted, RootlineUtility will throw a RuntimeException.
+                // We still queue the uid then to ensure it gets deleted in ES as well
                 $filteredPageUids[] = $uid;
             }
         }
