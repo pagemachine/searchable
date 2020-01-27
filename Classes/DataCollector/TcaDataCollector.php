@@ -388,7 +388,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
             ],
         ];
 
-        if ($applyLanguageRestriction) {
+        if ($applyLanguageRestriction && !empty($this->getTcaConfiguration()['ctrl']['languageField'])) {
             $statement['where']['language'] = ' AND ' . $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'] . ' IN' . "(0,-1)";
         }
 
