@@ -7,6 +7,7 @@ use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -24,6 +25,19 @@ class SearchableCommandController extends CommandController
      * @inject
      */
     protected $indexerFactory;
+
+    /**
+     * @var Dispatcher $signalDispatcher
+     */
+    protected $signalDispatcher;
+
+    /**
+     * @param Dispatcher $dispatcher
+     */
+    public function injectSignalDispatcher(Dispatcher $signalDispatcher)
+    {
+        $this->signalDispatcher = $signalDispatcher;
+    }
 
     /**
      * Scheduled indexers, will be collected at start
@@ -239,12 +253,18 @@ class SearchableCommandController extends CommandController
         }
 
         $endtime = microtime(true);
+        $elapsedTime = $endtime - $starttime;
 
         $this->outputLine();
-        $this->outputLine("<options=bold>Time (seconds):</> " . ($endtime - $starttime));
+        $this->outputLine("<options=bold>Time (seconds):</> " . $elapsedTime);
         $this->outputLine("<options=bold>Memory (MB):</> " . (memory_get_peak_usage(true) / 1000000));
         $this->outputLine();
         $this->outputLine("<info>Indexing finished.</info>");
+
+        $this->signalDispatcher->dispatch(__CLASS__, 'afterIndexRun', [
+            'fullIndexing' => $this->runFullIndexing,
+            'elapsedTime' => $elapsedTime,
+        ]);
     }
 
     /**
