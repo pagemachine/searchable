@@ -8,14 +8,10 @@ $EM_CONF[$_EXTKEY] = [
   'author_email' => 'sschreiber@pagemachine.de',
   'author_company' => 'PAGEmachine AG',
   'state' => 'alpha',
-  'version' => '3.0.2',
+  'version' => '3.0.3',
   'constraints' => [
     'depends' => [
       'typo3' => '8.7.0-9.9.99',
-    ],
-    'conflicts' => [
-    ],
-    'suggests' => [
     ],
   ],
 ];
