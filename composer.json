@@ -1,51 +1,73 @@
 {
-  "name": "pagemachine/searchable",
-  "description": "Elasticsearch companion API for TYPO3",
-  "type": "typo3-cms-extension",
-  "license": "proprietary",
-  "authors": [
-    {
-      "name": "Saskia Schreiber",
-      "email": "sschreiber@pagemachine.de"
+    "name": "pagemachine/searchable",
+    "type": "typo3-cms-extension",
+    "description": "Elasticsearch companion API for TYPO3",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Saskia Schreiber",
+            "email": "sschreiber@pagemachine.de"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "elasticsearch/elasticsearch": "~5.0",
+        "typo3/cms-backend": "^8.7 || ^9.5",
+        "typo3/cms-core": "^8.7 || ^9.5",
+        "typo3/cms-extbase": "^8.7 || ^9.5",
+        "typo3/cms-fluid": "^8.7 || ^9.5",
+        "typo3/cms-frontend": "^8.7 || ^9.5"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.6",
+        "jakub-onderka/php-console-highlighter": "^0.3.2",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "nimut/testing-framework": "^4.1",
+        "phpunit/phpunit": "^6.0",
+        "sclable/xml-lint": "^0.2.3",
+        "slevomat/coding-standard": "^4.0",
+        "squizlabs/php_codesniffer": "^3.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "searchable",
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": "web"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "PAGEmachine\\Searchable\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PAGEmachine\\Searchable\\Tests\\": "Tests/",
+            "TYPO3\\CMS\\Core\\Tests\\": "vendor/typo3/cms/typo3/sysext/core/Tests/"
+        }
+    },
+    "scripts": {
+        "build": [
+            "@composer validate --ansi",
+            "@composer install",
+            "@composer normalize --no-update-lock --dry-run",
+            "@lint",
+            "@test"
+        ],
+        "lint": [
+            "@lint:php",
+            "@lint:style",
+            "@lint:xml"
+        ],
+        "lint:php": "parallel-lint --exclude bin --exclude vendor --exclude web .",
+        "lint:style": "phpcs",
+        "lint:xml": "xmllint --pattern '*.xlf,*.svg' Resources",
+        "test": [
+            "@test:unit"
+        ],
+        "test:unit": "phpunit"
     }
-  ],
-  "require": {
-    "php": "^7.0 || ^7.2",
-    "elasticsearch/elasticsearch": "~5.0",
-    "typo3/cms-backend": "^8.7 || ^9.5",
-    "typo3/cms-core": "^8.7 || ^9.5",
-    "typo3/cms-extbase": "^8.7 || ^9.5",
-    "typo3/cms-fluid": "^8.7 || ^9.5",
-    "typo3/cms-frontend": "^8.7 || ^9.5"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^6.0",
-    "nimut/testing-framework": "^4.1",
-    "jakub-onderka/php-parallel-lint": "^1.0",
-    "jakub-onderka/php-console-highlighter": "^0.3.2",
-    "slevomat/coding-standard": "^4.0",
-    "squizlabs/php_codesniffer": "^3.0"
-  },
-  "suggest": {
-  },
-  "config": {
-    "bin-dir": "bin"
-  },
-  "extra": {
-    "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": "web"
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "PAGEmachine\\Searchable\\": "Classes/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "PAGEmachine\\Searchable\\Tests\\": "Tests/",
-      "TYPO3\\CMS\\Core\\Tests\\": "vendor/typo3/cms/typo3/sysext/core/Tests/"
-    }
-  }
 }

@@ -1,0 +1,36 @@
+dist: trusty
+sudo: false
+language: php
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+install:
+  - composer install
+
+script:
+  - composer build
+
+jobs:
+  include:
+    - &build
+      name: PHP 7.2, TYPO3v9
+      php: 7.2
+      env: TYPO3_VERSION=^9.5
+      install:
+        - composer require typo3/cms-core="$TYPO3_VERSION"
+
+    - <<: *build
+      name: PHP 7.3, TYPO3v9
+      php: 7.3
+
+    - <<: *build
+      name: PHP 7.1, TYPO3v8
+      php: 7.1
+      env: TYPO3_VERSION=^8.7
+
+    - <<: *build
+      name: PHP 7.3, TYPO3v8
+      php: 7.3
+      env: TYPO3_VERSION=^8.7

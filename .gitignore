@@ -1,6 +1,5 @@
-/bin
 /composer.lock
 /coverage
-/node_modules
 /vendor
+/var
 /web
