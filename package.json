@@ -1,7 +1,0 @@
-{
-  "devDependencies": {
-    "bash-require": "^1.0.0",
-    "bash-shippable-tasks": "git+ssh://git@bitbucket.org:pagemachineag/bash-shippable-tasks.git"
-  },
-  "private": true
-}

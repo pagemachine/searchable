@@ -46,6 +46,12 @@
     }
   },
   "scripts": {
+    "build": [
+      "@composer validate --ansi",
+      "@composer install",
+      "@lint",
+      "@test"
+    ],
     "lint:php": "parallel-lint --exclude bin --exclude vendor --exclude web .",
     "lint:xml": "xmllint --pattern '*.xlf,*.svg' Resources",
     "lint:style": "phpcs",
