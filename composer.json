@@ -25,7 +25,8 @@
     "jakub-onderka/php-console-highlighter": "^0.3.2",
     "sclable/xml-lint": "^0.2.3",
     "slevomat/coding-standard": "^4.0",
-    "squizlabs/php_codesniffer": "^3.0"
+    "squizlabs/php_codesniffer": "^3.0",
+    "ergebnis/composer-normalize": "^2.6"
   },
   "extra": {
     "typo3/cms": {
@@ -49,6 +50,7 @@
     "build": [
       "@composer validate --ansi",
       "@composer install",
+      "@composer normalize --no-update-lock --dry-run",
       "@lint",
       "@test"
     ],
