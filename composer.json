@@ -2,7 +2,7 @@
     "name": "pagemachine/searchable",
     "type": "typo3-cms-extension",
     "description": "Elasticsearch companion API for TYPO3",
-    "license": "proprietary",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Saskia Schreiber",
