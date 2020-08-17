@@ -341,7 +341,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         }
 
         //LanguageRestriction
-        if ($applyLanguageRestriction) {
+        if ($applyLanguageRestriction && !empty($this->getTcaConfiguration()['ctrl']['languageField'])) {
             $whereExpressions[] = $queryBuilder->expr()->in($this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'], $queryBuilder->createNamedParameter("0,-1"));
         }
 
