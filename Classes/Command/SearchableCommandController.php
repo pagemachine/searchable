@@ -6,6 +6,8 @@ use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use TYPO3\CMS\Core\Registry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
@@ -46,16 +48,24 @@ class SearchableCommandController extends CommandController
     protected $scheduledIndexers = [];
 
     /**
-     * Determines if a full indexing is performed
-     * @var bool
+     * Indexing type, one of full, partial or schedule
+     *
+     * @var string
      */
-    protected $runFullIndexing = false;
+    protected $indexingType;
 
     /**
      * Index type. If null, all indexers are run
      * @var string|null
      */
     protected $type = null;
+
+    /**
+     * Last time schedules where processed for indexing
+     *
+     * @var \DateTime
+     */
+    protected $lastScheduleProcessingDate;
 
     /**
      * Runs all indexers (full)
@@ -67,7 +77,7 @@ class SearchableCommandController extends CommandController
         $this->outputLine();
         $this->checkHealth();
 
-        $this->runFullIndexing = true;
+        $this->indexingType = 'full';
         $this->type = $type;
 
         $this->collectScheduledIndexers();
@@ -84,11 +94,35 @@ class SearchableCommandController extends CommandController
         $this->outputLine();
         $this->checkHealth();
 
-        $this->runFullIndexing = false;
+        $this->indexingType = 'partial';
         $this->type = $type;
 
         $this->collectScheduledIndexers();
         $this->runIndexers();
+    }
+
+    /**
+     * Run all indexers (scheduled updates only)
+     *
+     * @param string $type If set, only runs indexing for the given type
+     * @return void
+     */
+    public function indexSchedulesCommand($type = null)
+    {
+        $this->outputLine();
+        $this->checkHealth();
+
+        $this->indexingType = 'schedule';
+        $this->type = $type;
+
+        /** @var \TYPO3\CMS\Core\Registry */
+        $registry = GeneralUtility::makeInstance(Registry::class);
+        $this->lastScheduleProcessingDate = $registry->get('searchable', 'scheduleProcessingDate', new \DateTime('@0'));
+
+        $this->collectScheduledIndexers();
+        $this->runIndexers();
+
+        $registry->set('searchable', 'scheduleProcessingDate', new \DateTime('@' . $GLOBALS['EXEC_TIME']));
     }
 
     /**
@@ -279,15 +313,28 @@ class SearchableCommandController extends CommandController
         $this->outputLine("<comment> Type '%s':</comment>", [$indexer->getType()]);
         $this->output->progressStart();
 
-        if ($this->runFullIndexing) {
-            foreach ($indexer->run() as $resultMessage) {
-                $this->output->progressSet($resultMessage);
-            }
-        } else {
-            foreach ($indexer->runUpdate() as $resultMessage) {
-                $this->output->progressSet($resultMessage);
-            }
+        switch ($this->indexingType) {
+            case 'full':
+                $progressValues = $indexer->run();
+                break;
+
+            case 'partial':
+                $progressValues = $indexer->runUpdate();
+                break;
+
+            case 'schedule':
+                $currentExecutionDate = new \DateTime('@' . $GLOBALS['EXEC_TIME']);
+                $progressValues = $indexer->runScheduleUpdate($this->lastScheduleProcessingDate, $currentExecutionDate);
+                break;
+
+            default:
+                throw new \UnexpectedValueException(sprintf('Unexpected indexing type "%s"', $this->indexingType), 1518003689);
         }
+
+        foreach ($progressValues as $progress) {
+            $this->output->progressSet($progress);
+        }
+
         $this->output->progressFinish();
     }
 
