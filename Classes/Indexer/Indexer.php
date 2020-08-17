@@ -2,6 +2,8 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
+use PAGEmachine\Searchable\DataCollector\ScheduleAwareDataCollectorInterface;
+use PAGEmachine\Searchable\DataCollector\SchedulingType;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
@@ -347,6 +349,54 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
                 yield $overallCounter;
             }
+        }
+    }
+
+    /**
+     * Runs an update for scheduled documents
+     *
+     * @param \DateTime $startDate the start of the date range
+     * @param \DateTime $endDate the end of the date range
+     * @return \Generator
+     */
+    public function runScheduleUpdate(\DateTime $startDate, \DateTime $endDate)
+    {
+        if (!$this->dataCollector instanceof ScheduleAwareDataCollectorInterface) {
+            yield 0;
+
+            return;
+        }
+
+        $bulkSize = $this->config['bulkSize'] ?: 20;
+        $counter = 0;
+        $overallCounter = 0;
+        $records = [];
+
+        foreach ($this->dataCollector->getScheduledRecords($startDate, $endDate, SchedulingType::cast(SchedulingType::ACTIVATED)) as $record) {
+            $records[] = $record;
+            $counter++;
+            $overallCounter++;
+
+            if ($counter >= $bulkSize) {
+                $this->sendBatch($records);
+
+                $records = [];
+                $counter = 0;
+                yield $overallCounter;
+            }
+        }
+
+        if ($counter > 0) {
+            $this->sendBatch($records);
+
+            yield $overallCounter;
+        }
+
+        foreach ($this->dataCollector->getScheduledRecords($startDate, $endDate, SchedulingType::cast(SchedulingType::EXPIRED)) as $record) {
+            $overallCounter++;
+            $this->query->delete($record['uid']);
+
+            yield $overallCounter;
         }
     }
 
