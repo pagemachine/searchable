@@ -9,6 +9,8 @@ use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
+use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -18,7 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class for fetching TCA-based data according to the given config
  */
-class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface
+class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface, ScheduleAwareDataCollectorInterface
 {
     /**
      *
@@ -212,6 +214,48 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
             yield ['uid' => $uid, 'deleted' => 1];
         }
+    }
+
+    /**
+     * Fetches the list of records scheduled in a date range
+     *
+     * @param \DateTime $startDate the start of the date range
+     * @param \DateTime $endTime the end of the date range
+     * @param SchedulingType $type the scheduling type
+     * @return \Traversable
+     */
+    public function getScheduledRecords(\DateTime $startDate, \DateTime $endDate, SchedulingType $type)
+    {
+        // Only run if there is a valid TCA available
+        if (!$this->isTcaAvailable()) {
+            yield from [];
+        }
+
+        $tableControl = $this->getTcaConfiguration()['ctrl'];
+        $scheduleField = $type->equals(SchedulingType::ACTIVATED) ? 'starttime' : 'endtime';
+
+        if (empty($tableControl['enablecolumns'][$scheduleField])) {
+            yield from [];
+        }
+
+        $queryBuilder = $this->buildUidListQueryBuilder();
+        $queryBuilder->getRestrictions()
+            ->removeByType(StartTimeRestriction::class)
+            ->add(GeneralUtility::makeInstance(StartTimeRestriction::class, $startDate->getTimestamp()))
+            ->removeByType(EndTimeRestriction::class)
+            ->add(GeneralUtility::makeInstance(EndTimeRestriction::class, $endDate->getTimestamp()));
+
+        $result = $queryBuilder->execute();
+
+        foreach ($result as $record) {
+            if ($type->equals(SchedulingType::ACTIVATED)) {
+                $record = $this->getRecord($record['uid']);
+            }
+
+            yield $record;
+        }
+
+        yield from [];
     }
 
     /**
