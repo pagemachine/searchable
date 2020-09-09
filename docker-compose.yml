@@ -8,7 +8,9 @@ services:
       typo3DatabaseHost: mysql
       typo3DatabaseUsername: root
       typo3DatabasePassword: root
+      ELASTICSEARCH_HOST: elasticsearch:9200
     depends_on:
+      - elasticsearch
       - mysql
       - ssh-key
     volumes:
@@ -24,6 +26,9 @@ services:
       MYSQL_ROOT_PASSWORD: root
     tmpfs:
       - /var/lib/mysql
+
+  elasticsearch:
+    image: elasticsearch:5
 
   ssh-agent:
     image: docksal/ssh-agent:1.3
