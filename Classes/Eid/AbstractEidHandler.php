@@ -22,22 +22,6 @@ abstract class AbstractEidHandler
     protected $options = [];
 
     /**
-     * Processes a autosuggest request (< TYPO3 V8)
-     *
-     * @return void
-     */
-    public function processRequestLegacy()
-    {
-        $term = GeneralUtility::_GET('term');
-        $this->options = GeneralUtility::_GET('options');
-
-        $result = $this->getResults($term);
-
-        header('Content-type: application/json');
-        echo json_encode($result);
-    }
-
-    /**
      * Process request
      *
      * @param ServerRequestInterface $request

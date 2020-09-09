@@ -134,22 +134,6 @@ class BackendController extends ActionController
      */
     protected function request($url, $body)
     {
-        if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.1', '>=')) {
-            return $this->doRequest($url, $body);
-        } else {
-            return $this->doRequestLegacy($url, $body);
-        }
-    }
-
-    /**
-     * Request processing for TYPO3 >= 8
-     *
-     * @param  string $url
-     * @param  string $body
-     * @return array
-     */
-    protected function doRequest($url, $body)
-    {
         $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
 
         $response = $requestFactory->request(
@@ -164,31 +148,6 @@ class BackendController extends ActionController
         return [
             'status' => $response->getStatusCode(),
             'body' => $response->getBody()->getContents(),
-        ];
-    }
-
-    /**
-     * Legacy processing for TYPO3 7
-     *
-     * TYPO3 7 legacy support
-     * @deprecated
-     *
-     * @param  string $url
-     * @param  string $body
-     * @return array
-     */
-    protected function doRequestLegacy($url, $body)
-    {
-        $request = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\HttpRequest::class, $url);
-
-        if ($body != '') {
-            $request->setBody($body);
-        }
-        $result = $request->send();
-
-        return [
-            'status' => $result->getStatus(),
-            'body' => $result->getBody(),
         ];
     }
 }
