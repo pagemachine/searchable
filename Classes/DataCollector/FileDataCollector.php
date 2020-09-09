@@ -62,8 +62,10 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(
                     'sys_file.mime_type',
-                    $this->config['mimetypes'],
-                    Connection::PARAM_STR_ARRAY
+                    $queryBuilder->createNamedParameter(
+                        $this->config['mimetypes'],
+                        Connection::PARAM_STR_ARRAY
+                    )
                 )
             );
         }
