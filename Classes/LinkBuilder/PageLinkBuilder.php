@@ -67,7 +67,7 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
             $typolinkConfiguration['parameter'] .= ',' . $configuration['pageType'];
         }
         if (!empty($configuration['additionalParams'])) {
-            $typolinkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
+            $typolinkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl('', $configuration['additionalParams']);
         }
 
         if ($configuration['addQueryString'] === true) {
