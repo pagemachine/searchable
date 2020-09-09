@@ -306,7 +306,7 @@ class SearchableCommandController extends CommandController
         }
 
         if (!empty($environment['locale'])) {
-            $originalEnvironment['locale'] = setlocale(LC_ALL, 0);
+            $originalEnvironment['locale'] = setlocale(LC_ALL, '0');
             setlocale(LC_ALL, $environment['locale']);
         }
 
