@@ -57,7 +57,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     protected $query;
 
     /**
-     * @var DataCollectorInterface
+     * @var \PAGEmachine\Searchable\DataCollector\DataCollectorInterface
      */
     protected $dataCollector;
 
@@ -163,13 +163,13 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     }
 
     /**
-     * @param String      $index  The index name to use
+     * @param string      $index  The index name to use
      * @param int         $language The language uid to index
-     * @param String      $type   The type to use
      * @param array      $config   The configuration to apply
      * @param BulkQuery|null $query
      * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
+     * @param LinkBuilderInterface|null $linkBuilder
      * @param array       $features
      */
     public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)

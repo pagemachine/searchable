@@ -143,10 +143,12 @@ class BulkQuery extends AbstractQuery
     /**
      * Executes a bulk insertion query
      *
-     * @return void
+     * @return array
      */
     public function execute()
     {
+        $response = [];
+
         if (!empty($this->parameters['body'])) {
 
             /**
@@ -158,6 +160,8 @@ class BulkQuery extends AbstractQuery
                 $this->logger->error("Bulk Query response contains errors: ", $response);
             }
         }
+
+        return $response;
     }
 
     /**

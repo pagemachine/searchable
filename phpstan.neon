@@ -1,0 +1,19 @@
+parameters:
+  level: 5
+
+  paths:
+    - ext_emconf.php
+    - ext_localconf.php
+    - ext_tables.php
+    - Classes
+
+  ignoreErrors:
+    - '#Variable \$_EXTKEY might not be defined.#'
+    - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
+      path: Classes/ViewHelpers/SiteLanguageViewHelper.php
+    - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
+      paths:
+        - ext_localconf.php
+        - Classes/Hook/DatabaseConnectionHook.php
+
+  reportUnmatchedIgnoredErrors: false

@@ -14,13 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
 {
     /**
-     * The default title if the title field is empty
-     *
-     * @var string
-     */
-    protected $defaultTitle = "Link";
-
-    /**
      * @var array
      */
     protected static $defaultConfiguration = [
@@ -74,7 +67,7 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
             $typolinkConfiguration['parameter'] .= ',' . $configuration['pageType'];
         }
         if (!empty($configuration['additionalParams'])) {
-            $typolinkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
+            $typolinkConfiguration['additionalParams'] = GeneralUtility::implodeArrayForUrl('', $configuration['additionalParams']);
         }
 
         if ($configuration['addQueryString'] === true) {

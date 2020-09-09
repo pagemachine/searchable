@@ -5,11 +5,16 @@ namespace PAGEmachine\Searchable\ViewHelpers\Link;
  * This file is part of the PAGEmachine Searchable project.
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+
 /**
  * PageViewHelper
  * Works like the default link.page ViewHelper from fluid, but allows to pass all arguments as an array
  */
-class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class PageViewHelper extends AbstractTagBasedViewHelper
 {
     /**
      * @var string
@@ -31,11 +36,12 @@ class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
     /**
      *
      * @param  array  $arguments
-     * @return array
+     * @return string
      */
     public function render($arguments = [])
     {
-        $uriBuilder = $this->controllerContext->getUriBuilder();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $uriBuilder = $objectManager->get(UriBuilder::class);
         $uri = $uriBuilder->reset()
             ->setTargetPageUid($arguments['pageUid'] ?: null)
             ->setTargetPageType($arguments['pageType'] ?: 0)

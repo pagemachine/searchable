@@ -14,7 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Abstract helper class for elasticsearch querying
  */
-abstract class AbstractQuery
+abstract class AbstractQuery implements QueryInterface
 {
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
@@ -33,11 +33,13 @@ abstract class AbstractQuery
 
     /**
      * @param array $parameters
-     * @return void
+     * @return QueryInterface
      */
     public function setParameters($parameters)
     {
         $this->parameters = $parameters;
+
+        return $this;
     }
 
     /**
@@ -57,6 +59,23 @@ abstract class AbstractQuery
     public function setParameter($key, $parameter)
     {
         $this->parameters[$key] = $parameter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTerm()
+    {
+        return '';
+    }
+
+    /**
+     * @param string $term
+     * @return QueryInterface
+     */
+    public function setTerm($term)
+    {
+        return $this;
     }
 
     /**
@@ -91,11 +110,12 @@ abstract class AbstractQuery
 
     /**
      * @param array $featureSettings
-     * @return void
+     * @return AbstractQuery
      */
     public function setFeatureSettings($featureSettings)
     {
         $this->featureSettings = $featureSettings;
+
         return $this;
     }
 
@@ -115,11 +135,12 @@ abstract class AbstractQuery
 
     /**
      * @param bool $pluginMode
-     * @return void
+     * @return AbstractQuery
      */
     public function setPluginMode($pluginMode)
     {
         $this->pluginMode = $pluginMode;
+
         return $this;
     }
 

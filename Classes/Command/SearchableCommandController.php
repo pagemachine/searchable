@@ -32,7 +32,7 @@ class SearchableCommandController extends CommandController
     protected $signalDispatcher;
 
     /**
-     * @param Dispatcher $dispatcher
+     * @param Dispatcher $signalDispatcher
      */
     public function injectSignalDispatcher(Dispatcher $signalDispatcher)
     {
@@ -94,7 +94,7 @@ class SearchableCommandController extends CommandController
     /**
      * Reset index for one or all languages
      *
-     * @param string $index
+     * @param int $language
      * @return void
      */
     public function resetIndexCommand($language = null)
@@ -270,7 +270,6 @@ class SearchableCommandController extends CommandController
     /**
      * Runs a single indexer
      * @param  IndexerInterface $indexer
-     * @param  bool          $full
      * @return void
      */
     protected function runSingleIndexer(IndexerInterface $indexer)
@@ -307,7 +306,7 @@ class SearchableCommandController extends CommandController
         }
 
         if (!empty($environment['locale'])) {
-            $originalEnvironment['locale'] = setlocale(LC_ALL, 0);
+            $originalEnvironment['locale'] = setlocale(LC_ALL, '0');
             setlocale(LC_ALL, $environment['locale']);
         }
 

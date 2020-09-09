@@ -14,13 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
 {
     /**
-     * The default title if the title field is empty
-     *
-     * @var string
-     */
-    protected $defaultTitle = "Link";
-
-    /**
      * @var array
      */
     protected static $defaultConfiguration = [
@@ -44,7 +37,7 @@ class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
     public function convertToTypoLinkConfig($configuration, $record)
     {
         if (!empty($configuration['additionalParams'])) {
-            $configuration['additionalParams'] = GeneralUtility::implodeArrayForUrl(null, $configuration['additionalParams']);
+            $configuration['additionalParams'] = GeneralUtility::implodeArrayForUrl('', $configuration['additionalParams']);
         }
 
         return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];

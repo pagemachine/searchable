@@ -18,9 +18,6 @@ trait FieldCollectionTrait
      */
     protected function collectFields($record, $fields, $content = [])
     {
-        /**
-         * @var array
-         */
         $content = [];
 
         foreach ($fields as $field) {
@@ -28,6 +25,7 @@ trait FieldCollectionTrait
                 $content[] = $record[$field];
             }
         }
+
         return $content;
     }
 

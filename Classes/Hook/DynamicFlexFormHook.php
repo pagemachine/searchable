@@ -13,19 +13,6 @@ use TYPO3\CMS\Extbase\Service\TypoScriptService;
 class DynamicFlexFormHook
 {
     /**
-     * Array of allowed plugin keys for dynamic FlexForm transformation
-     *
-     * TYPO3 7 legacy support
-     * @deprecated
-     * @var array
-     */
-    protected $allowedListTypes = [
-        'searchable_searchbar',
-        'searchable_livesearchbar',
-        'searchable_results',
-    ];
-
-    /**
      * Array of allowed flexform identifiers for transformation
      *
      * @var array
@@ -35,26 +22,6 @@ class DynamicFlexFormHook
         'searchable_livesearchbar,list',
         'searchable_results,list',
     ];
-
-    /**
-     * Hook function of \TYPO3\CMS\Backend\Utility\BackendUtility
-     * Used to add items based on TypoScript configuration
-     *
-     * TYPO3 7 legacy support
-     * @deprecated
-     *
-     * @param array &$dataStructure Flexform structure
-     * @param array $conf some strange configuration
-     * @param array $row row of current record
-     * @param string $table table name
-     * @return void
-     */
-    public function getFlexFormDS_postProcessDS(&$dataStructure, $conf, $row, $table)
-    {
-        if ($table === 'tt_content' && $row['CType'] === 'list' && in_array($row['list_type'], $this->allowedListTypes) && is_array($dataStructure)) {
-            $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($row['list_type']);
-        }
-    }
 
     /**
      * Hook used to add items based on TypoScript configuration

@@ -6,7 +6,6 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Enumeration\TcaType;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -94,7 +93,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      *
      *
      * @param string                 $field        Fieldname to apply this collector to
-     * @param DataCollectorInterface $subCollector
+     * @param DataCollectorInterface $collector
      */
     public function addSubCollector($field, DataCollectorInterface $collector)
     {
@@ -122,7 +121,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * Returns true if a subcollector exists for given column (this is the TCA column, not the subtype fieldname!)
      *
-     * @param  string $field
+     * @param  string $column
      * @return bool
      */
     public function subCollectorExistsForColumn($column)
@@ -324,7 +323,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return queryBuilder $subCollector
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {
@@ -362,49 +361,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $queryBuilder->where(...$whereExpressions);
 
         return $queryBuilder;
-    }
-
-    /**
-     * Legacy function for typo3 7.6
-     * Bulds query parts for the record selection query
-     * Modify this method if you want to apply custom restrictions
-     *
-     * @param  string  $additionalWhere
-     * @param  bool $applyLanguageRestriction
-     * @return array
-     */
-    public function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)
-    {
-        $statement = [
-            'select' => [$this->config['table'].'.uid'],
-            'from' => [$this->config['table']],
-            'where' => [
-                0 => '1=1 ',
-                //enablefields
-                'enablefields' => $this->pageRepository->enableFields($this->config['table']),
-                'deleted' => BackendUtility::deleteClause($this->config['table']),
-                //PID restriction
-                'pid' => ($this->config['pid'] !== null ? ' AND ' . $this->config['table'] . '.pid = ' . $this->config['pid'] : ''),
-            ],
-        ];
-
-        if ($applyLanguageRestriction && !empty($this->getTcaConfiguration()['ctrl']['languageField'])) {
-            $statement['where']['language'] = ' AND ' . $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'] . ' IN' . "(0,-1)";
-        }
-
-        if ($additionalWhere) {
-            $statement['where']['additional'] = ' AND ' . $additionalWhere;
-        }
-
-        if (!empty($this->config['select']['additionalTables'])) {
-            $statement['from'] = array_merge($statement['from'], $this->config['select']['additionalTables']);
-        }
-
-        if (!empty($this->config['select']['additionalWhereClauses'])) {
-            $statement['where'] = array_merge($statement['where'], $this->config['select']['additionalWhereClauses']);
-        }
-
-        return $statement;
     }
 
     public function isTcaAvailable()

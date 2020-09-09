@@ -26,7 +26,7 @@ class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRe
     /**
      * Renders the preview
      *
-     * @param  array $config
+     * @param  array $record
      * @return string
      */
     public function render($record)

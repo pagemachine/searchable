@@ -66,6 +66,8 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
      */
     public function modifyRecord($record)
     {
+        $content = [];
+
         if (!empty($this->config['fields'])) {
             $content = $this->collectFields($record, $this->config['fields']);
 
@@ -73,11 +75,13 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
                 $content = $this->splitFields($content);
             }
         }
+
         $content = $this->collectFieldFromSubRecords($record, $this->config['completionField'], $content, true);
 
         if (!empty($content)) {
             $record[$this->config['completionField']]['input'] = $content;
         }
+
         return $record;
     }
 
@@ -104,7 +108,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
      * Modifies a query before it is executed
      *
      * @param QueryInterface $query
-     * @return array
+     * @return QueryInterface
      */
     public function modifyQuery(QueryInterface $query)
     {

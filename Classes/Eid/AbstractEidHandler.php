@@ -3,7 +3,6 @@ namespace PAGEmachine\Searchable\Eid;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -20,22 +19,6 @@ abstract class AbstractEidHandler
      * @var array
      */
     protected $options = [];
-
-    /**
-     * Processes a autosuggest request (< TYPO3 V8)
-     *
-     * @return void
-     */
-    public function processRequestLegacy()
-    {
-        $term = GeneralUtility::_GET('term');
-        $this->options = GeneralUtility::_GET('options');
-
-        $result = $this->getResults($term);
-
-        header('Content-type: application/json');
-        echo json_encode($result);
-    }
 
     /**
      * Process request

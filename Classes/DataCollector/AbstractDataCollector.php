@@ -107,7 +107,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * Adds a new SubCollector for subtypes
      *
      * @param string                 $field        Fieldname to apply this collector to
-     * @param DataCollectorInterface $subCollector
+     * @param DataCollectorInterface $collector
      */
     public function addSubCollector($field, DataCollectorInterface $collector)
     {

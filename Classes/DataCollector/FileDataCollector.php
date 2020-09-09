@@ -41,36 +41,11 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
     ];
 
     /**
-     * Bulds query parts for the record selection query
-     * Adds mimetype restriction via mm query
-     *
-     * @param  string  $additionalWhere
-     * @param  bool $applyLanguageRestriction
-     * @return array
-     */
-    public function buildUidListQueryParts($additionalWhere, $applyLanguageRestriction = false)
-    {
-        /**
-         * @var array
-         */
-        $statement = parent::buildUidListQueryParts($additionalWhere, $applyLanguageRestriction);
-        $statement['from'][] = 'sys_file';
-
-        $statement['where'][] = ' AND sys_file_metadata.file = sys_file.uid';
-
-        if (!empty($this->config['mimetypes'])) {
-            $statement['where'][] = ' AND sys_file.mime_type IN(' . implode(',', $this->config['mimetypes']) . ')';
-        }
-
-        return $statement;
-    }
-
-    /**
      * Returns a QueryBuilder object for the record selection query
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return queryBuilder $subCollector
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {
@@ -87,8 +62,10 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(
                     'sys_file.mime_type',
-                    $this->config['mimetypes'],
-                    Connection::PARAM_STR_ARRAY
+                    $queryBuilder->createNamedParameter(
+                        $this->config['mimetypes'],
+                        Connection::PARAM_STR_ARRAY
+                    )
                 )
             );
         }

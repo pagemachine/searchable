@@ -76,7 +76,7 @@ class IndexManager implements SingletonInterface
     /**
      * Deletes and recreates an index
      * @param  string $index
-     * @return array
+     * @return void
      */
     public function resetIndex($index)
     {

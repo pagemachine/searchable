@@ -29,27 +29,6 @@ class LinkBuilder
     }
 
     /**
-     * Processes a autosuggest request (< TYPO3 V8)
-     *
-     * @return void
-     */
-    public function processRequestLegacy()
-    {
-        $configuration = GeneralUtility::_POST('configuration');
-
-        $links = [];
-
-        if ($configuration) {
-            foreach ($configuration as $key => $recordConfig) {
-                $links[$key] = $this->getLink($recordConfig['conf']);
-            }
-        }
-
-        header('Content-type: application/json');
-        echo json_encode($links);
-    }
-
-    /**
      * Process request
      *
      * @param ServerRequestInterface $request
@@ -76,7 +55,6 @@ class LinkBuilder
     /**
      * Builds a single link
      *
-     * @param  string $title
      * @param  array $configuration TypoLink configuration
      * @return string
      */
@@ -90,5 +68,7 @@ class LinkBuilder
             }
             return $url;
         }
+
+        return '';
     }
 }
