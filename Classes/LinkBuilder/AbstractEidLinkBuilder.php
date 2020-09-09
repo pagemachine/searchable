@@ -102,7 +102,6 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
                 'form_params' => [
                     'configuration' => $configuration,
                 ],
-                'body' => $body ?: '',
                 'http_errors' => false,
             ]
         );
