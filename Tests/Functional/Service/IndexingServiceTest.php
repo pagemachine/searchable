@@ -10,6 +10,7 @@ use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -33,6 +34,13 @@ final class IndexingServiceTest extends FunctionalTestCase
      * @var array
      */
     protected $configurationToUseInTestInstance = [
+        'DB' => [
+            'Connections' => [
+                'Default' => [
+                    'wrapperClass' => \PAGEmachine\Searchable\Database\Connection::class,
+                ],
+            ],
+        ],
         'LOG' => [
             'PAGEmachine' => [
                 'Searchable' => [
@@ -61,7 +69,7 @@ final class IndexingServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function indexesRecords(): void
+    public function indexesRecordsFully(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 2,
@@ -81,21 +89,51 @@ final class IndexingServiceTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function indexesRecordsPartially(): void
+    {
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 2,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Test page',
+        ]);
+        $this->indexingService->indexFull();
+
+        $this->assertDocumentInIndex([
+            'uid' => 2,
+            'title' => 'Test page',
+        ]);
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('pages');
+        $connection->update(
+            'pages',
+            [
+                'title' => 'Updated test page',
+            ],
+            [
+                'uid' => 2,
+            ]
+        );
+
+        $this->syncIndices();
+
+        $this->indexingService->indexPartial();
+
+        $this->assertDocumentInIndex([
+            'uid' => 2,
+            'title' => 'Updated test page',
+        ]);
+    }
+
+    /**
      * @return void
      */
     protected function setUp()
     {
         parent::setUp();
-
-        // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
-        $this->setUpBackendUserFromFixture(1);
-        // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
-
-        if (!method_exists(Bootstrap::class, 'getInstance')) { // TYPO3v9+
-            Bootstrap::initializeLanguageObject();
-        } else {
-            Bootstrap::getInstance()->initializeLanguageObject();
-        }
 
         $this->indexName = sprintf('index_%s', GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8));
 
@@ -144,6 +182,15 @@ final class IndexingServiceTest extends FunctionalTestCase
             'EXT:searchable/Configuration/Typoscript/setup.txt',
             __DIR__ . '/Fixtures/TypoScript/page.typoscript',
         ]);
+
+        // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
+        $this->setUpBackendUserFromFixture(1);
+        // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
+        if (!method_exists(Bootstrap::class, 'getInstance')) { // TYPO3v9+
+            Bootstrap::initializeLanguageObject();
+        } else {
+            Bootstrap::getInstance()->initializeLanguageObject();
+        }
     }
 
     /**
@@ -159,10 +206,8 @@ final class IndexingServiceTest extends FunctionalTestCase
     protected function assertIndexEmpty(): void
     {
         $client = $this->getElasticsearchClient();
-        // Ensure all queued changes are persisted
-        $client->indices()->flushSynced([
-            'index' => $this->indexName,
-        ]);
+        $this->syncIndices();
+
         $response = $client->search([
             'index' => $this->indexName,
         ]);
@@ -174,10 +219,8 @@ final class IndexingServiceTest extends FunctionalTestCase
     protected function assertDocumentInIndex(array $documentSubset): void
     {
         $client = $this->getElasticsearchClient();
-        // Ensure all queued changes are persisted
-        $client->indices()->flushSynced([
-            'index' => $this->indexName,
-        ]);
+        $this->syncIndices();
+
         $response = $client->search([
             'index' => $this->indexName,
         ]);
@@ -186,7 +229,7 @@ final class IndexingServiceTest extends FunctionalTestCase
 
         $this->assertGreaterThanOrEqual(1, count($hits), 'No document in index');
         $this->assertNotEmpty($document, 'Document not in index');
-        $this->assertArraySubset($documentSubset, $document);
+        $this->assertArraySubset($documentSubset, $document, false, 'Document source mismatch');
     }
 
     protected function getElasticsearchClient(): ElasticsearchClient
@@ -194,5 +237,18 @@ final class IndexingServiceTest extends FunctionalTestCase
         $client = Connection::getClient();
 
         return $client;
+    }
+
+    /**
+     * Ensure all queued changes are persisted
+     */
+    protected function syncIndices(): void
+    {
+        $this->getElasticsearchClient()->indices()->flushSynced([
+            'index' => implode(',', [
+                $this->indexName,
+                'searchable_updates',
+            ]),
+        ]);
     }
 }
