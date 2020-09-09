@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 
+use PAGEmachine\Searchable\DataCollector\AbstractDataCollector;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\RelationResolverInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -52,10 +53,15 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     public function resolveRelation($fieldname, $record, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)
     {
         $processedField = [];
+        $language = null;
+
+        if (!$childCollector->getConfig()['sysLanguageOverlay'] && $childCollector instanceof AbstractDataCollector) {
+            $language = (string)$childCollector->getLanguage();
+        }
 
         $contentUids = $this->fetchContentUids(
             $record['uid'],
-            $childCollector->getConfig()['sysLanguageOverlay'] ? null : $childCollector->getLanguage()
+            $language
         );
 
         foreach ($contentUids as $content) {
