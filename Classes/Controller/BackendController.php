@@ -134,7 +134,7 @@ class BackendController extends ActionController
      */
     protected function request($url, $body)
     {
-        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 8001000) {
+        if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.1', '>=')) {
             return $this->doRequest($url, $body);
         } else {
             return $this->doRequestLegacy($url, $body);

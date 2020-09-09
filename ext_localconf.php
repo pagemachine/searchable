@@ -115,8 +115,8 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PA
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_linkbuilder'] = \PAGEmachine\Searchable\Eid\LinkBuilder::class . '::processRequest';
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = \PAGEmachine\Searchable\Eid\Search::class . '::processRequest';
 
-//Register Hook for dynamic Plugin FlexForms
-if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 8005000) {
+// Register Hook for dynamic Plugin FlexForms
+if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.5', '<')) {
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['getFlexFormDSClass']['searchable'] =
         \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;
 } else {
