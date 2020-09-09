@@ -2,7 +2,9 @@ version: '3'
 
 services:
   app:
-    image: thecodingmachine/php:7.2-v2-fpm
+    image: thecodingmachine/php:${PHP_VERSION:-7.2}-v2-fpm
+    environment:
+      TYPO3_VERSION: ${TYPO3_VERSION:-^9.5}
     depends_on:
       - ssh-key
     volumes:
