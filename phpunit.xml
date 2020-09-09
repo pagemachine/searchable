@@ -11,11 +11,8 @@
   stopOnFailure="false"
   stopOnIncomplete="false"
   stopOnSkipped="false"
-  verbose="false">
-
-  <php>
-    <env name="TYPO3_PATH_WEB" value="web"/>
-  </php>
+  verbose="false"
+>
 
   <testsuites>
     <testsuite name="Unit tests">
