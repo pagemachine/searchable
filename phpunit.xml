@@ -12,6 +12,7 @@
   stopOnIncomplete="false"
   stopOnSkipped="false"
   verbose="false"
+  printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer"
 >
 
   <testsuites>
