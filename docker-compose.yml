@@ -6,10 +6,21 @@ services:
     environment:
       TYPO3_VERSION: ${TYPO3_VERSION:-^9.5}
     depends_on:
+      - mysql
       - ssh-key
     volumes:
       - ./:/var/www/html
       - ssh-agent:/.ssh-agent
+
+  mysql:
+    image: mysql:5.7
+    command:
+      - mysqld
+      - --character-set-server=utf8mb4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    tmpfs:
+      - /var/lib/mysql
 
   ssh-agent:
     image: docksal/ssh-agent:1.3
