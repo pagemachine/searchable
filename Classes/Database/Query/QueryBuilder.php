@@ -43,6 +43,8 @@ class QueryBuilder extends BaseQueryBuilder
             $count = preg_match('/[^\w]*uid[^\w]\s*=\s*(?:(?<uid>[0-9]+)|:(?<placeholder>[\w]+))/', $where, $matches);
 
             if ($count === 1) {
+                $uid = 0;
+
                 if (!empty($matches['uid'])) {
                     $uid = $matches['uid'];
                 } elseif (!empty($matches['placeholder'])) {

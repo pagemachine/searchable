@@ -68,5 +68,7 @@ class LinkBuilder
             }
             return $url;
         }
+
+        return '';
     }
 }

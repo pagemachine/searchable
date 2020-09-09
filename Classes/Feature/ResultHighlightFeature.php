@@ -55,15 +55,17 @@ class ResultHighlightFeature extends HighlightFeature implements FeatureInterfac
      */
     public function modifyRecord($record)
     {
+        $highlightContent = [];
+
         if (!empty($this->config['fields'])) {
             $highlightContent = $this->collectFields($record, $this->config['fields']);
         }
+
         $highlightContent = $this->collectFieldFromSubRecords($record, $this->config['highlightField'], $highlightContent, true);
 
         if (!empty($highlightContent)) {
             $record[$this->config['highlightField']] = $this->config['stripTags'] ? strip_tags(implode(" ", $highlightContent)) : implode(" ", $highlightContent);
         }
-
 
         return $record;
     }

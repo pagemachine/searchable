@@ -214,7 +214,9 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addMapping($indexerConfiguration)
     {
-        //Apply mapper
+        $mapping = [];
+
+        // Apply mapper
         if (is_string($indexerConfiguration['config']['mapper']['className']) && !empty($indexerConfiguration['config']['mapper']['className'])) {
             // Class will only be called if it implements a specific interface.
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?

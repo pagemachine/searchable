@@ -263,11 +263,12 @@ class SearchQuery extends AbstractQuery
             }
 
             $this->result = $response;
-            return $response;
         } catch (\Exception $e) {
             $this->logger->error("Elasticsearch-PHP encountered an error while searching: " . $e->getMessage());
-            return [];
+
+            $response = [];
         }
+
         return $response;
     }
 

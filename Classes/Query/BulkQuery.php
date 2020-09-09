@@ -147,6 +147,8 @@ class BulkQuery extends AbstractQuery
      */
     public function execute()
     {
+        $response = [];
+
         if (!empty($this->parameters['body'])) {
 
             /**
@@ -158,6 +160,8 @@ class BulkQuery extends AbstractQuery
                 $this->logger->error("Bulk Query response contains errors: ", $response);
             }
         }
+
+        return $response;
     }
 
     /**

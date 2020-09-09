@@ -53,6 +53,8 @@ class SearchController extends ActionController
      */
     public function resultsAction($term = null, $page = 1)
     {
+        $result = [];
+
         if ($term) {
             $this->searchQuery
                 ->setTerm($term)

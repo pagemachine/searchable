@@ -27,6 +27,13 @@ abstract class AbstractEidLinkBuilder extends AbstractLinkBuilder implements Dyn
     ];
 
     /**
+     * The default title if the title field is empty
+     *
+     * @var string
+     */
+    protected $defaultTitle = "Link";
+
+    /**
      * Creates links for a batch of records
      *
      * @param  array $records
