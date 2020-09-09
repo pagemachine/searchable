@@ -9,5 +9,11 @@ parameters:
 
   ignoreErrors:
     - '#Variable \$_EXTKEY might not be defined.#'
+    - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
+      path: Classes/ViewHelpers/SiteLanguageViewHelper.php
+    - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
+      paths:
+        - ext_localconf.php
+        - Classes/Hook/DatabaseConnectionHook.php
 
   reportUnmatchedIgnoredErrors: false

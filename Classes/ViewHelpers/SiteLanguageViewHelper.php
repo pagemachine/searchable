@@ -23,6 +23,7 @@ class SiteLanguageViewHelper extends AbstractViewHelper
     {
         if (is_object($this->getTypoScriptFrontendController())) {
             if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
+                // @phpstan-ignore-next-line
                 return $this->getTypoScriptFrontendController()->sys_language_uid;
             } else {
                 return $this->getLanguageAspect()->getId();
