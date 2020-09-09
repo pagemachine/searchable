@@ -5,6 +5,9 @@ services:
     image: thecodingmachine/php:${PHP_VERSION:-7.2}-v3-fpm
     environment:
       TYPO3_VERSION: ${TYPO3_VERSION:-^9.5}
+      typo3DatabaseHost: mysql
+      typo3DatabaseUsername: root
+      typo3DatabasePassword: root
     depends_on:
       - mysql
       - ssh-key
