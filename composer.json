@@ -21,10 +21,13 @@
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.26.0",
         "ergebnis/composer-normalize": "^2.6",
+        "jangregor/phpstan-prophecy": "^0.8.0",
         "nimut/testing-framework": "^5.1",
         "php-parallel-lint/php-console-highlighter": "^0.5.0",
         "php-parallel-lint/php-parallel-lint": "^1.2",
+        "phpstan/phpstan": "^0.12.42",
         "phpunit/phpunit": "^7.0",
+        "saschaegerer/phpstan-typo3": "^0.13.1",
         "sclable/xml-lint": "^0.3.0",
         "slevomat/coding-standard": "^6.4",
         "squizlabs/php_codesniffer": "^3.0"
@@ -51,6 +54,7 @@
         }
     },
     "scripts": {
+        "analyze:php": "phpstan analyse --ansi --no-progress --configuration=phpstan.neon",
         "build": [
             "@composer require --no-progress --ansi --update-with-dependencies typo3/cms-core $TYPO3_VERSION",
             "@composer validate --ansi",
@@ -61,6 +65,7 @@
         "lint": [
             "@lint:php",
             "@lint:style",
+            "@analyze:php",
             "@lint:xml"
         ],
         "lint:php": "parallel-lint --exclude bin --exclude vendor --exclude web .",
