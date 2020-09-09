@@ -11,11 +11,9 @@
   stopOnFailure="false"
   stopOnIncomplete="false"
   stopOnSkipped="false"
-  verbose="false">
-
-  <php>
-    <env name="TYPO3_PATH_WEB" value="web"/>
-  </php>
+  verbose="false"
+  printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer"
+>
 
   <testsuites>
     <testsuite name="Unit tests">
