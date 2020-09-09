@@ -55,10 +55,10 @@ class SearchController extends ActionController
     {
         if ($term) {
             $this->searchQuery
-                ->setPluginMode(true)
-                ->setFeatureSettings($this->settings['features'])
                 ->setTerm($term)
-                ->setPage($page);
+                ->setPage($page)
+                ->setPluginMode(true)
+                ->setFeatureSettings($this->settings['features']);
 
             $result = $this->searchQuery->execute();
         }

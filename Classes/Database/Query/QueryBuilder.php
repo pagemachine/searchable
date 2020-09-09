@@ -15,6 +15,11 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 class QueryBuilder extends BaseQueryBuilder
 {
     /**
+     * @var \PAGEmachine\Searchable\Database\Connection
+     */
+    protected $connection;
+
+    /**
      * @var DatabaseRecordUpdateQuery
      */
     protected $updateQuery;
@@ -29,10 +34,10 @@ class QueryBuilder extends BaseQueryBuilder
         $result = parent::execute();
 
         if ($this->getType() === DoctrineQueryBuilder::INSERT) {
-            $tableName = $this->getConnection()->unquoteIdentifier($this->getQueryPart('from')['table']);
-            $this->getQuery()->updateToplevel($tableName, (int)$this->getConnection()->lastInsertId($tableName));
+            $tableName = $this->connection->unquoteIdentifier($this->getQueryPart('from')['table']);
+            $this->getQuery()->updateToplevel($tableName, (int)$this->connection->lastInsertId($tableName));
         } elseif (in_array($this->getType(), [DoctrineQueryBuilder::UPDATE, DoctrineQueryBuilder::DELETE], true)) {
-            $tableName = $this->getConnection()->unquoteIdentifier($this->getQueryPart('from')['table']);
+            $tableName = $this->connection->unquoteIdentifier($this->getQueryPart('from')['table']);
             $where = (string)$this->getQueryPart('where');
             $matches = [];
             $count = preg_match('/[^\w]*uid[^\w]\s*=\s*(?:(?<uid>[0-9]+)|:(?<placeholder>[\w]+))/', $where, $matches);

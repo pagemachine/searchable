@@ -28,11 +28,12 @@ class SiteLanguageViewHelper extends AbstractViewHelper
                 return $this->getLanguageAspect()->getId();
             }
         }
+
         return 0;
     }
 
     /**
-     * @return TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController|null
      * @codeCoverageIgnore
      */
     public function getTypoScriptFrontendController()
@@ -41,7 +42,7 @@ class SiteLanguageViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @return \TYPO3\CMS\Core\Context\LanguageAspect
      * @codeCoverageIgnore
      */
     public function getLanguageAspect()

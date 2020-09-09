@@ -43,7 +43,7 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     /**
      * Renders the preview
      *
-     * @param  array $config
+     * @param  array $record
      * @return string
      */
     public function render($record)

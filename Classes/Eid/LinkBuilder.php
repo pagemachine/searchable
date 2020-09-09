@@ -55,7 +55,6 @@ class LinkBuilder
     /**
      * Builds a single link
      *
-     * @param  string $title
      * @param  array $configuration TypoLink configuration
      * @return string
      */

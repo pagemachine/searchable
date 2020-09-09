@@ -91,7 +91,7 @@ class BackendController extends ActionController
      *
      * @param  string $url
      * @param  string $body
-     * @return string $answer
+     * @return void
      */
     public function requestAction($url = '', $body = '')
     {

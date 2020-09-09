@@ -14,7 +14,7 @@ class FieldListUtility implements SingletonInterface
     const MODE_BLACKLIST = 'blacklist';
 
     /**
-     * @return OverlayUtility
+     * @return FieldListUtility
      */
     public static function getInstance()
     {

@@ -55,7 +55,7 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
      * Modifies a query before it is executed
      *
      * @param QueryInterface $query
-     * @return array
+     * @return QueryInterface
      */
     public function modifyQuery(QueryInterface $query)
     {

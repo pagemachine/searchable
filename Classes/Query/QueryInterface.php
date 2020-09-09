@@ -14,10 +14,10 @@ interface QueryInterface
      * @return array
      */
     public function getParameters();
-    
+
     /**
      * @param array $parameters
-     * @return void
+     * @return QueryInterface
      */
     public function setParameters($parameters);
 
@@ -25,10 +25,10 @@ interface QueryInterface
      * @return string
      */
     public function getTerm();
-    
+
     /**
      * @param string $term
-     * @return SearchQuery
+     * @return QueryInterface
      */
     public function setTerm($term);
 }

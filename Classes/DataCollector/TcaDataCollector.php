@@ -94,7 +94,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      *
      *
      * @param string                 $field        Fieldname to apply this collector to
-     * @param DataCollectorInterface $subCollector
+     * @param DataCollectorInterface $collector
      */
     public function addSubCollector($field, DataCollectorInterface $collector)
     {
@@ -122,7 +122,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     /**
      * Returns true if a subcollector exists for given column (this is the TCA column, not the subtype fieldname!)
      *
-     * @param  string $field
+     * @param  string $column
      * @return bool
      */
     public function subCollectorExistsForColumn($column)
@@ -324,7 +324,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return queryBuilder $subCollector
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {

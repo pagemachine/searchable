@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Query class for searching
  */
-class SearchQuery extends AbstractQuery implements QueryInterface
+class SearchQuery extends AbstractQuery
 {
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
@@ -33,11 +33,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     /**
      * @param string $key
      * @param mixed $parameter
-     * @return void
+     * @return SearchQuery
      */
     public function setBodyParameter($key, $parameter)
     {
         $this->parameters['body'][$key] = $parameter;
+
         return $this;
     }
 
@@ -58,11 +59,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
 
     /**
      * @param bool $respectLanguage
-     * @return void
+     * @return SearchQuery
      */
     public function setRespectLanguage($respectLanguage)
     {
         $this->respectLanguage = $respectLanguage;
+
         return $this;
     }
 
@@ -81,11 +83,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
 
     /**
      * @param int $language
-     * @return void
+     * @return SearchQuery
      */
     public function setLanguage($language)
     {
         $this->language = $language;
+
         return $this;
     }
 
@@ -105,11 +108,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
 
     /**
      * @param int $from
-     * @return void
+     * @return SearchQuery
      */
     public function setFrom($from)
     {
         $this->from = $from;
+
         return $this;
     }
 
@@ -129,11 +133,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
 
     /**
      * @param int $size
-     * @return void
+     * @return SearchQuery
      */
     public function setSize($size)
     {
         $this->size = $size;
+
         return $this;
     }
 
@@ -141,10 +146,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
      * Sets the page offset
      *
      * @param int $page
+     * @return SearchQuery
      */
     public function setPage($page)
     {
         $this->from = (int)($page - 1) * $this->size;
+
         return $this;
     }
 
@@ -164,11 +171,12 @@ class SearchQuery extends AbstractQuery implements QueryInterface
 
     /**
      * @param string $searchType
-     * @return void
+     * @return SearchQuery
      */
     public function setSearchType($searchType)
     {
         $this->searchType = $searchType;
+
         return $this;
     }
 
@@ -193,6 +201,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     public function setSearchFields($searchFields)
     {
         $this->searchFields = $searchFields;
+
         return $this;
     }
 
@@ -217,6 +226,7 @@ class SearchQuery extends AbstractQuery implements QueryInterface
     public function setTerm($term)
     {
         $this->term = $term;
+
         return $this;
     }
 

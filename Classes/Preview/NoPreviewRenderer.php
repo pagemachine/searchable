@@ -14,7 +14,7 @@ class NoPreviewRenderer extends AbstractPreviewRenderer implements PreviewRender
     /**
      * Renders the preview
      *
-     * @param  array $config
+     * @param  array $record
      * @return string
      */
     public function render($record)

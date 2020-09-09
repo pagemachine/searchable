@@ -143,7 +143,7 @@ class BulkQuery extends AbstractQuery
     /**
      * Executes a bulk insertion query
      *
-     * @return void
+     * @return array
      */
     public function execute()
     {

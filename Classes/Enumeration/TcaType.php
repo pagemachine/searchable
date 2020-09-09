@@ -22,7 +22,7 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
     /**
      * Returns true if the type is of plain mapping type (supported type with no relations)
      *
-     * @param $type
+     * @param string $type
      * @return bool
      */
     public static function isPlain($type)
@@ -38,7 +38,7 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
     /**
      * Returns true if the type is relation based (and needs subcollector handling)
      *
-     * @param $type
+     * @param string $type
      * @return bool
      */
     public static function isRelation($type)
@@ -52,7 +52,7 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
     /**
      * Returns true if the type is currently unsupported by this extension
      *
-     * @param $type
+     * @param string $type
      * @return bool
      */
     public static function isUnsupported($type)

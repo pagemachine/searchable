@@ -48,7 +48,7 @@ class IndexerFactory implements SingletonInterface
      * Builds a single indexer
      * @param  int $language language to set up
      * @param  string  $type     The type the index is for
-     * @return IndexerInterface
+     * @return IndexerInterface|null
      */
     public function makeIndexer($language = 0, $type = '')
     {

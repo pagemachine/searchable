@@ -45,7 +45,7 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return queryBuilder $subCollector
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {

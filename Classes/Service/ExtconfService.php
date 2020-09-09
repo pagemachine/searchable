@@ -127,7 +127,7 @@ class ExtconfService implements SingletonInterface
     /**
      * Returns the meta fieldname used for preview, link etc.
      *
-     * @return array
+     * @return string
      */
     public static function getMetaFieldname()
     {

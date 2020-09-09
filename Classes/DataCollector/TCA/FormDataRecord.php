@@ -31,8 +31,8 @@ class FormDataRecord implements SingletonInterface
 
     /**
      *
-     * @param SearchableRecordGroup|null
-     * @param FormDataCompiler|null
+     * @param SearchableRecordGroup|null $formDataGroup
+     * @param FormDataCompiler|null $formDataCompiler
      */
     public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null)
     {

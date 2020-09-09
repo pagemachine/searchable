@@ -31,7 +31,7 @@ class PageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
     /**
      *
      * @param  array  $arguments
-     * @return array
+     * @return string
      */
     public function render($arguments = [])
     {
