@@ -5,11 +5,39 @@ services:
     image: thecodingmachine/php:${PHP_VERSION:-7.2}-v3-fpm
     environment:
       TYPO3_VERSION: ${TYPO3_VERSION:-^9.5}
+      typo3DatabaseHost: mysql
+      typo3DatabaseUsername: root
+      typo3DatabasePassword: root
+      ELASTICSEARCH_HOST: elasticsearch:9200
+      HTTP_HOST: apache
     depends_on:
+      - apache
+      - elasticsearch
+      - mysql
       - ssh-key
     volumes:
       - ./:/var/www/html
       - ssh-agent:/.ssh-agent
+
+  apache:
+    image: thecodingmachine/php:${PHP_VERSION:-7.2}-v3-slim-apache
+    environment:
+      APACHE_DOCUMENT_ROOT: web/
+    volumes:
+      - ./:/var/www/html
+
+  mysql:
+    image: mysql:5.7
+    command:
+      - mysqld
+      - --character-set-server=utf8mb4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    tmpfs:
+      - /var/lib/mysql
+
+  elasticsearch:
+    image: elasticsearch:5
 
   ssh-agent:
     image: docksal/ssh-agent:1.3

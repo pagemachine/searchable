@@ -70,7 +70,10 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected function prepareView()
     {
-        $configuration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
+        $configuration = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
+            'Searchable'
+        );
 
         $this->view->setTemplateRootPaths($configuration['view']['templateRootPaths']);
         $this->view->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
