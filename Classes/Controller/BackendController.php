@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Controller;
 
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -17,10 +18,17 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 class BackendController extends ActionController
 {
     /**
-     * @var \PAGEmachine\Searchable\Indexer\IndexerFactory
-     * @inject
+     * @var IndexerFactory $indexerFactory
      */
     protected $indexerFactory;
+
+    /**
+     * @param IndexerFactory $indexerFactory
+     */
+    public function injectIndexerFactory(IndexerFactory $indexerFactory): void
+    {
+        $this->indexerFactory = $indexerFactory;
+    }
 
     /**
      * Backend Template Container

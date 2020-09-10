@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
+use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
@@ -9,6 +10,7 @@ use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -20,18 +22,30 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface
 {
     /**
-     *
-     * @var \TYPO3\CMS\Frontend\Page\PageRepository
-     * @inject
+     * @var PageRepository $pageRepository
      */
     protected $pageRepository;
 
     /**
-     *
-     * @var \PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager
-     * @inject
+     * @param PageRepository $pageRepository
+     */
+    public function injectPageRepository(PageRepository $pageRepository): void
+    {
+        $this->pageRepository = $pageRepository;
+    }
+
+    /**
+     * @var ResolverManager $resolverManager
      */
     protected $resolverManager;
+
+    /**
+     * @param ResolverManager $resolverManager
+     */
+    public function injectResolverManager(ResolverManager $resolverManager): void
+    {
+        $this->resolverManager = $resolverManager;
+    }
 
     /**
      * Holds one resolver for each subtype field
