@@ -1,10 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\Hook;
 
+use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Service\TypoScriptService;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
