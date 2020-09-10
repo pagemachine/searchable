@@ -24,7 +24,12 @@ class TsfeUtility
 
         if (!is_object($GLOBALS['TSFE'])) {
             $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 1, '');
-            $GLOBALS['TSFE']->connectToDB();
+
+            if (method_exists($GLOBALS['TSFE'], 'connectToDB')) { // TYPO3v9+
+                // @extensionScannerIgnoreLine
+                $GLOBALS['TSFE']->connectToDB();
+            }
+
             $GLOBALS['TSFE']->initFEuser();
             $GLOBALS['TSFE']->determineId();
             $GLOBALS['TSFE']->initTemplate();
