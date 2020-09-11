@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\LanguageIdTrait;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -16,6 +17,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Search implements SingletonInterface
 {
+    use LanguageIdTrait;
+
     /**
      * Elasticsearch client
      * @var Client
@@ -69,7 +72,7 @@ class Search implements SingletonInterface
         }
 
         if ($respectLanguage === true) {
-            $language = $forceLanguage ?: $GLOBALS['TSFE']->sys_language_uid;
+            $language = $forceLanguage ?: $this->getLanguageId();
 
             $params['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         }

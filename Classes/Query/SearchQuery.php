@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
+use PAGEmachine\Searchable\LanguageIdTrait;
 use PAGEmachine\Searchable\Service\ExtconfService;
 
 /*
@@ -12,6 +13,8 @@ use PAGEmachine\Searchable\Service\ExtconfService;
  */
 class SearchQuery extends AbstractQuery
 {
+    use LanguageIdTrait;
+
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
      *
@@ -314,7 +317,7 @@ class SearchQuery extends AbstractQuery
         ];
 
         if ($this->respectLanguage === true) {
-            $language = $this->language ?: $GLOBALS['TSFE']->sys_language_uid;
+            $language = $this->language ?: $this->getLanguageId();
 
             $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         }

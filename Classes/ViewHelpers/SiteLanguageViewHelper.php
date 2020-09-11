@@ -1,9 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\ViewHelpers;
 
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use PAGEmachine\Searchable\LanguageIdTrait;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /*
@@ -16,38 +14,17 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class SiteLanguageViewHelper extends AbstractViewHelper
 {
+    use LanguageIdTrait;
+
     /**
      * @return int
      */
     public function render()
     {
-        if (is_object($this->getTypoScriptFrontendController())) {
-            if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
-                // @phpstan-ignore-next-line
-                return $this->getTypoScriptFrontendController()->sys_language_uid;
-            } else {
-                return $this->getLanguageAspect()->getId();
-            }
+        if (is_object($GLOBALS['TSFE'])) {
+            return $this->getLanguageId();
         }
 
         return 0;
-    }
-
-    /**
-     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController|null
-     * @codeCoverageIgnore
-     */
-    public function getTypoScriptFrontendController()
-    {
-        return $GLOBALS['TSFE'];
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Context\LanguageAspect
-     * @codeCoverageIgnore
-     */
-    public function getLanguageAspect()
-    {
-        return GeneralUtility::makeInstance(Context::class)->getAspect('language');
     }
 }
