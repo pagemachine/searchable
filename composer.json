@@ -63,6 +63,7 @@
             "@lint",
             "@test"
         ],
+        "fix:style": "phpcbf",
         "lint": [
             "@lint:php",
             "@lint:style",
