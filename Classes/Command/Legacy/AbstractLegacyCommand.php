@@ -44,11 +44,18 @@ abstract class AbstractLegacyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        GeneralUtility::deprecationLog(sprintf(
+        $deprecationMessage = sprintf(
             'The CLI command "%s" is deprecated and will be removed with Searchable v4, use "%s" instead',
             $this->getName(),
             $this->replacementCommand
-        ));
+        );
+
+        if (!method_exists(GeneralUtility::class, 'deprecationLog')) { // TYPO3v10
+            trigger_error($deprecationMessage, E_USER_DEPRECATED);
+        } else {
+            // @extensionScannerIgnoreLine
+            GeneralUtility::deprecationLog($deprecationMessage);
+        }
 
         return $this->getApplication()->find($this->replacementCommand)->run($input, $output);
     }
