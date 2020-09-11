@@ -312,4 +312,9 @@ final class IndexingService
             throw new \RuntimeException('Elasticsearch is offline', 1599662577);
         }
     }
+
+    public function __toString(): string
+    {
+        return __CLASS__;
+    }
 }
