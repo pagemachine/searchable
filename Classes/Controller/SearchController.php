@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
+use PAGEmachine\Searchable\Query\SearchQuery;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /*
@@ -10,12 +11,17 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 class SearchController extends ActionController
 {
     /**
-     * Search Query
-     *
-     * @var \PAGEmachine\Searchable\Query\SearchQuery
-     * @inject
+     * @var SearchQuery $searchQuery
      */
     protected $searchQuery;
+
+    /**
+     * @param SearchQuery $searchQuery
+     */
+    public function injectSearchQuery(SearchQuery $searchQuery): void
+    {
+        $this->searchQuery = $searchQuery;
+    }
 
     public function initializeObject()
     {

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Preview;
 
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -13,16 +14,30 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
 {
     /**
-     * @var \TYPO3\CMS\Fluid\View\StandaloneView
-     * @inject
+     * @var StandaloneView $view
      */
     protected $view;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
-     * @inject
+     * @param StandaloneView $view
+     */
+    public function injectView(StandaloneView $view): void
+    {
+        $this->view = $view;
+    }
+
+    /**
+     * @var ConfigurationManagerInterface $configurationManager
      */
     protected $configurationManager;
+
+    /**
+     * @param ConfigurationManagerInterface $configurationManager
+     */
+    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void
+    {
+        $this->configurationManager = $configurationManager;
+    }
 
     /**
      * @var array

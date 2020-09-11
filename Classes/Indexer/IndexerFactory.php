@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Indexer;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -12,12 +13,17 @@ use TYPO3\CMS\Core\SingletonInterface;
 class IndexerFactory implements SingletonInterface
 {
     /**
-     * ObjectManager
-     *
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
-     * @inject
+     * @var ObjectManager $objectManager
      */
     protected $objectManager;
+
+    /**
+     * @param ObjectManager $objectManager
+     */
+    public function injectObjectManager(ObjectManager $objectManager): void
+    {
+        $this->objectManager = $objectManager;
+    }
 
     /**
      * Builds an array of indexers
