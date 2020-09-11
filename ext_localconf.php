@@ -6,14 +6,14 @@ if (!defined('TYPO3_MODE')) {
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['searchable'] = \PAGEmachine\Searchable\Command\SearchableCommandController::class;
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.' . $_EXTKEY,
+    'PAGEmachine.Searchable',
     'Searchbar',
     ['Search' => 'searchbar'],
     ['Search' => 'searchbar']
 );
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.' . $_EXTKEY,
+    'PAGEmachine.Searchable',
     'LiveSearchbar',
     ['Search' => 'liveSearchbar'],
     ['Search' => 'liveSearchbar']
@@ -21,7 +21,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['sear
 
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.' . $_EXTKEY,
+    'PAGEmachine.Searchable',
     'Results',
     ['Search' => 'results'],
     ['Search' => 'results']

@@ -8,7 +8,8 @@ parameters:
     - Classes
 
   ignoreErrors:
-    - '#Variable \$_EXTKEY might not be defined.#'
+    - message: '#Variable \$_EXTKEY might not be defined.#'
+      path: ext_emconf.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
       path: Classes/ViewHelpers/SiteLanguageViewHelper.php
     - message: '#TYPO3\\CMS\\Extbase\\Mvc\\Controller\\CommandController#'
