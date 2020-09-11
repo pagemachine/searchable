@@ -8,6 +8,7 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
+use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -28,6 +29,11 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      * @var string
      */
     private $indexName;
+
+    /**
+     * @var Process
+     */
+    private $serverProcess;
 
     /**
      * @var IndexingService
@@ -51,7 +57,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                         'hosts' => sprintf('http://%s', getenv('ELASTICSEARCH_HOST')),
                     ],
                     'indexing' => [
-                        'domain' => sprintf('http://%s', getenv('HTTP_HOST')),
+                        'domain' => 'http://localhost:8080',
                     ],
                 ],
                 'indices' => [
@@ -78,6 +84,19 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->indexingService = $objectManager->get(IndexingService::class);
         $this->indexingService->setup();
+
+        $this->serverProcess = new Process(
+            [
+                PHP_BINARY,
+                '-S',
+                'localhost:8080',
+            ],
+            $this->getInstancePath(),
+            [
+                'TYPO3_PATH_ROOT' => $this->getInstancePath(),
+            ]
+        );
+        $this->serverProcess->start();
 
         $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 1,
@@ -107,6 +126,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->getElasticsearchClient()->indices()->delete([
             'index' => $this->indexName,
         ]);
+
+        $this->serverProcess->stop();
     }
 
     protected function assertIndexEmpty(): void
