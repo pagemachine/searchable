@@ -30,7 +30,8 @@
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "sclable/xml-lint": "^0.3.0",
         "slevomat/coding-standard": "^6.4",
-        "squizlabs/php_codesniffer": "^3.0"
+        "squizlabs/php_codesniffer": "^3.0",
+        "symfony/process": "^5.1"
     },
     "config": {
         "sort-packages": true
