@@ -62,6 +62,9 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentInIndex([
             'uid' => 2,
             'title' => 'Test page',
+            'searchable_meta' => [
+                'renderedLink' => 'index.php?id=2',
+            ],
         ]);
     }
 
