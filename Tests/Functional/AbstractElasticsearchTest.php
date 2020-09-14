@@ -26,9 +26,9 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     ];
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $indexName;
+    private $indexNames;
 
     /**
      * @var Process
@@ -47,7 +47,9 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->indexName = sprintf('index_%s', GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8));
+        $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
+        $this->indexNames[0] = sprintf('index_%s_en', $id);
+        $this->indexNames[1] = sprintf('index_%s_de', $id);
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -62,7 +64,10 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                 ],
                 'indices' => [
                     0 => [
-                        'name' => $this->indexName,
+                        'name' => $this->indexNames[0],
+                    ],
+                    1 => [
+                        'name' => $this->indexNames[1],
                     ],
                 ],
                 'indexers' => [
@@ -124,32 +129,32 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     protected function tearDown()
     {
         $this->getElasticsearchClient()->indices()->delete([
-            'index' => $this->indexName,
+            'index' => implode(',', $this->indexNames),
         ]);
 
         $this->serverProcess->stop();
     }
 
-    protected function assertIndexEmpty(): void
+    protected function assertIndexEmpty(int $languageId = 0): void
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
 
         $response = $client->search([
-            'index' => $this->indexName,
+            'index' => $this->indexNames[$languageId],
         ]);
         $total = $response['hits']['total'];
 
         $this->assertEquals(0, $total, 'Documents in index');
     }
 
-    protected function assertDocumentInIndex(array $documentSubset): void
+    protected function assertDocumentInIndex(array $documentSubset, int $languageId = 0): void
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
 
         $response = $client->search([
-            'index' => $this->indexName,
+            'index' => $this->indexNames[$languageId],
         ]);
         $hits = $response['hits']['hits'];
         $document = $hits[0]['_source'] ?? [];
@@ -172,10 +177,10 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     protected function syncIndices(): void
     {
         $this->getElasticsearchClient()->indices()->flushSynced([
-            'index' => implode(',', [
-                $this->indexName,
-                'searchable_updates',
-            ]),
+            'index' => implode(',', array_merge(
+                $this->indexNames,
+                [ 'searchable_updates' ]
+            )),
         ]);
     }
 }

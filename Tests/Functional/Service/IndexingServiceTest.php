@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -66,6 +67,51 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
                 'renderedLink' => 'index.php?id=2',
             ],
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function indexesRecordTranslations(): void
+    {
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 2,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Test page',
+        ]);
+
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=')) {
+            $this->getDatabaseConnection()->insertArray('pages', [
+                'uid' => 3,
+                'pid' => 1,
+                'sys_language_uid' => 1,
+                'l10n_parent' => 2,
+                'doktype' => PageRepository::DOKTYPE_DEFAULT,
+                'title' => 'Translated test page',
+            ]);
+        } else {
+            $this->getDatabaseConnection()->insertArray('pages_language_overlay', [
+                'uid' => 3,
+                'pid' => 2,
+                'sys_language_uid' => 1,
+                'doktype' => PageRepository::DOKTYPE_DEFAULT,
+                'title' => 'Translated test page',
+            ]);
+        }
+
+        $this->assertIndexEmpty(0);
+        $this->assertIndexEmpty(1);
+
+        $this->indexingService->indexFull();
+
+        $this->assertDocumentInIndex([
+            'uid' => 2,
+            'title' => 'Translated test page',
+            'searchable_meta' => [
+                'renderedLink' => 'index.php?id=2&L=1',
+            ],
+        ], 1);
     }
 
     /**
