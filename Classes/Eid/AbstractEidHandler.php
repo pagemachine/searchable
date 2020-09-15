@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Eid;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\Response;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -24,18 +25,17 @@ abstract class AbstractEidHandler
      * Process request
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return null|ResponseInterface
      */
-    public function processRequest(ServerRequestInterface $request, ResponseInterface $response)
+    public function processRequest(ServerRequestInterface $request): ResponseInterface
     {
         $term = $request->getQueryParams()['term'];
         $this->options = $request->getQueryParams()['options'];
 
         $result = $this->getResults($term);
 
-        $response = $response->withHeader('Content-type', 'application/json');
+        $response = (new Response())->withHeader('Content-Type', 'application/json; charset=utf-8');
         $response->getBody()->write(json_encode($result));
+
         return $response;
     }
 

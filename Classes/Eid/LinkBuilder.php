@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Eid;
 use PAGEmachine\Searchable\Utility\TsfeUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -31,10 +32,8 @@ class LinkBuilder
      * Process request
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return null|ResponseInterface
      */
-    public function processRequest(ServerRequestInterface $request, ResponseInterface $response)
+    public function processRequest(ServerRequestInterface $request): ResponseInterface
     {
         $configuration = $request->getParsedBody()['configuration'];
 
@@ -46,8 +45,9 @@ class LinkBuilder
             }
         }
 
-        $response = $response->withHeader('Content-type', 'application/json');
+        $response = (new Response())->withHeader('Content-Type', 'application/json; charset=utf-8');
         $response->getBody()->write(json_encode($links));
+
         return $response;
     }
 
