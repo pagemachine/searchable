@@ -8,7 +8,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
-use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -18,6 +17,8 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
+    use WebserverTrait;
+
     /**
      * @var array
      */
@@ -29,11 +30,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      * @var string[]
      */
     private $indexNames;
-
-    /**
-     * @var Process
-     */
-    private $serverProcess;
 
     /**
      * @var IndexingService
@@ -90,18 +86,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->indexingService = $objectManager->get(IndexingService::class);
         $this->indexingService->setup();
 
-        $this->serverProcess = new Process(
-            [
-                PHP_BINARY,
-                '-S',
-                'localhost:8080',
-            ],
-            $this->getInstancePath(),
-            [
-                'TYPO3_PATH_ROOT' => $this->getInstancePath(),
-            ]
-        );
-        $this->serverProcess->start();
+        $this->startWebserver();
 
         $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 1,
@@ -131,8 +116,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->getElasticsearchClient()->indices()->delete([
             'index' => implode(',', $this->indexNames),
         ]);
-
-        $this->serverProcess->stop();
     }
 
     protected function assertIndexEmpty(int $languageId = 0): void
