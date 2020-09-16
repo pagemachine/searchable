@@ -20,8 +20,8 @@ trait WebserverTrait
             ],
             $this->getInstancePath(),
             [
-                'TYPO3_PATH_APP' => $this->getInstancePath(),
-                'TYPO3_PATH_ROOT' => $this->getInstancePath(),
+                'TYPO3_PATH_APP' => getenv('TYPO3_PATH_APP'),
+                'TYPO3_PATH_ROOT' => getenv('TYPO3_PATH_ROOT'),
             ]
         );
         $serverProcess->start(function (string $type, string $output) use ($logger): void {
