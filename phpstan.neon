@@ -10,6 +10,8 @@ parameters:
   ignoreErrors:
     - message: '#Variable \$_EXTKEY might not be defined.#'
       path: ext_emconf.php
+    - message: '#Psr\\Http\\Server\\MiddlewareInterface#'
+      path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
       path: Classes/ViewHelpers/SiteLanguageViewHelper.php
     - message: '#TYPO3\\CMS\\Extbase\\Mvc\\Controller\\CommandController#'
