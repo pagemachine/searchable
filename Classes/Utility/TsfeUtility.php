@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Utility;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -20,7 +21,11 @@ class TsfeUtility
      */
     public static function createTSFE()
     {
-        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA(); // @phpstan-ignore-line
+        // @extensionScannerIgnoreLine
+        if (class_exists(EidUtility::class)) {
+            // @extensionScannerIgnoreLine
+            EidUtility::initTCA(); // @phpstan-ignore-line
+        }
 
         if (!is_object($GLOBALS['TSFE'])) {
             $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 1, '');
