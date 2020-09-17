@@ -9,6 +9,7 @@ use PAGEmachine\Searchable\Service\IndexingService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
+// @extensionScannerIgnoreLine
 class SearchableCommandController extends CommandController
 {
     /**
