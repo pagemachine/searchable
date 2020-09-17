@@ -5,8 +5,6 @@ namespace PAGEmachine\Searchable\Tests\Functional\Middleware;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
-use TYPO3\CMS\Core\Configuration\SiteConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -69,11 +67,7 @@ final class UriBuilderTest extends FunctionalTestCase
             ]
         );
 
-        $siteConfiguration = GeneralUtility::makeInstance(
-            SiteConfiguration::class,
-            Environment::getConfigPath() . '/sites'
-        );
-        $siteConfiguration->createNewBasicSite('test', 1, '/');
+        $this->setUpFrontendRootPage(1);
 
         $response = GeneralUtility::makeInstance(RequestFactory::class)->request(
             'http://localhost:8080/-/searchable/urls',
@@ -92,7 +86,6 @@ final class UriBuilderTest extends FunctionalTestCase
                         ],
                     ],
                 ],
-                'http_errors' => false,
             ]
         );
         $result = json_decode((string)$response->getBody(), true);
