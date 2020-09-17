@@ -78,10 +78,6 @@ class PlainValueProcessor implements SingletonInterface
         return $label;
     }
 
-
-    /**
-     * @return \TYPO3\CMS\Lang\LanguageService
-    */
     protected function getLanguageService()
     {
         return $GLOBALS['LANG'];

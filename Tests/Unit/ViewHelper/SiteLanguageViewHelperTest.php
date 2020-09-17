@@ -7,7 +7,9 @@ namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
 
 use PAGEmachine\Searchable\ViewHelpers\SiteLanguageViewHelper;
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -25,12 +27,12 @@ class SiteLanguageViewHelperTest extends TestCase
      */
     protected function setUp()
     {
-        $this->viewHelper = $this->getMockBuilder(SiteLanguageViewHelper::class)
-            ->setMethods([
-                    'getTypoScriptFrontendController',
-                    'getLanguageAspect',
-                ])
-            ->getMock();
+        $this->viewHelper = new SiteLanguageViewHelper();
+    }
+
+    protected function tearDown()
+    {
+        unset($GLOBALS['TSFE']);
     }
 
     /**
@@ -38,18 +40,13 @@ class SiteLanguageViewHelperTest extends TestCase
      */
     public function returnsCurrentLanguage()
     {
-        $tsfe = $this->prophesize(TypoScriptFrontendController::class);
+        $GLOBALS['TSFE'] = $this->prophesize(TypoScriptFrontendController::class)->reveal();
 
-        if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
-            $tsfe->sys_language_uid = 1;
+        if (class_exists(Context::class)) {
+            GeneralUtility::makeInstance(Context::class)->setAspect('language', new LanguageAspect(1));
         } else {
-            $languageAspect = $this->prophesize(LanguageAspect::class);
-            $languageAspect->getId()->willReturn(1);
-
-            $this->viewHelper->method("getLanguageAspect")->will($this->returnValue($languageAspect->reveal()));
+            $GLOBALS['TSFE']->sys_language_uid = 1;
         }
-
-        $this->viewHelper->method("getTypoScriptFrontendController")->will($this->returnValue($tsfe->reveal()));
 
         $this->assertEquals(1, $this->viewHelper->render());
     }
@@ -59,8 +56,6 @@ class SiteLanguageViewHelperTest extends TestCase
      */
     public function returnsZeroIfTsfeDoesNotExist()
     {
-        $this->viewHelper->method("getTypoScriptFrontendController")->will($this->returnValue(null));
-
         $this->assertEquals(0, $this->viewHelper->render());
     }
 }

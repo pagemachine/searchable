@@ -56,6 +56,10 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'title' => 'Test page',
         ]);
 
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=')) {
+            $this->getDatabaseConnection()->updateArray('pages', ['uid' => 2], ['slug' => '/test-page/']);
+        }
+
         $this->assertIndexEmpty();
 
         $this->indexingService->indexFull();
@@ -64,7 +68,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'uid' => 2,
             'title' => 'Test page',
             'searchable_meta' => [
-                'renderedLink' => 'index.php?id=2',
+                'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/test-page/' : 'index.php?id=2',
             ],
         ]);
     }
@@ -82,6 +86,10 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         ]);
 
         if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=')) {
+            $this->getDatabaseConnection()->updateArray('pages', ['uid' => 2], ['slug' => '/test-page/']);
+        }
+
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=')) {
             $this->getDatabaseConnection()->insertArray('pages', [
                 'uid' => 3,
                 'pid' => 1,
@@ -90,6 +98,10 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
                 'doktype' => PageRepository::DOKTYPE_DEFAULT,
                 'title' => 'Translated test page',
             ]);
+
+            if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=')) {
+                $this->getDatabaseConnection()->updateArray('pages', ['uid' => 3], ['slug' => '/translated-test-page/']);
+            }
         } else {
             $this->getDatabaseConnection()->insertArray('pages_language_overlay', [
                 'uid' => 3,
@@ -109,7 +121,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'uid' => 2,
             'title' => 'Translated test page',
             'searchable_meta' => [
-                'renderedLink' => 'index.php?id=2&L=1',
+                'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/da/translated-test-page/' : 'index.php?id=2&L=1',
             ],
         ], 1);
     }
@@ -125,6 +137,11 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
         ]);
+
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=')) {
+            $this->getDatabaseConnection()->updateArray('pages', ['uid' => 2], ['slug' => '/test-page/']);
+        }
+
         $this->indexingService->indexFull();
 
         $this->assertDocumentInIndex([

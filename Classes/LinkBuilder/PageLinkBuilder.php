@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * PageLinkBuilder
  * Creates a link configuration array to be passed on to a Fluid link.page ViewHelper
  */
-class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+class PageLinkBuilder extends AbstractLinkBuilder
 {
     /**
      * @var array
@@ -37,17 +37,15 @@ class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
     ];
 
     /**
-     * Converts builder-specific configuration to TypoLink configuration
-     *
-     * @param  array $configuration
-     * @param  array $record
+     * @param array $configuration
+     * @param array $record
      * @return array
      */
-    public function convertToTypoLinkConfig($configuration, $record)
+    public function finalizeTypoLinkConfig($configuration, $record)
     {
         $linkConfiguration = $this->convertFromPageViewHelperConfig($configuration);
 
-        return ['title' => $this->getLinkTitle($record), 'conf' => $linkConfiguration];
+        return $linkConfiguration;
     }
 
     /**

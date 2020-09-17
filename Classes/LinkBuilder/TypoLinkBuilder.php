@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * TypoLinkBuilder
  * Creates a link based on typolink configuration
  */
-class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+class TypoLinkBuilder extends AbstractLinkBuilder
 {
     /**
      * @var array
@@ -28,18 +28,16 @@ class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInter
     ];
 
     /**
-     * Converts builder-specific configuration to TypoLink configuration
-     *
-     * @param  array $configuration
-     * @param  array $record
+     * @param array $configuration
+     * @param array $record
      * @return array
      */
-    public function convertToTypoLinkConfig($configuration, $record)
+    public function finalizeTypoLinkConfig($configuration, $record)
     {
         if (!empty($configuration['additionalParams'])) {
             $configuration['additionalParams'] = GeneralUtility::implodeArrayForUrl('', $configuration['additionalParams']);
         }
 
-        return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];
+        return $configuration;
     }
 }

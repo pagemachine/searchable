@@ -6,14 +6,14 @@ if (!defined('TYPO3_MODE')) {
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['searchable'] = \PAGEmachine\Searchable\Command\SearchableCommandController::class;
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.' . $_EXTKEY,
+    'PAGEmachine.Searchable',
     'Searchbar',
     ['Search' => 'searchbar'],
     ['Search' => 'searchbar']
 );
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.' . $_EXTKEY,
+    'PAGEmachine.Searchable',
     'LiveSearchbar',
     ['Search' => 'liveSearchbar'],
     ['Search' => 'liveSearchbar']
@@ -21,7 +21,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['sear
 
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.' . $_EXTKEY,
+    'PAGEmachine.Searchable',
     'Results',
     ['Search' => 'results'],
     ['Search' => 'results']
@@ -106,7 +106,9 @@ if (!empty($_EXTCONF)) {
 
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_linkbuilder'] = \PAGEmachine\Searchable\Eid\LinkBuilder::class . '::processRequest';
+if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_linkbuilder'] = \PAGEmachine\Searchable\Eid\LinkBuilder::class . '::processRequest';
+}
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = \PAGEmachine\Searchable\Eid\Search::class . '::processRequest';
 
 // Register Hook for dynamic Plugin FlexForms

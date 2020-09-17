@@ -46,9 +46,9 @@ class FileLinkBuilderTest extends UnitTestCase
 
         $this->linkBuilder = new FileLinkBuilder($config);
 
-        $linkConfiguration = $this->linkBuilder->convertToTypoLinkConfig([], $record);
+        $linkConfiguration = $this->linkBuilder->finalizeTypoLinkConfig([], $record);
 
-        $this->assertEquals('t3://file?uid=22', $linkConfiguration['conf']['parameter']);
+        $this->assertEquals('t3://file?uid=22', $linkConfiguration['parameter']);
     }
 
     /**
@@ -71,9 +71,9 @@ class FileLinkBuilderTest extends UnitTestCase
 
         $this->linkBuilder = new FileLinkBuilder($config);
 
-        $linkConfiguration = $this->linkBuilder->convertToTypoLinkConfig([], $record);
+        $linkConfiguration = $this->linkBuilder->finalizeTypoLinkConfig([], $record);
 
-        $this->assertEquals('t3://file?uid=25', $linkConfiguration['conf']['parameter']);
+        $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
 
     /**
@@ -98,8 +98,8 @@ class FileLinkBuilderTest extends UnitTestCase
 
         $this->linkBuilder = new FileLinkBuilder($config);
 
-        $linkConfiguration = $this->linkBuilder->convertToTypoLinkConfig([], $record);
+        $linkConfiguration = $this->linkBuilder->finalizeTypoLinkConfig([], $record);
 
-        $this->assertEquals('t3://file?uid=25', $linkConfiguration['conf']['parameter']);
+        $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
 }

@@ -18,11 +18,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class TcaDataCollectorTest extends UnitTestCase
 {
     /**
-     * @var TcaDataCollector
-     */
-    protected $tcaDataCollector;
-
-    /**
      * @var OverlayUtility
      */
     protected $overlayUtility;
@@ -52,10 +47,9 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $this->overlayUtility = $this->prophesize(OverlayUtility::class);
 
-        $this->tcaDataCollector = new TcaDataCollector([]);
-
         $this->objectManager = $this->prophesize(ObjectManager::class);
         $this->objectManager->get(Argument::any())->willReturn(null);
+
 
         GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());
         GeneralUtility::setSingletonInstance(PlainValueProcessor::class, $this->plainValueProcessor->reveal());
@@ -132,7 +126,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         ];
 
-        $this->tcaDataCollector->__construct($configuration, 0, $this->objectManager->reveal());
+        $tcaDataCollector = new TcaDataCollector($configuration, 0, $this->objectManager->reveal());
 
         $this->formDataRecord->getRecord(123, 'example_table', [
             'uid',
@@ -160,7 +154,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'radiofield' => 'radiovalue',
         ];
 
-        $this->assertEquals($expectedOutput, $this->tcaDataCollector->getRecord(123));
+        $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
     /**
@@ -218,7 +212,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'processedTca' => $recordTca,
         ];
 
-        $this->tcaDataCollector->__construct($configuration, 0, $this->objectManager->reveal());
+        $tcaDataCollector = new TcaDataCollector($configuration, 0, $this->objectManager->reveal());
 
         $this->formDataRecord->getRecord(123, 'example_table', Argument::type('array'))->willReturn($record);
 
@@ -227,16 +221,16 @@ class TcaDataCollectorTest extends UnitTestCase
             ->willReturn($record['databaseRow']);
 
         $resolver = $this->prophesize(SelectRelationResolver::class);
-        $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, $this->tcaDataCollector)->willReturn([[
+        $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, $tcaDataCollector)->willReturn([[
             'uid' => 123,
             'title' => 'foobar',
         ]]);
 
         $resolverManager = $this->prophesize(ResolverManager::class);
-        $resolverManager->findResolverForRelation("selectfield", $subCollector, $this->tcaDataCollector)->willReturn($resolver->reveal());
-        $this->inject($this->tcaDataCollector, "resolverManager", $resolverManager->reveal());
+        $resolverManager->findResolverForRelation("selectfield", $subCollector, $tcaDataCollector)->willReturn($resolver->reveal());
+        $this->inject($tcaDataCollector, "resolverManager", $resolverManager->reveal());
 
-        $this->tcaDataCollector->addSubCollector("es_selectfield", $subCollector->reveal());
+        $tcaDataCollector->addSubCollector("es_selectfield", $subCollector->reveal());
 
         $expectedOutput = [
             'uid' => 1,
@@ -249,7 +243,7 @@ class TcaDataCollectorTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expectedOutput, $this->tcaDataCollector->getRecord(123));
+        $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
     /**
@@ -293,12 +287,12 @@ class TcaDataCollectorTest extends UnitTestCase
             'processedTca' => $recordTca,
         ];
 
-        $this->tcaDataCollector->__construct($configuration, 1);
+        $tcaDataCollector = new TcaDataCollector($configuration, 1, $this->objectManager->reveal());
 
         $this->formDataRecord->getRecord(1, 'example_table', Argument::type('array'))->willReturn($record);
 
         $this->overlayUtility->languageOverlay('example_table', $baseRow, 1, Argument::type("array"), 1)->shouldBeCalled()->willReturn($translatedRow);
 
-        $this->assertEquals($translatedRow, $this->tcaDataCollector->getRecord(1));
+        $this->assertEquals($translatedRow, $tcaDataCollector->getRecord(1));
     }
 }
