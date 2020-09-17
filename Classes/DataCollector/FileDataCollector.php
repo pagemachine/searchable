@@ -35,8 +35,8 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
             ],
         ],
         'mimetypes' => [
-            '"text/plain"',
-            '"application/pdf"',
+            'text/plain',
+            'application/pdf',
         ],
     ];
 
