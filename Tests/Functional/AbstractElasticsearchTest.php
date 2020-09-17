@@ -116,6 +116,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->getElasticsearchClient()->indices()->delete([
             'index' => implode(',', $this->indexNames),
         ]);
+
+        $this->stopWebserver();
     }
 
     protected function assertIndexEmpty(int $languageId = 0): void

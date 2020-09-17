@@ -7,9 +7,14 @@ use Symfony\Component\Process\Process;
 
 trait WebserverTrait
 {
-    private function startWebserver(): void
+    /**
+     * @var Process
+     */
+    private $serverProcess;
+
+    protected function startWebserver(): void
     {
-        (new Process(
+        $this->serverProcess = new Process(
             [
                 PHP_BINARY,
                 '-S',
@@ -20,9 +25,15 @@ trait WebserverTrait
                 'TYPO3_PATH_APP' => getenv('TYPO3_PATH_APP'),
                 'TYPO3_PATH_ROOT' => getenv('TYPO3_PATH_ROOT'),
             ]
-        ))->start();
+        );
+        $this->serverProcess->start();
 
         $this->waitForServer('localhost', 8080);
+    }
+
+    protected function stopWebserver(): void
+    {
+        $this->serverProcess->stop(0);
     }
 
     private function waitForServer(string $host, int $port): void

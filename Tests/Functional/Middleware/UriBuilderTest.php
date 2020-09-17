@@ -118,4 +118,12 @@ final class UriBuilderTest extends FunctionalTestCase
 
         $this->startWebserver();
     }
+
+    /**
+     * @return void
+     */
+    protected function tearDown()
+    {
+        $this->stopWebserver();
+    }
 }
