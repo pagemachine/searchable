@@ -8,7 +8,9 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
+use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -97,6 +99,14 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
             __DIR__ . '/Fixtures/TypoScript/page.typoscript',
             'EXT:searchable/Configuration/Typoscript/setup.txt',
         ]);
+        // Update internally created site to flush all caches
+        if (class_exists(SiteConfiguration::class)) {
+            $siteConfiguration = GeneralUtility::makeInstance(
+                SiteConfiguration::class,
+                Environment::getConfigPath() . '/sites'
+            );
+            $siteConfiguration->write('1', $siteConfiguration->load('1'));
+        }
 
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
         $this->setUpBackendUserFromFixture(1);
