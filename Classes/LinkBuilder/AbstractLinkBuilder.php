@@ -2,9 +2,13 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
+use PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequest;
+use PAGEmachine\Searchable\LinkBuilder\Frontend\LegacyFrontendRequest;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -52,11 +56,22 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     protected $config = [];
 
     /**
+     * @var \PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequestInterface
+     */
+    protected $frontendRequest;
+
+    /**
      * @param array $config
      */
     public function __construct($config = null)
     {
         $this->config = $config;
+
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
+            $this->frontendRequest = GeneralUtility::makeInstance(LegacyFrontendRequest::class);
+        } else {
+            $this->frontendRequest = GeneralUtility::makeInstance(FrontendRequest::class);
+        }
     }
 
     /**
@@ -178,37 +193,11 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
         return $configuration;
     }
 
-    protected function getFrontendLinks($configuration)
+    protected function getFrontendLinks($configuration): array
     {
-        $domain = ExtconfService::getInstance()->getFrontendDomain();
+        $baseUri = new Uri(ExtconfService::getInstance()->getFrontendDomain());
+        $uris = $this->frontendRequest->send($baseUri, $configuration);
 
-        return $this->doRequest($domain, $configuration);
-    }
-
-    /**
-     * The actual request
-     *
-     * @param  string $domain
-     * @param  array $configuration
-     * @return array
-     */
-    protected function doRequest($domain, $configuration)
-    {
-        $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
-        $response = $requestFactory->request(
-            $domain,
-            'POST',
-            [
-                'query' => [
-                    'eID' => 'searchable_linkbuilder',
-                ],
-                'form_params' => [
-                    'configuration' => $configuration,
-                ],
-                'http_errors' => false,
-            ]
-        );
-
-        return json_decode($response->getBody()->getContents(), true);
+        return $uris;
     }
 }
