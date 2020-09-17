@@ -65,8 +65,8 @@ class PageLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $typolinkConfig = $this->pageLinkBuilder->convertToTypoLinkConfig($config, []);
+        $typolinkConfig = $this->pageLinkBuilder->finalizeTypoLinkConfig($config, []);
 
-        $this->assertEquals($expectedTypolinkConfig, $typolinkConfig['conf']);
+        $this->assertEquals($expectedTypolinkConfig, $typolinkConfig);
     }
 }

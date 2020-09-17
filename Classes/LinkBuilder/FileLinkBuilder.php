@@ -23,15 +23,12 @@ class FileLinkBuilder extends AbstractLinkBuilder
         'fileRecordField' => 'file',
     ];
 
-
     /**
-     * Converts builder-specific configuration to TypoLink configuration
-     *
-     * @param  array $configuration
-     * @param  array $record
+     * @param array $configuration
+     * @param array $record
      * @return array
      */
-    public function convertToTypoLinkConfig($configuration, $record)
+    public function finalizeTypoLinkConfig($configuration, $record)
     {
         $fileRecord = $this->config['fileRecordField'] ? $record[$this->config['fileRecordField']] : $record;
 
@@ -44,7 +41,7 @@ class FileLinkBuilder extends AbstractLinkBuilder
         }
         $configuration['parameter'] = 't3://file?uid=' . $fileRecord['uid'];
 
-        return parent::convertToTypoLinkConfig($configuration, $record);
+        return $configuration;
     }
 
     /**

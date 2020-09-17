@@ -99,7 +99,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     /**
      * Creates links for a batch of records
      *
-     * @param  array $records
+     * @param array $records
      * @param int $language
      * @return array $records
      */
@@ -110,7 +110,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
 
         foreach ($records as $key => $record) {
             $linkConfiguration = $this->createLinkConfiguration($record, $language);
-            $linkConfiguration = $this->convertToTypoLinkConfig($linkConfiguration, $record);
+            $linkConfiguration = $this->finalizeTypoLinkConfig($linkConfiguration, $record);
 
             $configurationArray[$key] = $linkConfiguration;
         }
@@ -129,13 +129,13 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
      * Converts builder-specific configuration to TypoLink configuration
      * This should be overridden with custom conversion logic
      *
-     * @param  array $configuration
-     * @param  array $record
+     * @param array $configuration
+     * @param array $record
      * @return array
      */
-    public function convertToTypoLinkConfig($configuration, $record)
+    public function finalizeTypoLinkConfig($configuration, $record)
     {
-        return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];
+        return $configuration;
     }
 
     /**

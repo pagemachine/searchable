@@ -40,8 +40,8 @@ class LinkBuilder
         $links = [];
 
         if ($configuration) {
-            foreach ($configuration as $key => $recordConfig) {
-                $links[$key] = $this->getLink($recordConfig['conf']);
+            foreach ($configuration as $key => $linkConfiguration) {
+                $links[$key] = $this->getLink($linkConfiguration);
             }
         }
 

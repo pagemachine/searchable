@@ -28,18 +28,16 @@ class TypoLinkBuilder extends AbstractLinkBuilder
     ];
 
     /**
-     * Converts builder-specific configuration to TypoLink configuration
-     *
-     * @param  array $configuration
-     * @param  array $record
+     * @param array $configuration
+     * @param array $record
      * @return array
      */
-    public function convertToTypoLinkConfig($configuration, $record)
+    public function finalizeTypoLinkConfig($configuration, $record)
     {
         if (!empty($configuration['additionalParams'])) {
             $configuration['additionalParams'] = GeneralUtility::implodeArrayForUrl('', $configuration['additionalParams']);
         }
 
-        return ['title' => $this->getLinkTitle($record), 'conf' => $configuration];
+        return $configuration;
     }
 }
