@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * TypoLinkBuilder
  * Creates a link based on typolink configuration
  */
-class TypoLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+class TypoLinkBuilder extends AbstractLinkBuilder
 {
     /**
      * @var array

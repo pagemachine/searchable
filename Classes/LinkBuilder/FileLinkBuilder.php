@@ -9,7 +9,7 @@ namespace PAGEmachine\Searchable\LinkBuilder;
  * FileLinkBuilder
  * Creates a file link (using t3://file) and processes it via eID to a real link
  */
-class FileLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+class FileLinkBuilder extends AbstractLinkBuilder
 {
     /**
      * DefaultConfiguration

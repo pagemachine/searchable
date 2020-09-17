@@ -12,7 +12,7 @@ interface LinkBuilderInterface
      *
      * @param  array $record
      * @param  int   $language
-     * @return string
+     * @return array
      */
     public function createLinkConfiguration($record, $language);
 

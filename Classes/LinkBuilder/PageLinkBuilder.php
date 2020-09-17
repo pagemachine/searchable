@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * PageLinkBuilder
  * Creates a link configuration array to be passed on to a Fluid link.page ViewHelper
  */
-class PageLinkBuilder extends AbstractEidLinkBuilder implements LinkBuilderInterface
+class PageLinkBuilder extends AbstractLinkBuilder
 {
     /**
      * @var array

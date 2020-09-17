@@ -155,4 +155,30 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
         $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
     }
+
+    /**
+     * @test
+     */
+    public function convertsToTypoLinkConfig()
+    {
+        $record = ['title' => 'sometitle'];
+
+        $builderConfig = [
+            'titleField' => 'title',
+        ];
+
+        $linkConfig = [
+            'foo' => 'bar',
+        ];
+
+        $typolinkConfig = [
+            'title' => 'sometitle',
+            'conf' => ['foo' => 'bar'],
+        ];
+
+        $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $builderConfig]);
+        $linkConfiguration = $this->linkBuilder->convertToTypoLinkConfig($linkConfig, $record);
+
+        $this->assertEquals($typolinkConfig, $linkConfiguration);
+    }
 }
