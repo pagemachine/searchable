@@ -7,6 +7,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Enumeration\TcaType;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -355,7 +356,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         //LanguageRestriction
         if ($applyLanguageRestriction && !empty($this->getTcaConfiguration()['ctrl']['languageField'])) {
-            $whereExpressions[] = $queryBuilder->expr()->in($this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'], $queryBuilder->createNamedParameter("0,-1"));
+            $whereExpressions[] = $queryBuilder->expr()->in(
+                $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'],
+                $queryBuilder->createNamedParameter([0, -1], Connection::PARAM_INT_ARRAY)
+            );
         }
 
         //additionalTables
