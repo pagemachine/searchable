@@ -15,6 +15,6 @@ trait LanguageIdTrait
         }
 
         // @extensionScannerIgnoreLine
-        return $GLOBALS['TSFE']->sys_language_uid; // @phpstan-ignore-line
+        return $GLOBALS['TSFE']->sys_language_uid ?? 0; // @phpstan-ignore-line
     }
 }
