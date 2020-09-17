@@ -10,6 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -46,6 +47,21 @@ final class UriBuilder implements MiddlewareInterface
 
     private function bootFrontendController(ServerRequestInterface $request): void
     {
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '10', '<')) {
+            $frontendController = GeneralUtility::makeInstance(
+                TypoScriptFrontendController::class,
+                null,
+                1,
+                0
+            );
+            $frontendController->initFEuser();
+            $frontendController->fetch_the_id();
+
+            $GLOBALS['TSFE'] = $frontendController;
+
+            return;
+        }
+
         $frontendController = GeneralUtility::makeInstance(
             TypoScriptFrontendController::class,
             GeneralUtility::makeInstance(Context::class),

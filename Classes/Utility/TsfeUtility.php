@@ -28,7 +28,7 @@ class TsfeUtility
         }
 
         if (!is_object($GLOBALS['TSFE'])) {
-            $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 1, '');
+            $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 1, 0);
 
             if (method_exists($GLOBALS['TSFE'], 'connectToDB')) { // TYPO3v9+
                 // @extensionScannerIgnoreLine
