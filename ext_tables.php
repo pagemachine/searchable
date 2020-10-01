@@ -3,12 +3,6 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    'searchable',
-    'Configuration/TypoScript',
-    'Searchable'
-);
-
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'PAGEmachine.Searchable',
     'Searchbar',
@@ -19,24 +13,6 @@ if (!defined('TYPO3_MODE')) {
     'PAGEmachine.Searchable',
     'LiveSearchbar',
     'Searchable: Live Search bar (AJAX)'
-);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-    'searchable_searchbar',
-    'FILE:EXT:searchable/Configuration/Flexforms/Searchbar.xml'
-);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-    'searchable_livesearchbar',
-    'FILE:EXT:searchable/Configuration/Flexforms/LiveSearchbar.xml'
-);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-    'searchable_results',
-    'FILE:EXT:searchable/Configuration/Flexforms/Results.xml'
-);
-
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
-    'searchable',
-    'FILE:EXT:searchable/Configuration/PageTS/ContentElementWizard.ts',
-    'Searchable TSConfig'
 );
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
