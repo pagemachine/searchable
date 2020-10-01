@@ -7,6 +7,9 @@ parameters:
     - ext_tables.php
     - Classes
 
+  excludes_analyse:
+    - Classes/Command/SearchableCommandController.php
+
   ignoreErrors:
     - message: '#Variable \$_EXTKEY might not be defined.#'
       path: ext_emconf.php
@@ -14,13 +17,13 @@ parameters:
       path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
       path: Classes/ViewHelpers/SiteLanguageViewHelper.php
-    - message: '#TYPO3\\CMS\\Extbase\\Mvc\\Controller\\CommandController#'
-      paths:
-        - ext_localconf.php
-        - Classes/Command/SearchableCommandController.php
     - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
       paths:
         - ext_localconf.php
         - Classes/Hook/DatabaseConnectionHook.php
+    - message: '#TYPO3\\CMS\\Core\\Context\\Context#'
+      path: Classes/Middleware/UriBuilder.php
+    - message: '#TYPO3\\CMS\\Core\\Http\\JsonResponse#'
+      path: Classes/Middleware/UriBuilder.php
 
   reportUnmatchedIgnoredErrors: false
