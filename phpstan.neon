@@ -21,5 +21,9 @@ parameters:
       paths:
         - ext_localconf.php
         - Classes/Hook/DatabaseConnectionHook.php
+    - message: '#TYPO3\\CMS\\Core\\Context\\Context#'
+      path: Classes/Middleware/UriBuilder.php
+    - message: '#TYPO3\\CMS\\Core\\Http\\JsonResponse#'
+      path: Classes/Middleware/UriBuilder.php
 
   reportUnmatchedIgnoredErrors: false
