@@ -14,10 +14,6 @@ parameters:
       path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
       path: Classes/ViewHelpers/SiteLanguageViewHelper.php
-    - message: '#TYPO3\\CMS\\Extbase\\Mvc\\Controller\\CommandController#'
-      paths:
-        - ext_localconf.php
-        - Classes/Command/SearchableCommandController.php
     - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
       paths:
         - ext_localconf.php
