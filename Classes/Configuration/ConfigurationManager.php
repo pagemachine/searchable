@@ -8,6 +8,7 @@ use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -282,8 +283,8 @@ class ConfigurationManager implements SingletonInterface
     {
         $this->updateConfiguration['database']['toplevel'][$table][] = $typeName;
 
-        //Special case handling for pages since language overlays are in a separate table
-        if ($table == 'pages') {
+        // Special case handling for pages in TYPO3v8
+        if ($table == 'pages' && version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
             $this->updateConfiguration['database']['toplevel']['pages_language_overlay'][] = $typeName;
         }
     }
@@ -299,8 +300,8 @@ class ConfigurationManager implements SingletonInterface
     {
         $this->updateConfiguration['database']['sublevel'][$table][$typeName] = $sublevelPath;
 
-        //Special case handling for pages since language overlays are in a separate table
-        if ($table == 'pages') {
+        // Special case handling for pages in TYPO3v8
+        if ($table == 'pages' && version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
             $this->updateConfiguration['database']['sublevel']['pages_language_overlay'][$typeName] = $sublevelPath;
         }
     }
