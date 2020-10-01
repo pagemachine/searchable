@@ -27,6 +27,7 @@
         "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/phpstan": "^0.12.42",
         "phpunit/phpunit": "^7.0",
+        "psr/http-server-middleware": "^1.0",
         "saschaegerer/phpstan-typo3": "^0.13.1",
         "sclable/xml-lint": "^0.3.0",
         "slevomat/coding-standard": "^6.4",
