@@ -30,10 +30,8 @@ class Connection
     {
         if (self::$client == null) {
             self::$client = ClientBuilder::create()
-                ->setHosts(
-                    ExtconfService::getInstance()
-                    ->getHostsSettings()
-                )->build();
+                ->setHosts(ExtconfService::getInstance()->getHostsSettings())
+                ->build();
         }
         return self::$client;
     }
@@ -46,6 +44,7 @@ class Connection
     public static function isHealthy()
     {
         $ping = self::getClient()->ping();
+
         return $ping;
     }
 }
