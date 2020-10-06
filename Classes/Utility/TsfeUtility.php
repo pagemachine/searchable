@@ -39,6 +39,8 @@ class TsfeUtility
             $GLOBALS['TSFE']->determineId();
             $GLOBALS['TSFE']->initTemplate();
             $GLOBALS['TSFE']->getConfigArray();
+            $_SERVER['HTTP_HOST'] = 'localhost';
+            GeneralUtility::flushInternalRuntimeCaches();
             $GLOBALS['TSFE']->preparePageContentGeneration();
         }
     }
