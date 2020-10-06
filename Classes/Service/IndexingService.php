@@ -309,7 +309,9 @@ final class IndexingService
     protected function assertConnectionHealthy(): void
     {
         if (!Connection::isHealthy()) {
-            throw new \RuntimeException('Elasticsearch is offline', 1599662577);
+            $hosts = ExtconfService::getInstance()->getHostsSettings();
+
+            throw new \RuntimeException(sprintf('Elasticsearch at "%s" is offline', implode(', ', $hosts)), 1599662577);
         }
     }
 
