@@ -1,0 +1,76 @@
+plugin.tx_searchable {
+    view {
+        templateRootPaths.0 = {$plugin.tx_searchable.view.templateRootPath}
+        partialRootPaths.0 = {$plugin.tx_searchable.view.partialRootPath}
+        layoutRootPaths.0 = {$plugin.tx_searchable.view.layoutRootPath}
+
+        pluginNamespace = tx_searchable
+    }
+    persistence {
+        storagePid = {$plugin.tx_searchable.persistence.storagePid}
+    }
+    settings {
+        includejQuery = {$plugin.tx_searchable.includejQuery}
+        includejQueryAutocomplete = {$plugin.tx_searchable.includejQueryAutocomplete}
+
+        resultPage = {$plugin.tx_searchable.settings.resultPage}
+
+        search {
+            resultsPerPage = {$plugin.tx_searchable.settings.search.resultsPerPage}
+        }
+        result {
+            showPreview = {$plugin.tx_searchable.settings.result.showPreview}
+        }
+    }
+    features {
+        requireCHashArgumentForActionArguments = 0
+    }
+}
+
+plugin.tx_searchable_searchbar < plugin.tx_searchable
+plugin.tx_searchable_searchbar {
+    settings {
+        features {
+            completionSuggest = {$plugin.tx_searchable.settings.features.completionSuggest}
+        }
+    }
+}
+
+plugin.tx_searchable_results < plugin.tx_searchable
+plugin.tx_searchable_results {
+    settings {
+        features {
+            //@todo rename constants in V2
+            highlighting = {$plugin.tx_searchable.settings.result.showHighlighting}
+            termSuggest = {$plugin.tx_searchable.settings.result.showSuggestions}
+        }
+    }
+}
+
+
+module.tx_searchable {
+    settings < plugin.tx_searchable.settings
+    persistence < plugin.tx_searchable.persistence
+    view < plugin.tx_searchable.view
+}
+
+page.includeCSS.searchable = EXT:searchable/Resources/Public/Css/searchable.css
+
+# Include JQuery if activated
+[{$plugin.tx_searchable.settings.includejQuery} == 1]
+page.includeJSFooterlibs.jQuery = EXT:searchable/Resources/Public/JavaScript/jquery-3.2.1.min.js
+[global]
+
+# Include Autocomplete if activated
+[{$plugin.tx_searchable.settings.includejQueryAutocomplete} == 1]
+page.includeJSFooter.jQueryAutocomplete = EXT:searchable/Resources/Public/JavaScript/jquery.autocomplete.min.js
+[global]
+
+# Include mustache if activated
+[{$plugin.tx_searchable.settings.includeMustache} == 1]
+page.includeJSFooterlibs.mustache = EXT:searchable/Resources/Public/JavaScript/mustache.min.js
+[global]
+
+page.includeJSFooter.URI = EXT:searchable/Resources/Public/JavaScript/URI.js
+page.includeJSFooter.searchable = EXT:searchable/Resources/Public/JavaScript/searchable.js
+
