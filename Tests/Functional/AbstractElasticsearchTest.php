@@ -14,6 +14,7 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -84,21 +85,38 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
             ]
         );
 
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Root',
+        ]);
+
+        $typoScriptConstantsFile = 'EXT:searchable/Configuration/TypoScript/constants.typoscript';
+        $typoScriptSetupFile = 'EXT:searchable/Configuration/TypoScript/setup.typoscript';
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
+            $typoScriptConstantsFile = 'EXT:searchable/Configuration/TypoScript/constants.txt';
+            $typoScriptSetupFile = 'EXT:searchable/Configuration/TypoScript/setup.txt';
+        }
+        $this->setUpFrontendRootPage(1, [
+            __DIR__ . '/Fixtures/TypoScript/page.typoscript',
+            $typoScriptSetupFile,
+        ]);
+        $this->getDatabaseConnection()->updateArray(
+            'sys_template',
+            [
+                'pid' => 1,
+            ],
+            [
+                'constants' => '<INCLUDE_TYPOSCRIPT: source="FILE:' . $typoScriptConstantsFile . '">',
+            ]
+        );
+
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->indexingService = $objectManager->get(IndexingService::class);
         $this->indexingService->setup();
 
         $this->startWebserver();
 
-        $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 1,
-            'doktype' => PageRepository::DOKTYPE_DEFAULT,
-            'title' => 'Root',
-        ]);
-        $this->setUpFrontendRootPage(1, [
-            __DIR__ . '/Fixtures/TypoScript/page.typoscript',
-            'EXT:searchable/Configuration/Typoscript/setup.txt',
-        ]);
         // Update internally created site to flush all caches
         if (class_exists(SiteConfiguration::class)) {
             $siteConfiguration = GeneralUtility::makeInstance(
