@@ -24,9 +24,13 @@ final class ResetCommand extends AbstractIndexCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->indexingService->resetIndex(
-            $input->hasArgument('language') ? (int)$input->getArgument('language') : null
-        );
+        $language = $input->getArgument('language');
+
+        if ($language !== null) {
+            $language = (int)$language;
+        }
+
+        $this->indexingService->resetIndex($language);
 
         return 0;
     }
