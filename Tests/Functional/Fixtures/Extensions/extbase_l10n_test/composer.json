@@ -1,0 +1,8 @@
+{
+    "name": "pagemachine/searchable-extbase-l10n-test",
+    "autoload": {
+        "psr-4": {
+            "Pagemachine\\SearchableExtbaseL10nTest\\": "Classes/"
+        }
+    }
+}

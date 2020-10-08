@@ -16,7 +16,9 @@ parameters:
     - message: '#Psr\\Http\\Server\\MiddlewareInterface#'
       path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
-      path: Classes/ViewHelpers/SiteLanguageViewHelper.php
+      paths:
+        - Classes/Service/IndexingService.php
+        - Classes/ViewHelpers/SiteLanguageViewHelper.php
     - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
       paths:
         - ext_localconf.php

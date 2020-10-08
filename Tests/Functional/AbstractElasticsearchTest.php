@@ -7,7 +7,9 @@ use Elasticsearch\Client as ElasticsearchClient;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
+use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
+use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
@@ -27,6 +29,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
+        'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
     ];
 
     /**
@@ -78,6 +81,24 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                                 'config' => [
                                     'pid' => 1,
                                 ],
+                            ],
+                        ],
+                    ],
+                    'content' => [
+                        'className' => TcaIndexer::class,
+                        'config' => [
+                            'type' => 'content',
+                            'collector' => [
+                                'config' => [
+                                    'table' => 'tt_content',
+                                    'pid' => 1,
+                                    'fields' => [
+                                        'header',
+                                    ],
+                                ],
+                            ],
+                            'preview' => [
+                                'className' => ContentPreviewRenderer::class,
                             ],
                         ],
                     ],

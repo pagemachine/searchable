@@ -52,6 +52,7 @@
     "autoload-dev": {
         "psr-4": {
             "PAGEmachine\\Searchable\\Tests\\": "Tests/",
+            "Pagemachine\\SearchableExtbaseL10nTest\\": "Tests/Functional/Fixtures/Extensions/extbase_l10n_test/Classes/",
             "TYPO3\\CMS\\Core\\Tests\\": "vendor/typo3/cms/typo3/sysext/core/Tests/"
         },
         "classmap": [

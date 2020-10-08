@@ -9,7 +9,11 @@ use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 final class IndexingService
@@ -25,6 +29,19 @@ final class IndexingService
     public function injectIndexerFactory(IndexerFactory $indexerFactory): void
     {
         $this->indexerFactory = $indexerFactory;
+    }
+
+    /**
+     * @var PersistenceManagerInterface $persistenceManager
+     */
+    protected $persistenceManager;
+
+    /**
+     * @param PersistenceManagerInterface $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager): void
+    {
+        $this->persistenceManager = $persistenceManager;
     }
 
     /**
@@ -228,13 +245,14 @@ final class IndexingService
                 $this->logger->debug(sprintf('Indexing language "%s"', $language));
 
                 $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
-                $restoreEnvironment = $this->applyEnvironment($environment);
+                $restoreEnvironment = $this->applyEnvironment((int)$language, $environment);
 
                 foreach ($indexers as $indexer) {
                     $this->runSingleIndexer($indexer);
                 }
 
                 $restoreEnvironment();
+                $this->resetPersistence();
             } else {
                 $this->logger->warning(sprintf('No indexers found for language "%s", doing nothing', $language));
             }
@@ -284,19 +302,45 @@ final class IndexingService
      *
      * @return \Closure callback to restore the original environment
      */
-    protected function applyEnvironment(array $environment): \Closure
+    protected function applyEnvironment(int $languageUid, array $environment): \Closure
     {
         $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
         $originalLocale = setlocale(LC_ALL, '0');
-        $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale): void {
-            $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
-            setlocale(LC_ALL, $originalLocale);
-        };
 
         $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
         setlocale(LC_ALL, $environment['locale']);
 
+        if (class_exists(Context::class)) {
+            $context = GeneralUtility::makeInstance(Context::class);
+            $originalLanguageAspect = $context->getAspect('language');
+
+            $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale, $originalLanguageAspect): void {
+                $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
+                setlocale(LC_ALL, $originalLocale);
+
+                $context = GeneralUtility::makeInstance(Context::class);
+                $context->setAspect('language', $originalLanguageAspect);
+            };
+
+            $context->setAspect('language', new LanguageAspect($languageUid));
+        } else { // TYPO3v8
+            $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale): void {
+                $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
+                setlocale(LC_ALL, $originalLocale);
+            };
+        }
+
         return $restoreEnvironment;
+    }
+
+    /**
+     * Reset the Extbase persistence
+     *
+     * This is essential e.g. for retrieving objects once per language.
+     */
+    private function resetPersistence(): void
+    {
+        $this->persistenceManager->clearState();
     }
 
     /**
