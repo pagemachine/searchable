@@ -228,13 +228,13 @@ final class IndexingService
                 $this->logger->debug(sprintf('Indexing language "%s"', $language));
 
                 $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
-                $originalEnvironment = $this->applyEnvironment($environment);
+                $restoreEnvironment = $this->applyEnvironment($environment);
 
                 foreach ($indexers as $indexer) {
                     $this->runSingleIndexer($indexer);
                 }
 
-                $this->applyEnvironment($originalEnvironment);
+                $restoreEnvironment();
             } else {
                 $this->logger->warning(sprintf('No indexers found for language "%s", doing nothing', $language));
             }
@@ -282,23 +282,21 @@ final class IndexingService
     /**
      * Apply the given environment, e.g. language and locale
      *
-     * @return array the original environment to be restored with another call
+     * @return \Closure callback to restore the original environment
      */
-    protected function applyEnvironment(array $environment): array
+    protected function applyEnvironment(array $environment): \Closure
     {
-        $originalEnvironment = [];
+        $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
+        $originalLocale = setlocale(LC_ALL, '0');
+        $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale): void {
+            $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
+            setlocale(LC_ALL, $originalLocale);
+        };
 
-        if (!empty($environment['language'])) {
-            $originalEnvironment['language'] = $GLOBALS['BE_USER']->uc['lang'];
-            $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
-        }
+        $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
+        setlocale(LC_ALL, $environment['locale']);
 
-        if (!empty($environment['locale'])) {
-            $originalEnvironment['locale'] = setlocale(LC_ALL, '0');
-            setlocale(LC_ALL, $environment['locale']);
-        }
-
-        return $originalEnvironment;
+        return $restoreEnvironment;
     }
 
     /**
