@@ -64,13 +64,15 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
 
         $this->indexingService->indexFull();
 
-        $this->assertDocumentInIndex([
-            'uid' => 2,
-            'title' => 'Test page',
-            'searchable_meta' => [
-                'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/test-page/' : 'index.php?id=2',
-            ],
-        ]);
+        $this->assertDocumentInIndex(
+            2,
+            [
+                'title' => 'Test page',
+                'searchable_meta' => [
+                    'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/test-page/' : 'index.php?id=2',
+                ],
+            ]
+        );
     }
 
     /**
@@ -117,13 +119,16 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
 
         $this->indexingService->indexFull();
 
-        $this->assertDocumentInIndex([
-            'uid' => 2,
-            'title' => 'Translated test page',
-            'searchable_meta' => [
-                'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/da/translated-test-page/' : 'index.php?id=2&L=1',
+        $this->assertDocumentInIndex(
+            2,
+            [
+                'title' => 'Translated test page',
+                'searchable_meta' => [
+                    'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/da/translated-test-page/' : 'index.php?id=2&L=1',
+                ],
             ],
-        ], 1);
+            1
+        );
     }
 
     /**
@@ -154,20 +159,26 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->indexingService->setup();
         $this->indexingService->indexFull('content');
 
-        $this->assertDocumentInIndex([
-            'uid' => 1,
-            'header' => 'Test content',
-            'searchable_meta' => [
-                'preview' => 'Preview: Test content [1]',
+        $this->assertDocumentInIndex(
+            1,
+            [
+                'header' => 'Test content',
+                'searchable_meta' => [
+                    'preview' => 'Preview: Test content [1]',
+                ],
             ],
-        ], 0);
-        $this->assertDocumentInIndex([
-            'uid' => 1,
-            'header' => 'Translated test content',
-            'searchable_meta' => [
-                'preview' => 'Preview: Translated test content [2]',
+            0
+        );
+        $this->assertDocumentInIndex(
+            1,
+            [
+                'header' => 'Translated test content',
+                'searchable_meta' => [
+                    'preview' => 'Preview: Translated test content [2]',
+                ],
             ],
-        ], 1);
+            1
+        );
     }
 
     /**
@@ -188,10 +199,12 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
 
         $this->indexingService->indexFull();
 
-        $this->assertDocumentInIndex([
-            'uid' => 2,
-            'title' => 'Test page',
-        ]);
+        $this->assertDocumentInIndex(
+            2,
+            [
+                'title' => 'Test page',
+            ]
+        );
 
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('pages');
@@ -209,10 +222,54 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
 
         $this->indexingService->indexPartial();
 
-        $this->assertDocumentInIndex([
+        $this->assertDocumentInIndex(
+            2,
+            [
+                'title' => 'Updated test page',
+            ]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function skipsPagesWithNoSearchFromIndexing(): void
+    {
+        $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 2,
-            'title' => 'Updated test page',
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'First page to exclude',
+            'no_search' => 1,
         ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 2,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'First regular page',
+        ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 4,
+            'pid' => 3,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Second page to exclude',
+            'no_search' => 1,
+        ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 5,
+            'pid' => 4,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Second regular page',
+        ]);
+
+        $this->assertIndexEmpty();
+
+        $this->indexingService->indexFull();
+
+        $this->assertDocumentNotInIndex(2);
+        $this->assertDocumentInIndex(3);
+        $this->assertDocumentNotInIndex(4);
+        $this->assertDocumentInIndex(5);
     }
 
     /**
