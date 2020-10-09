@@ -182,20 +182,19 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->assertEquals(0, $total, 'Documents in index');
     }
 
-    protected function assertDocumentInIndex(array $documentSubset, int $languageId = 0): void
+    protected function assertDocumentInIndex(int $uid, array $documentSubset = [], int $languageId = 0): void
     {
-        $client = $this->getElasticsearchClient();
-        $this->syncIndices();
+        $document = $this->searchDocumentByUid($uid, $languageId);
 
-        $response = $client->search([
-            'index' => $this->indexNames[$languageId],
-        ]);
-        $hits = $response['hits']['hits'];
-        $document = $hits[0]['_source'] ?? [];
-
-        $this->assertGreaterThanOrEqual(1, count($hits), 'No document in index');
         $this->assertNotEmpty($document, 'Document not in index');
         $this->assertArraySubset($documentSubset, $document, false, 'Document source mismatch');
+    }
+
+    protected function assertDocumentNotInIndex(int $uid, int $languageId = 0): void
+    {
+        $document = $this->searchDocumentByUid($uid, $languageId);
+
+        $this->assertEmpty($document, 'Document in index');
     }
 
     protected function getElasticsearchClient(): ElasticsearchClient
@@ -203,6 +202,29 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $client = Connection::getClient();
 
         return $client;
+    }
+
+    protected function searchDocumentByUid(int $uid, int $languageId): array
+    {
+        $client = $this->getElasticsearchClient();
+        $this->syncIndices();
+
+        $response = $client->search([
+            'index' => $this->indexNames[$languageId],
+            'body' => [
+                'query' => [
+                    'term' => [
+                        'uid' => [
+                            'value' => $uid,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $hits = $response['hits']['hits'];
+        $document = $hits[0]['_source'] ?? [];
+
+        return $document;
     }
 
     /**
