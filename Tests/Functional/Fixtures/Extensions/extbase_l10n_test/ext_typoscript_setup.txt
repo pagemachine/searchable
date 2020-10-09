@@ -1,0 +1,11 @@
+config.tx_extbase {
+  persistence {
+    classes {
+      Pagemachine\SearchableExtbaseL10nTest\Domain\Model\Content {
+        mapping {
+          tableName = tt_content
+        }
+      }
+    }
+  }
+}

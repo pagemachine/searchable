@@ -129,6 +129,50 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    public function appliesLanguageForRecordTranslationIndexing(): void
+    {
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
+            $this->markTestSkipped('TYPO3v9+ only');
+        }
+
+        $this->getDatabaseConnection()->insertArray('tt_content', [
+            'uid' => 1,
+            'pid' => 1,
+            'header' => 'Test content',
+        ]);
+        $this->getDatabaseConnection()->insertArray('tt_content', [
+            'uid' => 2,
+            'pid' => 1,
+            'l18n_parent' => 1, // [sic!]
+            'sys_language_uid' => 1,
+            'header' => 'Translated test content',
+        ]);
+
+        $this->assertIndexEmpty(0);
+        $this->assertIndexEmpty(1);
+
+        $this->indexingService->setup();
+        $this->indexingService->indexFull('content');
+
+        $this->assertDocumentInIndex([
+            'uid' => 1,
+            'header' => 'Test content',
+            'searchable_meta' => [
+                'preview' => 'Preview: Test content [1]',
+            ],
+        ], 0);
+        $this->assertDocumentInIndex([
+            'uid' => 1,
+            'header' => 'Translated test content',
+            'searchable_meta' => [
+                'preview' => 'Preview: Translated test content [2]',
+            ],
+        ], 1);
+    }
+
+    /**
+     * @test
+     */
     public function indexesRecordsPartially(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
