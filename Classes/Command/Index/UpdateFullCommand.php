@@ -16,7 +16,7 @@ final class UpdateFullCommand extends AbstractIndexCommand
     {
         $this
             ->setDescription('Process search indexers')
-            ->addArgument('type', InputArgument::OPTIONAL, 'Type to run indexers for');
+            ->addArgument('type', InputArgument::OPTIONAL, 'Type to run indexers for, all by default');
     }
 
     /**
@@ -24,7 +24,7 @@ final class UpdateFullCommand extends AbstractIndexCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->indexingService->indexFull($input->getArgument('type'));
+        $this->indexingService->indexFull($input->getArgument('type') ?: '');
 
         return 0;
     }

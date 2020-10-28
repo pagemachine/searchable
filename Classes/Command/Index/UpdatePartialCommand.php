@@ -16,7 +16,7 @@ final class UpdatePartialCommand extends AbstractIndexCommand
     {
         $this
             ->setDescription('Process search indexer updates')
-            ->addArgument('type', InputArgument::OPTIONAL, 'Type to run indexers for');
+            ->addArgument('type', InputArgument::OPTIONAL, 'Type to run indexers for, all by default');
     }
 
     /**
@@ -24,7 +24,7 @@ final class UpdatePartialCommand extends AbstractIndexCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->indexingService->indexPartial($input->getArgument('type'));
+        $this->indexingService->indexPartial($input->getArgument('type') ?: '');
 
         return 0;
     }

@@ -85,11 +85,11 @@ final class IndexingService
     protected $runFullIndexing = false;
 
     /**
-     * Index type. If null, all indexers are run
+     * Index type. If empty, all indexers are run
      *
-     * @var string|null
+     * @var string
      */
-    protected $type = null;
+    protected $type = '';
 
     /**
      * Sets up everything, needs to be run after installation.
@@ -179,7 +179,7 @@ final class IndexingService
      *
      * @param string $type If set, only runs indexing for the given type
      */
-    public function indexFull(string $type = null): void
+    public function indexFull(string $type = ''): void
     {
         $this->assertConnectionHealthy();
 
@@ -195,7 +195,7 @@ final class IndexingService
      *
      * @param string $type If set, only runs indexing for the given type
      */
-    public function indexPartial(string $type = null): void
+    public function indexPartial(string $type = ''): void
     {
         $this->assertConnectionHealthy();
 
@@ -214,7 +214,7 @@ final class IndexingService
         $indices = ExtconfService::getIndices();
 
         foreach ($indices as $language => $index) {
-            if ($this->type == null) {
+            if (empty($this->type)) {
                 foreach ($this->indexerFactory->makeIndexers($language) as $indexer) {
                     $this->scheduledIndexers[$language][] = $indexer;
                 }
@@ -258,7 +258,7 @@ final class IndexingService
             }
         }
 
-        if ($this->type === null) {
+        if (empty($this->type)) {
             IndexManager::getInstance()->resetUpdateIndex();
             $this->logger->info('Update index was reset');
         } else {
