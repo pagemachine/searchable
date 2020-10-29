@@ -3,9 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Query;
 
-use Elasticsearch\Common\Exceptions\BadRequest400Exception;
 use PAGEmachine\Searchable\Database\Connection;
-use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
 
@@ -65,12 +63,12 @@ final class UpdateQueryTest extends AbstractElasticsearchTest
 
         $this->syncIndices();
 
-        $this->expectException(BadRequest400Exception::class);
-
         $updateQuery = new UpdateQuery();
-        $updateQuery->getUpdates(
+        $updates = $updateQuery->getUpdates(
             $this->getIndexName(),
             'test_pages'
         );
+
+        $this->assertCount(0, $updates);
     }
 }
