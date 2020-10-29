@@ -226,6 +226,16 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->assertEmpty($document, 'Document in index');
     }
 
+    protected function getIndexName(int $languageId = 0): string
+    {
+        return $this->indexNames[$languageId];
+    }
+
+    protected function getUpdateIndexName(): string
+    {
+        return $this->indexNames['update'];
+    }
+
     protected function getElasticsearchClient(): ElasticsearchClient
     {
         $client = Connection::getClient();
