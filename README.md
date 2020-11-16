@@ -13,3 +13,9 @@ Features:
 
 In addition to the already supported features, it is very easy to add your own code if necessary.
 No need to write a complete indexer from scratch, instead you can register custom classes for almost every sub-process like preview rendering, link generation and more.
+
+## Testing
+
+All tests can be executed with the shipped Docker Compose definition:
+
+    docker-compose run --rm app composer build
