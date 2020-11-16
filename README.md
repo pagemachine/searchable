@@ -1,4 +1,4 @@
-# Searchable
+# Searchable ![CI](https://github.com/pagemachine/searchable/workflows/CI/badge.svg)
 
 This extension provides an API to easily use Elasticsearch in complex TYPO3 instances.
 
