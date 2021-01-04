@@ -39,8 +39,8 @@
     },
     "extra": {
         "typo3/cms": {
-            "extension-key": "searchable",
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "extension-key": "searchable",
             "web-dir": "web"
         }
     },
