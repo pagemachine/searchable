@@ -13,6 +13,8 @@ parameters:
   ignoreErrors:
     - message: '#Variable \$_EXTKEY might not be defined.#'
       path: ext_emconf.php
+    - message: '#Undefined variable: \$_EXTCONF#'
+      path: ext_localconf.php
     - message: '#Psr\\Http\\Server\\MiddlewareInterface#'
       path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
