@@ -89,20 +89,33 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     ],
 ];
 
-//Load Extension Manager settings
-if (!empty($_EXTCONF)) {
-    $typoScriptService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TypoScriptService::class);
-    $extensionManagementConfig = $typoScriptService->convertTypoScriptArrayToPlainArray(unserialize($_EXTCONF));
-    unset($typoScriptService);
+// Load Extension Manager settings
+(function (): void {
+    $extensionConfiguration = [];
 
-    foreach ($extensionManagementConfig as $key => $value) {
+    if (class_exists(\TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class)) {
+        try {
+            $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class)
+                ->get('searchable');
+        } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
+            $extensionConfiguration = [];
+        }
+    } elseif (!empty($_EXTCONF)) {
+        $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TypoScriptService::class)
+            ->convertTypoScriptArrayToPlainArray(unserialize($_EXTCONF));
+    }
+
+    foreach ($extensionConfiguration as $key => $value) {
         if (is_array($value) && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key])) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key] = array_merge($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key], $extensionManagementConfig[$key]);
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key] = array_merge(
+                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key],
+                $extensionConfiguration[$key]
+            );
         } else {
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key] = $extensionManagementConfig[$key];
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement'][$key] = $extensionConfiguration[$key];
         }
     }
-}
+})();
 
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
