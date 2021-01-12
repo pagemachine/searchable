@@ -21,15 +21,23 @@ parameters:
       path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
       paths:
+        - Classes/Middleware/UriBuilder.php
         - Classes/Service/IndexingService.php
+        - Classes/Utility/TsfeUtility.php
         - Classes/ViewHelpers/SiteLanguageViewHelper.php
     - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
       paths:
         - ext_localconf.php
         - Classes/Hook/DatabaseConnectionHook.php
-    - message: '#TYPO3\\CMS\\Core\\Context\\Context#'
-      path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Http\\JsonResponse#'
       path: Classes/Middleware/UriBuilder.php
+    - message: '#TYPO3\\CMS\\Core\\Routing\\.+#'
+      paths:
+        - Classes/Middleware/UriBuilder.php
+        - Classes/Utility/TsfeUtility.php
+    - message: '#TYPO3\\CMS\\Core\\Site\\.+#'
+      paths:
+        - Classes/Middleware/UriBuilder.php
+        - Classes/Utility/TsfeUtility.php
 
   reportUnmatchedIgnoredErrors: false

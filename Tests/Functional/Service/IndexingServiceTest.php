@@ -69,7 +69,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Test page',
                 'searchable_meta' => [
-                    'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/test-page/' : 'index.php?id=2',
+                    'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/test-page/' : 'http://localhost/index.php?id=2',
                 ],
             ]
         );
@@ -124,7 +124,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Translated test page',
                 'searchable_meta' => [
-                    'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/da/translated-test-page/' : 'index.php?id=2&L=1',
+                    'renderedLink' => version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '>=') ? '/da/translated-test-page/' : 'http://localhost/index.php?id=2&L=1',
                 ],
             ],
             1
