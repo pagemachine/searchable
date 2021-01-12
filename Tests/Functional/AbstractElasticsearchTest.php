@@ -73,13 +73,35 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indexers' => [
-                    'pages' => [
+                    'foo_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'test_pages',
+                            'type' => 'foo_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 1,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'bar_pages' => [
+                        'className' => PagesIndexer::class,
+                        'config' => [
+                            'type' => 'bar_pages',
+                            'collector' => [
+                                'config' => [
+                                    'pid' => 100,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'qux_pages' => [
+                        'className' => PagesIndexer::class,
+                        'config' => [
+                            'type' => 'qux_pages',
+                            'collector' => [
+                                'config' => [
+                                    'pid' => 200,
                                 ],
                             ],
                         ],
@@ -109,7 +131,17 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
-            'title' => 'Root',
+            'title' => 'Foo Root',
+        ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 100,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Bar Root',
+        ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 200,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Qux Root',
         ]);
 
         $typoScriptConstantsFile = 'EXT:searchable/Configuration/TypoScript/constants.typoscript';
@@ -122,6 +154,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
             __DIR__ . '/Fixtures/TypoScript/page.typoscript',
             $typoScriptSetupFile,
         ]);
+        $this->setUpFrontendRootPage(100);
+        $this->setUpFrontendRootPage(200);
         $this->getDatabaseConnection()->updateArray(
             'sys_template',
             [

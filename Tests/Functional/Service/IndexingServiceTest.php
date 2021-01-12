@@ -5,6 +5,8 @@ namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
 use PAGEmachine\Searchable\Service\IndexingService;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
@@ -270,6 +272,66 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentInIndex(3);
         $this->assertDocumentNotInIndex(4);
         $this->assertDocumentInIndex(5);
+    }
+
+    /**
+     * @test
+     */
+    public function respectsSiteBase(): void
+    {
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
+            $this->markTestSkipped('TYPO3v9+ only');
+        }
+
+        $siteConfiguration = GeneralUtility::makeInstance(
+            SiteConfiguration::class,
+            Environment::getConfigPath() . '/sites'
+        );
+        $configuration = $siteConfiguration->load('100');
+        $configuration['base'] = 'https://bar.example.org/';
+        $siteConfiguration->write('100', $configuration);
+
+        $configuration = $siteConfiguration->load('200');
+        $configuration['base'] = 'https://qux.example.org/';
+        $siteConfiguration->write('200', $configuration);
+
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 101,
+            'pid' => 100,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Bar test page',
+            'slug' => '/bar-test-page/',
+        ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 201,
+            'pid' => 200,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Qux test page',
+            'slug' => '/qux-test-page/',
+        ]);
+
+        $this->assertIndexEmpty();
+
+        $this->indexingService->indexFull();
+
+        $this->assertDocumentInIndex(
+            101,
+            [
+                'title' => 'Bar test page',
+                'searchable_meta' => [
+                    'renderedLink' => 'https://bar.example.org/bar-test-page/',
+                ],
+            ]
+        );
+        $this->assertDocumentInIndex(
+            201,
+            [
+                'title' => 'Qux test page',
+                'searchable_meta' => [
+                    'renderedLink' => 'https://qux.example.org/qux-test-page/',
+                ],
+            ]
+        );
     }
 
     /**
