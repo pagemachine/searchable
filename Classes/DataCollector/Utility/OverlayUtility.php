@@ -5,7 +5,6 @@ use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /*
@@ -33,9 +32,7 @@ class OverlayUtility implements SingletonInterface
      */
     public function __construct(PageRepository $pageRepository = null)
     {
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '10', '<')) {
-            TsfeUtility::createTSFE();
-        }
+        TsfeUtility::createTSFE();
 
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
     }

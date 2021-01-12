@@ -27,7 +27,7 @@ class PageLinkBuilder extends AbstractLinkBuilder
             'noCacheHash' => false,
             'section' => '',
             'linkAccessRestrictedPages' => false,
-            'absolute' => false,
+            'absolute' => true,
             'addQueryString' => false,
             'argumentsToBeExcludedFromQueryString' => [],
             'addQueryStringMethod' => null,
