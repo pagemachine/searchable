@@ -81,13 +81,11 @@ class UpdateQuery extends AbstractQuery
      */
     public function getUpdates($index, $type)
     {
-        $recordids = [];
-
         $this->init();
 
         $this->parameters['type'] = $type;
         $this->parameters['body'] = [
-            'size' => '9999',
+            'size' => 9999,
             'query' => [
                 'match_all' => new \stdClass(),
             ],
@@ -100,39 +98,35 @@ class UpdateQuery extends AbstractQuery
             return [];
         }
 
-        $updateParams = [];
+        $recordids = [];
 
         foreach ($result['hits']['hits'] as $hit) {
-            //If this is a simple toplevel uid check, we can add this id directly to the updated uid list
+            // If this is a simple toplevel uid check, we can add this id directly to the updated uid list
             if ($hit['_source']['property'] == 'uid') {
                 $recordids[$hit['_source']['uid']] = $hit['_source']['uid'];
-            } else {
-                 $updateParams[] = [
-                    "term" => [
-                        $hit['_source']['property'] => $hit['_source']['uid'],
+            } else { // Otherwise look up UID by sub property
+                $this->parameters['index'] = $index;
+                $this->parameters['body'] = [
+                    '_source' => false,
+                    'size' => 9999,
+                    'query' => [
+                        'bool' => [
+                            'should' => [
+                                'term' => [
+                                    $hit['_source']['property'] => $hit['_source']['uid'],
+                                ],
+                            ],
+                            'minimum_should_match' => 1,
+                        ],
                     ],
-                 ];
-            }
-        }
+                ];
 
-        if (!empty($updateParams)) {
-            $this->parameters['index'] = $index;
-            $this->parameters['body'] = [
-                '_source' => false,
-                'size' => '9999',
-                'query' => [
-                    'bool' => [
-                        'should' => $updateParams,
-                        'minimum_should_match' => 1,
-                    ],
-                ],
-            ];
+                $subResult = $this->client->search($this->parameters);
 
-            $result = $this->client->search($this->parameters);
-
-            if (!empty($result['hits']['hits'])) {
-                foreach ($result['hits']['hits'] as $hit) {
-                    $recordids[$hit['_id']] = $hit['_id'];
+                if (!empty($subResult['hits']['hits'])) {
+                    foreach ($subResult['hits']['hits'] as $hit) {
+                        $recordids[$hit['_id']] = $hit['_id'];
+                    }
                 }
             }
         }
