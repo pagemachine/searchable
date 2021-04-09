@@ -108,7 +108,8 @@
 
             }
 
-
+            lastTerm = searchTerm;
+            lastPage = currentPage;
             timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
         }
 
@@ -148,8 +149,6 @@
                         }, data, this);
                     }
 
-                    lastTerm = searchTerm;
-                    lastPage = currentPage;
                     result = data;
                     populate();
                     updateUI();
