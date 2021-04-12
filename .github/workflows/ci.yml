@@ -25,6 +25,9 @@ jobs:
           - ^10.4
           - ^9.5
           - ^8.7
+        elasticsearch:
+          - 5
+          - 6.8.15
 
     steps:
       - uses: actions/checkout@v2
@@ -33,6 +36,7 @@ jobs:
         env:
           PHP_VERSION: ${{matrix.php}}
           TYPO3_VERSION: ${{matrix.typo3}}
+          ELASTICSEARCH_VERSION: ${{matrix.elasticsearch}}
         run: docker-compose run --rm app composer build
 
       - name: Cleanup
