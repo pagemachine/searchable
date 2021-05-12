@@ -106,7 +106,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             ],
                         ],
                     ],
-                    'content' => [
+                    'l10n_content' => [
                         'className' => TcaIndexer::class,
                         'config' => [
                             'type' => 'content',

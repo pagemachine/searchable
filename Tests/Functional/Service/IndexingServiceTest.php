@@ -159,7 +159,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertIndexEmpty(1);
 
         $this->indexingService->setup();
-        $this->indexingService->indexFull('content');
+        $this->indexingService->indexFull('l10n_content');
 
         $this->assertDocumentInIndex(
             1,
