@@ -27,6 +27,13 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     /**
      * @var array
      */
+    protected $coreExtensionsToLoad = [
+        'fluid_styled_content',
+    ];
+
+    /**
+     * @var array
+     */
     protected $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
@@ -152,17 +159,22 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         }
         $this->setUpFrontendRootPage(1, [
             __DIR__ . '/Fixtures/TypoScript/page.typoscript',
+            'EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript',
             $typoScriptSetupFile,
         ]);
         $this->setUpFrontendRootPage(100);
         $this->setUpFrontendRootPage(200);
+        $typoScriptConstants = <<<CONSTANTS
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:fluid_styled_content/Configuration/TypoScript/constants.typoscript">
+<INCLUDE_TYPOSCRIPT: source="FILE:${typoScriptConstantsFile}">
+CONSTANTS;
         $this->getDatabaseConnection()->updateArray(
             'sys_template',
             [
                 'pid' => 1,
             ],
             [
-                'constants' => '<INCLUDE_TYPOSCRIPT: source="FILE:' . $typoScriptConstantsFile . '">',
+                'constants' => $typoScriptConstants,
             ]
         );
 

@@ -32,7 +32,8 @@
         "sclable/xml-lint": "^0.3.0",
         "slevomat/coding-standard": "^6.4",
         "squizlabs/php_codesniffer": "^3.0",
-        "symfony/process": "^5.1"
+        "symfony/process": "^5.1",
+        "typo3/cms-fluid-styled-content": "^8.7 || ^9.5 || ^10.4"
     },
     "config": {
         "sort-packages": true
