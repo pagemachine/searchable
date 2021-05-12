@@ -186,6 +186,33 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    public function rendersLinksInPreview(): void
+    {
+        $this->getDatabaseConnection()->insertArray('tt_content', [
+            'uid' => 1,
+            'pid' => 1,
+            'CType' => 'textmedia',
+            'bodytext' => 'Test: <a href="https://example.org">Example</a>',
+        ]);
+
+        $this->assertIndexEmpty();
+
+        $this->indexingService->setup();
+        $this->indexingService->indexFull('link_content');
+
+        $this->assertDocumentInIndex(
+            1,
+            [
+                'searchable_meta' => [
+                    'preview' => '<p>Test: <a href="https://example.org">Example</a></p>',
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @test
+     */
     public function indexesRecordsPartially(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
