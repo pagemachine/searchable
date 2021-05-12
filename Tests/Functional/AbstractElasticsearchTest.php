@@ -8,6 +8,7 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
+use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
 use PAGEmachine\Searchable\Service\IndexingService;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
@@ -129,6 +130,32 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             ],
                             'preview' => [
                                 'className' => ContentPreviewRenderer::class,
+                            ],
+                        ],
+                    ],
+                    'link_content' => [
+                        'className' => TcaIndexer::class,
+                        'config' => [
+                            'type' => 'content',
+                            'collector' => [
+                                'config' => [
+                                    'table' => 'tt_content',
+                                    'pid' => 1,
+                                    'fields' => [
+                                        'uid',
+                                        'bodytext',
+                                    ],
+                                ],
+                            ],
+                            'preview' => [
+                                'className' => FluidPreviewRenderer::class,
+                                'config' => [
+                                    'templateName' => 'Preview/LinkedContent',
+                                    'fields' => [
+                                        'uid',
+                                        'bodytext',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
