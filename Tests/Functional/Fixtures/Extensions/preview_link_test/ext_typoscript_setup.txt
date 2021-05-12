@@ -1,0 +1,7 @@
+plugin {
+  tx_searchable {
+    view {
+      templateRootPaths.100 = EXT:preview_link_test/Resources/Private/Templates/
+    }
+  }
+}

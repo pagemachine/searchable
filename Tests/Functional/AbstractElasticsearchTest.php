@@ -37,6 +37,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     protected $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
+        'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/preview_link_test',
     ];
 
     /**
