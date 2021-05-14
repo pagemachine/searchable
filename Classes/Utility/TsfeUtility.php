@@ -79,6 +79,7 @@ class TsfeUtility
         );
         $frontendController->fetch_the_id($request);
         $frontendController->getConfigArray($request);
+        $frontendController->preparePageContentGeneration($request);
 
         $GLOBALS['TSFE'] = $frontendController;
     }

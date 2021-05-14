@@ -148,7 +148,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                                 ],
                             ],
                             'preview' => [
-                                'className' => FluidPreviewRenderer::class,
+                                'className' => \PAGEmachine\Searchable\Preview\FrontendFluidPreviewRenderer::class,
                                 'config' => [
                                     'templateName' => 'Preview/LinkedContent',
                                     'fields' => [
