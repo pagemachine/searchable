@@ -21,7 +21,7 @@ class PlainValueProcessorTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->plainValueProcessor = new PlainValueProcessor();
     }

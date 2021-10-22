@@ -37,7 +37,7 @@ class PagesDataCollectorTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    public function setUp()
+    public function setUp(): void
     {
         $GLOBALS['TCA']['pages'] = [
             'columns' => [

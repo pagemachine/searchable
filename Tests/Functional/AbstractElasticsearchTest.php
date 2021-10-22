@@ -45,7 +45,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     /**
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -194,7 +194,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     /**
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->getElasticsearchClient()->indices()->delete([
             'index' => implode(',', $this->indexNames),

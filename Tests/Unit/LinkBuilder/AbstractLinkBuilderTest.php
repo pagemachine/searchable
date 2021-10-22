@@ -18,7 +18,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
      */
     protected $linkBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class);
     }

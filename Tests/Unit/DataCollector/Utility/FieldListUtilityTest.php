@@ -21,7 +21,7 @@ class FieldListUtilityTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fieldListUtility = new FieldListUtility();
     }
