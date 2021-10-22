@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
@@ -22,6 +23,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
+    use ArraySubsetAsserts;
     use WebserverTrait;
 
     /**
