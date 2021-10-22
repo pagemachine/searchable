@@ -40,7 +40,7 @@ class TcaDataCollectorTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->formDataRecord = $this->prophesize(FormDataRecord::class);
         $this->plainValueProcessor = $this->prophesize(PlainValueProcessor::class);

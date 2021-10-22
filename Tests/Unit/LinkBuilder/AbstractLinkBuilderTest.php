@@ -18,7 +18,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
      */
     protected $linkBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class);
     }
@@ -132,8 +132,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
 
-        $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
-        $this->assertArraySubset(['additionalParams' => ['param1' => 'value1', 'param2' => 'value2']], $linkConfiguration);
+        $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
+        $this->assertSame(['param1' => 'value1', 'param2' => 'value2'], $linkConfiguration['additionalParams'] ?? null);
     }
 
     /**
@@ -153,6 +153,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
         $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
 
-        $this->assertArraySubset(['pageUid' => '123'], $linkConfiguration);
+        $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
     }
 }

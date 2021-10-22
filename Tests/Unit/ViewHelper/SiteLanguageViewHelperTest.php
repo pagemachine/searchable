@@ -25,12 +25,12 @@ class SiteLanguageViewHelperTest extends TestCase
     /**
      * Set up this testcase
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->viewHelper = new SiteLanguageViewHelper();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($GLOBALS['TSFE']);
     }

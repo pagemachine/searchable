@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
@@ -22,6 +23,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
+    use ArraySubsetAsserts;
     use WebserverTrait;
 
     /**
@@ -45,7 +47,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     /**
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -194,7 +196,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     /**
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->getElasticsearchClient()->indices()->delete([
             'index' => implode(',', $this->indexNames),

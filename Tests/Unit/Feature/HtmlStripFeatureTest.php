@@ -22,7 +22,7 @@ class HtmlStripFeatureTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->htmlStripFeature = new HtmlStripFeature();
     }
@@ -30,7 +30,7 @@ class HtmlStripFeatureTest extends UnitTestCase
     /**
      * Tear down this testcase
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         GeneralUtility::purgeInstances();
     }

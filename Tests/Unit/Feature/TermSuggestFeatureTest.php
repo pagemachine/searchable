@@ -22,7 +22,7 @@ class TermSuggestFeatureTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->feature = new TermSuggestFeature();
     }

@@ -32,7 +32,7 @@ class ConfigurationManagerTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->configurationManager = new ConfigurationManager();
 

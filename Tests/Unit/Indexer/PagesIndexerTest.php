@@ -38,7 +38,7 @@ class PagesIndexerTest extends UnitTestCase
     /**
      * Set up this testcase
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->query = $this->prophesize(BulkQuery::class);
 
