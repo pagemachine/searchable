@@ -41,15 +41,7 @@ class HighlightFeatureTest extends UnitTestCase
 
         $mapping = HighlightFeature::modifyMapping([], $configuration);
 
-        $expectedMapping = [
-            'properties' => [
-                'fieldone' => [
-                    'copy_to' => 'searchable_highlight',
-                ],
-            ],
-        ];
-
-        $this->assertArraySubset($expectedMapping, $mapping);
+        $this->assertEquals('searchable_highlight', $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
     /**
@@ -75,16 +67,8 @@ class HighlightFeatureTest extends UnitTestCase
 
         $mapping = HighlightFeature::modifyMapping($mapping, $configuration);
 
-        $expectedMapping = [
-            'properties' => [
-                'fieldone' => [
-                    'type' => 'text',
-                    'copy_to' => 'searchable_highlight',
-                ],
-            ],
-        ];
-
-        $this->assertArraySubset($expectedMapping, $mapping);
+        $this->assertEquals('text', $mapping['properties']['fieldone']['type'] ?? null);
+        $this->assertEquals('searchable_highlight', $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
     /**
@@ -119,23 +103,10 @@ class HighlightFeatureTest extends UnitTestCase
 
         $mapping = HighlightFeature::modifyMapping($mapping, $configuration);
 
-        $expectedMapping = [
-            'properties' => [
-                'fieldone' => [
-                    'type' => 'text',
-                    'copy_to' => 'searchable_highlight',
-                ],
-                'sublevel' => [
-                    'properties' => [
-                        'fieldtwo' => [
-                            'type' => 'text',
-                            'copy_to' => 'searchable_highlight',
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        $this->assertEquals('text', $mapping['properties']['fieldone']['type'] ?? null);
+        $this->assertEquals('searchable_highlight', $mapping['properties']['fieldone']['copy_to'] ?? null);
 
-        $this->assertArraySubset($expectedMapping, $mapping);
+        $this->assertEquals('text', $mapping['properties']['sublevel']['properties']['fieldtwo']['type'] ?? null);
+        $this->assertEquals('searchable_highlight', $mapping['properties']['sublevel']['properties']['fieldtwo']['copy_to'] ?? null);
     }
 }
