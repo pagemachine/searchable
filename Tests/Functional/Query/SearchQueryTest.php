@@ -6,7 +6,7 @@ namespace PAGEmachine\Searchable\Tests\Functional\Query;
 use PAGEmachine\Searchable\Query\SearchQuery;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * Testcase for PAGEmachine\Searchable\Query\SearchQuery

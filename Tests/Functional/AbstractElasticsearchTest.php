@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
