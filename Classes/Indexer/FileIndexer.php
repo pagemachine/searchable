@@ -29,11 +29,6 @@ class FileIndexer extends TcaIndexer
         'mapper' => [
             'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class,
         ],
-        'mapping' => [
-            '_all' => [
-                'store' => true,
-            ],
-        ],
     ];
 
     /**
