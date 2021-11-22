@@ -100,7 +100,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
             $extensionConfiguration = [];
         }
-    } elseif (!empty($_EXTCONF)) {
+    } else {
         $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TypoScriptService::class)
             ->convertTypoScriptArrayToPlainArray(unserialize($_EXTCONF));
     }
