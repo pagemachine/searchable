@@ -6,8 +6,7 @@ parameters:
     - ext_localconf.php
     - ext_tables.php
     - Classes
-
-  excludes_analyse:
+  excludePaths:
     - Classes/Command/SearchableCommandController.php
 
   ignoreErrors:

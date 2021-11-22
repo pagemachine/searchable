@@ -66,6 +66,10 @@ class FormDataRecord implements SingletonInterface
         ];
 
         try {
+            /**
+             * @throws DatabaseRecordException
+             * @throws DatabaseDefaultLanguageException
+             */
             $data = $this->formDataCompiler->compile($formDataCompilerInput);
         //Be nice and catch all errors related to inconsistent data (sometimes strange things happen with extbase relations)
         } catch (DatabaseRecordException $e) {

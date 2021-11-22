@@ -98,7 +98,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     /**
      *
      *
-     * @return \Generator
+     * @return \Generator|null
      */
     protected function getPageRecords($pid = null)
     {
