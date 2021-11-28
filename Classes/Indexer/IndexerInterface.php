@@ -42,6 +42,28 @@ interface IndexerInterface
      * @return void
      */
     public function setType($type);
+
+    /**
+     * @return String
+     */
+    public function getNameIndex();
+    
+    /**
+     * @param String $nameIndex
+     * @return void
+     */
+    public function setNameIndex($nameIndex);
+
+    /**
+     * @return String
+     */
+    public function getIndexerName();
+    
+    /**
+     * @param String $indexerName
+     * @return void
+     */
+    public function setIndexerName($indexerName);
     
     /**
      * @return int

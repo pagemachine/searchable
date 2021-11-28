@@ -220,12 +220,12 @@ class ConfigurationManager implements SingletonInterface
         if (is_string($indexerConfiguration['config']['mapper']['className']) && !empty($indexerConfiguration['config']['mapper']['className'])) {
             // Class will only be called if it implements a specific interface.
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
-            if (in_array(MapperInterface::class, class_implements($indexerConfiguration['config']['mapper']['className']))) {
-                $mapping = ConfigurationMergerService::merge(
-                    $indexerConfiguration['config']['mapper']['className']::getMapping($indexerConfiguration),
-                    ($indexerConfiguration['config']['mapping'] ?: [])
-                );
-            }
+            // if (in_array(MapperInterface::class, class_implements($indexerConfiguration['config']['mapper']['className']))) {
+            //     $mapping = ConfigurationMergerService::merge(
+            //         $indexerConfiguration['config']['mapper']['className']::getMapping($indexerConfiguration),
+            //         ($indexerConfiguration['config']['mapping'] ?: [])
+            //     );
+            // }
         }
 
         return $mapping;
