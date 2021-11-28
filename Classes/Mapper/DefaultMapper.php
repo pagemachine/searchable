@@ -18,9 +18,9 @@ class DefaultMapper implements MapperInterface
      *
      * @var array
      */
-    protected static $defaultMapping = [
-        'properties' => [],
-    ];
+    // protected static $defaultMapping = [
+    //     'properties' => [],
+    // ];
 
     /**
      * Creates the mapping
@@ -30,9 +30,9 @@ class DefaultMapper implements MapperInterface
      */
     public static function getMapping($indexerConfiguration)
     {
-        $mapping = self::$defaultMapping;
+        //$mapping = self::$defaultMapping;
 
-        $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
+       // $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
 
         return $mapping;
     }

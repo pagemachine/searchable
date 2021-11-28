@@ -116,6 +116,50 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->type = $type;
     }
 
+    /**
+     * @var String $nameIndex
+     */
+    protected $nameIndex;
+
+    /**
+     * @return String
+     */
+    public function getNameIndex()
+    {
+        return $this->nameIndex;
+    }
+
+    /**
+     * @param String $nameIndex
+     * @return void
+     */
+    public function setNameIndex($nameIndex)
+    {
+        $this->nameIndex = $nameIndex;
+    }
+
+    /**
+     * @var String $indexerName
+     */
+    protected $indexerName;
+
+    /**
+     * @return String
+     */
+    public function getIndexerName()
+    {
+        return $this->indexerName;
+    }
+
+    /**
+     * @param String $indexerName
+     * @return void
+     */
+    public function setIndexerName($indexerName)
+    {
+        $this->indexerName = $indexerName;
+    }
+
 
     /**
      * @var int $language

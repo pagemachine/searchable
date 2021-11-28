@@ -319,7 +319,7 @@ class SearchQuery extends AbstractQuery
         // if ($this->respectLanguage === true) {
         //     $language = $this->language ?: $this->getLanguageId();
 
-        //     $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+        //     $this->parameters['index'] = ExtconfService::hasIndex($nameIndex) ? ExtconfService::getIndex($nameIndex) : ExtconfService::getIndex();
         // }
 
         $this->applyFeatures();
