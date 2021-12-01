@@ -52,6 +52,8 @@ class IndexManager implements SingletonInterface
         $info = [];
 
         foreach (ExtconfService::getIndices() as $nameIndex => $index) {
+            $language = ExtconfService::getIndexLanguage($index);
+            
             $info[$nameIndex] = [
                 'name' => $index,
                 'nameIndex' => $nameIndex,

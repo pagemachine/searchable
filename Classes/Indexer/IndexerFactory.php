@@ -29,20 +29,21 @@ class IndexerFactory implements SingletonInterface
      * Builds an array of indexers
      *
      * @param  int $language
+     * @param  string $index
      * @return array
      */
-    public function makeIndexers($language = 0)
+    public function makeIndexers($language = 0, $index = '')
     {
-        $indexers = [];
+        // $indexers = [];
 
-        $indicies = ExtconfService::getLanguageIndicies($language);
+        // $indicies = ExtconfService::getLanguageIndicies($language);
 
-        if (empty($indicies)) {
-           // $index = ExtconfService::getIndex($nameIndex);
-           $index = $indicies[0];
-        } else {
-            return [];
-        }
+        // if (empty($indicies)) {
+        //    // $index = ExtconfService::getIndex($nameIndex);
+        //    $index = $indicies[0];
+        // } else {
+        //     return [];
+        // }
 
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
@@ -55,27 +56,28 @@ class IndexerFactory implements SingletonInterface
 
     /**
      * Builds a single indexer
-     * @param  string $nameIndex 
+     * @param  string $index
+     * @param  int $language
      * @param  string  $type     The type the index is for
      * @return IndexerInterface|null
      */
-    public function makeIndexer($language = 0, $type = '')
+    public function makeIndexer($index = '', $language = 0, $type = '')
     {
-        $indicies = ExtconfService::getLanguageIndicies($language);
+        // $indicies = ExtconfService::getLanguageIndicies($language);
 
-        if (!empty($indicies)) {
-           // $index = ExtconfService::getIndex($language);
-        } else {
-            return null;
-        }
+        // if (!empty($indicies)) {
+        //    // $index = ExtconfService::getIndex($language);
+        // } else {
+        //     return null;
+        // }
 
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
-        foreach ($indicies as $indexName) {
-            if($indexerConfiguration[$type]['className']==ExtconfService::getIndexIndexer($indexName)){
-                $index = $indexName;
-            }
-        }
+        // foreach ($indicies as $indexName) {
+        //     if($indexerConfiguration[$type]['className']==ExtconfService::getIndexIndexer($indexName)){
+        //         $index = $indexName;
+        //     }
+        // }
 
         if ($indexerConfiguration[$type]) {
            return $this->objectManager->get($indexerConfiguration[$type]['className'], $index, $language, $indexerConfiguration[$type]['config']);
