@@ -65,7 +65,7 @@ class ExtconfService implements SingletonInterface
     {
         $language = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['typo_language'];
 
-        if (empty($language)) {
+        if (!isset($language)) {
             throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
         }
         return $language;
