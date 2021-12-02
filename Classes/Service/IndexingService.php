@@ -155,22 +155,22 @@ final class IndexingService
     /**
      * Reset index for one or all
      *
-     * @param int $language
+     * 
      * @param string $nameIndex
      */
     public function resetIndex(string $nameIndex = ''): void
     {
         $this->assertConnectionHealthy();
 
-        $indexers = $this->indexerFactory->makeIndexers();
+        //$indexers = $this->indexerFactory->makeIndexers($nameIndex);
         $indexManager = IndexManager::getInstance();
 
         if ($nameIndex !== '') {
-            $indexManager->resetIndex(ExtconfService::getIndex($nameIndex));
+            $indexManager->resetIndex($nameIndex);
 
             $this->logger->info(sprintf(
                 'Index "%s" was successfully cleared',
-                ExtconfService::getIndex($nameIndex)
+                $nameIndex
             ));
         } else {
             foreach (ExtconfService::getIndices() as $index) {
@@ -226,8 +226,8 @@ final class IndexingService
         foreach ($indices as $nameIndex => $index) {
             $language = ExtconfService::getIndexLanguage($index);
             if (empty($this->type)) {
-                foreach ($this->indexerFactory->makeIndexers($language, $index) as $indexer) {
-                    $this->scheduledIndexers[$nameIndex][] = $indexer;
+                foreach ($this->indexerFactory->makeIndexers($index, $language) as $indexer) {
+                        $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
             } else {
                 $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
@@ -246,9 +246,8 @@ final class IndexingService
         $starttime = microtime(true);
 
         $this->logger->info(sprintf(
-            'Starting "%s" indexing with %d indexers',
-            $this->runFullIndexing ? 'full' : 'partial',
-            "placeholder"
+            'Starting "%s" indexing with  indexers',
+            $this->runFullIndexing ? 'full' : 'partial'
             //count($this->scheduledIndexers[0]) this doesnt work  Warning: count(): Parameter must be an array or an object that implements Countable
         ));
 

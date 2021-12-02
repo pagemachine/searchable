@@ -50,7 +50,7 @@ class ExtconfService implements SingletonInterface
         $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['name'];
 
         if (empty($index)) {
-            throw new UndefinedIndexException('Index for language ' . $nameIndex . ' is not defined!');
+            throw new UndefinedIndexException('Index  ' . $nameIndex . ' is not defined!');
         }
         return $index;
     }
@@ -72,12 +72,12 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns the indexer for a given index name, if set. Otherwise throws an error so no invalid indices are created
+     * Returns the indexer for a given index name, if set. Otherwise throws an error 
      *
      * @param  string $nameIndex
      * @return string $indexerName
      */
-    public static function getIndexIndexer($nameIndex = '')
+    public static function getIndexIndexer(string $nameIndex)
     {
         $indexerName = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['indexer'];
 

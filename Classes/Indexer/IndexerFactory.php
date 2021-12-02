@@ -32,7 +32,7 @@ class IndexerFactory implements SingletonInterface
      * @param  string $index
      * @return array
      */
-    public function makeIndexers($language = 0, $index = '')
+    public function makeIndexers($index = '', $language = 0)
     {
         // $indexers = [];
 
@@ -48,7 +48,9 @@ class IndexerFactory implements SingletonInterface
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
         foreach ($indexerConfiguration as $indexer) {
+            if($indexer['config']['type']==ExtconfService::getIndexIndexer($index)){
             $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
+            }
         }
 
         return $indexers;

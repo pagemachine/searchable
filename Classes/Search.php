@@ -59,9 +59,9 @@ class Search implements SingletonInterface
                     ],
                 ],
                 //Only load meta fields, not the whole source
-                // '_source' => [
-                //     'searchable_meta',
-                // ],
+                 '_source' => [
+                     'searchable_meta',
+                 ],
             ],
         ];
 
