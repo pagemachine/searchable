@@ -54,8 +54,8 @@ class Search implements SingletonInterface
         $params = [
             'body' => [
                 'query' => [
-                    'match' => [
-                        '_all' => $term,
+                    'multi_match' => [
+                        'query' => $term,
                     ],
                 ],
                 //Only load meta fields, not the whole source
