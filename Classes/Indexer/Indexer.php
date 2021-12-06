@@ -139,12 +139,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     }
 
     /**
-     * @var String $indexerName
+     * @var array $indexerName
      */
     protected $indexerName;
 
     /**
-     * @return String
+     * @return array
      */
     public function getIndexerName()
     {
@@ -152,7 +152,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     }
 
     /**
-     * @param String $indexerName
+     * @param array $indexerName
      * @return void
      */
     public function setIndexerName($indexerName)

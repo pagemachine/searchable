@@ -250,7 +250,7 @@ final class IndexingService
                 $restoreEnvironment = $this->applyEnvironment((string)$nameIndex, $environment);
 
                 foreach ($indexers as $indexer) {
-                    $this->runSingleIndexer($indexer);
+                        $this->runSingleIndexer($indexer);
                 }
 
                 $restoreEnvironment();
