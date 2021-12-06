@@ -76,12 +76,14 @@ class Search implements SingletonInterface
 
             $indicies = ExtconfService::getLanguageIndicies($language);
             if (!empty($indicies)) {
-                $params['index'] = $indicies[0];
+                foreach($indicies as $index){
+                    $params['index'] +=  (string) $index +',';
+                }
             } else{
                 $params['index'] =  ExtconfService::getIndex();
             }
 
-           // $params['index'] = ExtconfService::hasIndex($nameIndex) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+            //$params['index'] == ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
          }
 
 
