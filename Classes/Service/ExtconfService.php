@@ -75,11 +75,16 @@ class ExtconfService implements SingletonInterface
      * Returns the indexer for a given index name, if set. Otherwise throws an error 
      *
      * @param  string $nameIndex
-     * @return string $indexerName
+     * @return array $indexerName
      */
     public static function getIndexIndexer(string $nameIndex)
     {
-        $indexerName = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['indexer'];
+        $indicesConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['indexer'];
+        $indexerName = [];
+
+        foreach ($indicesConfiguration as $nameIndex => $indexer) {
+            $indexerName[$nameIndex] = $indexer;
+        }
 
         if (empty($indexerName)) {
             throw new UndefinedIndexException('Indexer for Index ' . $nameIndex . ' is not defined!');
