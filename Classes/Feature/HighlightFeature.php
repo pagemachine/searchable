@@ -37,19 +37,19 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
      * @param  array  $configuration
      * @return array  $mapping
      */
-    // public static function modifyMapping($mapping, $configuration)
-    // {
-    //     $mapping['properties'][$configuration['highlightField']] = [
-    //         'type' => 'text',
-    //         'include_in_all' => false,
-    //         // Highlight field needs to be stored as copied content is not included in _source
-    //         'store' => true,
-    //     ];
+    public static function modifyMapping($mapping, $configuration)
+    {
+        $mapping['properties'][$configuration['highlightField']] = [
+            'type' => 'text',
+            'include_in_all' => false,
+            // Highlight field needs to be stored as copied content is not included in _source
+            'store' => true,
+        ];
 
-    //     $mapping = self::addRecursiveCopyTo($configuration['fields'], $mapping, $configuration);
+        $mapping = self::addRecursiveCopyTo($configuration['fields'], $mapping, $configuration);
 
-    //     return $mapping;
-    // }
+        return $mapping;
+    }
 
     /**
      * Modifies a query before it is executed
@@ -80,18 +80,18 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
      * @param array $mapping
      * @param array $configuration
      */
-    // protected static function addRecursiveCopyTo($fieldArray, $mapping, $configuration)
-    // {
-    //     if (!empty($fieldArray)) {
-    //         foreach ($fieldArray as $key => $field) {
-    //             if (is_array($field)) {
-    //                 $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
-    //             } else {
-    //                 $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
-    //             }
-    //         }
-    //     }
+    protected static function addRecursiveCopyTo($fieldArray, $mapping, $configuration)
+    {
+        if (!empty($fieldArray)) {
+            foreach ($fieldArray as $key => $field) {
+                if (is_array($field)) {
+                    $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
+                } else {
+                    $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
+                }
+            }
+        }
 
-    //     return $mapping;
-    // }
+        return $mapping;
+    }
 }
