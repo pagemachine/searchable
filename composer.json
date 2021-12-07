@@ -1,8 +1,8 @@
 {
     "name": "pagemachine/searchable",
-    "type": "typo3-cms-extension",
     "description": "Elasticsearch companion API for TYPO3",
     "license": "GPL-3.0-or-later",
+    "type": "typo3-cms-extension",
     "authors": [
         {
             "name": "Saskia Schreiber",
@@ -35,16 +35,6 @@
         "squizlabs/php_codesniffer": "^3.0",
         "symfony/process": "^5.1"
     },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "extension-key": "searchable",
-            "web-dir": "web"
-        }
-    },
     "autoload": {
         "psr-4": {
             "PAGEmachine\\Searchable\\": "Classes/"
@@ -59,6 +49,16 @@
         "classmap": [
             "Tests/StaticAnalysis/Stubs/CommandController.php"
         ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "extension-key": "searchable",
+            "web-dir": "web"
+        }
     },
     "scripts": {
         "post-autoload-dump": [
