@@ -30,9 +30,10 @@ class DefaultMapper implements MapperInterface
      */
     public static function getMapping($indexerConfiguration)
     {
-        //$mapping = self::$defaultMapping;
+        // $mapping = self::$defaultMapping;
+        //mappinghotfix
 
-       // $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
+       $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
 
         return $mapping;
     }

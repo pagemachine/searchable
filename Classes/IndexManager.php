@@ -61,7 +61,7 @@ class IndexManager implements SingletonInterface
             ];
 
             foreach (ExtconfService::getIndexers() as $name => $config) {
-                //if($name==ExtconfService::getIndexIndexer($index)){
+                if(in_array($name,ExtconfService::getIndexIndexer($index))){
                 $info[$nameIndex]['types'][$name] = [
                     'name' => $name,
                     'documents' => $this->client->count([
@@ -69,7 +69,7 @@ class IndexManager implements SingletonInterface
                         'type' => $config['config']['type'],
                     ])['count'],
                 ];
-             // }
+             }
             }
         }
 
@@ -119,6 +119,7 @@ class IndexManager implements SingletonInterface
         // if (!empty($mapping)) {
         //     $params['body']['mappings'] = $mapping;
         // }
+        //mappinghotfix
 
         return $this->client->indices()->create($params);
     }
