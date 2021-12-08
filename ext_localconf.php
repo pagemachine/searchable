@@ -111,7 +111,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
     'pipelines' => [],
     //Default index settings used for every index. If you define custom settings, these will be merged with them
     'defaultIndexSettings' => [
-        'number_of_shards' => 2,
+        'number_of_shards' => 1,
         'number_of_replicas' => 0,
     ],
     'query' => [
