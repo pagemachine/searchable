@@ -59,9 +59,9 @@ class Search implements SingletonInterface
                     ],
                 ],
                 //Only load meta fields, not the whole source
-                 '_source' => [
-                     'searchable_meta',
-                 ],
+                //  '_source' => [
+                //      'searchable_meta',
+                //  ],
             ],
         ];
 
@@ -77,7 +77,7 @@ class Search implements SingletonInterface
             $indicies = ExtconfService::getLanguageIndicies($language);
             if (!empty($indicies)) {
                 foreach($indicies as $index){
-                    $params['index'] +=  (string) $index +',';
+                    $params['index'] .=  (string) $index .',';
                 }
             } else{
                 $params['index'] =  ExtconfService::getIndex();
@@ -112,7 +112,7 @@ class Search implements SingletonInterface
         $result = $this->client->search($params);
 
 
-        $updates = [];
+         $updates = [];
 
         if ($result['hits']['total'] > 0) {
             foreach ($result['hits']['hits'] as $hit) {
@@ -120,6 +120,6 @@ class Search implements SingletonInterface
             }
         }
 
-        return $updates;
+         return $updates;
     }
 }
