@@ -50,7 +50,7 @@ class IndexerFactory implements SingletonInterface
 
         foreach ($indexerConfiguration as $indexer) {
             if(in_array($indexer['config']['type'],array_values($indexerNames))){
-            $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
+                $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
             }
         }
 
