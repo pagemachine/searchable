@@ -114,7 +114,7 @@ class Search implements SingletonInterface
 
          $updates = [];
 
-        if ($result['hits']['total'] > 0) {
+        if ($result['hits']['total']['value'] > 0) {
             foreach ($result['hits']['hits'] as $hit) {
                 $updates[] = $hit['_source'];
             }
