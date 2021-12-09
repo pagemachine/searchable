@@ -116,9 +116,9 @@ class IndexManager implements SingletonInterface
 
         $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
-        // if (!empty($mapping)) {
-        //     $params['body']['mappings'] = $mapping;
-        // }
+        if (!empty($mapping)) {
+            $params['body']['mappings'] = $mapping;
+        }
         //mappinghotfix
 
         return $this->client->indices()->create($params);
