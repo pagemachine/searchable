@@ -8,6 +8,8 @@ use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
+
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -112,14 +114,31 @@ class IndexManager implements SingletonInterface
             'body' => [
                 'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index)),
             ],
-        ];
+        ];  
 
         $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
-        if (!empty($mapping)) {
-            $params['body']['mappings'] = $mapping;
+        $mappingIndexer = [];
+
+        if($index != 'searchable_updates'){
+        $indexer = ExtconfService::getIndexIndexer($index)[0];
+        
+        $mappingIndexer = $mapping[$indexer];
+        
+        DebugUtility::debug($mappingIndexer, 'mappingIndexer');
+        DebugUtility::debug($index, 'Index');
+
+        if ($mappingIndexer['properties']['searchable_meta'] == null){
+            $mappingIndexer['properties']['searchable_meta'] = [];
         }
-        //mappinghotfix
+
+
+        if (!empty($mapping)) {
+            $params['body']['mappings'] = $mappingIndexer;
+        }}else{
+
+        }
+        DebugUtility::debug($params, 'mapping');
 
         return $this->client->indices()->create($params);
     }
