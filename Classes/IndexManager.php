@@ -125,8 +125,8 @@ class IndexManager implements SingletonInterface
         
         $mappingIndexer = $mapping[$indexer];
         
-        DebugUtility::debug($mappingIndexer, 'mappingIndexer');
-        DebugUtility::debug($index, 'Index');
+        // DebugUtility::debug($mappingIndexer, 'mappingIndexer');
+        // DebugUtility::debug($index, 'Index');
 
         if ($mappingIndexer['properties']['searchable_meta'] == null){
             $mappingIndexer['properties']['searchable_meta'] = [];
@@ -138,7 +138,7 @@ class IndexManager implements SingletonInterface
         }}else{
 
         }
-        DebugUtility::debug($params, 'mapping');
+        //DebugUtility::debug($params, 'mapping');
 
         return $this->client->indices()->create($params);
     }
