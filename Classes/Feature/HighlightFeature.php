@@ -41,7 +41,6 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
     {
         $mapping['properties'][$configuration['highlightField']] = [
             'type' => 'text',
-            'include_in_all' => false,
             // Highlight field needs to be stored as copied content is not included in _source
             'store' => true,
         ];
@@ -87,7 +86,8 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
                 if (is_array($field)) {
                     $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
                 } else {
-                    $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
+                    $mapping['properties'][$field]['type'] = 'text';
+                    $mapping['properties'][$field]['term_vector'] = 'with_positions_offsets';
                 }
             }
         }
