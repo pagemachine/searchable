@@ -125,11 +125,37 @@ class IndexManager implements SingletonInterface
         
         $mappingIndexer = $mapping[$indexer];
         
-        // DebugUtility::debug($mappingIndexer, 'mappingIndexer');
-        // DebugUtility::debug($index, 'Index');
+        
+        //DebugUtility::debug($index, 'Index');
+        // $mappingIndexer['properties']['uid'] = [
+        //       'type' => 'integer',
+        // ];
+        // $mappingIndexer['properties']['pid'] = [
+        //     'type' => 'integer',
+        // ];
+        // $mappingIndexer['properties']['sys_language_uid'] = [
+        //     'properties' => [
+        //         '0' => [
+        //            'type' => 'text',
+        //         ],],
+        // ];
 
         if ($mappingIndexer['properties']['searchable_meta'] == null){
-            $mappingIndexer['properties']['searchable_meta'] = [];
+            $mappingIndexer['properties']['searchable_meta'] = [
+                'properties' => [
+            'preview' => [
+                'type' => 'text',
+            ],
+            'renderedLink' => [
+                'type' => 'text',
+            ],
+            'linkTitle' => [
+                'type' => 'text',
+            ],],];
+        }
+        //DebugUtility::debug($mappingIndexer, 'mappingIndexer');
+        if (!empty($mappingIndexer['_all'])){
+            unset($mappingIndexer['_all']);
         }
 
 
