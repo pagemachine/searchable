@@ -230,7 +230,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
         $this->query = $query ?: new BulkQuery(
             $this->index,
-            $this->type,
+            // $this->type,
             $config['pipeline']
         );
 

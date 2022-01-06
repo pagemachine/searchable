@@ -82,12 +82,12 @@ class BulkQuery extends AbstractQuery
      * @param string $index
      * @param string $type
      */
-    public function __construct($index, $type, $pipeline = null)
+    public function __construct($index,  $pipeline = null)
     {
         parent::__construct();
 
         $this->index = $index;
-        $this->type = $type;
+        //$this->type = $type;
         $this->pipeline = $pipeline;
 
         $this->init();
@@ -101,7 +101,7 @@ class BulkQuery extends AbstractQuery
     {
         $this->parameters =  [
             'index' => $this->getIndex(),
-            'type' => $this->getType(),
+            //'type' => $this->getType(),
             'body' => [],
         ];
 
@@ -124,7 +124,7 @@ class BulkQuery extends AbstractQuery
         $this->parameters['body'][] = [
             'index' => [
                 '_index' => $this->index,
-                '_type' => $this->type,
+                '_type' => '_doc',
                 '_id' => $uid,
             ],
 
@@ -175,7 +175,7 @@ class BulkQuery extends AbstractQuery
     {
         $params = [
             'index' => $this->index,
-            'type' => $this->type,
+            'type' => '_doc',
             'id' => $id,
         ];
 

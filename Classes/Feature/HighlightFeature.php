@@ -87,7 +87,8 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
                     $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
                 } else {
                     $mapping['properties'][$field]['type'] = 'text';
-                    $mapping['properties'][$field]['term_vector'] = 'with_positions_offsets';
+                    $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
+                    //$mapping['properties'][$field]['term_vector'] = 'with_positions_offsets';
                 }
             }
         }
