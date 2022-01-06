@@ -67,8 +67,7 @@ class IndexManager implements SingletonInterface
                 $info[$nameIndex]['types'][$name] = [
                     'name' => $name,
                     'documents' => $this->client->count([
-                        'index' => $index,
-                        'type' => $config['config']['type'],
+                        'index' => $index
                     ])['count'],
                 ];
              }
