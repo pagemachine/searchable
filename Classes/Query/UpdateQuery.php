@@ -88,9 +88,14 @@ class UpdateQuery extends AbstractQuery
 
         //$this->parameters['type'] = $type;
         $this->parameters['body'] = [
-            'size' => '9999',
             'query' => [
-                'match' => ['type'=> $type],
+                'bool' => [
+                    'filter' => [
+                        'term' => [
+                            'type'=> $type,
+                        ],
+                    ],
+                ],
             ],
         ];
 
