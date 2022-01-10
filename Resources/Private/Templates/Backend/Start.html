@@ -54,7 +54,7 @@
 
 			<f:for each="{updates.hits.hits}" as="update">
 				<tr>
-				 <td>{update._type}</td>
+				 <td>{update._source._type}</td>
 				 <td>{update._source.property}</td>
 				 <td>{update._source.uid}</td>
 				</tr>
