@@ -61,7 +61,8 @@ class UpdateQuery extends AbstractQuery
         $docid = sha1($type . "." . $property . ":" . $id);
 
         $this->parameters['id'] = $docid;
-        $this->parameters['type'] = $type;
+        $this->parameters['type'] = '_doc';
+        $this->parameters['body']['type'] = strval($type);
         $this->parameters['body']['property'] = $property;
         $this->parameters['body']['uid'] = $id;
 
@@ -85,11 +86,11 @@ class UpdateQuery extends AbstractQuery
 
         $this->init();
 
-        $this->parameters['type'] = $type;
+        //$this->parameters['type'] = $type;
         $this->parameters['body'] = [
             'size' => '9999',
             'query' => [
-                'match_all' => new \stdClass(),
+                'match' => ['type'=> $type],
             ],
         ];
 
