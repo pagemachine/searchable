@@ -15,6 +15,7 @@ use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 
 final class IndexingService
 {
@@ -216,15 +217,18 @@ final class IndexingService
 
         foreach ($indices as $nameIndex => $index) {
             $language = ExtconfService::getIndexLanguage($index);
+            $indexers = ExtconfService::getIndexIndexer($index);
             if (empty($this->type)) {
                 foreach ($this->indexerFactory->makeIndexers($index, $language) as $indexer) {
                         $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
             } else {
+                if($this->type == $indexers[0]){
                 $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
                 if ($indexer != null) {
                     $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
+            }
             }
         }
     }
