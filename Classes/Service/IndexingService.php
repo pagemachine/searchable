@@ -223,7 +223,7 @@ final class IndexingService
                         $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
             } else {
-                if($this->type == $indexers[0]){
+                if($this->type == $indexers){
                 $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
                 if ($indexer != null) {
                     $this->scheduledIndexers[$nameIndex][] = $indexer;
