@@ -63,7 +63,7 @@ class IndexManager implements SingletonInterface
             ];
 
             foreach (ExtconfService::getIndexers() as $name => $config) {
-                if(in_array($name,ExtconfService::getIndexIndexer($index))){
+                if($name == ExtconfService::getIndexIndexer($index)){
                 $info[$nameIndex]['types'][$name] = [
                     'name' => $name,
                     'documents' => $this->client->count([
@@ -120,7 +120,7 @@ class IndexManager implements SingletonInterface
         $mappingIndexer = [];
 
         if($index != 'searchable_updates'){
-        $indexer = ExtconfService::getIndexIndexer($index)[0];
+        $indexer = ExtconfService::getIndexIndexer($index);
         
         $mappingIndexer = $mapping[$indexer];
         
