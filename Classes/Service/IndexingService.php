@@ -218,12 +218,13 @@ final class IndexingService
         foreach ($indices as $nameIndex => $index) {
             $language = ExtconfService::getIndexLanguage($index);
             $indexers = ExtconfService::getIndexIndexer($index);
+            $indexerConfig = ExtconfService::getIndexersConfiguration($indexers);
             if (empty($this->type)) {
                 foreach ($this->indexerFactory->makeIndexers($index, $language) as $indexer) {
                         $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
             } else {
-                if($this->type == $indexers){
+                if($this->type == $indexerConfig['type']){
                 $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
                 if ($indexer != null) {
                     $this->scheduledIndexers[$nameIndex][] = $indexer;
