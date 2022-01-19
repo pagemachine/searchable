@@ -46,10 +46,11 @@ class IndexerFactory implements SingletonInterface
 
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
-        $indexerNames = ExtconfService::getIndexIndexer($index);
+        $indexerName = ExtconfService::getIndexIndexer($index);
+        $indexerConfig = ExtconfService::getIndexersConfiguration($indexerName);
 
         foreach ($indexerConfiguration as $indexer) {
-            if($indexer['config']['type'] == $indexerNames){
+            if($indexer['config']['type'] == $indexerConfig['type']){
                 $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
             }
         }
