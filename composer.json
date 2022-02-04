@@ -68,8 +68,7 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "mkdir -p web/typo3conf/ext",
-            "ln -sfn ../../.. web/typo3conf/ext/$(composer config extra.typo3/cms.extension-key)"
+            "Nimut\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
         ],
         "analyze:php": "phpstan analyse --ansi --no-progress --configuration=phpstan.neon",
         "build": [
