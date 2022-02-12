@@ -47,9 +47,10 @@ class Search implements SingletonInterface
      * @param  array $options
      * @param  bool $respectLanguage If set, the search will be limited to the current FE language (if there is an index for it) or the default language
      * @param  int $forceLanguage Forces the given language id
+     * @param  array $givenIndicies to search trough
      * @return array
      */
-    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null)
+    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null, $givenIndicies = null)
     {
         $params = [
             'body' => [
@@ -76,23 +77,22 @@ class Search implements SingletonInterface
 
             $indicies = ExtconfService::getLanguageIndicies($language);
             if (!empty($indicies)) {
-                if (empty($params['index'])){
+                if (empty($givenIndicies)){
                     foreach($indicies as $index){
                         $params['index'] .=  (string) $index .',';
                     }
                 } else{
-                    $givenIndicies = explode(",",$params['index']);
                     $indicies = array_intersect($givenIndicies,$indicies);
                     foreach($indicies as $index){
                         $params['index'] .=  (string) $index .',';
                     }
                 }
-            } else{
-                $params['index'] =  ExtconfService::getIndex();
             }
-
-            //$params['index'] == ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
-         }
+        } if(!empty($givenIndicies)){
+            foreach($givenIndicies as $index){
+                $params['index'] .=  (string) $index .',';
+            }
+        }
 
 
         $result = $this->client->search($params);
