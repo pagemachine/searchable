@@ -235,6 +235,31 @@ class SearchQuery extends AbstractQuery
 
 
     /**
+     * @var array $givenIndicies
+     */
+    protected $givenIndicies = [];
+
+    /**
+     * @return array
+     */
+    public function getGivenIndicies()
+    {
+        return $this->givenIndicies;
+    }
+
+    /**
+     * @param array $indicies
+     * @return SearchQuery
+     */
+    public function setGivenIndicies($givenIndicies)
+    {
+        $this->givenIndicies = $givenIndicies;
+
+        return $this;
+    }
+
+
+    /**
      * @var array $result
      */
     protected $result;
@@ -321,6 +346,23 @@ class SearchQuery extends AbstractQuery
 
         //     $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         // }
+        if ($this->respectLanguage === true) {
+            $language = $this->language ?: $this->getLanguageId();
+
+            $indicies = ExtconfService::getLanguageIndicies($language);
+            if (!empty($indicies)) {
+                if (empty($this->givenIndicies)){
+                    foreach($indicies as $index){
+                        $this->parameters['index'] .=  (string) $index .',';
+                    }
+                } else{
+                    $indicies = array_intersect($this->givenIndicies,$indicies);
+                    foreach($indicies as $index){
+                        $this->parameters['index'] .=  (string) $index .',';
+                    }
+                }
+            }
+        }
 
         $this->applyFeatures();
     }
