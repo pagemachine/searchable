@@ -100,6 +100,10 @@ final class IndexingService
     {
         $this->assertConnectionHealthy();
 
+        $pipelineManager = PipelineManager::getInstance();
+        $pipelineManager->createPipelines();
+        $this->logger->debug('Successfully created pipelines');
+
         $this->logger->debug('Checking for existing Update Index..');
 
         $indexManager = IndexManager::getInstance();
@@ -109,7 +113,7 @@ final class IndexingService
         $this->logger->debug('Ensured update index exists');
 
         try {
-            $indexers = $this->indexerFactory->makeIndexers();
+            $indexers = $this->indexerFactory->makeIndexersForSetup();
         } catch (\Exception $e) {
             $this->logger->error(sprintf(
                 'Invalid indexers configuration: %s [%s]',
@@ -139,9 +143,7 @@ final class IndexingService
             }
         }
 
-        $pipelineManager = PipelineManager::getInstance();
-        $pipelineManager->createPipelines();
-        $this->logger->debug('Successfully created pipelines');
+        
     }
 
     /**
