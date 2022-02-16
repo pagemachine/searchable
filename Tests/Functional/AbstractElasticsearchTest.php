@@ -66,11 +66,13 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indices' => [
-                    0 => [
+                    $this->indexNames[0] => [
                         'name' => $this->indexNames[0],
+                        'indexer' => 'foo_pages',
                     ],
-                    1 => [
+                    $this->indexNames[1] => [
                         'name' => $this->indexNames[1],
+                        'indexer' => 'foo_pages',
                     ],
                 ],
                 'indexers' => [
