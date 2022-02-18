@@ -24,7 +24,7 @@
         "ergebnis/composer-normalize": "^2.6",
         "jangregor/phpstan-prophecy": "^1.0.0",
         "nimut/testing-framework": "^6.0",
-        "php-parallel-lint/php-console-highlighter": "^0.5.0",
+        "php-parallel-lint/php-console-highlighter": "^1.0.0",
         "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/phpstan": "^1.0.0",
         "phpunit/phpunit": "^9.0",
