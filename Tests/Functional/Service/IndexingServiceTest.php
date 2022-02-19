@@ -95,8 +95,8 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'slug' => '/translated-test-page/',
         ]);
 
-        $this->assertIndexEmpty(0);
-        $this->assertIndexEmpty(1);
+        $this->assertIndexeEmpty(0);
+        $this->assertIndexeEmpty(1);
 
         $this->indexingService->indexFull();
 
@@ -130,8 +130,8 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'header' => 'Translated test content',
         ]);
 
-        $this->assertIndexEmpty(0);
-        $this->assertIndexEmpty(1);
+        $this->assertIndexeEmpty(0);
+        $this->assertIndexeEmpty(1);
 
         $this->indexingService->setup();
         $this->indexingService->indexFull('content');
@@ -236,7 +236,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'title' => 'Second regular page',
         ]);
 
-        $this->assertIndexEmpty();
+        $this->assertIndexeEmpty();
 
         $this->indexingService->indexFull();
 
@@ -278,7 +278,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'slug' => '/qux-test-page/',
         ]);
 
-        $this->assertIndexEmpty();
+        $this->assertIndexeEmpty();
 
         $this->indexingService->indexFull();
 

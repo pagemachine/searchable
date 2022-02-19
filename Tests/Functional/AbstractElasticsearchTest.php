@@ -6,11 +6,13 @@ namespace PAGEmachine\Searchable\Tests\Functional;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
+use Stringable;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
@@ -73,6 +75,30 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     $this->indexNames[1] => [
                         'name' => $this->indexNames[1],
                         'indexer' => 'foo_pages',
+                    ],
+                    $this->indexNames[0].'bar' => [
+                        'name' => $this->indexNames[0].'bar',
+                        'indexer' => 'bar_pages',
+                    ],
+                    $this->indexNames[1].'bar' => [
+                        'name' => $this->indexNames[1].'bar',
+                        'indexer' => 'bar_pages',
+                    ],
+                    $this->indexNames[0].'qux' => [
+                        'name' => $this->indexNames[0].'qux',
+                        'indexer' => 'qux_pages',
+                    ],
+                    $this->indexNames[1].'qux' => [
+                        'name' => $this->indexNames[1].'qux',
+                        'indexer' => 'qux_pages',
+                    ],
+                    $this->indexNames[0].'content' => [
+                        'name' => $this->indexNames[0].'content',
+                        'indexer' => 'content',
+                    ],
+                    $this->indexNames[1].'content' => [
+                        'name' => $this->indexNames[1].'content',
+                        'indexer' => 'content',
                     ],
                 ],
                 'indexers' => [
@@ -196,17 +222,22 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->stopWebserver();
     }
 
-    protected function assertIndexEmpty(int $languageId = 0): void
+    protected function assertIndexeEmpty(int $languageId = 0): void
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
+        $indexe = ExtconfService::getLanguageIndicies($languageId);
+        $indexString = '';
+        foreach($indexe as $index){
+            $indexString .= $index . ',';
+        }
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => $indexString,
         ]);
         $total = $response['hits']['total'];
 
-        $this->assertEquals(0, $total, 'Documents in index');
+        $this->assertEquals(0, $total, 'Documents in indexe');
     }
 
     protected function assertDocumentInIndex(int $uid, array $documentSubset = [], int $languageId = 0): void
@@ -235,9 +266,14 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
+        $indexe = ExtconfService::getLanguageIndicies($languageId);
+        $indexString = '';
+        foreach($indexe as $index){
+            $indexString .= $index . ',';
+        }
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => $indexString,
             'body' => [
                 'query' => [
                     'term' => [
