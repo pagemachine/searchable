@@ -8,6 +8,7 @@ use Elasticsearch\Client as ElasticsearchClient;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\Service\IndexingService;
