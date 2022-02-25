@@ -19,7 +19,7 @@
         "typo3/cms-frontend": "^9.5 || ^10.4"
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": "^0.31.0",
+        "codedungeon/phpunit-result-printer": "^0.32.0",
         "dms/phpunit-arraysubset-asserts": "^0.4.0",
         "ergebnis/composer-normalize": "^2.6",
         "jangregor/phpstan-prophecy": "^1.0.0",
