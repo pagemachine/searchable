@@ -38,5 +38,7 @@ parameters:
       paths:
         - Classes/Middleware/UriBuilder.php
         - Classes/Utility/TsfeUtility.php
+    - message: '#Call to function is_array\(\) with mixed will always evaluate to false.#'
+      path: Classes/Feature/Traits/FieldCollectionTrait.php
 
   reportUnmatchedIgnoredErrors: false
