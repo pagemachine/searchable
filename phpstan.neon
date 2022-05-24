@@ -6,36 +6,10 @@ parameters:
     - ext_localconf.php
     - ext_tables.php
     - Classes
-  excludePaths:
-    - Classes/Command/SearchableCommandController.php
 
   ignoreErrors:
     - message: '#Variable \$_EXTKEY might not be defined.#'
       path: ext_emconf.php
-    - message: '#Undefined variable: \$_EXTCONF#'
-      path: ext_localconf.php
-    - message: '#Psr\\Http\\Server\\MiddlewareInterface#'
-      path: Classes/Middleware/UriBuilder.php
-    - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
-      paths:
-        - Classes/Middleware/UriBuilder.php
-        - Classes/Service/IndexingService.php
-        - Classes/Utility/TsfeUtility.php
-        - Classes/ViewHelpers/SiteLanguageViewHelper.php
-    - message: '#TYPO3\\CMS\\Core\\Database\\PostProcessQueryHookInterface#'
-      paths:
-        - ext_localconf.php
-        - Classes/Hook/DatabaseConnectionHook.php
-    - message: '#TYPO3\\CMS\\Core\\Http\\JsonResponse#'
-      path: Classes/Middleware/UriBuilder.php
-    - message: '#TYPO3\\CMS\\Core\\Routing\\.+#'
-      paths:
-        - Classes/Middleware/UriBuilder.php
-        - Classes/Utility/TsfeUtility.php
-    - message: '#TYPO3\\CMS\\Core\\Site\\.+#'
-      paths:
-        - Classes/Middleware/UriBuilder.php
-        - Classes/Utility/TsfeUtility.php
     - message: '#Call to function is_array\(\) with mixed will always evaluate to false.#'
       path: Classes/Feature/Traits/FieldCollectionTrait.php
 
