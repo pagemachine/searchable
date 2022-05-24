@@ -14,8 +14,6 @@ parameters:
       path: ext_emconf.php
     - message: '#Undefined variable: \$_EXTCONF#'
       path: ext_localconf.php
-    - message: '#TYPO3\\CMS\\Core\\Configuration\\Exception\\ExtensionConfigurationExtensionNotConfiguredException#'
-      path: ext_localconf.php
     - message: '#Psr\\Http\\Server\\MiddlewareInterface#'
       path: Classes/Middleware/UriBuilder.php
     - message: '#TYPO3\\CMS\\Core\\Context\\.+#'
