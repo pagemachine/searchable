@@ -7,6 +7,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
 
 use PAGEmachine\Searchable\ViewHelpers\SiteLanguageViewHelper;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -17,6 +18,8 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
  */
 class SiteLanguageViewHelperTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SiteLanguageViewHelper
      */

@@ -8,6 +8,7 @@ use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestDataCollectorFi
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestFeatureFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestIndexerFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestMapperFixture;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -19,6 +20,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ConfigurationManagerTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ConfigurationManager
      */
