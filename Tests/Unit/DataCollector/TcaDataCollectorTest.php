@@ -9,6 +9,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -17,6 +18,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class TcaDataCollectorTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var OverlayUtility
      */

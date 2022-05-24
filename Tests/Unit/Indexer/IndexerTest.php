@@ -11,6 +11,7 @@ use PAGEmachine\Searchable\Indexer\Indexer;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Query\BulkQuery;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -19,6 +20,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class IndexerTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * Set up this testcase
      */

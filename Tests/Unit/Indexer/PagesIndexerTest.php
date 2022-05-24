@@ -8,6 +8,7 @@ use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
@@ -15,6 +16,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 */
 class PagesIndexerTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PagesIndexer
      */

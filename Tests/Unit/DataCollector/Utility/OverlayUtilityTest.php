@@ -7,6 +7,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
@@ -14,6 +15,8 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 class OverlayUtilityTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @dataProvider pagesToOverlay
