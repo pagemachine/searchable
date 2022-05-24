@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 /*
@@ -45,8 +46,7 @@ class UpdateQuery extends AbstractQuery
     {
         $this->parameters =  [
             'index' => $this->getIndex(),
-            'body' => [
-            ],
+            'body' => [],
         ];
     }
 
@@ -67,8 +67,8 @@ class UpdateQuery extends AbstractQuery
         $this->parameters['body']['uid'] = $id;
 
         try {
-              $response = $this->client->index($this->getParameters());
-              return $response;
+            $response = $this->client->index($this->getParameters());
+            return $response;
         } catch (\Exception $e) {
             $this->logger->error("Could not track update. Reason: " . $e->getMessage());
             return [];
@@ -86,13 +86,12 @@ class UpdateQuery extends AbstractQuery
 
         $this->init();
 
-        //$this->parameters['type'] = $type;
         $this->parameters['body'] = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'term' => [
-                            'type'=> $type,
+                            'type' => $type,
                         ],
                     ],
                 ],
@@ -113,11 +112,11 @@ class UpdateQuery extends AbstractQuery
             if ($hit['_source']['property'] == 'uid') {
                 $recordids[$hit['_source']['uid']] = $hit['_source']['uid'];
             } else {
-                 $updateParams[] = [
+                $updateParams[] = [
                     "term" => [
                         $hit['_source']['property'] => $hit['_source']['uid'],
                     ],
-                 ];
+                ];
             }
         }
 

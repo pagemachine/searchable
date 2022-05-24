@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
@@ -341,24 +342,19 @@ class SearchQuery extends AbstractQuery
             'size' => $this->size,
         ];
 
-        // if ($this->respectLanguage === true) {
-        //     $language = $this->language ?: $this->getLanguageId();
-
-        //     $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
-        // }
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();
 
             $indicies = ExtconfService::getLanguageIndicies($language);
             if (!empty($indicies)) {
-                if (empty($this->givenIndicies)){
-                    foreach($indicies as $index){
-                        $this->parameters['index'] .=  (string) $index .',';
+                if (empty($this->givenIndicies)) {
+                    foreach ($indicies as $index) {
+                        $this->parameters['index'] .=  (string) $index . ',';
                     }
-                } else{
-                    $indicies = array_intersect($this->givenIndicies,$indicies);
-                    foreach($indicies as $index){
-                        $this->parameters['index'] .=  (string) $index .',';
+                } else {
+                    $indicies = array_intersect($this->givenIndicies, $indicies);
+                    foreach ($indicies as $index) {
+                        $this->parameters['index'] .=  (string) $index . ',';
                     }
                 }
             }

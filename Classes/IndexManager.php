@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
@@ -55,7 +56,7 @@ class IndexManager implements SingletonInterface
 
         foreach (ExtconfService::getIndices() as $nameIndex => $index) {
             $language = ExtconfService::getIndexLanguage($index);
-            
+
             $info[$nameIndex] = [
                 'name' => $index,
                 'nameIndex' => $nameIndex,
@@ -63,14 +64,14 @@ class IndexManager implements SingletonInterface
             ];
 
             foreach (ExtconfService::getIndexers() as $name => $config) {
-                if($name == ExtconfService::getIndexIndexer($index)){
-                $info[$nameIndex]['types'][$name] = [
-                    'name' => $name,
-                    'documents' => $this->client->count([
-                        'index' => $index
-                    ])['count'],
-                ];
-             }
+                if ($name == ExtconfService::getIndexIndexer($index)) {
+                    $info[$nameIndex]['types'][$name] = [
+                        'name' => $name,
+                        'documents' => $this->client->count([
+                            'index' => $index
+                        ])['count'],
+                    ];
+                }
             }
         }
 
@@ -113,57 +114,43 @@ class IndexManager implements SingletonInterface
             'body' => [
                 'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index)),
             ],
-        ];  
+        ];
 
         $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
         $mappingIndexer = [];
 
-        if($index != 'searchable_updates'){
-        $indexer = ExtconfService::getIndexIndexer($index);
-        
-        $mappingIndexer = $mapping[$indexer];
-        
-        
-        //DebugUtility::debug($index, 'Index');
-        // $mappingIndexer['properties']['uid'] = [
-        //       'type' => 'integer',
-        // ];
-        // $mappingIndexer['properties']['pid'] = [
-        //     'type' => 'integer',
-        // ];
-        // $mappingIndexer['properties']['sys_language_uid'] = [
-        //     'properties' => [
-        //         '0' => [
-        //            'type' => 'text',
-        //         ],],
-        // ];
+        if ($index != 'searchable_updates') {
+            $indexer = ExtconfService::getIndexIndexer($index);
 
-        if ($mappingIndexer['properties']['searchable_meta'] == null){
-            $mappingIndexer['properties']['searchable_meta'] = [
-                'properties' => [
-            'preview' => [
-                'type' => 'text',
-            ],
-            'renderedLink' => [
-                'type' => 'text',
-            ],
-            'linkTitle' => [
-                'type' => 'text',
-            ],],];
+            $mappingIndexer = $mapping[$indexer];
+
+            if ($mappingIndexer['properties']['searchable_meta'] == null) {
+                $mappingIndexer['properties']['searchable_meta'] = [
+                    'properties' => [
+                        'preview' => [
+                            'type' => 'text',
+                        ],
+                        'renderedLink' => [
+                            'type' => 'text',
+                        ],
+                        'linkTitle' => [
+                            'type' => 'text',
+                        ],
+                    ],
+                ];
+            }
+
+            if (!empty($mappingIndexer['_all'])) {
+                unset($mappingIndexer['_all']);
+            }
+
+
+            if (!empty($mapping)) {
+                $params['body']['mappings'] = $mappingIndexer;
+            }
+        } else {
         }
-        //DebugUtility::debug($mappingIndexer, 'mappingIndexer');
-        if (!empty($mappingIndexer['_all'])){
-            unset($mappingIndexer['_all']);
-        }
-
-
-        if (!empty($mapping)) {
-            $params['body']['mappings'] = $mappingIndexer;
-        }}else{
-
-        }
-        //DebugUtility::debug($params, 'mapping');
 
         return $this->client->indices()->create($params);
     }

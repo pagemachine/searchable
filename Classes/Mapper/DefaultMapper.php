@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Mapper;
 
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -31,9 +32,8 @@ class DefaultMapper implements MapperInterface
     public static function getMapping($indexerConfiguration)
     {
         $mapping = self::$defaultMapping;
-        //mappinghotfix
 
-       $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
+        $mapping['properties'][ExtconfService::getMetaFieldname()] = self::getMetaMapping();
 
         return $mapping;
     }
@@ -45,6 +45,6 @@ class DefaultMapper implements MapperInterface
      */
     protected static function getMetaMapping()
     {
-        return ;//["enabled" => false];
+        return; //["enabled" => false];
     }
 }
