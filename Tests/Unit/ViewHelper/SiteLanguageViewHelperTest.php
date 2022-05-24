@@ -42,11 +42,7 @@ class SiteLanguageViewHelperTest extends TestCase
     {
         $GLOBALS['TSFE'] = $this->prophesize(TypoScriptFrontendController::class)->reveal();
 
-        if (class_exists(Context::class)) {
-            GeneralUtility::makeInstance(Context::class)->setAspect('language', new LanguageAspect(1));
-        } else {
-            $GLOBALS['TSFE']->sys_language_uid = 1;
-        }
+        GeneralUtility::makeInstance(Context::class)->setAspect('language', new LanguageAspect(1));
 
         $this->assertEquals(1, $this->viewHelper->render());
     }
