@@ -10,11 +10,6 @@ trait LanguageIdTrait
 {
     protected function getLanguageId(): int
     {
-        if (class_exists(Context::class)) {
-            return (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id');
-        }
-
-        // @extensionScannerIgnoreLine
-        return $GLOBALS['TSFE']->sys_language_uid ?? 0; // @phpstan-ignore-line
+        return (int)GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('language', 'id');
     }
 }

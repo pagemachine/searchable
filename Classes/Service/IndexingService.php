@@ -310,25 +310,18 @@ final class IndexingService
         $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
         setlocale(LC_ALL, $environment['locale']);
 
-        if (class_exists(Context::class)) {
+        $context = GeneralUtility::makeInstance(Context::class);
+        $originalLanguageAspect = $context->getAspect('language');
+
+        $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale, $originalLanguageAspect): void {
+            $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
+            setlocale(LC_ALL, $originalLocale);
+
             $context = GeneralUtility::makeInstance(Context::class);
-            $originalLanguageAspect = $context->getAspect('language');
+            $context->setAspect('language', $originalLanguageAspect);
+        };
 
-            $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale, $originalLanguageAspect): void {
-                $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
-                setlocale(LC_ALL, $originalLocale);
-
-                $context = GeneralUtility::makeInstance(Context::class);
-                $context->setAspect('language', $originalLanguageAspect);
-            };
-
-            $context->setAspect('language', new LanguageAspect($languageUid));
-        } else { // TYPO3v8
-            $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale): void {
-                $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
-                setlocale(LC_ALL, $originalLocale);
-            };
-        }
+        $context->setAspect('language', new LanguageAspect($languageUid));
 
         return $restoreEnvironment;
     }
