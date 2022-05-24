@@ -3,9 +3,9 @@ namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\Utility\TsfeUtility;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
