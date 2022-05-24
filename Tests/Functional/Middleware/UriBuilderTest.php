@@ -8,7 +8,6 @@ use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * Testcase for PAGEmachine\Searchable\Middleware\UriBuilder
@@ -104,10 +103,6 @@ final class UriBuilderTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
-            $this->markTestSkipped('TYPO3v9+ only');
-        }
 
         $this->startWebserver();
     }
