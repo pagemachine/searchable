@@ -6,10 +6,8 @@ use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -27,33 +25,6 @@ class TsfeUtility
      */
     public static function createTSFE()
     {
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '10', '<')) {
-            // @extensionScannerIgnoreLine
-            if (class_exists(EidUtility::class)) {
-                // @extensionScannerIgnoreLine
-                EidUtility::initTCA(); // @phpstan-ignore-line
-            }
-
-            if (!is_object($GLOBALS['TSFE'])) {
-                $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 1, 0);
-
-                if (method_exists($GLOBALS['TSFE'], 'connectToDB')) { // TYPO3v9+
-                    // @extensionScannerIgnoreLine
-                    $GLOBALS['TSFE']->connectToDB();
-                }
-
-                $GLOBALS['TSFE']->initFEuser();
-                $GLOBALS['TSFE']->determineId();
-                $GLOBALS['TSFE']->initTemplate();
-                $GLOBALS['TSFE']->getConfigArray();
-                $_SERVER['HTTP_HOST'] = 'localhost';
-                GeneralUtility::flushInternalRuntimeCaches();
-                $GLOBALS['TSFE']->preparePageContentGeneration();
-            }
-
-            return;
-        }
-
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
         $site = array_values($siteFinder->getAllSites())[0] ?? null;
 
