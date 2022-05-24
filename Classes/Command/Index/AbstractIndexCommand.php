@@ -6,7 +6,6 @@ namespace PAGEmachine\Searchable\Command\Index;
 use PAGEmachine\Searchable\Service\IndexingService;
 use Symfony\Component\Console\Command\Command;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 abstract class AbstractIndexCommand extends Command
 {
@@ -15,11 +14,10 @@ abstract class AbstractIndexCommand extends Command
      */
     protected $indexingService;
 
-    public function __construct(...$arguments)
+    public function __construct(IndexingService $indexingService)
     {
-        parent::__construct(...$arguments);
+        $this->indexingService = $indexingService;
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->indexingService = $objectManager->get(IndexingService::class);
+        parent::__construct();
     }
 }
