@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
@@ -315,12 +316,6 @@ class SearchQuery extends AbstractQuery
             'from' => $this->from,
             'size' => $this->size,
         ];
-
-        // if ($this->respectLanguage === true) {
-        //     $language = $this->language ?: $this->getLanguageId();
-
-        //     $this->parameters['index'] = ExtconfService::hasIndex($nameIndex) ? ExtconfService::getIndex($nameIndex) : ExtconfService::getIndex();
-        // }
 
         $this->applyFeatures();
     }

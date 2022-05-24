@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 /*
@@ -87,7 +88,6 @@ class BulkQuery extends AbstractQuery
         parent::__construct();
 
         $this->index = $index;
-        //$this->type = $type;
         $this->pipeline = $pipeline;
 
         $this->init();
@@ -101,7 +101,6 @@ class BulkQuery extends AbstractQuery
     {
         $this->parameters =  [
             'index' => $this->getIndex(),
-            //'type' => $this->getType(),
             'body' => [],
         ];
 

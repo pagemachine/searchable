@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Service;
 
@@ -151,8 +152,6 @@ final class IndexingService
                 ));
             }
         }
-
-        
     }
 
     /**
@@ -165,7 +164,6 @@ final class IndexingService
     {
         $this->assertConnectionHealthy();
 
-        //$indexers = $this->indexerFactory->makeIndexers($nameIndex);
         $indexManager = IndexManager::getInstance();
 
         if ($nameIndex !== '') {
@@ -232,15 +230,15 @@ final class IndexingService
             $indexerConfig = ExtconfService::getIndexersConfiguration($indexers);
             if (empty($this->type)) {
                 foreach ($this->indexerFactory->makeIndexers($index, $language) as $indexer) {
-                        $this->scheduledIndexers[$nameIndex][] = $indexer;
-                }
-            } else {
-                if($this->type == $indexerConfig['type']){
-                $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
-                if ($indexer != null) {
                     $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
-            }
+            } else {
+                if ($this->type == $indexerConfig['type']) {
+                    $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
+                    if ($indexer != null) {
+                        $this->scheduledIndexers[$nameIndex][] = $indexer;
+                    }
+                }
             }
         }
     }
@@ -266,7 +264,7 @@ final class IndexingService
                 $restoreEnvironment = $this->applyEnvironment((string)$nameIndex, $environment);
 
                 foreach ($indexers as $indexer) {
-                        $this->runSingleIndexer($indexer);
+                    $this->runSingleIndexer($indexer);
                 }
 
                 $restoreEnvironment();
