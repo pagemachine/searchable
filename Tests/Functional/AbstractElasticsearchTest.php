@@ -170,13 +170,11 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->startWebserver();
 
         // Update internally created site to flush all caches
-        if (class_exists(SiteConfiguration::class)) {
-            $siteConfiguration = GeneralUtility::makeInstance(
-                SiteConfiguration::class,
-                Environment::getConfigPath() . '/sites'
-            );
-            $siteConfiguration->write('1', $siteConfiguration->load('1'));
-        }
+        $siteConfiguration = GeneralUtility::makeInstance(
+            SiteConfiguration::class,
+            Environment::getConfigPath() . '/sites'
+        );
+        $siteConfiguration->write('1', $siteConfiguration->load('1'));
 
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
         $this->setUpBackendUserFromFixture(1);
