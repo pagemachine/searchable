@@ -17,7 +17,6 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
@@ -148,10 +147,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
 
         $typoScriptConstantsFile = 'EXT:searchable/Configuration/TypoScript/constants.typoscript';
         $typoScriptSetupFile = 'EXT:searchable/Configuration/TypoScript/setup.typoscript';
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
-            $typoScriptConstantsFile = 'EXT:searchable/Configuration/TypoScript/constants.txt';
-            $typoScriptSetupFile = 'EXT:searchable/Configuration/TypoScript/setup.txt';
-        }
         $this->setUpFrontendRootPage(1, [
             __DIR__ . '/Fixtures/TypoScript/page.typoscript',
             $typoScriptSetupFile,

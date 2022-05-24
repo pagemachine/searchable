@@ -3,12 +3,10 @@ namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequest;
-use PAGEmachine\Searchable\LinkBuilder\Frontend\LegacyFrontendRequest;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -67,11 +65,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     {
         $this->config = $config;
 
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
-            $this->frontendRequest = GeneralUtility::makeInstance(LegacyFrontendRequest::class);
-        } else {
-            $this->frontendRequest = GeneralUtility::makeInstance(FrontendRequest::class);
-        }
+        $this->frontendRequest = GeneralUtility::makeInstance(FrontendRequest::class);
     }
 
     /**

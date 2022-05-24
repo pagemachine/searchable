@@ -117,9 +117,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
 
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
-if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '9', '<')) {
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_linkbuilder'] = \PAGEmachine\Searchable\Eid\LinkBuilder::class . '::processRequest';
-}
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = \PAGEmachine\Searchable\Eid\Search::class . '::processRequest';
 
 // Register Hook for dynamic Plugin FlexForms
