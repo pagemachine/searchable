@@ -27,4 +27,4 @@ services:
       - /var/lib/mysql
 
   elasticsearch:
-    image: elasticsearch:5
+    image: elasticsearch:${ELASTICSEARCH_VERSION:-5}
