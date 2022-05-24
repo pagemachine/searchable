@@ -11,7 +11,7 @@ However, they don't have to use each function. It depends on where you register 
 
 Feature classes can also hold their own configuration for extra convenience.
 
-A good example for a feature using all three hooks is `PAGEmachine\Searchable\Feature\ResultHighlightFeature`, a feature to return highlighted snippets containing the search word for each content.
+A good example for a feature using all three hooks is `PAGEmachine\Searchable\Feature\HighlightFeature`, a feature to return highlighted snippets containing the search word for each content.
 
 ## Modifying mappings
 
@@ -20,7 +20,7 @@ The first function is `modifyMapping` which - as the name suggests - is called b
 To register your class for this function, you have to add it to the **Indexer** features (toplevel). Example from the *highlight* feature:
 
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['pages']['config']['features']['highlighting'] = [
-        'className' => \PAGEmachine\Searchable\Feature\ResultHighlightFeature::class,
+        'className' => \PAGEmachine\Searchable\Feature\HighlightFeature::class,
         'config' => [
             // Here you can override the default config of this feature, if necessary
         ]
@@ -40,7 +40,7 @@ Query modifying consists of several steps, as it concerns the query itself as we
 First, register your feature for a query class (`SearchQuery` most likely, as this is the default query):
 
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['query'][PAGEmachine\Searchable\Query\SearchQuery::class]['features']['highlighting'] = [
-        'className' => PAGEmachine\Searchable\Feature\ResultHighlightFeature::class,
+        'className' => PAGEmachine\Searchable\Feature\HighlightFeature::class,
         'config' => [
             // Here you can override the default config of this feature, if necessary
         ]        

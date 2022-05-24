@@ -8,7 +8,7 @@ use PAGEmachine\Searchable\Query\QueryInterface;
  */
 
 /**
- * ResultHighlightFeature
+ * HighlightFeature
  * Creates mapping and search parameters for result highlighting
  * Uses the ES copy_to mapping option to fill the highlight field
  * See: https://www.elastic.co/guide/en/elasticsearch/reference/current/copy-to.html
