@@ -13,7 +13,6 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\Entity\NullSite;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -50,21 +49,6 @@ final class UriBuilder implements MiddlewareInterface
 
     private function bootFrontendController(ServerRequestInterface $request): void
     {
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '10', '<')) {
-            $frontendController = GeneralUtility::makeInstance(
-                TypoScriptFrontendController::class,
-                null,
-                1,
-                0
-            );
-            $frontendController->initFEuser();
-            $frontendController->fetch_the_id();
-
-            $GLOBALS['TSFE'] = $frontendController;
-
-            return;
-        }
-
         $site = $request->getAttribute('site');
 
         if ($site instanceof NullSite) {

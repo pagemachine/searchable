@@ -181,11 +181,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
         $this->setUpBackendUserFromFixture(1);
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
-        if (!method_exists(Bootstrap::class, 'getInstance')) { // TYPO3v9+
-            Bootstrap::initializeLanguageObject();
-        } else {
-            Bootstrap::getInstance()->initializeLanguageObject();
-        }
+        Bootstrap::initializeLanguageObject();
     }
 
     /**
