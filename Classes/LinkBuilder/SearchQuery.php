@@ -3,7 +3,6 @@
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
-use PAGEmachine\Searchable\Service\ExtconfService;
 
 /*
  * This file is part of the PAGEmachine Searchable project.

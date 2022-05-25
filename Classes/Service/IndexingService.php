@@ -16,7 +16,6 @@ use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 
 final class IndexingService
 {
@@ -148,7 +147,7 @@ final class IndexingService
     /**
      * Reset index for one or all
      *
-     * 
+     *
      * @param string $nameIndex
      */
     public function resetIndex(string $nameIndex = ''): void
@@ -338,12 +337,7 @@ final class IndexingService
             $languageUid = ExtconfService::getIndexLanguage($nameIndex);
 
             $context->setAspect('language', new LanguageAspect($languageUid));
-        } else { // TYPO3v8
-            $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale): void {
-                $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
-                setlocale(LC_ALL, $originalLocale);
-            };
-        }
+        };
 
         return $restoreEnvironment;
     }

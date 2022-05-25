@@ -1,27 +1,27 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Connection;
-use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Service\IndexingService;
+use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
-use Stringable;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Crypto\Random;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
@@ -77,28 +77,28 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                         'name' => $this->indexNames[1],
                         'indexer' => 'foo_pages',
                     ],
-                    $this->indexNames[0].'bar' => [
-                        'name' => $this->indexNames[0].'bar',
+                    $this->indexNames[0] . 'bar' => [
+                        'name' => $this->indexNames[0] . 'bar',
                         'indexer' => 'bar_pages',
                     ],
-                    $this->indexNames[1].'bar' => [
-                        'name' => $this->indexNames[1].'bar',
+                    $this->indexNames[1] . 'bar' => [
+                        'name' => $this->indexNames[1] . 'bar',
                         'indexer' => 'bar_pages',
                     ],
-                    $this->indexNames[0].'qux' => [
-                        'name' => $this->indexNames[0].'qux',
+                    $this->indexNames[0] . 'qux' => [
+                        'name' => $this->indexNames[0] . 'qux',
                         'indexer' => 'qux_pages',
                     ],
-                    $this->indexNames[1].'qux' => [
-                        'name' => $this->indexNames[1].'qux',
+                    $this->indexNames[1] . 'qux' => [
+                        'name' => $this->indexNames[1] . 'qux',
                         'indexer' => 'qux_pages',
                     ],
-                    $this->indexNames[0].'content' => [
-                        'name' => $this->indexNames[0].'content',
+                    $this->indexNames[0] . 'content' => [
+                        'name' => $this->indexNames[0] . 'content',
                         'indexer' => 'content',
                     ],
-                    $this->indexNames[1].'content' => [
-                        'name' => $this->indexNames[1].'content',
+                    $this->indexNames[1] . 'content' => [
+                        'name' => $this->indexNames[1] . 'content',
                         'indexer' => 'content',
                     ],
                 ],
@@ -229,7 +229,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->syncIndices();
         $indexe = ExtconfService::getLanguageIndicies($languageId);
         $indexString = '';
-        foreach($indexe as $index){
+        foreach ($indexe as $index) {
             $indexString .= $index . ',';
         }
 
@@ -269,7 +269,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->syncIndices();
         $indexe = ExtconfService::getLanguageIndicies($languageId);
         $indexString = '';
-        foreach($indexe as $index){
+        foreach ($indexe as $index) {
             $indexString .= $index . ',';
         }
 
@@ -299,7 +299,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->getElasticsearchClient()->indices()->flushSynced([
             'index' => implode(',', array_merge(
                 $this->indexNames,
-                [ 'searchable_updates' ]
+                ['searchable_updates']
             )),
         ]);
     }

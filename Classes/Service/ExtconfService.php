@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Service;
 
 use PAGEmachine\Searchable\UndefinedIndexException;
@@ -72,13 +73,13 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns the indexer for a given index name, if set. Otherwise throws an error 
+     * Returns the indexer for a given index name, if set. Otherwise throws an error
      *
      * @param  string $nameIndex
      * @return string $indexerName
      */
     public static function getIndexIndexer(string $nameIndex)
-    { 
+    {
         $indexerName = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['indexer'];
 
         if (empty($indexerName)) {
@@ -99,7 +100,7 @@ class ExtconfService implements SingletonInterface
         $indices = [];
 
         foreach ($indicesConfiguration as $nameIndex => $index) {
-            if($index['typo_language']==$language){
+            if ($index['typo_language'] == $language) {
                 $indices[$nameIndex] = $index['name'];
             }
         }
@@ -199,7 +200,7 @@ class ExtconfService implements SingletonInterface
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
     }
 
-     /**
+    /**
      * Returns indexers configuration
      *
      * @param string $indexerName
