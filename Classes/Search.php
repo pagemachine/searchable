@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
@@ -77,20 +78,21 @@ class Search implements SingletonInterface
 
             $indicies = ExtconfService::getLanguageIndicies($language);
             if (!empty($indicies)) {
-                if (empty($givenIndicies)){
-                    foreach($indicies as $index){
-                        $params['index'] .=  (string) $index .',';
+                if (empty($givenIndicies)) {
+                    foreach ($indicies as $index) {
+                        $params['index'] .=  (string) $index . ',';
                     }
-                } else{
-                    $indicies = array_intersect($givenIndicies,$indicies);
-                    foreach($indicies as $index){
-                        $params['index'] .=  (string) $index .',';
+                } else {
+                    $indicies = array_intersect($givenIndicies, $indicies);
+                    foreach ($indicies as $index) {
+                        $params['index'] .=  (string) $index . ',';
                     }
                 }
             }
-        } if(!empty($givenIndicies)){
-            foreach($givenIndicies as $index){
-                $params['index'] .=  (string) $index .',';
+        }
+        if (!empty($givenIndicies)) {
+            foreach ($givenIndicies as $index) {
+                $params['index'] .=  (string) $index . ',';
             }
         }
 
@@ -120,7 +122,7 @@ class Search implements SingletonInterface
         $result = $this->client->search($params);
 
 
-         $updates = [];
+        $updates = [];
 
         if ($result['hits']['total']['value'] > 0) {
             foreach ($result['hits']['hits'] as $hit) {
@@ -128,6 +130,6 @@ class Search implements SingletonInterface
             }
         }
 
-         return $updates;
+        return $updates;
     }
 }

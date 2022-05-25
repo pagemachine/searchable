@@ -9,8 +9,6 @@ use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -68,7 +66,7 @@ class IndexManager implements SingletonInterface
                     $info[$nameIndex]['types'][$name] = [
                         'name' => $name,
                         'documents' => $this->client->count([
-                            'index' => $index
+                            'index' => $index,
                         ])['count'],
                     ];
                 }

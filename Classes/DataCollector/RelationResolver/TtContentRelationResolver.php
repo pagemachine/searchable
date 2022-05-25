@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -83,11 +82,11 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         $queryBuilder->select('uid')
-        ->from('tt_content')
-        ->where(
-            $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
-            $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
-        );
+            ->from('tt_content')
+            ->where(
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
+                $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
+            );
         return $queryBuilder->execute();
     }
 }
