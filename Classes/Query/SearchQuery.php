@@ -249,7 +249,7 @@ class SearchQuery extends AbstractQuery
     }
 
     /**
-     * @param array $indicies
+     * @param array $givenIndicies
      * @return SearchQuery
      */
     public function setGivenIndicies($givenIndicies)

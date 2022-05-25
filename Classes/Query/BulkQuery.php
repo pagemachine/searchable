@@ -81,7 +81,6 @@ class BulkQuery extends AbstractQuery
 
     /**
      * @param string $index
-     * @param string $type
      */
     public function __construct($index, $pipeline = null)
     {

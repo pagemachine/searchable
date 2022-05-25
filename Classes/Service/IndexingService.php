@@ -333,11 +333,10 @@ final class IndexingService
                 $context = GeneralUtility::makeInstance(Context::class);
                 $context->setAspect('language', $originalLanguageAspect);
             };
-
-            $languageUid = ExtconfService::getIndexLanguage($nameIndex);
-
-            $context->setAspect('language', new LanguageAspect($languageUid));
         };
+        $languageUid = ExtconfService::getIndexLanguage($nameIndex);
+
+        $context->setAspect('language', new LanguageAspect($languageUid));
 
         return $restoreEnvironment;
     }
