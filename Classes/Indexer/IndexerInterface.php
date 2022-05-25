@@ -55,12 +55,12 @@ interface IndexerInterface
     public function setNameIndex($nameIndex);
 
     /**
-     * @return Array
+     * @return String
      */
     public function getIndexerName();
     
     /**
-     * @param Array $indexerName
+     * @param String $indexerName
      * @return void
      */
     public function setIndexerName($indexerName);
