@@ -58,7 +58,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             'slug' => '/test-page/',
         ]);
 
-        $this->assertIndexEmpty();
+        $this->assertIndexeEmpty();
 
         $this->indexingService->indexFull();
 
