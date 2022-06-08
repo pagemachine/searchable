@@ -243,6 +243,9 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->syncIndices();
         $indexe = ExtconfService::getLanguageIndicies($languageId);
         $indexString = implode(',', $indexe);
+        $client->indices()->refresh([
+            'index' => $indexString,
+        ]);
 
         $response = $client->search([
             'index' => $indexString,
@@ -281,6 +284,10 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $indexe = ExtconfService::getLanguageIndicies($languageId);
         $indexString = implode(',', $indexe);
 
+        $client->indices()->refresh([
+            'index' => $indexString,
+        ]);
+
         $response = $client->search([
             'index' => $indexString,
             'body' => [
@@ -304,7 +311,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected function syncIndices(): void
     {
-        $this->getElasticsearchClient()->indices()->flushSynced([
+        $this->getElasticsearchClient()->indices()->flush([
             'index' => implode(',', array_merge(
                 $this->indexNames,
                 ['searchable_updates']
