@@ -193,9 +193,12 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
 
         $this->syncIndices();
-
+        sleep(7);
         $this->indexingService->indexPartial();
 
+        $client = $this->getElasticsearchClient();
+        $client->indices()->refresh();
+        sleep(3);
         $this->assertDocumentInIndex(
             2,
             [
