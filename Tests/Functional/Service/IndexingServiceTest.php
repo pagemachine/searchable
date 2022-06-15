@@ -136,6 +136,9 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->indexingService->setup();
         $this->indexingService->indexFull('content');
 
+        $client = $this->getElasticsearchClient();
+        $client->indices()->refresh();
+
         $this->assertDocumentInIndex(
             1,
             [
@@ -193,12 +196,12 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
 
         $this->syncIndices();
-        sleep(7);
+        $client = $this->getElasticsearchClient();
+        $client->indices()->refresh();
         $this->indexingService->indexPartial();
 
         $client = $this->getElasticsearchClient();
         $client->indices()->refresh();
-        sleep(3);
         $this->assertDocumentInIndex(
             2,
             [
@@ -284,6 +287,9 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertIndexeEmpty();
 
         $this->indexingService->indexFull();
+
+        $client = $this->getElasticsearchClient();
+        $client->indices()->refresh();
 
         $this->assertDocumentInIndex(
             101,

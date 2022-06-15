@@ -10,7 +10,7 @@ on:
   pull_request:
     branches:
      - master
-     - elasticsearch7
+     - elasticsearch7-testing
   schedule:
     - cron: '0 7 * * *'
 
@@ -26,6 +26,7 @@ jobs:
           - '^10.4'
         elasticsearch:
           - '5'
+          - '7'
 
     steps:
       - uses: actions/checkout@v3
