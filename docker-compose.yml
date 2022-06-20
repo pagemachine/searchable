@@ -29,7 +29,7 @@ services:
   elasticsearch:
     image: elasticsearch:${ELASTICSEARCH_VERSION:-5}
     # image: elasticsearch:${ELASTICSEARCH_VERSION:-7.17.4}
-    # environment:
-    #   - ingest.geoip.downloader.enabled=false
-    #   - discovery.type=single-node
+    environment:
+      - ingest.geoip.downloader.enabled=false
+      - discovery.type=single-node
     # command: ["elasticsearch", "-Elogger.level=DEBUG"]
