@@ -27,7 +27,7 @@ jobs:
           - '^11.5'
         elasticsearch:
           - '5'
-          - '7'
+          - '7.17.4'
 
     steps:
       - uses: actions/checkout@v3
