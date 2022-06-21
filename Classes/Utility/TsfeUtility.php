@@ -48,7 +48,7 @@ class TsfeUtility
             $request->getAttribute('routing'),
             $request->getAttribute('frontend.user')
         );
-        $frontendController->fetch_the_id($request);
+        $frontendController->determineId($request);
         $frontendController->getConfigArray($request);
 
         $GLOBALS['TSFE'] = $frontendController;

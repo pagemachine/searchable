@@ -67,7 +67,7 @@ final class UriBuilder implements MiddlewareInterface
             $request->getAttribute('routing'),
             $request->getAttribute('frontend.user')
         );
-        $frontendController->fetch_the_id($request);
+        $frontendController->determineId($request);
 
         $GLOBALS['TSFE'] = $frontendController;
     }
