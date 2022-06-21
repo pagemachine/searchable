@@ -176,9 +176,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $queryBuilder = $this->buildUidListQueryBuilder(true);
 
-        $statement = $queryBuilder->execute();
+        /** @var \Doctrine\DBAL\ForwardCompatibility\Result */
+        $result = $queryBuilder->execute();
 
-        while ($rawRecord = $statement->fetch()) {
+        foreach ($result as $rawRecord) {
             yield $this->getRecord($rawRecord['uid']);
         }
     }
@@ -210,8 +211,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 ]);
             }
 
-            $statement = $queryBuilder->execute();
-            $record = $statement->fetch();
+            /** @var \Doctrine\DBAL\ForwardCompatibility\Result */
+            $result = $queryBuilder->execute();
+            $record = $result->fetchAssociative();
 
             if ($record) {
                 $sourceLanguageUid = $record[$tca['ctrl']['languageField']] > 0 ? $record[$tca['ctrl']['transOrigPointerField']] : $record['uid'];
