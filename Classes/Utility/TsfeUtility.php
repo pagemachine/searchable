@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Utility;
 
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -34,6 +35,7 @@ class TsfeUtility
 
         $requestFactory = GeneralUtility::makeInstance(ServerRequestFactory::class);
         $request = $requestFactory->createServerRequest('get', 'http://localhost')
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
             ->withAttribute('site', $site)
             ->withAttribute('language', $site->getDefaultLanguage())
             ->withAttribute('routing', new PageArguments($site->getRootPageId(), '0', []))
