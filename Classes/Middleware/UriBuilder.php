@@ -64,7 +64,7 @@ final class UriBuilder implements MiddlewareInterface
             GeneralUtility::makeInstance(Context::class),
             $request->getAttribute('site'),
             $request->getAttribute('language'),
-            $request->getAttribute('routing'),
+            new PageArguments($site->getRootPageId(), '0', []),
             $request->getAttribute('frontend.user')
         );
         $frontendController->determineId($request);
