@@ -5,6 +5,9 @@ namespace PAGEmachine\Searchable\Indexer;
  * This file is part of the PAGEmachine Searchable project.
  */
 
+use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * File Indexer - reads from sys_file_metadata and uses a pipeline to send over files as well
  */
@@ -43,7 +46,7 @@ class FileIndexer extends TcaIndexer
     {
         $records = $this->linkBuilder->createLinksForBatch($records);
 
-        $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
+        $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
 
         foreach ($records as $key => $record) {
             if (!empty($record[$this->config['fileField']])) {
