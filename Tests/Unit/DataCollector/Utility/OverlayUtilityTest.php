@@ -8,7 +8,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\PhpUnit\ProphecyTrait;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * Testcase for PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility
