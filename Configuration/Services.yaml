@@ -3,3 +3,23 @@ services:
     autowire: true
     autoconfigure: true
     public: false
+
+  PAGEmachine\Searchable\Command\Index\UpdateFullCommand:
+    tags:
+      - name: console.command
+        command: index:update:full
+
+  PAGEmachine\Searchable\Command\Index\UpdatePartialCommand:
+    tags:
+      - name: console.command
+        command: index:update:partial
+
+  PAGEmachine\Searchable\Command\Index\ResetCommand:
+    tags:
+      - name: console.command
+        command: index:reset
+
+  PAGEmachine\Searchable\Command\Index\SetupCommand:
+    tags:
+      - name: console.command
+        command: index:setup
