@@ -274,8 +274,8 @@ final class IndexingService
         ]);
 
         $this->signalDispatcher->dispatch(__CLASS__, 'afterIndexRun', [
-            'fullIndexing' => $this->runFullIndexing,
-            'elapsedTime' => $elapsedTime,
+            $this->runFullIndexing,
+            $elapsedTime,
         ]);
     }
 
