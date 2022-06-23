@@ -266,7 +266,7 @@ final class IndexingService
         }
 
         $endtime = microtime(true);
-        $elapsedTime = $endtime - $starttime;
+        $elapsedTime = (int)($endtime - $starttime);
 
         $this->logger->info('Indexing finished', [
             'elapsedTime' => $elapsedTime,
