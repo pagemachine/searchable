@@ -4,11 +4,13 @@ declare(strict_types = 1);
 namespace PAGEmachine\Searchable\Service;
 
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Events\AfterIndexRunEvent;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Log\LogManager;
@@ -55,6 +57,13 @@ final class IndexingService
     public function injectSignalDispatcher(Dispatcher $signalDispatcher)
     {
         $this->signalDispatcher = $signalDispatcher;
+    }
+
+    private EventDispatcherInterface $eventDispatcher;
+
+    public function injectEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -266,7 +275,7 @@ final class IndexingService
         }
 
         $endtime = microtime(true);
-        $elapsedTime = $endtime - $starttime;
+        $elapsedTime = (int)($endtime - $starttime);
 
         $this->logger->info('Indexing finished', [
             'elapsedTime' => $elapsedTime,
@@ -274,9 +283,13 @@ final class IndexingService
         ]);
 
         $this->signalDispatcher->dispatch(__CLASS__, 'afterIndexRun', [
-            'fullIndexing' => $this->runFullIndexing,
-            'elapsedTime' => $elapsedTime,
+            $this->runFullIndexing,
+            $elapsedTime,
         ]);
+        $this->eventDispatcher->dispatch(new AfterIndexRunEvent(
+            $this->runFullIndexing,
+            $elapsedTime
+        ));
     }
 
     /**
