@@ -41,7 +41,7 @@ class PlainValueProcessor implements SingletonInterface
         foreach ($activeItemKeys as $key) {
             $label = $fieldTca['items'][$key][0];
 
-            if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
+            if (str_starts_with($label, 'LLL:')) {
                 $label = $this->getLanguageService()->sL($label);
             }
 
@@ -71,7 +71,7 @@ class PlainValueProcessor implements SingletonInterface
             }
         }
 
-        if (GeneralUtility::isFirstPartOfStr($label, 'LLL:')) {
+        if (str_starts_with($label, 'LLL:')) {
             $label = $this->getLanguageService()->sL($label);
         }
 
