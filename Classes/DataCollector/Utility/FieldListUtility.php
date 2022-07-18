@@ -36,7 +36,7 @@ class FieldListUtility implements SingletonInterface
         $whitelist = $this->getWhitelistSystemFields($tca);
 
         foreach ($tca['columns'] as $key => $column) {
-            $type = $column['config']['type'];
+            $type = $column['config']['type'] ?? null;
 
             if ($this->shouldInclude($key, $configFields, $configMode)) {
                 $whitelist[] = $key;
@@ -57,8 +57,12 @@ class FieldListUtility implements SingletonInterface
         $systemFields = [
             'uid',
             'pid',
-            $tca['ctrl']['languageField'],
         ];
+        $languageField = $tca['ctrl']['languageField'] ?? null;
+
+        if (!empty($languageField)) {
+            $systemFields[] = $languageField;
+        }
 
         return $systemFields;
     }

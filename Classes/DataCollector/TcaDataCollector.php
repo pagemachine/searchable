@@ -91,7 +91,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         //If this is a subcollector, try fetching the table name from the parent TCA
         if (!empty($GLOBALS['TCA'])) {
-            if (!$currentSubconfiguration['table'] && !$defaultConfiguration['table']) {
+            if (empty($currentSubconfiguration['table']) && empty($defaultConfiguration['table'])) {
                 if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
                     $defaultConfiguration['table'] = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table'];
                 } else {
@@ -286,7 +286,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 continue;
             }
 
-            $type = $this->processedTca['columns'][$key]['config']['type'];
+            $type = $this->processedTca['columns'][$key]['config']['type'] ?? null;
 
             //plain types
             switch ($type) {
