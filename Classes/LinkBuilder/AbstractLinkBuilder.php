@@ -177,7 +177,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
         foreach ($configuration as $key => $value) {
             if (is_array($value)) {
                 $configuration[$key] = $this->replaceFieldsRecursive($value, $record);
-            } elseif (is_string($value) && $record[$value] != null) {
+            } elseif (is_string($value) && ($record[$value] ?? null) != null) {
                 $configuration[$key] = $record[$value];
             } else {
                 unset($configuration[$key]);

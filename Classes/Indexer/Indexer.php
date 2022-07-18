@@ -178,7 +178,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->config = $config;
         $this->language = $language;
 
-        $this->type = $this->config['type'];
+        $this->type = $this->config['type'] ?? null;
 
         $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
 
@@ -238,7 +238,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function setFeatures($features)
     {
-        $features = $features ?: $this->config['features'];
+        $features = $features ?: $this->config['features'] ?? [];
 
         if (!empty($features)) {
             foreach ($features as $key => $featureConfig) {
@@ -270,7 +270,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
-        $bulkSize = $this->config['bulkSize'] ?: 20;
+        $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;
         $overallCounter = 0;
