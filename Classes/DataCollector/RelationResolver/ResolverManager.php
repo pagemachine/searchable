@@ -41,7 +41,7 @@ class ResolverManager implements SingletonInterface
         $classname = null;
 
         // Check for a custom resolver first
-        if (is_array($subConfiguration['resolver']) && $subConfiguration['resolver']['className']) {
+        if (isset($subConfiguration['resolver']) && is_array($subConfiguration['resolver']) && $subConfiguration['resolver']['className']) {
             $classname = $subConfiguration['resolver']['className'];
         //Next try TCA/FormEngine related stuff
         } elseif ($tca['columns'][$fieldname] && $tca['columns'][$fieldname]['config']['type']) {

@@ -51,16 +51,17 @@ class OverlayUtility implements SingletonInterface
     {
         $tca = $GLOBALS['TCA'][$table];
 
-        $rawOverlay = $this->pageRepository->getRecordOverlay($table, [
-            'uid' => $record['uid'],
-            'pid' => $record['pid'],
-            $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']][0],
+        if (isset($tca['ctrl']['languageField'])) {
+            $rawOverlay = $this->pageRepository->getRecordOverlay($table, [
+                'uid' => $record['uid'],
+                'pid' => $record['pid'],
+                $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']],
             ], $language, $overlayMode);
-
+        }
 
         // PageRepository says this is not a valid record in this language, so don't return it
         // Examples: R(1), language 0 | R(0), language 1, olMode 'hideNonTranslated' | R(1), language 0 (invalid combination)
-        if ($rawOverlay == null) {
+        if (empty($rawOverlay)) {
             return [];
         }
 

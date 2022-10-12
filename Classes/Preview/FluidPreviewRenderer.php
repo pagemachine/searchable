@@ -67,7 +67,9 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
             $assignFields = [];
 
             foreach ($this->config['fields'] as $fieldname) {
-                $assignFields[$fieldname] = $record[$fieldname];
+                if (isset($record[$fieldname])) {
+                    $assignFields[$fieldname] = $record[$fieldname];
+                }
             }
 
             $this->view->assign("fields", $assignFields);

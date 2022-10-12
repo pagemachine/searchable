@@ -140,7 +140,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
      */
     protected function getLinkTitle($record = [])
     {
-        $title = $record[$this->config['titleField']];
+        $title = $record[$this->config['titleField']] ?? null;
 
         if ($title == null) {
             $title = $this->defaultTitle;
