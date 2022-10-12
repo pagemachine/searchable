@@ -187,7 +187,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->query = $query ?: new BulkQuery(
             $this->index,
             $this->type,
-            $config['pipeline']
+            $config['pipeline'] ?? null
         );
 
         $this->setPreviewRenderer($previewRenderer);
@@ -205,10 +205,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         if ($previewRenderer) {
             $this->previewRenderer = $previewRenderer;
         } else {
-            if (!empty($this->config['preview']['className'])) {
-                $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
-            } else {
-                $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+            if (isset($this->config['preview'])) {
+                if (!empty($this->config['preview']['className'])) {
+                    $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
+                } else {
+                    $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+                }
             }
         }
     }
@@ -223,10 +225,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         if ($linkBuilder) {
             $this->linkBuilder = $linkBuilder;
         } else {
-            if (!empty($this->config['link']['className'])) {
-                $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
-            } else {
-                $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
+            if (isset($this->config['link'])) {
+                if (!empty($this->config['link']['className'])) {
+                    $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
+                } else {
+                    $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
+                }
             }
         }
     }

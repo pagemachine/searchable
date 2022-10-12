@@ -38,7 +38,9 @@ class SelectRelationResolver implements SingletonInterface, RelationResolverInte
         $parentConfiguration = $parentCollector->getConfig();
         $fieldTca = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$fieldname];
 
-        $rawField = $record[$fieldname];
+        if (isset($record[$fieldname])) {
+            $rawField = $record[$fieldname];
+        }
 
         $records = [];
 
