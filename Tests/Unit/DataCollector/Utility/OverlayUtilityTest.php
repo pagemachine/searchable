@@ -23,7 +23,6 @@ class OverlayUtilityTest extends UnitTestCase
      */
     public function performsPagesLanguageOverlay(array $page, $language, $overlayMode, $pageOverlay, $expected)
     {
-        /** @var PageRepository|\Prophecy\Prophecy\ObjectProphecy */
         $pageRepository = $this->prophesize(PageRepository::class);
         $overlayUtility = $this->getMockBuilder(OverlayUtility::class)
             ->disableOriginalConstructor()

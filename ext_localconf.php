@@ -3,27 +3,75 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.Searchable',
-    'Searchbar',
-    ['Search' => 'searchbar'],
-    ['Search' => 'searchbar']
-);
+if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '11', '>=')) {
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Searchable',
+        'Searchbar',
+        [
+            \PAGEmachine\Searchable\Controller\SearchController::class => 'searchbar',
+        ],
+        [
+            \PAGEmachine\Searchable\Controller\SearchController::class => 'searchbar',
+        ]
+    );
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.Searchable',
-    'LiveSearchbar',
-    ['Search' => 'liveSearchbar'],
-    ['Search' => 'liveSearchbar']
-);
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Searchable',
+        'LiveSearchbar',
+        [
+            \PAGEmachine\Searchable\Controller\SearchController::class => 'liveSearchbar',
+        ],
+        [
+            \PAGEmachine\Searchable\Controller\SearchController::class => 'liveSearchbar',
+        ]
+    );
 
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'PAGEmachine.Searchable',
-    'Results',
-    ['Search' => 'results'],
-    ['Search' => 'results']
-);
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Searchable',
+        'Results',
+        [
+            \PAGEmachine\Searchable\Controller\SearchController::class => 'results',
+        ],
+        [
+            \PAGEmachine\Searchable\Controller\SearchController::class => 'results',
+        ]
+    );
+} else {
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'PAGEmachine.Searchable',
+        'Searchbar',
+        [
+            'Search' => 'searchbar',
+        ],
+        [
+            'Search' => 'searchbar',
+        ]
+    );
+
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'PAGEmachine.Searchable',
+        'LiveSearchbar',
+        [
+            'Search' => 'liveSearchbar',
+        ],
+        [
+            'Search' => 'liveSearchbar',
+        ]
+    );
+
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'PAGEmachine.Searchable',
+        'Results',
+        [
+            'Search' => 'results',
+        ],
+        [
+            'Search' => 'results',
+        ]
+    );
+}
+
 
 // Add custom logging
 if (empty($GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'])) {

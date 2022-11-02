@@ -4,7 +4,7 @@ services:
   app:
     image: thecodingmachine/php:${PHP_VERSION:-7.4}-v4-cli
     environment:
-      TYPO3_VERSION: ${TYPO3_VERSION:-^10.4}
+      TYPO3_VERSION: ${TYPO3_VERSION:-^11.5}
       typo3DatabaseHost: mysql
       typo3DatabaseUsername: root
       typo3DatabasePassword: root

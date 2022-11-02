@@ -42,7 +42,6 @@ class IndexerTest extends UnitTestCase
      */
     public function skipsEmptyRecordsFromDataCollector()
     {
-        /** @var DataCollectorInterface|\Prophecy\Prophecy\ObjectProphecy */
         $dataCollector = $this->prophesize(DataCollectorInterface::class);
         $dataCollectorClassName = get_class($dataCollector->reveal());
         $config = [
@@ -57,9 +56,7 @@ class IndexerTest extends UnitTestCase
                 'config' => ['linkConfig'],
             ],
         ];
-        /** @var BulkQuery|\Prophecy\Prophecy\ObjectProphecy */
         $query = $this->prophesize(BulkQuery::class);
-        /** @var ObjectManager|\Prophecy\Prophecy\ObjectProphecy */
         $objectManager = $this->prophesize(ObjectManager::class);
         $objectManager->get($dataCollectorClassName, ['collectorConfig'], 1)->willReturn($dataCollector->reveal());
         $objectManager->get(DefaultPreviewRenderer::class, ['previewConfig'])->willReturn($this->prophesize(DefaultPreviewRenderer::class)->reveal());
