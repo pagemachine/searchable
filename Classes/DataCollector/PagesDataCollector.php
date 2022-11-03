@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
@@ -106,8 +107,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
             $this->config['groupWhereClause'] .
-            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
-            ;
+            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0');
 
         $rawList = $this->pageRepository->getMenu(
             $pid,
@@ -185,10 +185,13 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         foreach ($pageUids as $uid) {
             try {
-                $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
-
-                if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
+                if ($uid == 0) {
                     $filteredPageUids[] = $uid;
+                } else {
+                    $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
+                    if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
+                        $filteredPageUids[] = $uid;
+                    }
                 }
             } catch (\RuntimeException $e) {
                 // If the page is deleted, RootlineUtility will throw a RuntimeException.
