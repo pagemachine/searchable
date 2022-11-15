@@ -18,7 +18,7 @@ class TcaSelectRelations extends TcaSelectItems implements FormDataProviderInter
      * @return array Modified item array
      * @throws \UnexpectedValueException
      */
-    protected function addItemsFromForeignTable(array $result, $fieldName, array $items)
+    protected function addItemsFromForeignTable(array $result, $fieldName, array $items, bool $includeFullRows = false)
     {
         return $items;
     }
