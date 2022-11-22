@@ -1,19 +1,23 @@
 # Index Setup
 
-Searchable follows the approach to use one Elasticsearch index for each language. However, it does not create indices automatically.
+Searchable follows the approach to use one Elasticsearch index for each language and indexer. However, it does not create indices automatically.
 You have to configure it in the `indices` section of the extension configuration:
 
 ```
 #!php
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
-  '0' => [ // Language key 0, english index
+  'typo3' => [ // Language key 0, english index
     'name' => 'typo3', //Index name
+    'typo_language' => 0, // Language key 0, english index
+    'indexer' => $indexer, //config type of the Indexer
     'settings' => [
         //Your index settings
     ]
   ],
-  '1' => [ // Language key 1, german index
+  'typo3_ger' => [ // Language key 1, german index
     'name' => 'typo3_ger',
+    'typo_language' => 1, // Language key 1, german index
+    'indexer' => $indexer, //config type of the Indexer
     'settings' => [
         //Your index settings
     ]
@@ -39,8 +43,10 @@ This is how the index configuration could look like to set up the environment fo
 ```
 #!php
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
-  '0' => [
+  'typo3' => [
     'name' => 'typo3',
+    'typo_language' => $typo_language, //german language key in typo3
+    'indexer' => $indexer, //config type of the Indexer
     'environment' => [
       'language' => 'de',
       'locale' => 'de_DE.utf-8',
@@ -56,16 +62,16 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
 
 [Analyzers](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html) are very important to provide more intelligent search results, f.ex. by taking the current language into account. A recommended analysis setting for a 2-language-setup could look like this:
 
-    //Analyzer setup for index 0 (english)
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['0']['settings']['analysis'] = [
+    //Analyzer setup for index typo3 (english)
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['typo3']['settings']['analysis'] = [
       'analyzer' => [
         'default' => ['type' => 'english'],
         'default_search' => ['type' => 'english']
       ]
     ];
 
-    //Analyzer setup for index 1 (german)
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['1']['settings']['analysis'] = [
+    //Analyzer setup for index typo3_ger (german)
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['typo3_ger']['settings']['analysis'] = [
       'analyzer' => [
         'default' => ['type' => 'german'],
         'default_search' => ['type' => 'german']

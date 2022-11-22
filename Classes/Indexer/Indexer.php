@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -116,6 +117,50 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->type = $type;
     }
 
+    /**
+     * @var String $nameIndex
+     */
+    protected $nameIndex;
+
+    /**
+     * @return String
+     */
+    public function getNameIndex()
+    {
+        return $this->nameIndex;
+    }
+
+    /**
+     * @param String $nameIndex
+     * @return void
+     */
+    public function setNameIndex($nameIndex)
+    {
+        $this->nameIndex = $nameIndex;
+    }
+
+    /**
+     * @var string $indexerName
+     */
+    protected $indexerName;
+
+    /**
+     * @return string
+     */
+    public function getIndexerName()
+    {
+        return $this->indexerName;
+    }
+
+    /**
+     * @param string $indexerName
+     * @return void
+     */
+    public function setIndexerName($indexerName)
+    {
+        $this->indexerName = $indexerName;
+    }
+
 
     /**
      * @var int $language
@@ -180,13 +225,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
         $this->type = $this->config['type'];
 
-        $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
+        $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
         $this->dataCollector = $this->objectManager->get($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
 
         $this->query = $query ?: new BulkQuery(
             $this->index,
-            $this->type,
             $config['pipeline']
         );
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
@@ -47,21 +48,22 @@ class Search implements SingletonInterface
      * @param  array $options
      * @param  bool $respectLanguage If set, the search will be limited to the current FE language (if there is an index for it) or the default language
      * @param  int $forceLanguage Forces the given language id
+     * @param  array $givenIndicies to search trough
      * @return array
      */
-    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null)
+    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null, $givenIndicies = null)
     {
         $params = [
             'body' => [
                 'query' => [
-                    'match' => [
-                        '_all' => $term,
+                    'multi_match' => [
+                        'query' => $term,
                     ],
                 ],
                 //Only load meta fields, not the whole source
-                '_source' => [
-                    'searchable_meta',
-                ],
+                //  '_source' => [
+                //      'searchable_meta',
+                //  ],
             ],
         ];
 
@@ -74,7 +76,24 @@ class Search implements SingletonInterface
         if ($respectLanguage === true) {
             $language = $forceLanguage ?: $this->getLanguageId();
 
-            $params['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+            $indicies = ExtconfService::getLanguageIndicies($language);
+            if (!empty($indicies)) {
+                if (empty($givenIndicies)) {
+                    foreach ($indicies as $index) {
+                        $params['index'] .=  (string) $index . ',';
+                    }
+                } else {
+                    $indicies = array_intersect($givenIndicies, $indicies);
+                    foreach ($indicies as $index) {
+                        $params['index'] .=  (string) $index . ',';
+                    }
+                }
+            }
+        }
+        if (!empty($givenIndicies)) {
+            foreach ($givenIndicies as $index) {
+                $params['index'] .=  (string) $index . ',';
+            }
         }
 
 
@@ -105,7 +124,7 @@ class Search implements SingletonInterface
 
         $updates = [];
 
-        if ($result['hits']['total'] > 0) {
+        if ($result['hits']['total']['value'] > 0) {
             foreach ($result['hits']['hits'] as $hit) {
                 $updates[] = $hit['_source'];
             }

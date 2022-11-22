@@ -52,11 +52,6 @@ class PagesIndexer extends Indexer
             ],
         ],
         'mapping' => [
-            '_all' => [
-                'store' => true,
-            ],
-            'properties' => [
-                'content' => [
                     'properties' => [
                         'header' => [
                             'type' => 'text',
@@ -68,8 +63,6 @@ class PagesIndexer extends Indexer
                             'type' => 'text',
                         ],
                     ],
-                ],
-            ],
         ],
     ];
 }

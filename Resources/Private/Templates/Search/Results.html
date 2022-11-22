@@ -7,8 +7,8 @@
 		<f:render partial="Results/Suggestions" arguments="{result : result, settings : settings}" />
 
 		<div class="results-count">
-			<f:translate key="results.information" arguments="{0: result.hits.total, 1: result.took}" />
-			<f:if condition="{result.hits.total}">
+			<f:translate key="results.information" arguments="{0: result.hits.total.value, 1: result.took}" />
+			<f:if condition="{result.hits.total.value}">
 				<f:translate key="results.pageinformation" arguments="{0: currentPage}" /> {totalPages -> f:count()}.
 			</f:if>
 

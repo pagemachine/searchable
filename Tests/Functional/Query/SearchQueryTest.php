@@ -36,16 +36,17 @@ final class SearchQueryTest extends AbstractElasticsearchTest
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Unrelated page',
         ]);
-
+       
         $this->indexingService->indexFull();
         $this->syncIndices();
-
         $query = GeneralUtility::makeInstance(SearchQuery::class);
         $query->setTerm('test');
+        $client = $this->getElasticsearchClient();
+        $client->indices()->refresh();
 
         $result = $query->execute();
 
-        $this->assertEquals(2, $result['hits']['total']);
+        $this->assertEquals(2, $result['hits']['total']['value']);
         $this->assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
         $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
     }

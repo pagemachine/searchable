@@ -16,7 +16,7 @@ final class ResetCommand extends AbstractIndexCommand
     {
         $this
             ->setDescription('Reset search index')
-            ->addArgument('language', InputArgument::OPTIONAL, 'Language of index to reset');
+            ->addArgument('name', InputArgument::OPTIONAL, 'Name of index to reset');
     }
 
     /**
@@ -24,13 +24,14 @@ final class ResetCommand extends AbstractIndexCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $language = $input->getArgument('language');
 
-        if ($language !== null) {
-            $language = (int)$language;
+        $nameIndex = $input->getArgument('name');
+
+        if ($nameIndex == null) {
+            $nameIndex = '';
         }
 
-        $this->indexingService->resetIndex($language);
+        $this->indexingService->resetIndex($nameIndex);
 
         return 0;
     }

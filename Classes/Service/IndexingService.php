@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Service;
 
@@ -108,6 +109,10 @@ final class IndexingService
     {
         $this->assertConnectionHealthy();
 
+        $pipelineManager = PipelineManager::getInstance();
+        $pipelineManager->createPipelines();
+        $this->logger->debug('Successfully created pipelines');
+
         $this->logger->debug('Checking for existing Update Index..');
 
         $indexManager = IndexManager::getInstance();
@@ -117,7 +122,7 @@ final class IndexingService
         $this->logger->debug('Ensured update index exists');
 
         try {
-            $indexers = $this->indexerFactory->makeIndexers();
+            $indexers = $this->indexerFactory->makeIndexersForSetup();
         } catch (\Exception $e) {
             $this->logger->error(sprintf(
                 'Invalid indexers configuration: %s [%s]',
@@ -137,7 +142,7 @@ final class IndexingService
         $indices = ExtconfService::getIndices();
 
         if (!empty($indices)) {
-            foreach ($indices as $language => $index) {
+            foreach ($indices as $nameIndex => $index) {
                 $indexManager->createIndex($index);
 
                 $this->logger->debug(sprintf(
@@ -146,30 +151,26 @@ final class IndexingService
                 ));
             }
         }
-
-        $pipelineManager = PipelineManager::getInstance();
-        $pipelineManager->createPipelines();
-        $this->logger->debug('Successfully created pipelines');
     }
 
     /**
-     * Reset index for one or all languages
+     * Reset index for one or all
      *
-     * @param int $language
+     *
+     * @param string $nameIndex
      */
-    public function resetIndex(int $language = null): void
+    public function resetIndex(string $nameIndex = ''): void
     {
         $this->assertConnectionHealthy();
 
-        $indexers = $this->indexerFactory->makeIndexers();
         $indexManager = IndexManager::getInstance();
 
-        if ($language !== null) {
-            $indexManager->resetIndex(ExtconfService::getIndex($language));
+        if ($nameIndex !== '') {
+            $indexManager->resetIndex($nameIndex);
 
             $this->logger->info(sprintf(
                 'Index "%s" was successfully cleared',
-                ExtconfService::getIndex($language)
+                $nameIndex
             ));
         } else {
             foreach (ExtconfService::getIndices() as $index) {
@@ -222,15 +223,20 @@ final class IndexingService
     {
         $indices = ExtconfService::getIndices();
 
-        foreach ($indices as $language => $index) {
+        foreach ($indices as $nameIndex => $index) {
+            $language = ExtconfService::getIndexLanguage($index);
+            $indexers = ExtconfService::getIndexIndexer($index);
+            $indexerConfig = ExtconfService::getIndexersConfiguration($indexers);
             if (empty($this->type)) {
-                foreach ($this->indexerFactory->makeIndexers($language) as $indexer) {
-                    $this->scheduledIndexers[$language][] = $indexer;
+                foreach ($this->indexerFactory->makeIndexers($index, $language) as $indexer) {
+                    $this->scheduledIndexers[$nameIndex][] = $indexer;
                 }
             } else {
-                $indexer = $this->indexerFactory->makeIndexer($language, $this->type);
-                if ($indexer != null) {
-                    $this->scheduledIndexers[$language][] = $indexer;
+                if ($this->type == $indexerConfig['type']) {
+                    $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
+                    if ($indexer != null) {
+                        $this->scheduledIndexers[$nameIndex][] = $indexer;
+                    }
                 }
             }
         }
@@ -244,17 +250,17 @@ final class IndexingService
         $starttime = microtime(true);
 
         $this->logger->info(sprintf(
-            'Starting "%s" indexing with %d indexers',
-            $this->runFullIndexing ? 'full' : 'partial',
-            count($this->scheduledIndexers[0])
+            'Starting "%s" indexing with  indexers',
+            $this->runFullIndexing ? 'full' : 'partial'
+            //count($this->scheduledIndexers[0]) this doesnt work  Warning: count(): Parameter must be an array or an object that implements Countable
         ));
 
-        foreach ($this->scheduledIndexers as $language => $indexers) {
+        foreach ($this->scheduledIndexers as $nameIndex => $indexers) {
             if (!empty($indexers)) {
-                $this->logger->debug(sprintf('Indexing language "%s"', $language));
+                $this->logger->debug(sprintf('Indexing Index "%s"', $nameIndex));
 
-                $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
-                $restoreEnvironment = $this->applyEnvironment((int)$language, $environment);
+                $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($nameIndex));
+                $restoreEnvironment = $this->applyEnvironment((string)$nameIndex, $environment);
 
                 foreach ($indexers as $indexer) {
                     $this->runSingleIndexer($indexer);
@@ -263,7 +269,7 @@ final class IndexingService
                 $restoreEnvironment();
                 $this->resetPersistence();
             } else {
-                $this->logger->warning(sprintf('No indexers found for language "%s", doing nothing', $language));
+                $this->logger->warning(sprintf('No indexers found with name "%s", doing nothing', $nameIndex));
             }
         }
 
@@ -315,7 +321,7 @@ final class IndexingService
      *
      * @return \Closure callback to restore the original environment
      */
-    protected function applyEnvironment(int $languageUid, array $environment): \Closure
+    protected function applyEnvironment(string $nameIndex, array $environment): \Closure
     {
         $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
         $originalLocale = setlocale(LC_ALL, '0');
@@ -331,8 +337,17 @@ final class IndexingService
             setlocale(LC_ALL, $originalLocale);
 
             $context = GeneralUtility::makeInstance(Context::class);
-            $context->setAspect('language', $originalLanguageAspect);
+            $originalLanguageAspect = $context->getAspect('language');
+
+            $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale, $originalLanguageAspect): void {
+                $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
+                setlocale(LC_ALL, $originalLocale);
+
+                $context = GeneralUtility::makeInstance(Context::class);
+                $context->setAspect('language', $originalLanguageAspect);
+            };
         };
+        $languageUid = ExtconfService::getIndexLanguage($nameIndex);
 
         $context->setAspect('language', new LanguageAspect($languageUid));
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Configuration;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;

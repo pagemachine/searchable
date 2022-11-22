@@ -51,7 +51,14 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();
 
-            $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+            $indicies = ExtconfService::getLanguageIndicies($language);
+            if (!empty($indicies)) {
+                $this->parameters['index'] = $indicies[0];
+            } else {
+                $this->parameters['index'] =  ExtconfService::getIndex();
+            }
+
+           // $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         }
 
         $this->applyFeatures();

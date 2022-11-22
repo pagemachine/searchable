@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
@@ -9,7 +10,9 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Service\IndexingService;
+use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -53,6 +56,12 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
         $this->indexNames[0] = sprintf('index_%s_en', $id);
         $this->indexNames[1] = sprintf('index_%s_de', $id);
+        $this->indexNames[2] = $this->indexNames[0].'bar';
+        $this->indexNames[3] = $this->indexNames[1].'bar';
+        $this->indexNames[4] = $this->indexNames[0].'qux';
+        $this->indexNames[5] = $this->indexNames[1].'qux';
+        $this->indexNames[6] = $this->indexNames[0].'content';
+        $this->indexNames[7] = $this->indexNames[1].'content';
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -66,11 +75,45 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indices' => [
-                    0 => [
+                    $this->indexNames[0] => [
                         'name' => $this->indexNames[0],
+                        'indexer' => 'foo_pages',
+                        'typo_language' => 0,
                     ],
-                    1 => [
+                    $this->indexNames[1] => [
                         'name' => $this->indexNames[1],
+                        'indexer' => 'foo_pages',
+                        'typo_language' => 1,
+                    ],
+                    $this->indexNames[2] => [
+                        'name' => $this->indexNames[2],
+                        'indexer' => 'bar_pages',
+                        'typo_language' => 0,
+                    ],
+                    $this->indexNames[3] => [
+                        'name' => $this->indexNames[3],
+                        'indexer' => 'bar_pages',
+                        'typo_language' => 1,
+                    ],
+                    $this->indexNames[4] => [
+                        'name' => $this->indexNames[4],
+                        'indexer' => 'qux_pages',
+                        'typo_language' => 0,
+                    ],
+                    $this->indexNames[5] => [
+                        'name' => $this->indexNames[5],
+                        'indexer' => 'qux_pages',
+                        'typo_language' => 1,
+                    ],
+                    $this->indexNames[6] => [
+                        'name' => $this->indexNames[6],
+                        'indexer' => 'content',
+                        'typo_language' => 0,
+                    ],
+                    $this->indexNames[7] => [
+                        'name' => $this->indexNames[7],
+                        'indexer' => 'content',
+                        'typo_language' => 1,
                     ],
                 ],
                 'indexers' => [
@@ -83,8 +126,26 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                                     'pid' => 1,
                                 ],
                             ],
+                            'mapping' => [
+                                "dynamic_templates" => [
+                                    [
+                                    "all_text" => [
+                                        "match_mapping_type" =>  "string",
+                                        "mapping" =>  [
+                                            "copy_to" =>  "_all",
+                                            "type" =>  "text",
+                                        ],
+                                    ],
+                                    ],
+                                ],
+                                "properties" => [
+                                    "_all" => [
+                                        "type" => "text",
+                                    ],
+                                ],
+                            ],
                         ],
-                    ],
+                        ],
                     'bar_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
@@ -92,6 +153,24 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             'collector' => [
                                 'config' => [
                                     'pid' => 100,
+                                ],
+                            ],
+                            'mapping' => [
+                                "dynamic_templates" => [
+                                    [
+                                    "all_text" => [
+                                        "match_mapping_type" =>  "string",
+                                        "mapping" =>  [
+                                            "copy_to" =>  "_all",
+                                            "type" =>  "text",
+                                        ],
+                                    ],
+                                    ],
+                                ],
+                                "properties" => [
+                                    "_all" => [
+                                        "type" => "text",
+                                    ],
                                 ],
                             ],
                         ],
@@ -103,6 +182,24 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             'collector' => [
                                 'config' => [
                                     'pid' => 200,
+                                ],
+                            ],
+                            'mapping' => [
+                                "dynamic_templates" => [
+                                    [
+                                    "all_text" => [
+                                        "match_mapping_type" =>  "string",
+                                        "mapping" =>  [
+                                            "copy_to" =>  "_all",
+                                            "type" =>  "text",
+                                        ],
+                                    ],
+                                    ],
+                                ],
+                                "properties" => [
+                                    "_all" => [
+                                        "type" => "text",
+                                    ],
                                 ],
                             ],
                         ],
@@ -123,10 +220,28 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             'preview' => [
                                 'className' => ContentPreviewRenderer::class,
                             ],
+                            'mapping' => [
+                                "dynamic_templates" => [
+                                    [
+                                    "all_text" => [
+                                        "match_mapping_type" =>  "string",
+                                        "mapping" =>  [
+                                            "copy_to" =>  "_all",
+                                            "type" =>  "text",
+                                        ],
+                                    ],
+                                    ],
+                                ],
+                                "properties" => [
+                                    "_all" => [
+                                        "type" => "text",
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
-            ]
+            ],
         );
 
         $this->getDatabaseConnection()->insertArray('pages', [
@@ -194,17 +309,22 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->stopWebserver();
     }
 
-    protected function assertIndexEmpty(int $languageId = 0): void
+    protected function assertIndexeEmpty(int $languageId = 0): void
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
+        $indexe = ExtconfService::getLanguageIndicies($languageId);
+        $indexString = implode(',', $indexe);
+        $client->indices()->refresh([
+            'index' => $indexString,
+        ]);
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => $indexString,
         ]);
-        $total = $response['hits']['total'];
+        $total = $response['hits']['total']['value'];
 
-        $this->assertEquals(0, $total, 'Documents in index');
+        $this->assertEquals(0, $total, 'Documents in indexe');
     }
 
     protected function assertDocumentInIndex(int $uid, array $documentSubset = [], int $languageId = 0): void
@@ -233,9 +353,15 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
+        $indexe = ExtconfService::getLanguageIndicies($languageId);
+        $indexString = implode(',', $indexe);
+
+        $client->indices()->refresh([
+            'index' => $indexString,
+        ]);
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => $indexString,
             'body' => [
                 'query' => [
                     'term' => [
@@ -257,10 +383,10 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected function syncIndices(): void
     {
-        $this->getElasticsearchClient()->indices()->flushSynced([
+        $this->getElasticsearchClient()->indices()->flush([
             'index' => implode(',', array_merge(
                 $this->indexNames,
-                [ 'searchable_updates' ]
+                ['searchable_updates']
             )),
         ]);
     }

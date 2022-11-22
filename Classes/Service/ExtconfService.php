@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Service;
 
 use PAGEmachine\Searchable\UndefinedIndexException;
@@ -32,8 +33,8 @@ class ExtconfService implements SingletonInterface
         $indicesConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
         $indices = [];
 
-        foreach ($indicesConfiguration as $language => $index) {
-            $indices[$language] = $index['name'];
+        foreach ($indicesConfiguration as $nameIndex => $index) {
+            $indices[$nameIndex] = $index['name'];
         }
 
         return $indices;
@@ -42,17 +43,72 @@ class ExtconfService implements SingletonInterface
     /**
      * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
      *
-     * @param  int $language
+     * @param  string $nameIndex
      * @return string $index
      */
-    public static function getIndex($language = 0)
+    public static function getIndex($nameIndex = '')
     {
-        $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language]['name'];
+        $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['name'];
 
         if (empty($index)) {
-            throw new UndefinedIndexException('Index for language ' . $language . ' is not defined!');
+            throw new UndefinedIndexException('Index  ' . $nameIndex . ' is not defined!');
         }
         return $index;
+    }
+
+    /**
+     * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
+     *
+     * @param  string $nameIndex
+     * @return int $language
+     */
+    public static function getIndexLanguage($nameIndex = '')
+    {
+        $language = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['typo_language'];
+
+        if (!isset($language)) {
+            throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
+        }
+        return $language;
+    }
+
+    /**
+     * Returns the indexer for a given index name, if set. Otherwise throws an error
+     *
+     * @param  string $nameIndex
+     * @return string $indexerName
+     */
+    public static function getIndexIndexer(string $nameIndex)
+    {
+        $indexerName = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['indexer'];
+
+        if (empty($indexerName)) {
+            throw new UndefinedIndexException('Indexer for Index ' . $nameIndex . ' is not defined!');
+        }
+        return $indexerName;
+    }
+
+    /**
+     * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
+     *
+     * @param  int $language
+     * @return array $indicies
+     */
+    public static function getLanguageIndicies($language = 0)
+    {
+        $indicesConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
+        $indices = [];
+
+        foreach ($indicesConfiguration as $nameIndex => $index) {
+            if ($index['typo_language'] == $language) {
+                $indices[$nameIndex] = $index['name'];
+            }
+        }
+
+        if (empty($indices)) {
+            throw new UndefinedIndexException('');
+        }
+        return $indices;
     }
 
     /**
@@ -100,14 +156,14 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns true if an index for the given language exists, otherwise false
+     * Returns true if an index for the given name exists, otherwise false
      *
-     * @param  int $language
+     * @param  string $nameIndex
      * @return bool
      */
-    public static function hasIndex($language = 0)
+    public static function hasIndex($nameIndex = '')
     {
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$language])) {
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex])) {
             return true;
         }
 
@@ -142,6 +198,17 @@ class ExtconfService implements SingletonInterface
     public function getIndexerConfiguration()
     {
         return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
+    }
+
+    /**
+     * Returns indexers configuration
+     *
+     * @param string $indexerName
+     * @return array $config
+     */
+    public static function getIndexersConfiguration($indexerName)
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'][$indexerName]['config'];
     }
 
     /**

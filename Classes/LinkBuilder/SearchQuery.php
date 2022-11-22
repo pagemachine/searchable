@@ -3,7 +3,6 @@
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
-use PAGEmachine\Searchable\Service\ExtconfService;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -236,31 +235,6 @@ class SearchQuery extends AbstractQuery
 
 
     /**
-     * @var array $givenIndicies
-     */
-    protected $givenIndicies = [];
-
-    /**
-     * @return array
-     */
-    public function getGivenIndicies()
-    {
-        return $this->givenIndicies;
-    }
-
-    /**
-     * @param array $givenIndicies
-     * @return SearchQuery
-     */
-    public function setGivenIndicies($givenIndicies)
-    {
-        $this->givenIndicies = $givenIndicies;
-
-        return $this;
-    }
-
-
-    /**
      * @var array $result
      */
     protected $result;
@@ -341,24 +315,6 @@ class SearchQuery extends AbstractQuery
             'from' => $this->from,
             'size' => $this->size,
         ];
-
-        if ($this->respectLanguage === true) {
-            $language = $this->language ?: $this->getLanguageId();
-
-            $indicies = ExtconfService::getLanguageIndicies($language);
-            if (!empty($indicies)) {
-                if (empty($this->givenIndicies)) {
-                    foreach ($indicies as $index) {
-                        $this->parameters['index'] .=  (string) $index . ',';
-                    }
-                } else {
-                    $indicies = array_intersect($this->givenIndicies, $indicies);
-                    foreach ($indicies as $index) {
-                        $this->parameters['index'] .=  (string) $index . ',';
-                    }
-                }
-            }
-        }
 
         $this->applyFeatures();
     }
