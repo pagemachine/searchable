@@ -121,7 +121,7 @@ class ExtconfService implements SingletonInterface
 
         foreach ($indicesConfiguration as $nameIndex => $index) {
             if ($index['typo_language'] == $language) {
-                $indices[$nameIndex] = $index['name'];
+                $indices[] = $nameIndex;
             }
         }
 
