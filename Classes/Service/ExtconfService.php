@@ -42,6 +42,7 @@ class ExtconfService implements SingletonInterface
             foreach ($indexer as $key) {
                 $indices[$indeceKey.'_'.$key] = $indece;
                 $indices[$indeceKey.'_'.$key]['indexer'] = $key;
+                $indices[$indeceKey.'_'.$key]['configIndex'] = $indeceKey;
             }
         }
 
@@ -58,6 +59,21 @@ class ExtconfService implements SingletonInterface
         $indicesConfiguration = ExtconfService::getElasticsearchIndices();
 
         return array_keys($indicesConfiguration);
+    }
+
+    /**
+     * Returns the indice key of the config for a given elasticsearch index (Should only be needed for the overview in the backend module)
+     *
+     * @return array
+     */
+    public static function getConfigIndex($nameIndex = '')
+    {
+        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['configIndex'];
+
+        if (empty($index)) {
+            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
+        }
+        return $index;
     }
 
     /**

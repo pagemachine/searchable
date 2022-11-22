@@ -54,16 +54,19 @@ class IndexManager implements SingletonInterface
 
         foreach (ExtconfService::getIndices() as $index) {
             $language = ExtconfService::getIndexLanguage($index);
+            $configKey = ExtconfService::getConfigIndex($index);
 
-            $info[$index] = [
-                'name' => $index,
-                'nameIndex' => $index,
-                'language' => $language,
-            ];
+            if (empty($info[$configKey])) {
+                $info[$configKey] = [
+                    'name' => ExtconfService::getIndex($index),
+                    'nameIndex' => $index,
+                    'language' => $language,
+                ];
+            };
 
             foreach (ExtconfService::getIndexers() as $name => $config) {
                 if ($name == ExtconfService::getIndexIndexer($index)) {
-                    $info[$index]['types'][$name] = [
+                    $info[$configKey]['types'][$name] = [
                         'name' => $name,
                         'documents' => $this->client->count([
                             'index' => $index,
