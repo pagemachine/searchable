@@ -24,20 +24,40 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
+     * Creates a new indice for every Indexer. This keeps the configuration simple even if it is not the real index structure in elasticsearch.
+     * This is necessary because since elastic 7.0 one indice can only have one document type.
+     *
+     * @return array
+     */
+    protected static function getElasticsearchIndices()
+    {
+        $indices = [];
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $indeceKey => $indece) {
+            $indexer = $indece['indexer'];
+
+            if (!isset($indexer) || empty($indexer)) {
+                // If no indexer are set use all defined indexers
+                $indexer = array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']);
+            }
+            foreach ($indexer as $key) {
+                $indices[$indeceKey.'_'.$key] = $indece;
+                $indices[$indeceKey.'_'.$key]['indexer'] = $key;
+            }
+        }
+
+        return $indices;
+    }
+
+    /**
      * Returns all available indices
      *
      * @return array
      */
     public static function getIndices()
     {
-        $indicesConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
-        $indices = [];
+        $indicesConfiguration = ExtconfService::getElasticsearchIndices();
 
-        foreach ($indicesConfiguration as $nameIndex => $index) {
-            $indices[$nameIndex] = $index['name'];
-        }
-
-        return $indices;
+        return array_keys($indicesConfiguration);
     }
 
     /**
@@ -48,10 +68,10 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndex($nameIndex = '')
     {
-        $index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['name'];
+        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['name'];
 
         if (empty($index)) {
-            throw new UndefinedIndexException('Index  ' . $nameIndex . ' is not defined!');
+            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
         }
         return $index;
     }
@@ -64,7 +84,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexLanguage($nameIndex = '')
     {
-        $language = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['typo_language'];
+        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo_language'];
 
         if (!isset($language)) {
             throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
@@ -80,7 +100,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexIndexer(string $nameIndex)
     {
-        $indexerName = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex]['indexer'];
+        $indexerName = ExtconfService::getElasticsearchIndices()[$nameIndex]['indexer'];
 
         if (empty($indexerName)) {
             throw new UndefinedIndexException('Indexer for Index ' . $nameIndex . ' is not defined!');
@@ -96,7 +116,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getLanguageIndicies($language = 0)
     {
-        $indicesConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'];
+        $indicesConfiguration = ExtconfService::getElasticsearchIndices();
         $indices = [];
 
         foreach ($indicesConfiguration as $nameIndex => $index) {
@@ -119,7 +139,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexSettings($indexName)
     {
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $index) {
+        foreach (ExtconfService::getElasticsearchIndices() as $index) {
             if ($index['name'] == $indexName && isset($index['settings'])) {
                 return $index['settings'];
             }
@@ -136,7 +156,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexEnvironment($indexName)
     {
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $index) {
+        foreach (ExtconfService::getElasticsearchIndices() as $index) {
             if ($index['name'] == $indexName && isset($index['environment'])) {
                 return $index['environment'];
             }
@@ -163,7 +183,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function hasIndex($nameIndex = '')
     {
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'][$nameIndex])) {
+        if (!empty(ExtconfService::getElasticsearchIndices()[$nameIndex])) {
             return true;
         }
 
