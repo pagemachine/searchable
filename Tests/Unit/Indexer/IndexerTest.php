@@ -45,6 +45,7 @@ class IndexerTest extends UnitTestCase
         $dataCollector = $this->prophesize(DataCollectorInterface::class);
         $dataCollectorClassName = get_class($dataCollector->reveal());
         $config = [
+            'type' => 'pages',
             'collector' => [
                 'className' => $dataCollectorClassName,
                 'config' => ['collectorConfig'],
