@@ -120,7 +120,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'foo_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'foo_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 1,
@@ -149,7 +148,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'bar_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'bar_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 100,
@@ -178,7 +176,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'qux_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'qux_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 200,
@@ -207,7 +204,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'content' => [
                         'className' => TcaIndexer::class,
                         'config' => [
-                            'type' => 'content',
                             'collector' => [
                                 'config' => [
                                     'table' => 'tt_content',
