@@ -4,13 +4,9 @@ on:
   push:
     branches:
      - master
-     - elasticsearch7
     tags:
       - '*'
   pull_request:
-    branches:
-     - master
-     - elasticsearch7-testing
   schedule:
     - cron: '0 7 * * *'
 
