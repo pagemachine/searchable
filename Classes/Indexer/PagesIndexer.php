@@ -11,7 +11,6 @@ class PagesIndexer extends Indexer
      * @var array
      */
     protected static $defaultConfiguration = [
-        'type' => 'pages',
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\PagesDataCollector::class,
         ],

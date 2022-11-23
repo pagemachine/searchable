@@ -48,7 +48,6 @@ Now you can set up the file indexer configuration:
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['files'] = [
     'className' => \PAGEmachine\Searchable\Indexer\FileIndexer::class,
     'config' => [
-        'type' => 'files',
         'collector' => [
             'config' => [
                 'fields' => [
