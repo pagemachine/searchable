@@ -213,7 +213,17 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexers()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
+        $indexer = [];
+
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'] as $key => $value) {
+            if (!empty($value['config']['type'])) {
+                throw new \Exception('Please remove the "type" config key for ' . $key, 1669216900);
+            }
+            $indexer[$key] = $value;
+            $indexer[$key]['config']['type'] = $key;
+        }
+
+        return $indexer;
     }
 
     /**
@@ -233,7 +243,7 @@ class ExtconfService implements SingletonInterface
      */
     public function getIndexerConfiguration()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'];
+        return ExtconfService::getIndexers();
     }
 
     /**
@@ -244,7 +254,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexersConfiguration($indexerName)
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'][$indexerName]['config'];
+        return ExtconfService::getIndexers()[$indexerName]['config'];
     }
 
     /**
