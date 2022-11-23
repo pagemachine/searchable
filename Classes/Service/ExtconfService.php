@@ -64,7 +64,7 @@ class ExtconfService implements SingletonInterface
     /**
      * Returns the indice key of the config for a given elasticsearch index (Should only be needed for the overview in the backend module)
      *
-     * @return array
+     * @return string
      */
     public static function getConfigIndex($nameIndex = '')
     {
