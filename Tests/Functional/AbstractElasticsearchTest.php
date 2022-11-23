@@ -54,14 +54,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         parent::setUp();
 
         $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
-        $this->indexNames[0] = sprintf('index_%s_en', $id);
-        $this->indexNames[1] = sprintf('index_%s_de', $id);
-        $this->indexNames[2] = $this->indexNames[0].'bar';
-        $this->indexNames[3] = $this->indexNames[1].'bar';
-        $this->indexNames[4] = $this->indexNames[0].'qux';
-        $this->indexNames[5] = $this->indexNames[1].'qux';
-        $this->indexNames[6] = $this->indexNames[0].'content';
-        $this->indexNames[7] = $this->indexNames[1].'content';
+        $indexEn = sprintf('index_%s_en', $id);
+        $indexDe = sprintf('index_%s_de', $id);
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -75,44 +69,12 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indices' => [
-                    $this->indexNames[0] => [
-                        'name' => $this->indexNames[0],
-                        'indexer' => 'foo_pages',
+                    $indexEn => [
+                        'name' => $indexEn,
                         'typo_language' => 0,
                     ],
-                    $this->indexNames[1] => [
-                        'name' => $this->indexNames[1],
-                        'indexer' => 'foo_pages',
-                        'typo_language' => 1,
-                    ],
-                    $this->indexNames[2] => [
-                        'name' => $this->indexNames[2],
-                        'indexer' => 'bar_pages',
-                        'typo_language' => 0,
-                    ],
-                    $this->indexNames[3] => [
-                        'name' => $this->indexNames[3],
-                        'indexer' => 'bar_pages',
-                        'typo_language' => 1,
-                    ],
-                    $this->indexNames[4] => [
-                        'name' => $this->indexNames[4],
-                        'indexer' => 'qux_pages',
-                        'typo_language' => 0,
-                    ],
-                    $this->indexNames[5] => [
-                        'name' => $this->indexNames[5],
-                        'indexer' => 'qux_pages',
-                        'typo_language' => 1,
-                    ],
-                    $this->indexNames[6] => [
-                        'name' => $this->indexNames[6],
-                        'indexer' => 'content',
-                        'typo_language' => 0,
-                    ],
-                    $this->indexNames[7] => [
-                        'name' => $this->indexNames[7],
-                        'indexer' => 'content',
+                    $indexDe => [
+                        'name' => $indexDe,
                         'typo_language' => 1,
                     ],
                 ],
@@ -144,7 +106,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                                 ],
                             ],
                         ],
-                        ],
+                    ],
                     'bar_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
@@ -239,6 +201,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                 ],
             ],
         );
+
+        $this->indexNames = ExtconfService::getIndices();
 
         $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 1,
