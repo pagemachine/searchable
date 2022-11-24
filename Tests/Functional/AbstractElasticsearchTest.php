@@ -87,24 +87,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                                     'pid' => 1,
                                 ],
                             ],
-                            'mapping' => [
-                                "dynamic_templates" => [
-                                    [
-                                    "all_text" => [
-                                        "match_mapping_type" =>  "string",
-                                        "mapping" =>  [
-                                            "copy_to" =>  "_all",
-                                            "type" =>  "text",
-                                        ],
-                                    ],
-                                    ],
-                                ],
-                                "properties" => [
-                                    "_all" => [
-                                        "type" => "text",
-                                    ],
-                                ],
-                            ],
                         ],
                     ],
                     'bar_pages' => [
@@ -115,24 +97,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                                     'pid' => 100,
                                 ],
                             ],
-                            'mapping' => [
-                                "dynamic_templates" => [
-                                    [
-                                    "all_text" => [
-                                        "match_mapping_type" =>  "string",
-                                        "mapping" =>  [
-                                            "copy_to" =>  "_all",
-                                            "type" =>  "text",
-                                        ],
-                                    ],
-                                    ],
-                                ],
-                                "properties" => [
-                                    "_all" => [
-                                        "type" => "text",
-                                    ],
-                                ],
-                            ],
                         ],
                     ],
                     'qux_pages' => [
@@ -141,24 +105,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             'collector' => [
                                 'config' => [
                                     'pid' => 200,
-                                ],
-                            ],
-                            'mapping' => [
-                                "dynamic_templates" => [
-                                    [
-                                    "all_text" => [
-                                        "match_mapping_type" =>  "string",
-                                        "mapping" =>  [
-                                            "copy_to" =>  "_all",
-                                            "type" =>  "text",
-                                        ],
-                                    ],
-                                    ],
-                                ],
-                                "properties" => [
-                                    "_all" => [
-                                        "type" => "text",
-                                    ],
                                 ],
                             ],
                         ],
@@ -177,24 +123,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             ],
                             'preview' => [
                                 'className' => ContentPreviewRenderer::class,
-                            ],
-                            'mapping' => [
-                                "dynamic_templates" => [
-                                    [
-                                    "all_text" => [
-                                        "match_mapping_type" =>  "string",
-                                        "mapping" =>  [
-                                            "copy_to" =>  "_all",
-                                            "type" =>  "text",
-                                        ],
-                                    ],
-                                    ],
-                                ],
-                                "properties" => [
-                                    "_all" => [
-                                        "type" => "text",
-                                    ],
-                                ],
                             ],
                         ],
                     ],
