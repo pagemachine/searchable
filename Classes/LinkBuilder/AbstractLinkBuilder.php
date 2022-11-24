@@ -75,16 +75,14 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
      * @param int $language
      * @return array
      */
-    public function createLinkConfiguration($record, $language, $config = null)
+    public function createLinkConfiguration($record, $language)
     {
-        $workingConfig =  $config ? $config : $this->config['fixedParts'];
-
-        $linkConfiguration = $workingConfig['fixedParts'];
+        $linkConfiguration = $this->config['fixedParts'];
 
         $linkConfiguration = $this->addLanguageParameter($linkConfiguration, $language);
 
-        if (!empty($workingConfig['dynamicParts'])) {
-            $dynamicConfiguration = $this->replaceFieldsRecursive($workingConfig['dynamicParts'], $record);
+        if (!empty($this->config['dynamicParts'])) {
+            $dynamicConfiguration = $this->replaceFieldsRecursive($this->config['dynamicParts'], $record);
 
             $linkConfiguration = ConfigurationMergerService::merge($linkConfiguration, $dynamicConfiguration);
         }
