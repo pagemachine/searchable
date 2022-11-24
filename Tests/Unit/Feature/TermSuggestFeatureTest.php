@@ -27,7 +27,9 @@ class TermSuggestFeatureTest extends UnitTestCase
      */
     public function setUp(): void
     {
-        $this->feature = new TermSuggestFeature();
+        $this->feature = new TermSuggestFeature([
+            'field' => 'title',
+        ]);
     }
 
     /**
@@ -60,7 +62,7 @@ class TermSuggestFeatureTest extends UnitTestCase
                     'suggestion' => [
                         'text' => 'searchword',
                         'term' => [
-                            'field' => '_all',
+                            'field' => 'title',
                         ],
                     ],
                 ],
