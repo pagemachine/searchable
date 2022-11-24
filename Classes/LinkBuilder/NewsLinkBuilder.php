@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
