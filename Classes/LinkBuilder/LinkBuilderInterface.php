@@ -14,7 +14,7 @@ interface LinkBuilderInterface
      * @param  int   $language
      * @return array
      */
-    public function createLinkConfiguration($record, $language, $config = null);
+    public function createLinkConfiguration($record, $language);
 
     /**
      * Creates links for a batch of records

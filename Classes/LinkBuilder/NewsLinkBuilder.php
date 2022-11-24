@@ -57,6 +57,8 @@ class NewsLinkBuilder extends TypoLinkBuilder
         'dynamicParts' => [],
     ];
 
+    protected $configBackup;
+
     /**
      * Creates merged link configuration
      *
@@ -64,15 +66,20 @@ class NewsLinkBuilder extends TypoLinkBuilder
      * @param int $language
      * @return array
      */
-    public function createLinkConfiguration($record, $language, $config = null)
+    public function createLinkConfiguration($record, $language)
     {
+        if (!$this->configBackup) {
+            $this->configBackup = $this->config;
+        }
+
+        $this->config = $this->configBackup;
+
         $this->config['type'][0]['fixedParts']['parameter'] = $this->config['singlePage'];
 
-        $config = ConfigurationMergerService::merge($this->config, $this->config['type'][$record['type'][0]]);
+        $this->config = ConfigurationMergerService::merge($this->config, $this->config['type'][$record['type'][0]]);
 
-        unset($config['type']);
-        unset($config['singlePage']);
+        unset($this->config['type']);
 
-        return parent::createLinkConfiguration($record, $language, $config);
+        return parent::createLinkConfiguration($record, $language);
     }
 }
