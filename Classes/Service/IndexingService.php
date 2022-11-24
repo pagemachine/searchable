@@ -142,7 +142,7 @@ final class IndexingService
         $indices = ExtconfService::getIndices();
 
         if (!empty($indices)) {
-            foreach ($indices as $nameIndex => $index) {
+            foreach ($indices as $index) {
                 $indexManager->createIndex($index);
 
                 $this->logger->debug(sprintf(
@@ -223,19 +223,20 @@ final class IndexingService
     {
         $indices = ExtconfService::getIndices();
 
-        foreach ($indices as $nameIndex => $index) {
+        foreach ($indices as $index) {
             $language = ExtconfService::getIndexLanguage($index);
             $indexers = ExtconfService::getIndexIndexer($index);
             $indexerConfig = ExtconfService::getIndexersConfiguration($indexers);
+
             if (empty($this->type)) {
                 foreach ($this->indexerFactory->makeIndexers($index, $language) as $indexer) {
-                    $this->scheduledIndexers[$nameIndex][] = $indexer;
+                    $this->scheduledIndexers[$index][] = $indexer;
                 }
             } else {
                 if ($this->type == $indexerConfig['type']) {
                     $indexer = $this->indexerFactory->makeIndexer($index, $language, $this->type);
                     if ($indexer != null) {
-                        $this->scheduledIndexers[$nameIndex][] = $indexer;
+                        $this->scheduledIndexers[$index][] = $indexer;
                     }
                 }
             }

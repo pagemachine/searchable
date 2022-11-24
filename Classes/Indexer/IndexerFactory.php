@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use PAGEmachine\Searchable\UndefinedIndexException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -39,13 +40,14 @@ class IndexerFactory implements SingletonInterface
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
         $indexerName = ExtconfService::getIndexIndexer($index);
-        $indexerConfig = ExtconfService::getIndexersConfiguration($indexerName);
 
-        foreach ($indexerConfiguration as $indexer) {
-            if ($indexer['config']['type'] == $indexerConfig['type']) {
-                $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
-            }
+        $indexer = $indexerConfiguration[$indexerName];
+
+        if (empty($indexerName)) {
+            throw new UndefinedIndexException('Indexer '. $indexerName .' for Index ' . $index . ' is not defined!');
         }
+
+        $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
 
         return $indexers;
     }

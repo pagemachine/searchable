@@ -185,7 +185,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         foreach ($pageUids as $uid) {
             try {
-                if ($uid == 0) {
+                if ($rootlinePageUid == 0) {
                     $filteredPageUids[] = $uid;
                 } else {
                     $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
