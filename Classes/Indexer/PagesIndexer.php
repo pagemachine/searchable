@@ -51,17 +51,17 @@ class PagesIndexer extends Indexer
             ],
         ],
         'mapping' => [
-                    'properties' => [
-                        'header' => [
-                            'type' => 'text',
-                        ],
-                        'subheader' => [
-                            'type' => 'text',
-                        ],
-                        'bodytext' => [
-                            'type' => 'text',
-                        ],
-                    ],
+            'properties' => [
+                'header' => [
+                    'type' => 'text',
+                ],
+                'subheader' => [
+                    'type' => 'text',
+                ],
+                'bodytext' => [
+                    'type' => 'text',
+                ],
+            ],
         ],
     ];
 }

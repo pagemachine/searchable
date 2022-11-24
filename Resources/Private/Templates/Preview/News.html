@@ -1,0 +1,12 @@
+<f:format.crop maxCharacters="500" append="...">
+	<f:format.stripTags>
+		<f:if condition="{fields.teaser}">
+			<f:then>
+				<f:format.raw>{fields.teaser}</f:format.raw>
+			</f:then>
+			<f:else>
+				<f:format.raw>{fields.bodytext}</f:format.raw>
+			</f:else>
+		</f:if>
+	</f:format.stripTags>
+</f:format.crop>
