@@ -315,7 +315,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function runUpdate()
     {
-        $bulkSize = $this->config['bulkSize'] ?: 20;
+        $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;
         $overallCounter = 0;
