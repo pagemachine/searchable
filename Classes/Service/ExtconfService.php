@@ -155,8 +155,16 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexSettings($indexName)
     {
-        foreach (ExtconfService::getElasticsearchIndices() as $index) {
-            if ($index['name'] == $indexName && isset($index['settings'])) {
+        $indeces = ExtconfService::getElasticsearchIndices();
+
+        $settings = $indeces[$indexName]['settings'];
+
+        if (!empty($settings)) {
+            return $settings;
+        }
+
+        foreach ($indeces as $index) {
+            if (($index['name'] == $indexName) && isset($index['settings'])) {
                 return $index['settings'];
             }
         }
