@@ -303,6 +303,36 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     }
 
     /**
+     * @test
+     */
+    public function indexesRecordsOfUnlocalizableTables(): void
+    {
+        $this->getDatabaseConnection()->insertArray('tx_unlocalizedtabletest_unlocalizedtable', [
+            'uid' => 1,
+            'pid' => 1,
+            'title' => 'Test',
+        ]);
+
+        $this->assertIndexEmpty(0);
+        $this->assertIndexEmpty(1);
+
+        $this->indexingService->setup();
+        $this->indexingService->indexFull('unlocalized_table');
+
+        $this->assertDocumentInIndex(
+            1,
+            [
+                'title' => 'Test',
+            ],
+            0,
+        );
+        $this->assertDocumentNotInIndex(
+            1,
+            1,
+        );
+    }
+
+    /**
      * @return void
      */
     protected function setUp(): void
