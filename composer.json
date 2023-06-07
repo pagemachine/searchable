@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "codedungeon/phpunit-result-printer": "^0.32.0",
-        "dms/phpunit-arraysubset-asserts": "^0.4.0",
+        "dms/phpunit-arraysubset-asserts": "^0.5.0",
         "ergebnis/composer-normalize": "^2.6",
         "jangregor/phpstan-prophecy": "^1.0.0",
         "nimut/testing-framework": "^6.0",
