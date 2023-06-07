@@ -18,9 +18,7 @@ To perform partial index updates run the following command:
 
 You should set up a Scheduler task using the _Extbase CommandController Task_ to execute this periodically, e.g. every 5 minutes.
 
-For TYPO3v7 a hook for the `DatabaseConnection` takes care of queueing index updates.
-
-For TYPO3v8 and newer you need to add a database connection `wrapperClass` in your `LocalConfiguration.php`:
+You need to add a database connection `wrapperClass` in your `LocalConfiguration.php`:
 
 
 ```php

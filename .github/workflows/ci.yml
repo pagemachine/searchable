@@ -21,7 +21,6 @@ jobs:
         php:
           - '7.4'
         typo3:
-          - '^10.4'
           - '^11.5'
         elasticsearch:
           - '5'
