@@ -155,7 +155,7 @@ abstract class AbstractQuery implements QueryInterface
         $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
 
         // Use get_class() instead of static self::class to retrieve the inherited child classname
-        $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(get_class($this))['features'];
+        $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(get_class($this))['features'] ?? [];
 
         if (!empty($features)) {
             foreach ($features as $key => $feature) {

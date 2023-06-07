@@ -126,7 +126,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             foreach ($rawList as $uid => $page) {
                 // Check if page is directly indexable or only transient,
                 // also skip page if search has been disabled
-                if (in_array($page['doktype'], $this->config['doktypes']) && !$page['no_search']) {
+                if (in_array($page['doktype'], $this->config['doktypes']) && !($page['no_search'] ?? false)) {
                     yield $this->getRecord($uid);
                 }
 

@@ -317,7 +317,13 @@ final class IndexingService
      */
     protected function applyEnvironment(int $languageUid, array $environment): \Closure
     {
-        $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
+        // Set environment language if BE_USER lang is not set (happens on CLI calls)
+        if ($GLOBALS['BE_USER']->uc !== null) {
+            $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
+        } else {
+            $originalUserLanguage = $environment['language'];
+        }
+
         $originalLocale = setlocale(LC_ALL, '0');
 
         $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];

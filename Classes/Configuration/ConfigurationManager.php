@@ -74,7 +74,7 @@ class ConfigurationManager implements SingletonInterface
                 $type = $indexerConfiguration['config']['type'];
 
                 $configuration[$key] = $this->processIndexerLevel($indexerConfiguration);
-                $mapping[$type] = $configuration[$key]['config']['mapping'];
+                $mapping[$type] = $configuration[$key]['config']['mapping'] ?? [];
             }
 
             $this->processedConfiguration = $configuration;
@@ -120,7 +120,7 @@ class ConfigurationManager implements SingletonInterface
             $this->processedQueryConfiguration = $queryConfiguration;
         }
 
-        return $this->processedQueryConfiguration[$queryClassName];
+        return $this->processedQueryConfiguration[$queryClassName] ?? [];
     }
 
     /**
@@ -188,16 +188,17 @@ class ConfigurationManager implements SingletonInterface
      */
     protected function addClassDefaultConfiguration($configuration, $parentConfiguration)
     {
-        if (is_string($configuration['className']) && !empty($configuration['className'])) {
+        if (is_string($configuration['className'] ?? null) && !empty($configuration['className'])) {
             // Class will only be called if it implements a specific interface.
             // @todo should this throw an exception or is it legit to have classes without dynamic configuration?
             if (in_array(DynamicConfigurationInterface::class, class_implements($configuration['className']))) {
-                $defaultConfiguration = $configuration['className']::getDefaultConfiguration($configuration['config'], $parentConfiguration['config']);
+                $defaultConfiguration = $configuration['className']::getDefaultConfiguration(
+                    $configuration['config'] ?? [],
+                    $parentConfiguration['config'] ?? []
+                );
 
                 if (is_array($defaultConfiguration)) {
-                    $configuration['config'] = $configuration['config'] ?: [];
-
-                    $configuration['config'] = ConfigurationMergerService::merge($defaultConfiguration, $configuration['config']);
+                    $configuration['config'] = ConfigurationMergerService::merge($defaultConfiguration, $configuration['config'] ?? []);
                 }
             }
         }
@@ -245,7 +246,7 @@ class ConfigurationManager implements SingletonInterface
 
         if (!empty($configuration['config'])) {
             if (!empty($configuration['config']['table'])) {
-                if ($configuration['config']['field']) {
+                if ($configuration['config']['field'] ?? null) {
                     $collectorPath = $collectorPath ? $collectorPath . "." . $configuration['config']['field'] : $configuration['config']['field'];
                     $this->addSublevelUpdateConfiguration($typeName, $collectorPath, $configuration['config']['table']);
                 } else {
