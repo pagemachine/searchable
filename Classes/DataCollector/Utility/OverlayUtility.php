@@ -57,6 +57,8 @@ class OverlayUtility implements SingletonInterface
                 'pid' => $record['pid'],
                 $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']],
             ], $language, $overlayMode);
+        } elseif ($language === 0) {
+            return $record;
         }
 
         // PageRepository says this is not a valid record in this language, so don't return it
