@@ -9,6 +9,7 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
+use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
 use PAGEmachine\Searchable\Service\IndexingService;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
@@ -122,6 +123,9 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             ],
                             'preview' => [
                                 'className' => ContentPreviewRenderer::class,
+                            ],
+                            'link' => [
+                                'className' => TypoLinkBuilder::class,
                             ],
                         ],
                     ],
