@@ -33,7 +33,7 @@ jobs:
             typo3: '^10.4'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build
         env:
