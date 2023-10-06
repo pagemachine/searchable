@@ -56,6 +56,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
         $this->indexNames[0] = sprintf('index_%s_en', $id);
         $this->indexNames[1] = sprintf('index_%s_de', $id);
+        $this->indexNames['update'] = sprintf('searchable_updates_%s', $id);
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -67,6 +68,9 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'indexing' => [
                         'domain' => 'http://localhost:8080',
                     ],
+                ],
+                'updateIndex' => [
+                    'name' => $this->indexNames['update'],
                 ],
                 'indices' => [
                     0 => [
@@ -249,6 +253,16 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->assertEmpty($document, 'Document in index');
     }
 
+    protected function getIndexName(int $languageId = 0): string
+    {
+        return $this->indexNames[$languageId];
+    }
+
+    protected function getUpdateIndexName(): string
+    {
+        return $this->indexNames['update'];
+    }
+
     protected function getElasticsearchClient(): ElasticsearchClient
     {
         $client = Connection::getClient();
@@ -285,10 +299,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     protected function syncIndices(): void
     {
         $this->getElasticsearchClient()->indices()->flushSynced([
-            'index' => implode(',', array_merge(
-                $this->indexNames,
-                [ 'searchable_updates' ]
-            )),
+            'index' => implode(',', $this->indexNames),
         ]);
     }
 }
