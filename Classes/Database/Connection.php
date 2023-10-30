@@ -7,6 +7,7 @@ namespace PAGEmachine\Searchable\Database;
 
 use PAGEmachine\Searchable\Database\Query\QueryBuilder;
 use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
+use PAGEmachine\Searchable\Utility\TimeMeasurementUtility;
 use TYPO3\CMS\Core\Database\Connection as BaseConnection;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,12 +48,16 @@ class Connection extends BaseConnection
     {
         $result = parent::insert(...func_get_args());
 
+        $measure = (new TimeMeasurementUtility(5))->start();
+
         $this->getQuery()->updateToplevel($tableName, (int)$this->lastInsertId($tableName));
 
         // Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
         if ($tableName == 'tt_content' && !empty($data['pid'])) {
             $this->getQuery()->updateToplevel('pages', (int)$data['pid']);
         }
+
+        $measure->stop();
 
         return $result;
     }
@@ -75,8 +80,10 @@ class Connection extends BaseConnection
         $result = parent::update(...func_get_args());
 
         if (!empty($identifier['uid'])) {
+            $measure = (new TimeMeasurementUtility(5))->start();
             $this->getQuery()->updateToplevel($tableName, (int)$identifier['uid']);
             $this->getQuery()->updateSublevel($tableName, (int)$identifier['uid']);
+            $measure->stop();
         }
 
         return $result;
@@ -99,8 +106,10 @@ class Connection extends BaseConnection
         $result = parent::delete(...func_get_args());
 
         if (!empty($identifier['uid'])) {
+            $measure = (new TimeMeasurementUtility(5))->start();
             $this->getQuery()->updateToplevel($tableName, (int)$identifier['uid']);
             $this->getQuery()->updateSublevel($tableName, (int)$identifier['uid']);
+            $measure->stop();
         }
 
         return $result;
