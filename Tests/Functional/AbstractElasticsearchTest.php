@@ -11,6 +11,8 @@ use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
+use PAGEmachine\Searchable\Preview\NoPreviewRenderer;
 use PAGEmachine\Searchable\Service\IndexingService;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
@@ -34,6 +36,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     protected $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
+        'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/unlocalized_table_test',
     ];
 
     /**
@@ -123,6 +126,30 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                             ],
                             'preview' => [
                                 'className' => ContentPreviewRenderer::class,
+                            ],
+                            'link' => [
+                                'className' => TypoLinkBuilder::class,
+                            ],
+                        ],
+                    ],
+                    'unlocalized_table' => [
+                        'className' => TcaIndexer::class,
+                        'config' => [
+                            'type' => 'unlocalized_table',
+                            'collector' => [
+                                'config' => [
+                                    'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
+                                    'pid' => 1,
+                                    'fields' => [
+                                        'title',
+                                    ],
+                                ],
+                            ],
+                            'preview' => [
+                                'className' => NoPreviewRenderer::class,
+                            ],
+                            'link' => [
+                                'className' => TypoLinkBuilder::class,
                             ],
                         ],
                     ],

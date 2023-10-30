@@ -58,7 +58,7 @@ page.includeCSS.searchable = EXT:searchable/Resources/Public/Css/searchable.css
 
 # Include JQuery if activated
 [{$plugin.tx_searchable.settings.includejQuery} == 1]
-page.includeJSFooterlibs.jQuery = EXT:searchable/Resources/Public/JavaScript/jquery-3.2.1.min.js
+page.includeJSFooterlibs.jQuery = EXT:searchable/Resources/Public/JavaScript/jquery-3.6.1.min.js
 [global]
 
 # Include Autocomplete if activated

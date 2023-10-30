@@ -21,7 +21,7 @@ class SiteLanguageViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        if (is_object($GLOBALS['TSFE'])) {
+        if (is_object($GLOBALS['TSFE'] ?? null)) {
             return $this->getLanguageId();
         }
 

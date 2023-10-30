@@ -71,7 +71,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
         if (!empty($this->config['fields'])) {
             $content = $this->collectFields($record, $this->config['fields']);
 
-            if ($this->config['splitIntoWords']) {
+            if ($this->config['splitIntoWords'] ?? false) {
                 $content = $this->splitFields($content);
             }
         }

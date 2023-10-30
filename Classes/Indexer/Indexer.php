@@ -223,7 +223,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->config = $config;
         $this->language = $language;
 
-        $this->type = $this->config['type'];
+        $this->type = $this->config['type'] ?? null;
 
         if (empty($this->type)) {
             throw new \Exception('No type set in config for indexer '. $index, 1669133301);
@@ -235,7 +235,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
         $this->query = $query ?: new BulkQuery(
             $this->index,
-            $config['pipeline']
+            $config['pipeline'] ?? null
         );
 
         $this->setPreviewRenderer($previewRenderer);
@@ -253,10 +253,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         if ($previewRenderer) {
             $this->previewRenderer = $previewRenderer;
         } else {
-            if (!empty($this->config['preview']['className'])) {
-                $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
-            } else {
-                $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+            if (isset($this->config['preview'])) {
+                if (!empty($this->config['preview']['className'])) {
+                    $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
+                } else {
+                    $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+                }
             }
         }
     }
@@ -271,10 +273,12 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         if ($linkBuilder) {
             $this->linkBuilder = $linkBuilder;
         } else {
-            if (!empty($this->config['link']['className'])) {
-                $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
-            } else {
-                $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
+            if (isset($this->config['link'])) {
+                if (!empty($this->config['link']['className'])) {
+                    $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
+                } else {
+                    $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
+                }
             }
         }
     }
@@ -286,7 +290,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected function setFeatures($features)
     {
-        $features = $features ?: $this->config['features'];
+        $features = $features ?: $this->config['features'] ?? [];
 
         if (!empty($features)) {
             foreach ($features as $key => $featureConfig) {
@@ -318,7 +322,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
-        $bulkSize = $this->config['bulkSize'] ?: 20;
+        $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;
         $overallCounter = 0;
@@ -359,7 +363,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function runUpdate()
     {
-        $bulkSize = $this->config['bulkSize'] ?: 20;
+        $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;
         $overallCounter = 0;

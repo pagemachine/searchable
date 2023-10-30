@@ -82,7 +82,7 @@ class PageLinkBuilder extends AbstractLinkBuilder
         }
         if ($configuration['noCache'] === true) {
             $typolinkConfiguration['no_cache'] = 1;
-        } elseif ($configuration['useCacheHash']) {
+        } elseif (!empty($configuration['useCacheHash'])) {
             $typolinkConfiguration['useCacheHash'] = 1;
         }
         if ($configuration['section'] !== '') {

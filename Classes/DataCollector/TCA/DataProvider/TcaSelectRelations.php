@@ -15,6 +15,7 @@ class TcaSelectRelations extends TcaSelectItems implements FormDataProviderInter
      * @param array $result Result array
      * @param string $fieldName Current handle field name
      * @param array $items Incoming items
+     * @param bool $includeFullRows @internal Hack for category tree to speed up tree processing, adding full db row as _row to item
      * @return array Modified item array
      * @throws \UnexpectedValueException
      */
