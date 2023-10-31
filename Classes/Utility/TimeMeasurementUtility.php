@@ -21,7 +21,7 @@ class TimeMeasurementUtility
     protected $start;
 
     /**
-     * @var int
+     * @var float
      */
     protected $totalTime;
 
@@ -33,7 +33,6 @@ class TimeMeasurementUtility
     public function __construct($timeout = null)
     {
         $this->timeout = $timeout;
-        return $this;
     }
 
     public function start()
