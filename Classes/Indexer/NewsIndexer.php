@@ -84,7 +84,8 @@ class NewsIndexer extends Indexer
                 'className' => \PAGEmachine\Searchable\Feature\HighlightFeature::class,
                 'config' => [
                     'fields' => [
-                        'subheader',
+                        'title',
+                        'teaser',
                         'bodytext',
                     ],
                 ],
