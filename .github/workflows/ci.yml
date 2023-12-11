@@ -23,13 +23,7 @@ jobs:
         typo3:
           - '^11.5'
         elasticsearch:
-          - '5'
           - '7.17.4'
-        exclude:
-          - php: '8.0'
-            typo3: '^10.4'
-          - php: '8.1'
-            typo3: '^10.4'
 
     steps:
       - uses: actions/checkout@v4
