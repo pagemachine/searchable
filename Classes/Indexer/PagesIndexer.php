@@ -38,8 +38,12 @@ class PagesIndexer extends Indexer
                 'className' => \PAGEmachine\Searchable\Feature\HighlightFeature::class,
                 'config' => [
                     'fields' => [
-                        'subheader',
-                        'bodytext',
+                        'title',
+                        'content' => [
+                            'header',
+                            'subheader',
+                            'bodytext',
+                        ]
                     ],
                 ],
             ],

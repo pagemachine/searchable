@@ -84,7 +84,7 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
         if (!empty($fieldArray)) {
             foreach ($fieldArray as $key => $field) {
                 if (is_array($field)) {
-                    $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
+                    $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key] ?? [], $configuration);
                 } else {
                     $mapping['properties'][$field]['type'] = 'text';
                     $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
