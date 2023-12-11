@@ -224,7 +224,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->stopWebserver();
     }
 
-    protected function assertIndexeEmpty(int $languageId = 0): void
+    protected function assertIndexEmpty(int $languageId = 0): void
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
