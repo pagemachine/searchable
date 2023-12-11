@@ -225,7 +225,7 @@ class ConfigurationManager implements SingletonInterface
             if (in_array(MapperInterface::class, class_implements($indexerConfiguration['config']['mapper']['className']))) {
                 $mapping = ConfigurationMergerService::merge(
                     $indexerConfiguration['config']['mapper']['className']::getMapping($indexerConfiguration),
-                    ($indexerConfiguration['config']['mapping'] ?: [])
+                    $indexerConfiguration['config']['mapping'] ?? [],
                 );
             }
         }
