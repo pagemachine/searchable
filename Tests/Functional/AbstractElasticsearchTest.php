@@ -135,7 +135,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'unlocalized_table' => [
                         'className' => TcaIndexer::class,
                         'config' => [
-                            'type' => 'unlocalized_table',
                             'collector' => [
                                 'config' => [
                                     'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
