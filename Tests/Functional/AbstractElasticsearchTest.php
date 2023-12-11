@@ -35,6 +35,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
+        'typo3conf/ext/news',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/unlocalized_table_test',
     ];
@@ -48,6 +49,82 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      * @var IndexingService
      */
     protected $indexingService;
+
+    /**
+     * @var array
+     */
+    protected $indexers = [
+        'foo_pages' => [
+            'className' => PagesIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'pid' => 1,
+                    ],
+                ],
+            ],
+        ],
+        'bar_pages' => [
+            'className' => PagesIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'pid' => 100,
+                    ],
+                ],
+            ],
+        ],
+        'qux_pages' => [
+            'className' => PagesIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'pid' => 200,
+                    ],
+                ],
+            ],
+        ],
+        'content' => [
+            'className' => TcaIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'table' => 'tt_content',
+                        'pid' => 1,
+                        'fields' => [
+                            'header',
+                        ],
+                    ],
+                ],
+                'preview' => [
+                    'className' => ContentPreviewRenderer::class,
+                ],
+                'link' => [
+                    'className' => TypoLinkBuilder::class,
+                ],
+            ],
+        ],
+        'unlocalized_table' => [
+            'className' => TcaIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
+                        'pid' => 1,
+                        'fields' => [
+                            'title',
+                        ],
+                    ],
+                ],
+                'preview' => [
+                    'className' => NoPreviewRenderer::class,
+                ],
+                'link' => [
+                    'className' => TypoLinkBuilder::class,
+                ],
+            ],
+        ],
+    ];
 
     /**
      * @return void
@@ -81,78 +158,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                         'typo_language' => 1,
                     ],
                 ],
-                'indexers' => [
-                    'foo_pages' => [
-                        'className' => PagesIndexer::class,
-                        'config' => [
-                            'collector' => [
-                                'config' => [
-                                    'pid' => 1,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'bar_pages' => [
-                        'className' => PagesIndexer::class,
-                        'config' => [
-                            'collector' => [
-                                'config' => [
-                                    'pid' => 100,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'qux_pages' => [
-                        'className' => PagesIndexer::class,
-                        'config' => [
-                            'collector' => [
-                                'config' => [
-                                    'pid' => 200,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'content' => [
-                        'className' => TcaIndexer::class,
-                        'config' => [
-                            'collector' => [
-                                'config' => [
-                                    'table' => 'tt_content',
-                                    'pid' => 1,
-                                    'fields' => [
-                                        'header',
-                                    ],
-                                ],
-                            ],
-                            'preview' => [
-                                'className' => ContentPreviewRenderer::class,
-                            ],
-                            'link' => [
-                                'className' => TypoLinkBuilder::class,
-                            ],
-                        ],
-                    ],
-                    'unlocalized_table' => [
-                        'className' => TcaIndexer::class,
-                        'config' => [
-                            'collector' => [
-                                'config' => [
-                                    'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
-                                    'pid' => 1,
-                                    'fields' => [
-                                        'title',
-                                    ],
-                                ],
-                            ],
-                            'preview' => [
-                                'className' => NoPreviewRenderer::class,
-                            ],
-                            'link' => [
-                                'className' => TypoLinkBuilder::class,
-                            ],
-                        ],
-                    ],
-                ],
+                'indexers' => $this->indexers,
             ],
         );
 
