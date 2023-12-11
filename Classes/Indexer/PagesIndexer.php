@@ -43,7 +43,7 @@ class PagesIndexer extends Indexer
                             'header',
                             'subheader',
                             'bodytext',
-                        ]
+                        ],
                     ],
                 ],
             ],

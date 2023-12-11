@@ -81,6 +81,5 @@ final class SearchQueryTest extends AbstractElasticsearchTest
             "<span class='searchable-highlight'>Highlighting</span>",
             $result['hits']['hits'][0]['highlight']['searchable_highlight'][0]
         );
-
     }
 }
