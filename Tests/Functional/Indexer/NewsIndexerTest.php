@@ -32,7 +32,7 @@ final class NewsIndexerTest extends AbstractElasticsearchTest
     /**
      * @test
      */
-    public function searchesByTerm(): void
+    public function indexation(): void
     {
         $this->getDatabaseConnection()->insertArray('tx_news_domain_model_news', [
             'uid' => 2,

@@ -57,8 +57,6 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface
             } else {
                 $this->parameters['index'] =  ExtconfService::getIndex();
             }
-
-           // $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
         }
 
         $this->applyFeatures();

@@ -253,7 +253,6 @@ final class IndexingService
         $this->logger->info(sprintf(
             'Starting "%s" indexing with  indexers',
             $this->runFullIndexing ? 'full' : 'partial'
-            //count($this->scheduledIndexers[0]) this doesnt work  Warning: count(): Parameter must be an array or an object that implements Countable
         ));
 
         foreach ($this->scheduledIndexers as $nameIndex => $indexers) {
