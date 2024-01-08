@@ -87,7 +87,7 @@
             "@analyze:php",
             "@lint:xml"
         ],
-        "lint:php": "parallel-lint --exclude bin --exclude vendor --exclude web .",
+        "lint:php": "parallel-lint --show-deprecated --exclude bin --exclude vendor --exclude web .",
         "lint:style": "phpcs",
         "lint:xml": "xmllint --pattern '*.xlf,*.svg' Resources --ansi",
         "test": [
