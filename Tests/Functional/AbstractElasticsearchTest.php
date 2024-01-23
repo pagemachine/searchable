@@ -151,11 +151,11 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                 'indices' => [
                     $indexEn => [
                         'name' => $indexEn,
-                        'typo_language' => 0,
+                        'typo3_language' => 0,
                     ],
                     $indexDe => [
                         'name' => $indexDe,
-                        'typo_language' => 1,
+                        'typo3_language' => 1,
                     ],
                 ],
                 'indexers' => $this->indexers,

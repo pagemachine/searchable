@@ -100,7 +100,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexLanguage($nameIndex = '')
     {
-        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo_language'];
+        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo3_language'];
 
         if (!isset($language)) {
             throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
@@ -136,7 +136,7 @@ class ExtconfService implements SingletonInterface
         $indices = [];
 
         foreach ($indicesConfiguration as $nameIndex => $index) {
-            if ($index['typo_language'] == $language) {
+            if ($index['typo3_language'] == $language) {
                 $indices[] = $nameIndex;
             }
         }

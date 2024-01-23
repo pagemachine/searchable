@@ -7,7 +7,7 @@ You have to configure it in the `indices` section of the extension configuration
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
   'typo3' => [ // Language key 0, english index
     'name' => 'typo3', //Index name
-    'typo_language' => 0, // Language key 0, english index
+    'typo3_language' => 0, // Language key 0, english index
     'indexer' => ['pages'], // Array of indexers to run. If not defined all indexer will be executed
     'settings' => [
         //Your index settings
@@ -15,7 +15,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
   ],
   'typo3_ger' => [ // Language key 1, german index
     'name' => 'typo3_ger',
-    'typo_language' => 1, // Language key 1, german index
+    'typo3_language' => 1, // Language key 1, german index
     'indexer' => ['pages'], // Array of indexers to run. If not defined all indexer will be executed
     'settings' => [
         //Your index settings
@@ -43,7 +43,7 @@ This is how the index configuration could look like to set up the environment fo
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
   'typo3' => [
     'name' => 'typo3',
-    'typo_language' => $typo_language, //german language key in typo3
+    'typo3_language' => $typo3_language, //german language key in typo3
     'indexer' => ['pages'], // Array of indexers to run. If not defined all indexer will be executed
     'environment' => [
       'language' => 'de',
