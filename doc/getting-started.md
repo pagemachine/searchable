@@ -28,10 +28,7 @@ To create a simple setup for a non-multilanguage page, first configure a **defau
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
   'typo3' => [
     'name' => 'English',
-    'typo3_language' => '0',
-    'indexer' => [
-      'pages',
-    ],
+    'typo3_language' => 0,
   ],
 ];
 ```
