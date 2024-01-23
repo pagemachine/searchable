@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    name: 'PHP ${{ matrix.php }}, TYPO3 ${{ matrix.typo3 }}, Elasticsearch ${{ matrix.elasticsearch }}'
     runs-on: ubuntu-latest
 
     strategy:
