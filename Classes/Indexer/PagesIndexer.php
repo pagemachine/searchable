@@ -11,7 +11,6 @@ class PagesIndexer extends Indexer
      * @var array
      */
     protected static $defaultConfiguration = [
-        'type' => 'pages',
         'collector' => [
             'className' => \PAGEmachine\Searchable\DataCollector\PagesDataCollector::class,
         ],
@@ -39,11 +38,12 @@ class PagesIndexer extends Indexer
                 'className' => \PAGEmachine\Searchable\Feature\HighlightFeature::class,
                 'config' => [
                     'fields' => [
+                        'title',
                         'content' => [
+                            'header',
                             'subheader',
                             'bodytext',
                         ],
-
                     ],
                 ],
             ],
@@ -52,22 +52,15 @@ class PagesIndexer extends Indexer
             ],
         ],
         'mapping' => [
-            '_all' => [
-                'store' => true,
-            ],
             'properties' => [
-                'content' => [
-                    'properties' => [
-                        'header' => [
-                            'type' => 'text',
-                        ],
-                        'subheader' => [
-                            'type' => 'text',
-                        ],
-                        'bodytext' => [
-                            'type' => 'text',
-                        ],
-                    ],
+                'header' => [
+                    'type' => 'text',
+                ],
+                'subheader' => [
+                    'type' => 'text',
+                ],
+                'bodytext' => [
+                    'type' => 'text',
                 ],
             ],
         ],

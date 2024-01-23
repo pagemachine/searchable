@@ -58,6 +58,7 @@ class PagesIndexerTest extends UnitTestCase
         $this->linkBuilder = $this->prophesize(LinkBuilderInterface::class);
 
         $config = [
+            'type' => 'pages',
             'collector' => [
                 'className' => PagesDataCollector::class,
                 'config' => [

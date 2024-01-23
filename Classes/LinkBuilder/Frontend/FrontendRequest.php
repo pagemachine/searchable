@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\LinkBuilder\Frontend;
 
@@ -31,7 +32,6 @@ final class FrontendRequest implements FrontendRequestInterface
                 'http_errors' => false,
             ]
         );
-        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump((string)$response->getBody(), __METHOD__, 8, defined('TYPO3_cliMode') || defined('TYPO3_REQUESTTYPE') && (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI));
         $uris = json_decode((string)$response->getBody(), true);
 
         return $uris;

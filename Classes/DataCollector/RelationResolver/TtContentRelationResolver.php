@@ -82,11 +82,11 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         $queryBuilder->select('uid')
-        ->from('tt_content')
-        ->where(
-            $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
-            $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
-        );
+            ->from('tt_content')
+            ->where(
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
+                $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
+            );
         return $queryBuilder->execute();
     }
 }

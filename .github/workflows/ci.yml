@@ -7,8 +7,6 @@ on:
     tags:
       - '*'
   pull_request:
-    branches:
-     - master
   schedule:
     - cron: '0 7 * * *'
 
@@ -26,12 +24,7 @@ jobs:
         typo3:
           - '^11.5'
         elasticsearch:
-          - '5'
-        exclude:
-          - php: '8.0'
-            typo3: '^10.4'
-          - php: '8.1'
-            typo3: '^10.4'
+          - '7.17.4'
 
     steps:
       - uses: actions/checkout@v4

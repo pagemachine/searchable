@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -116,7 +117,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->type = $type;
     }
 
-
     /**
      * @var int $language
      */
@@ -180,13 +180,16 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
         $this->type = $this->config['type'] ?? null;
 
-        $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
+        if (empty($this->type)) {
+            throw new \Exception('No type set in config for indexer '. $index, 1669133301);
+        }
+
+        $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
         $this->dataCollector = $this->objectManager->get($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
 
         $this->query = $query ?: new BulkQuery(
             $this->index,
-            $this->type,
             $config['pipeline'] ?? null
         );
 

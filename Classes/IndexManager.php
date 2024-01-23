@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
@@ -51,20 +52,27 @@ class IndexManager implements SingletonInterface
 
         $info = [];
 
-        foreach (ExtconfService::getIndices() as $language => $index) {
-            $info[$language] = [
-                'name' => $index,
-                'language' => $language,
-            ];
+        foreach (ExtconfService::getIndices() as $index) {
+            $language = ExtconfService::getIndexLanguage($index);
+            $configKey = ExtconfService::getConfigIndex($index);
+
+            if (empty($info[$configKey])) {
+                $info[$configKey] = [
+                    'name' => ExtconfService::getIndex($index),
+                    'nameIndex' => $index,
+                    'language' => $language,
+                ];
+            };
 
             foreach (ExtconfService::getIndexers() as $name => $config) {
-                $info[$language]['types'][$name] = [
-                    'name' => $name,
-                    'documents' => $this->client->count([
-                        'index' => $index,
-                        'type' => $config['config']['type'],
-                    ])['count'],
-                ];
+                if ($name == ExtconfService::getIndexIndexer($index)) {
+                    $info[$configKey]['types'][$name] = [
+                        'name' => $name,
+                        'documents' => $this->client->count([
+                            'index' => $index,
+                        ])['count'],
+                    ];
+                }
             }
         }
 
@@ -111,8 +119,38 @@ class IndexManager implements SingletonInterface
 
         $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
-        if (!empty($mapping)) {
-            $params['body']['mappings'] = $mapping;
+        $mappingIndexer = [];
+
+        if ($index != 'searchable_updates') {
+            $indexer = ExtconfService::getIndexIndexer($index);
+
+            $mappingIndexer = $mapping[$indexer];
+
+            if ($mappingIndexer['properties']['searchable_meta'] == null) {
+                $mappingIndexer['properties']['searchable_meta'] = [
+                    'properties' => [
+                        'preview' => [
+                            'type' => 'text',
+                        ],
+                        'renderedLink' => [
+                            'type' => 'text',
+                        ],
+                        'linkTitle' => [
+                            'type' => 'text',
+                        ],
+                    ],
+                ];
+            }
+
+            if (!empty($mappingIndexer['_all'])) {
+                unset($mappingIndexer['_all']);
+            }
+
+
+            if (!empty($mapping)) {
+                $params['body']['mappings'] = $mappingIndexer;
+            }
+        } else {
         }
 
         return $this->client->indices()->create($params);

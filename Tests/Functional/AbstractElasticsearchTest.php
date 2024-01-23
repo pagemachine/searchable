@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
@@ -11,7 +12,9 @@ use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
 use PAGEmachine\Searchable\Preview\NoPreviewRenderer;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Service\IndexingService;
+use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -32,6 +35,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
+        'typo3conf/ext/news',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/unlocalized_table_test',
     ];
@@ -47,6 +51,82 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     protected $indexingService;
 
     /**
+     * @var array
+     */
+    protected $indexers = [
+        'foo_pages' => [
+            'className' => PagesIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'pid' => 1,
+                    ],
+                ],
+            ],
+        ],
+        'bar_pages' => [
+            'className' => PagesIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'pid' => 100,
+                    ],
+                ],
+            ],
+        ],
+        'qux_pages' => [
+            'className' => PagesIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'pid' => 200,
+                    ],
+                ],
+            ],
+        ],
+        'content' => [
+            'className' => TcaIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'table' => 'tt_content',
+                        'pid' => 1,
+                        'fields' => [
+                            'header',
+                        ],
+                    ],
+                ],
+                'preview' => [
+                    'className' => ContentPreviewRenderer::class,
+                ],
+                'link' => [
+                    'className' => TypoLinkBuilder::class,
+                ],
+            ],
+        ],
+        'unlocalized_table' => [
+            'className' => TcaIndexer::class,
+            'config' => [
+                'collector' => [
+                    'config' => [
+                        'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
+                        'pid' => 1,
+                        'fields' => [
+                            'title',
+                        ],
+                    ],
+                ],
+                'preview' => [
+                    'className' => NoPreviewRenderer::class,
+                ],
+                'link' => [
+                    'className' => TypoLinkBuilder::class,
+                ],
+            ],
+        ],
+    ];
+
+    /**
      * @return void
      */
     protected function setUp(): void
@@ -54,8 +134,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         parent::setUp();
 
         $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
-        $this->indexNames[0] = sprintf('index_%s_en', $id);
-        $this->indexNames[1] = sprintf('index_%s_de', $id);
+        $indexEn = sprintf('index_%s_en', $id);
+        $indexDe = sprintf('index_%s_de', $id);
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -69,92 +149,20 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indices' => [
-                    0 => [
-                        'name' => $this->indexNames[0],
+                    $indexEn => [
+                        'name' => $indexEn,
+                        'typo3_language' => 0,
                     ],
-                    1 => [
-                        'name' => $this->indexNames[1],
-                    ],
-                ],
-                'indexers' => [
-                    'foo_pages' => [
-                        'className' => PagesIndexer::class,
-                        'config' => [
-                            'type' => 'foo_pages',
-                            'collector' => [
-                                'config' => [
-                                    'pid' => 1,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'bar_pages' => [
-                        'className' => PagesIndexer::class,
-                        'config' => [
-                            'type' => 'bar_pages',
-                            'collector' => [
-                                'config' => [
-                                    'pid' => 100,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'qux_pages' => [
-                        'className' => PagesIndexer::class,
-                        'config' => [
-                            'type' => 'qux_pages',
-                            'collector' => [
-                                'config' => [
-                                    'pid' => 200,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'content' => [
-                        'className' => TcaIndexer::class,
-                        'config' => [
-                            'type' => 'content',
-                            'collector' => [
-                                'config' => [
-                                    'table' => 'tt_content',
-                                    'pid' => 1,
-                                    'fields' => [
-                                        'header',
-                                    ],
-                                ],
-                            ],
-                            'preview' => [
-                                'className' => ContentPreviewRenderer::class,
-                            ],
-                            'link' => [
-                                'className' => TypoLinkBuilder::class,
-                            ],
-                        ],
-                    ],
-                    'unlocalized_table' => [
-                        'className' => TcaIndexer::class,
-                        'config' => [
-                            'type' => 'unlocalized_table',
-                            'collector' => [
-                                'config' => [
-                                    'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
-                                    'pid' => 1,
-                                    'fields' => [
-                                        'title',
-                                    ],
-                                ],
-                            ],
-                            'preview' => [
-                                'className' => NoPreviewRenderer::class,
-                            ],
-                            'link' => [
-                                'className' => TypoLinkBuilder::class,
-                            ],
-                        ],
+                    $indexDe => [
+                        'name' => $indexDe,
+                        'typo3_language' => 1,
                     ],
                 ],
-            ]
+                'indexers' => $this->indexers,
+            ],
         );
+
+        $this->indexNames = ExtconfService::getIndices();
 
         $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 1,
@@ -225,13 +233,18 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
+        $indexe = ExtconfService::getLanguageIndices($languageId);
+        $indexString = implode(',', $indexe);
+        $client->indices()->refresh([
+            'index' => $indexString,
+        ]);
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => $indexString,
         ]);
-        $total = $response['hits']['total'];
+        $total = $response['hits']['total']['value'];
 
-        $this->assertEquals(0, $total, 'Documents in index');
+        $this->assertEquals(0, $total, 'Documents in indexe');
     }
 
     protected function assertDocumentInIndex(int $uid, array $documentSubset = [], int $languageId = 0): void
@@ -260,9 +273,15 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     {
         $client = $this->getElasticsearchClient();
         $this->syncIndices();
+        $indexe = ExtconfService::getLanguageIndices($languageId);
+        $indexString = implode(',', $indexe);
+
+        $client->indices()->refresh([
+            'index' => $indexString,
+        ]);
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => $indexString,
             'body' => [
                 'query' => [
                     'term' => [
@@ -284,10 +303,10 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected function syncIndices(): void
     {
-        $this->getElasticsearchClient()->indices()->flushSynced([
+        $this->getElasticsearchClient()->indices()->flush([
             'index' => implode(',', array_merge(
                 $this->indexNames,
-                [ 'searchable_updates' ]
+                ['searchable_updates']
             )),
         ]);
     }

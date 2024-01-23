@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Mapper;
 
 use PAGEmachine\Searchable\Service\ExtconfService;

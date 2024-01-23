@@ -17,6 +17,7 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface
      * @var array
      */
     protected static $defaultConfiguration = [
+        'field' => 'title',
     ];
 
     /**
@@ -37,7 +38,7 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface
         $parameters['body']['suggest']['suggestion'] = [
             'text' => $query->getTerm(),
             'term' => [
-                'field' => '_all',
+                'field' => $this->config['field'],
             ],
         ];
         $query->setParameters($parameters);

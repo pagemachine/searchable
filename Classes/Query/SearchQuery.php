@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
@@ -187,7 +188,7 @@ class SearchQuery extends AbstractQuery
     /**
      * @var array $searchFields
      */
-    protected $searchFields = ["_all"];
+    protected $searchFields = ["*"];
 
     /**
      * @return array
@@ -229,6 +230,31 @@ class SearchQuery extends AbstractQuery
     public function setTerm($term)
     {
         $this->term = $term;
+
+        return $this;
+    }
+
+
+    /**
+     * @var array $givenIndices
+     */
+    protected $givenIndices = [];
+
+    /**
+     * @return array
+     */
+    public function getGivenIndices()
+    {
+        return $this->givenIndices;
+    }
+
+    /**
+     * @param array $givenIndices
+     * @return SearchQuery
+     */
+    public function setGivenIndices($givenIndices)
+    {
+        $this->givenIndices = $givenIndices;
 
         return $this;
     }
@@ -292,7 +318,7 @@ class SearchQuery extends AbstractQuery
     public function getPageCount()
     {
         if (!empty($this->result)) {
-            return (int)ceil($this->result['hits']['total'] / $this->size);
+            return (int)ceil($this->result['hits']['total']['value'] / $this->size);
         }
 
         return 0;
@@ -319,7 +345,19 @@ class SearchQuery extends AbstractQuery
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();
 
-            $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+            $indices = ExtconfService::getLanguageIndices($language);
+            if (!empty($indices)) {
+                if (empty($this->givenIndices)) {
+                    foreach ($indices as $index) {
+                        $this->parameters['index'] .=  (string) $index . ',';
+                    }
+                } else {
+                    $indices = array_intersect($this->givenIndices, $indices);
+                    foreach ($indices as $index) {
+                        $this->parameters['index'] .=  (string) $index . ',';
+                    }
+                }
+            }
         }
 
         $this->applyFeatures();

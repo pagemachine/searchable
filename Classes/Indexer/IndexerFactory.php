@@ -1,8 +1,10 @@
 <?php
+
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use PAGEmachine\Searchable\UndefinedIndexException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -27,24 +29,47 @@ class IndexerFactory implements SingletonInterface
 
     /**
      * Builds an array of indexers
-     *
+     * @param  string $index
      * @param  int $language
      * @return array
      */
-    public function makeIndexers($language = 0)
+    public function makeIndexers($index = '', $language = 0)
     {
         $indexers = [];
 
-        if (ExtconfService::hasIndex($language)) {
-            $index = ExtconfService::getIndex($language);
+        $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
+
+        $indexerName = ExtconfService::getIndexIndexer($index);
+
+        $indexer = $indexerConfiguration[$indexerName];
+
+        if (empty($indexerName)) {
+            throw new UndefinedIndexException('Indexer '. $indexerName .' for Index ' . $index . ' is not defined!');
+        }
+
+        $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
+
+        return $indexers;
+    }
+
+    public function makeIndexersForSetup($language = 0)
+    {
+        $indexers = [];
+
+        if (!empty(ExtconfService::getLanguageIndices($language))) {
+            $indices = ExtconfService::getLanguageIndices($language);
         } else {
             return [];
         }
 
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
-        foreach ($indexerConfiguration as $indexer) {
-            $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
+        foreach ($indices as $index) {
+            foreach ($indexerConfiguration as $indexer) {
+                if ($indexer['config']['type'] == ExtconfService::getIndexersConfiguration(ExtconfService::getIndexIndexer($index))['type']) {
+                    $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
+                }
+            }
         }
 
         return $indexers;
@@ -52,17 +77,13 @@ class IndexerFactory implements SingletonInterface
 
     /**
      * Builds a single indexer
-     * @param  int $language language to set up
+     * @param  string $index
+     * @param  int $language
      * @param  string  $type     The type the index is for
      * @return IndexerInterface|null
      */
-    public function makeIndexer($language = 0, $type = '')
+    public function makeIndexer($index = '', $language = 0, $type = '')
     {
-        if (ExtconfService::hasIndex($language)) {
-            $index = ExtconfService::getIndex($language);
-        } else {
-            return null;
-        }
 
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 

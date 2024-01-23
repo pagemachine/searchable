@@ -21,6 +21,10 @@
 			<trans-unit id="live_searchbar_description">
 				<source>Use this plugin to include a live search bar (AJAX search-as-you-type)</source>
 			</trans-unit>
+
+			<trans-unit id="searchable_module_timeout">
+				<source>A slow responding Elasticsearch query delayed the action</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
