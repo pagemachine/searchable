@@ -128,9 +128,9 @@ class ExtconfService implements SingletonInterface
      * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
      *
      * @param  int $language
-     * @return array $indicies
+     * @return array $indices
      */
-    public static function getLanguageIndicies($language = 0)
+    public static function getLanguageIndices($language = 0)
     {
         $indicesConfiguration = ExtconfService::getElasticsearchIndices();
         $indices = [];

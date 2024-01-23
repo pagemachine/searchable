@@ -48,10 +48,10 @@ class Search implements SingletonInterface
      * @param  array $options
      * @param  bool $respectLanguage If set, the search will be limited to the current FE language (if there is an index for it) or the default language
      * @param  int $forceLanguage Forces the given language id
-     * @param  array $givenIndicies to search trough
+     * @param  array $givenIndices to search trough
      * @return array
      */
-    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null, $givenIndicies = null)
+    public function search($term, $options = [], $respectLanguage = true, $forceLanguage = null, $givenIndices = null)
     {
         $params = [
             'body' => [
@@ -76,22 +76,22 @@ class Search implements SingletonInterface
         if ($respectLanguage === true) {
             $language = $forceLanguage ?: $this->getLanguageId();
 
-            $indicies = ExtconfService::getLanguageIndicies($language);
-            if (!empty($indicies)) {
-                if (empty($givenIndicies)) {
-                    foreach ($indicies as $index) {
+            $indices = ExtconfService::getLanguageIndices($language);
+            if (!empty($indices)) {
+                if (empty($givenIndices)) {
+                    foreach ($indices as $index) {
                         $params['index'] .=  (string) $index . ',';
                     }
                 } else {
-                    $indicies = array_intersect($givenIndicies, $indicies);
-                    foreach ($indicies as $index) {
+                    $indices = array_intersect($givenIndices, $indices);
+                    foreach ($indices as $index) {
                         $params['index'] .=  (string) $index . ',';
                     }
                 }
             }
         }
-        if (!empty($givenIndicies)) {
-            foreach ($givenIndicies as $index) {
+        if (!empty($givenIndices)) {
+            foreach ($givenIndices as $index) {
                 $params['index'] .=  (string) $index . ',';
             }
         }

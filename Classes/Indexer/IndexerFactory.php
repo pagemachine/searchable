@@ -56,15 +56,15 @@ class IndexerFactory implements SingletonInterface
     {
         $indexers = [];
 
-        if (!empty(ExtconfService::getLanguageIndicies($language))) {
-            $indicies = ExtconfService::getLanguageIndicies($language);
+        if (!empty(ExtconfService::getLanguageIndices($language))) {
+            $indices = ExtconfService::getLanguageIndices($language);
         } else {
             return [];
         }
 
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
-        foreach ($indicies as $index) {
+        foreach ($indices as $index) {
             foreach ($indexerConfiguration as $indexer) {
                 if ($indexer['config']['type'] == ExtconfService::getIndexersConfiguration(ExtconfService::getIndexIndexer($index))['type']) {
                     $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
