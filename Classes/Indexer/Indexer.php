@@ -275,7 +275,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
-        TsfeUtility::createTSFE();
+        TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null);
 
         $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 

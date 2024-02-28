@@ -24,10 +24,10 @@ class TsfeUtility
      *
      * @return    void
      */
-    public static function createTSFE()
+    public static function createTSFE(string $siteIdentifier = null)
     {
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
-        $site = array_values($siteFinder->getAllSites())[0] ?? null;
+        $site = $siteIdentifier ? $siteFinder->getSiteByIdentifier($siteIdentifier) : array_values($siteFinder->getAllSites())[0] ?? null;
 
         if ($site === null) {
             throw new \RuntimeException('No site found for TSFE setup', 1610444900);

@@ -42,3 +42,16 @@ Let's create a simple setup for page indexing:
 
 That's it. This simply defines a new type (*"pages"*) and tells searchable to use the predefined `PagesIndexer` class for indexing.
 For extension content you need to define some more details, but the `PagesIndexer` contains a lot of default configuration to simplify the job.
+
+## Site support
+
+By default indexing will use the first site (as returned by the `SiteFinder`) which may lead to unexpected results, e.g. when using Fluid for preview rendering and Typolink.
+
+A specific site can be configured for each indexer using the `siteIdentifier` configuration option:
+
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['pages'] = [
+        'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class,
+        'config' => [
+            'siteIdentifier' => 'foo',
+        ],
+    ];
