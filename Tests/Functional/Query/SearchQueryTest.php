@@ -19,19 +19,19 @@ final class SearchQueryTest extends AbstractElasticsearchTest
     public function searchesByTerm(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 2,
+            'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 3,
+            'uid' => 4,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Another test page',
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 4,
+            'uid' => 5,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Unrelated page',
@@ -46,7 +46,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         $result = $query->execute();
 
         $this->assertEquals(2, $result['hits']['total']);
-        $this->assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
-        $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
+        $this->assertEquals('Test page', $result['hits']['hits'][1]['_source']['title']);
+        $this->assertEquals('Another test page', $result['hits']['hits'][0]['_source']['title']);
     }
 }

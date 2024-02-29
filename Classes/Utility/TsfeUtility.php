@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Utility;
 
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspectFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
@@ -24,7 +25,7 @@ class TsfeUtility
      *
      * @return    void
      */
-    public static function createTSFE(string $siteIdentifier = null)
+    public static function createTSFE(string $siteIdentifier = null, int $languageId = null)
     {
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
         $site = $siteIdentifier ? $siteFinder->getSiteByIdentifier($siteIdentifier) : array_values($siteFinder->getAllSites())[0] ?? null;
@@ -33,14 +34,19 @@ class TsfeUtility
             throw new \RuntimeException('No site found for TSFE setup', 1610444900);
         }
 
+        $siteLanguage = $languageId !== null ? $site->getLanguageById($languageId) : $site->getDefaultLanguage();
+
         $requestFactory = GeneralUtility::makeInstance(ServerRequestFactory::class);
         $request = $requestFactory->createServerRequest('get', 'http://localhost')
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
             ->withAttribute('site', $site)
-            ->withAttribute('language', $site->getDefaultLanguage())
+            ->withAttribute('language', $siteLanguage)
             ->withAttribute('routing', new PageArguments($site->getRootPageId(), '0', []))
             ->withAttribute('frontend.user', GeneralUtility::makeInstance(FrontendUserAuthentication::class));
         $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        $context = GeneralUtility::makeInstance(Context::class);
+        $context->setAspect('language', LanguageAspectFactory::createFromSiteLanguage($siteLanguage));
 
         $frontendController = GeneralUtility::makeInstance(
             TypoScriptFrontendController::class,

@@ -55,3 +55,5 @@ A specific site can be configured for each indexer using the `siteIdentifier` co
             'siteIdentifier' => 'foo',
         ],
     ];
+
+Also there must be a language in the site with an `languageId` matching each index language.

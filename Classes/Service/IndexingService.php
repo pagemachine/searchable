@@ -11,10 +11,7 @@ use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Log\LogManager;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
@@ -329,18 +326,10 @@ final class IndexingService
         $GLOBALS['BE_USER']->uc['lang'] = $environment['language'];
         setlocale(LC_ALL, $environment['locale']);
 
-        $context = GeneralUtility::makeInstance(Context::class);
-        $originalLanguageAspect = $context->getAspect('language');
-
-        $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale, $originalLanguageAspect): void {
+        $restoreEnvironment = function () use ($originalUserLanguage, $originalLocale): void {
             $GLOBALS['BE_USER']->uc['lang'] = $originalUserLanguage;
             setlocale(LC_ALL, $originalLocale);
-
-            $context = GeneralUtility::makeInstance(Context::class);
-            $context->setAspect('language', $originalLanguageAspect);
         };
-
-        $context->setAspect('language', new LanguageAspect($languageUid));
 
         return $restoreEnvironment;
     }
