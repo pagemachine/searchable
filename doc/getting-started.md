@@ -56,4 +56,4 @@ A specific site can be configured for each indexer using the `siteIdentifier` co
         ],
     ];
 
-Also there must be a language in the site with an `languageId` matching each index language.
+Also there should be a language in the site with an `languageId` matching each index language, otherwise the default site language will be used as fallback.

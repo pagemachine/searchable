@@ -5,6 +5,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspectFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -34,7 +35,16 @@ class TsfeUtility
             throw new \RuntimeException('No site found for TSFE setup', 1610444900);
         }
 
-        $siteLanguage = $languageId !== null ? $site->getLanguageById($languageId) : $site->getDefaultLanguage();
+        $siteLanguage = $site->getDefaultLanguage();
+
+        if ($languageId !== null) {
+            try {
+                $siteLanguage = $site->getLanguageById($languageId);
+            } catch (\InvalidArgumentException $e) {
+                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
+                $logger->warning(sprintf('Falling back to default language of site "%s": %s', $site->getIdentifier(), $e->getMessage()));
+            }
+        }
 
         $requestFactory = GeneralUtility::makeInstance(ServerRequestFactory::class);
         $request = $requestFactory->createServerRequest('get', 'http://localhost')
