@@ -2,8 +2,10 @@
 namespace PAGEmachine\Searchable\Utility;
 
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspectFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -24,23 +26,37 @@ class TsfeUtility
      *
      * @return    void
      */
-    public static function createTSFE()
+    public static function createTSFE(string $siteIdentifier = null, int $languageId = null)
     {
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
-        $site = array_values($siteFinder->getAllSites())[0] ?? null;
+        $site = $siteIdentifier ? $siteFinder->getSiteByIdentifier($siteIdentifier) : array_values($siteFinder->getAllSites())[0] ?? null;
 
         if ($site === null) {
             throw new \RuntimeException('No site found for TSFE setup', 1610444900);
+        }
+
+        $siteLanguage = $site->getDefaultLanguage();
+
+        if ($languageId !== null) {
+            try {
+                $siteLanguage = $site->getLanguageById($languageId);
+            } catch (\InvalidArgumentException $e) {
+                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
+                $logger->warning(sprintf('Falling back to default language of site "%s": %s', $site->getIdentifier(), $e->getMessage()));
+            }
         }
 
         $requestFactory = GeneralUtility::makeInstance(ServerRequestFactory::class);
         $request = $requestFactory->createServerRequest('get', 'http://localhost')
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
             ->withAttribute('site', $site)
-            ->withAttribute('language', $site->getDefaultLanguage())
+            ->withAttribute('language', $siteLanguage)
             ->withAttribute('routing', new PageArguments($site->getRootPageId(), '0', []))
             ->withAttribute('frontend.user', GeneralUtility::makeInstance(FrontendUserAuthentication::class));
         $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        $context = GeneralUtility::makeInstance(Context::class);
+        $context->setAspect('language', LanguageAspectFactory::createFromSiteLanguage($siteLanguage));
 
         $frontendController = GeneralUtility::makeInstance(
             TypoScriptFrontendController::class,

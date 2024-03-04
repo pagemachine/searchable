@@ -162,6 +162,14 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
             'title' => 'Foo Root',
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
+            'uid' => 2,
+            'pid' => 1,
+            'sys_language_uid' => 1,
+            'l10n_parent' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Dansk Foo Root',
+        ]);
+        $this->getDatabaseConnection()->insertArray('pages', [
             'uid' => 100,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Bar Root',

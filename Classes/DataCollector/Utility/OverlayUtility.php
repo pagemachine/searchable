@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
-use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -32,8 +31,6 @@ class OverlayUtility implements SingletonInterface
      */
     public function __construct(PageRepository $pageRepository = null)
     {
-        TsfeUtility::createTSFE();
-
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
     }
 

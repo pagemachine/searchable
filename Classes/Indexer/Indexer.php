@@ -9,6 +9,7 @@ use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -274,6 +275,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
+        TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
+
         $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;

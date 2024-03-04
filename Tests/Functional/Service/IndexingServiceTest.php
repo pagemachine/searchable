@@ -51,7 +51,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     public function indexesRecordsFully(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 2,
+            'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
@@ -63,7 +63,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->indexingService->indexFull();
 
         $this->assertDocumentInIndex(
-            2,
+            3,
             [
                 'title' => 'Test page',
                 'searchable_meta' => [
@@ -79,17 +79,17 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     public function indexesRecordTranslations(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 2,
+            'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
             'slug' => '/test-page/',
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 3,
+            'uid' => 4,
             'pid' => 1,
             'sys_language_uid' => 1,
-            'l10n_parent' => 2,
+            'l10n_parent' => 3,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Translated test page',
             'slug' => '/translated-test-page/',
@@ -101,7 +101,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->indexingService->indexFull();
 
         $this->assertDocumentInIndex(
-            2,
+            3,
             [
                 'title' => 'Translated test page',
                 'searchable_meta' => [
@@ -164,7 +164,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     public function indexesRecordsPartially(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 2,
+            'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
@@ -174,7 +174,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->indexingService->indexFull();
 
         $this->assertDocumentInIndex(
-            2,
+            3,
             [
                 'title' => 'Test page',
             ]
@@ -188,7 +188,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
                 'title' => 'Updated test page',
             ],
             [
-                'uid' => 2,
+                'uid' => 3,
             ]
         );
 
@@ -197,7 +197,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->indexingService->indexPartial();
 
         $this->assertDocumentInIndex(
-            2,
+            3,
             [
                 'title' => 'Updated test page',
             ]
@@ -210,28 +210,28 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 2,
+            'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'First page to exclude',
             'no_search' => 1,
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 3,
-            'pid' => 2,
+            'uid' => 4,
+            'pid' => 3,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'First regular page',
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 4,
-            'pid' => 3,
+            'uid' => 5,
+            'pid' => 4,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Second page to exclude',
             'no_search' => 1,
         ]);
         $this->getDatabaseConnection()->insertArray('pages', [
-            'uid' => 5,
-            'pid' => 4,
+            'uid' => 6,
+            'pid' => 5,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Second regular page',
         ]);
@@ -240,10 +240,10 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
 
         $this->indexingService->indexFull();
 
-        $this->assertDocumentNotInIndex(2);
-        $this->assertDocumentInIndex(3);
-        $this->assertDocumentNotInIndex(4);
-        $this->assertDocumentInIndex(5);
+        $this->assertDocumentNotInIndex(3);
+        $this->assertDocumentInIndex(4);
+        $this->assertDocumentNotInIndex(5);
+        $this->assertDocumentInIndex(6);
     }
 
     /**
