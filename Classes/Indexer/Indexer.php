@@ -318,6 +318,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function runUpdate()
     {
+        TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
+
         $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;
