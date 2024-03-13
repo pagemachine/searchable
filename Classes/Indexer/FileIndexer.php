@@ -4,7 +4,9 @@ namespace PAGEmachine\Searchable\Indexer;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-
+use PAGEmachine\Searchable\DataCollector\FileDataCollector;
+use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;
+use PAGEmachine\Searchable\Mapper\DefaultMapper;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -21,13 +23,13 @@ class FileIndexer extends TcaIndexer
         'fileField' => 'file',
         'bulkSize' => 2,
         'collector' => [
-            'className' => \PAGEmachine\Searchable\DataCollector\FileDataCollector::class,
+            'className' => FileDataCollector::class,
         ],
         'link' => [
-            'className' => \PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder::class,
+            'className' => FileLinkBuilder::class,
         ],
         'mapper' => [
-            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class,
+            'className' => DefaultMapper::class,
         ],
         'mapping' => [
             '_all' => [
@@ -58,7 +60,7 @@ class FileIndexer extends TcaIndexer
                             'filename' => $file->getProperty('name'),
                             'data' => base64_encode($file->getContents()),
                         ];
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         // The actual file on disk does not exist for this file record.
                         // This should be logged, but for now we just skip it.
                         unset($records[$key]);

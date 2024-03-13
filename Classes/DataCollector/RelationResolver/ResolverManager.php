@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 
+use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 
@@ -18,8 +20,8 @@ class ResolverManager implements SingletonInterface
      */
     protected $relationResolvers = [
         'FormEngine' => [
-            'select' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver::class,
-            'inline' => \PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver::class,
+            'select' => SelectRelationResolver::class,
+            'inline' => InlineRelationResolver::class,
         ],
 
     ];

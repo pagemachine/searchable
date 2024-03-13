@@ -1,23 +1,23 @@
 <?php
 namespace PAGEmachine\Searchable\Enumeration;
 
+use TYPO3\CMS\Core\Type\Enumeration;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-
-class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
+class TcaType extends Enumeration
 {
-    const INPUT = "input";
-    const TEXT = "text";
-    const CHECK = "check";
-    const RADIO = "radio";
-    const SELECT = "select";
-    const GROUP = "group";
-    const NONE = "none";
-    const PASSTHROUGH = "passthrough";
-    const USER = "user";
-    const FLEX = "flex";
-    const INLINE = "inline";
+    public const INPUT = "input";
+    public const TEXT = "text";
+    public const CHECK = "check";
+    public const RADIO = "radio";
+    public const SELECT = "select";
+    public const GROUP = "group";
+    public const NONE = "none";
+    public const PASSTHROUGH = "passthrough";
+    public const USER = "user";
+    public const FLEX = "flex";
+    public const INLINE = "inline";
 
     /**
      * Returns true if the type is of plain mapping type (supported type with no relations)
@@ -73,16 +73,10 @@ class TcaType extends \TYPO3\CMS\Core\Type\Enumeration
      */
     public function convertToESType()
     {
-        switch ($this->__toString()) {
-            case self::INPUT:
-            case self::TEXT:
-                return 'text';
-
-            case self::RADIO:
-                return 'keyword';
-
-            default:
-                return 'text';
-        }
+        return match ($this->__toString()) {
+            self::INPUT, self::TEXT => 'text',
+            self::RADIO => 'keyword',
+            default => 'text',
+        };
     }
 }

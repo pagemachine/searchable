@@ -44,7 +44,7 @@ class OverlayUtility implements SingletonInterface
      * @param  mixed          $overlayMode
      * @return array
      */
-    public function languageOverlay($table, $record, $language, $fieldWhitelist = [], $overlayMode = 1)
+    public function languageOverlay($table, $record, $language, $fieldWhitelist = [], mixed $overlayMode = 1)
     {
         $tca = $GLOBALS['TCA'][$table];
 

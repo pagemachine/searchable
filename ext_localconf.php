@@ -1,5 +1,5 @@
 <?php
-if (!defined('TYPO3_MODE')) {
+if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
@@ -105,7 +105,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
         )->get('searchable');
-    } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
+    } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException) {
         $extensionConfiguration = [];
     }
 

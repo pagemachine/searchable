@@ -41,7 +41,7 @@ class TsfeUtility
             try {
                 $siteLanguage = $site->getLanguageById($languageId);
             } catch (\InvalidArgumentException $e) {
-                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
+                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
                 $logger->warning(sprintf('Falling back to default language of site "%s": %s', $site->getIdentifier(), $e->getMessage()));
             }
         }

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Service;
 
+use Psr\Log\LoggerInterface;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Events\AfterIndexRunEvent;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
@@ -15,7 +16,7 @@ use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
-final class IndexingService
+final class IndexingService implements \Stringable
 {
     /**
      * @var IndexerFactory $indexerFactory
@@ -73,7 +74,7 @@ final class IndexingService
      */
     public function injectLogManager(LogManager $logManager): void
     {
-        $this->logger = $logManager->getLogger(__CLASS__);
+        $this->logger = $logManager->getLogger(self::class);
     }
 
     /**
@@ -119,7 +120,7 @@ final class IndexingService
             $this->logger->error(sprintf(
                 'Invalid indexers configuration: %s [%s]',
                 $e->getMessage(),
-                get_class($e)
+                $e::class
             ));
 
             return;
@@ -279,7 +280,7 @@ final class IndexingService
             'memoryUsage' => memory_get_peak_usage(true) / 1000000,
         ]);
 
-        $this->signalDispatcher->dispatch(__CLASS__, 'afterIndexRun', [
+        $this->signalDispatcher->dispatch(self::class, 'afterIndexRun', [
             $this->runFullIndexing,
             $elapsedTime,
         ]);
@@ -360,6 +361,6 @@ final class IndexingService
 
     public function __toString(): string
     {
-        return __CLASS__;
+        return self::class;
     }
 }

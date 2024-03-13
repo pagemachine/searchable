@@ -4,7 +4,8 @@ namespace PAGEmachine\Searchable\Database\Query;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-
+use PAGEmachine\Searchable\Database\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;
 use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
@@ -15,7 +16,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 class QueryBuilder extends BaseQueryBuilder
 {
     /**
-     * @var \PAGEmachine\Searchable\Database\Connection
+     * @var Connection
      */
     protected $connection;
 
@@ -27,7 +28,7 @@ class QueryBuilder extends BaseQueryBuilder
     /**
      * Executes this query using the bound parameters and their types.
      *
-     * @return \Doctrine\DBAL\Driver\Statement|int
+     * @return Statement|int
      */
     public function execute()
     {

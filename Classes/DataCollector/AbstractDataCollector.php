@@ -183,7 +183,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
 
         if (!empty($this->config['subCollectors'])) {
             foreach ($this->config['subCollectors'] as $key => $subtypeConfig) {
-                $subtypeCollectorClass = $subtypeConfig['className'] ?: get_class($this);
+                $subtypeCollectorClass = $subtypeConfig['className'] ?: static::class;
 
                 $subCollector = $this->buildSubCollector($subtypeCollectorClass, $subtypeConfig['config']);
 

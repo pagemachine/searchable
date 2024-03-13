@@ -10,8 +10,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FieldListUtility implements SingletonInterface
 {
-    const MODE_WHITELIST = 'whitelist';
-    const MODE_BLACKLIST = 'blacklist';
+    public const MODE_WHITELIST = 'whitelist';
+    public const MODE_BLACKLIST = 'blacklist';
 
     /**
      * @return FieldListUtility

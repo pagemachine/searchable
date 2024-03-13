@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
@@ -58,7 +59,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     protected $query;
 
     /**
-     * @var \PAGEmachine\Searchable\DataCollector\DataCollectorInterface
+     * @var DataCollectorInterface
      */
     protected $dataCollector;
 
@@ -188,7 +189,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->query = $query ?: new BulkQuery(
             $this->index,
             $this->type,
-            $config['pipeline'] ?? null
+            $this->config['pipeline'] ?? null
         );
 
         $this->setPreviewRenderer($previewRenderer);

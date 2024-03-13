@@ -20,7 +20,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
 {
     /**
      *
-     * @var \TYPO3\CMS\Core\Domain\Repository\PageRepository
+     * @var PageRepository
      */
     protected $pageRepository;
 

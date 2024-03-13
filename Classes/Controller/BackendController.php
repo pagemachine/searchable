@@ -1,6 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
@@ -21,6 +25,9 @@ class BackendController extends ActionController
      * @var IndexerFactory $indexerFactory
      */
     protected $indexerFactory;
+    public function __construct(private readonly ModuleTemplateFactory $moduleTemplateFactory)
+    {
+    }
 
     /**
      * @param IndexerFactory $indexerFactory
@@ -42,8 +49,9 @@ class BackendController extends ActionController
      *
      * @return void
      */
-    public function startAction()
+    public function startAction(): ResponseInterface
     {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         try {
             $this->view->assign("updates", $this->fetchScheduledUpdates());
 
@@ -52,8 +60,10 @@ class BackendController extends ActionController
             $this->view->assign("health", $stats['health']);
             $this->view->assign("indices", $stats['indices']);
         } catch (\Exception $e) {
-            $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR);
+            $this->addFlashMessage($e->getMessage(), $e::class, ContextualFeedbackSeverity::ERROR);
         }
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
     }
 
     /**
@@ -86,12 +96,15 @@ class BackendController extends ActionController
      * @param string $term
      * @return void
      */
-    public function searchAction($term)
+    public function searchAction($term): ResponseInterface
     {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $result = Search::getInstance()->search($term);
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
     }
 
     /**
@@ -101,24 +114,19 @@ class BackendController extends ActionController
      * @param  string $body
      * @return void
      */
-    public function requestAction($url = '', $body = '')
+    public function requestAction($url = '', $body = ''): ResponseInterface
     {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         if ($url != '') {
             $result = $this->request($url, $body);
 
-            $this->view->assign('response', json_decode($result['body'], true));
+            $this->view->assign('response', json_decode((string) $result['body'], true));
 
-            switch ($result['status']) {
-                case '200':
-                    $resultColor = 'success';
-                    break;
-                case '404':
-                    $resultColor = 'danger';
-                    break;
-                default:
-                    $resultColor = 'warning';
-                    break;
-            }
+            $resultColor = match ($result['status']) {
+                '200' => 'success',
+                '404' => 'danger',
+                default => 'warning',
+            };
 
             $this->view->assignMultiple([
                 'status' => $result['status'],
@@ -131,6 +139,8 @@ class BackendController extends ActionController
 
         $this->view->assign("url", $url);
         $this->view->assign("body", $body);
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
     }
 
     /**
@@ -142,7 +152,7 @@ class BackendController extends ActionController
      */
     protected function request($url, $body)
     {
-        $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
+        $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
 
         $response = $requestFactory->request(
             $url,
@@ -156,6 +166,4 @@ class BackendController extends ActionController
         return [
             'status' => $response->getStatusCode(),
             'body' => $response->getBody()->getContents(),
-        ];
-    }
-}
+      
