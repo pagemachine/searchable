@@ -38,13 +38,6 @@ class BackendController extends ActionController
     }
 
     /**
-     * Backend Template Container
-     *
-     * @var string
-     */
-    protected $defaultViewObjectName = BackendTemplateView::class;
-
-    /**
      * Backend controller overview action to show general information about the elasticsearch instance
      *
      * @return void
@@ -166,4 +159,6 @@ class BackendController extends ActionController
         return [
             'status' => $response->getStatusCode(),
             'body' => $response->getBody()->getContents(),
-      
+        ];
+    }
+}

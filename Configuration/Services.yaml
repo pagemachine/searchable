@@ -4,6 +4,10 @@ services:
     autoconfigure: true
     public: false
 
+  PAGEmachine\Searchable\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
+
   PAGEmachine\Searchable\Command\Index\UpdateFullCommand:
     tags:
       - name: console.command

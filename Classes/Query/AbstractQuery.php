@@ -5,7 +5,7 @@ use TYPO3\CMS\Core\Log\LogManager;
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
-use TYPO3\CMS\Core\Log\Logger;
+use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -85,11 +85,6 @@ abstract class AbstractQuery implements QueryInterface
     protected $client;
 
     /**
-     * @var Logger
-     */
-    protected $logger;
-
-    /**
      * Features
      *
      * @var array
@@ -150,10 +145,9 @@ abstract class AbstractQuery implements QueryInterface
      * @param Logger|null $logger
      * @param array $features
      */
-    public function __construct(Client $client = null, Logger $logger = null, $features = null)
+    public function __construct(private readonly LoggerInterface $logger, Client $client = null, $features = null)
     {
         $this->client = $client ?: Connection::getClient();
-        $this->logger = $logger ?: GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
 
         // Use get_class() instead of static self::class to retrieve the inherited child classname
         $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(static::class)['features'] ?? [];

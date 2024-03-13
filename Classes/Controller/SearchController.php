@@ -87,3 +87,4 @@ class SearchController extends ActionController
         ]);
         return $this->htmlResponse();
     }
+}
