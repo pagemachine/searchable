@@ -3,7 +3,6 @@ namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -30,13 +29,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
     {
         return static::$defaultConfiguration;
     }
-
-    /**
-     * ObjectManager
-     *
-     * @var ObjectManager
-     */
-    protected $objectManager;
 
 
     /**
@@ -147,19 +139,16 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      *
      * @param array $configuration
      * @param int $language
-     * @param ObjectManager $objectManager
      */
-    public function __construct($configuration = [], $language = 0, ObjectManager $objectManager = null)
+    public function __construct($configuration = [], $language = 0)
     {
         $this->language = $language;
-
-        $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
 
         $this->config = $configuration;
 
         if (!empty($this->config['features'])) {
             foreach ($this->config['features'] as $key => $featureConfig) {
-                $this->features[$key] = $this->objectManager->get($featureConfig['className'], $featureConfig['config']);
+                $this->features[$key] = GeneralUtility::makeInstance($featureConfig['className'], $featureConfig['config']);
             }
         }
     }
@@ -202,7 +191,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function buildSubCollector($classname, $collectorConfig = [])
     {
-        $subCollector = $this->objectManager->get($classname, $collectorConfig, $this->language);
+        $subCollector = GeneralUtility::makeInstance($classname, $collectorConfig, $this->language);
 
         return $subCollector;
     }

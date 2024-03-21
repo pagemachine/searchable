@@ -145,7 +145,7 @@ abstract class AbstractQuery implements QueryInterface
      * @param Logger|null $logger
      * @param array $features
      */
-    public function __construct(private readonly LoggerInterface $logger, Client $client = null, $features = null)
+    public function __construct(protected readonly LoggerInterface $logger, Client $client = null, $features = null)
     {
         $this->client = $client ?: Connection::getClient();
 
