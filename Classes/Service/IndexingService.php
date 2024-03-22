@@ -44,19 +44,6 @@ final class IndexingService implements \Stringable
         $this->persistenceManager = $persistenceManager;
     }
 
-    /**
-     * @var Dispatcher $signalDispatcher
-     */
-    protected $signalDispatcher;
-
-    /**
-     * @param Dispatcher $signalDispatcher
-     */
-    public function injectSignalDispatcher(Dispatcher $signalDispatcher)
-    {
-        $this->signalDispatcher = $signalDispatcher;
-    }
-
     private EventDispatcherInterface $eventDispatcher;
 
     public function injectEventDispatcher(EventDispatcherInterface $eventDispatcher)
@@ -280,10 +267,6 @@ final class IndexingService implements \Stringable
             'memoryUsage' => memory_get_peak_usage(true) / 1000000,
         ]);
 
-        $this->signalDispatcher->dispatch(self::class, 'afterIndexRun', [
-            $this->runFullIndexing,
-            $elapsedTime,
-        ]);
         $this->eventDispatcher->dispatch(new AfterIndexRunEvent(
             $this->runFullIndexing,
             $elapsedTime
