@@ -5,6 +5,7 @@ use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
@@ -61,6 +62,19 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         ],
     ];
+
+    /**
+     * @var PageRepository $pageRepository
+     */
+    protected $pageRepository;
+
+    /**
+     * @param PageRepository $pageRepository
+     */
+    public function injectPageRepository(PageRepository $pageRepository): void
+    {
+        $this->pageRepository = $pageRepository;
+    }
 
     /**
      * Cache string for database merged doktypes

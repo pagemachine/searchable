@@ -140,7 +140,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * @param array $configuration
      * @param int $language
      */
-    public function __construct($configuration = [], $language = 0)
+    public function init($configuration = [], $language = 0)
     {
         $this->language = $language;
 
@@ -151,13 +151,7 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
                 $this->features[$key] = GeneralUtility::makeInstance($featureConfig['className'], $featureConfig['config']);
             }
         }
-    }
 
-    /**
-     * @return void
-     */
-    public function initializeObject()
-    {
         $this->buildSubCollectors();
     }
 
@@ -191,7 +185,8 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     public function buildSubCollector($classname, $collectorConfig = [])
     {
-        $subCollector = GeneralUtility::makeInstance($classname, $collectorConfig, $this->language);
+        $subCollector = GeneralUtility::makeInstance($classname);
+        $subCollector->init($collectorConfig, $this->language);
 
         return $subCollector;
     }

@@ -27,3 +27,12 @@ services:
     tags:
       - name: console.command
         command: index:setup
+
+  PAGEmachine\Searchable\DataCollector\TcaDataCollector:
+    public: true
+
+  PAGEmachine\Searchable\DataCollector\PagesDataCollector:
+    public: true
+
+  PAGEmachine\Searchable\DataCollector\FileDataCollector:
+    public: true

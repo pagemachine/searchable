@@ -11,7 +11,6 @@ use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -24,21 +23,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface
 {
     /**
-     * @var PageRepository $pageRepository
-     */
-    protected $pageRepository;
-
-    /**
      * @var ResolverManager $resolverManager
      */
     protected $resolverManager;
 
-    public function __construct(...$args)
+    /**
+     * @param ResolverManager $resolverManager
+     */
+    public function injectResolverManager(ResolverManager $resolverManager): void
     {
-        $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $this->resolverManager = GeneralUtility::makeInstance(ResolverManager::class);
-
-        parent::__construct(...$args);
+        $this->resolverManager = $resolverManager;
     }
 
     /**
