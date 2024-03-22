@@ -8,7 +8,7 @@ namespace PAGEmachine\Searchable\Query;
 /**
  * Helper class to build up the parameter array for bulk indexing
  */
-class BulkQuery extends AbstractQuery
+class BulkQuery
 {
     /**
      * @var string $index
@@ -84,8 +84,6 @@ class BulkQuery extends AbstractQuery
      */
     public function __construct($index, $type, $pipeline = null)
     {
-        parent::__construct();
-
         $this->index = $index;
         $this->type = $type;
         $this->pipeline = $pipeline;
