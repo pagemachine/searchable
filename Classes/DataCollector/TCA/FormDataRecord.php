@@ -37,7 +37,7 @@ class FormDataRecord implements SingletonInterface
     public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null)
     {
         $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(SearchableRecordGroup::class);
-        $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
+        $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class);
     }
 
     /**
@@ -70,7 +70,7 @@ class FormDataRecord implements SingletonInterface
              * @throws DatabaseRecordException
              * @throws DatabaseDefaultLanguageException
              */
-            $data = $this->formDataCompiler->compile($formDataCompilerInput);
+            $data = $this->formDataCompiler->compile($formDataCompilerInput, $this->formDataGroup);
         //Be nice and catch all errors related to inconsistent data (sometimes strange things happen with extbase relations)
         } catch (DatabaseRecordException) {
             $data = [];
