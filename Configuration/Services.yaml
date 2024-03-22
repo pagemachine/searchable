@@ -36,3 +36,19 @@ services:
 
   PAGEmachine\Searchable\DataCollector\FileDataCollector:
     public: true
+
+
+  PAGEmachine\Searchable\Preview\DefaultPreviewRenderer:
+    public: true
+
+  PAGEmachine\Searchable\Preview\FluidPreviewRenderer:
+    public: true
+
+  PAGEmachine\Searchable\Preview\NoPreviewRenderer:
+    public: true
+
+  PAGEmachine\Searchable\Preview\PreviewRendererInterface:
+    public: true
+
+  PAGEmachine\Searchable\Preview\SimplePreviewRenderer:
+    public: true

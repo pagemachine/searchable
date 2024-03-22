@@ -40,7 +40,7 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface
     /**
      * @param array $config
      */
-    public function __construct($config)
+    public function init($config)
     {
         $this->config = $config;
     }

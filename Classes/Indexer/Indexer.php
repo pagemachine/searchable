@@ -198,9 +198,11 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         } else {
             if (isset($this->config['preview'])) {
                 if (!empty($this->config['preview']['className'])) {
-                    $this->previewRenderer = GeneralUtility::makeInstance($this->config['preview']['className'], $this->config['preview']['config']);
+                    $this->previewRenderer = GeneralUtility::makeInstance($this->config['preview']['className']);
+                    $this->previewRenderer->init($this->config['preview']['config']);
                 } else {
-                    $this->previewRenderer = GeneralUtility::makeInstance(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+                    $this->previewRenderer = GeneralUtility::makeInstance(DefaultPreviewRenderer::class);
+                    $this->previewRenderer->init($this->config['preview']['config']);
                 }
             }
         }
