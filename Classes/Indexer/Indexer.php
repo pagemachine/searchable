@@ -239,7 +239,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
         if (!empty($features)) {
             foreach ($features as $key => $featureConfig) {
-                $this->features[$key] = GeneralUtility::makeInstance($featureConfig['className'], $featureConfig['config']);
+                $feature = GeneralUtility::makeInstance($featureConfig['className']);
+                $feature->init($featureConfig['config']);
+                $this->features[$key] = $feature;
             }
         }
     }
@@ -267,7 +269,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
-        TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
+        // TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
 
         $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 

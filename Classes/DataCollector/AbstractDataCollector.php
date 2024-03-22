@@ -148,7 +148,9 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
 
         if (!empty($this->config['features'])) {
             foreach ($this->config['features'] as $key => $featureConfig) {
-                $this->features[$key] = GeneralUtility::makeInstance($featureConfig['className'], $featureConfig['config']);
+                $feature = GeneralUtility::makeInstance($featureConfig['className']);
+                $feature->init($featureConfig['config']);
+                $this->features[$key] = $feature;
             }
         }
 

@@ -41,7 +41,7 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
     /**
      * @param array $config
      */
-    public function __construct($config = null)
+    public function init($config = null)
     {
         $this->config = $config;
     }

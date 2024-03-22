@@ -28,6 +28,7 @@ services:
       - name: console.command
         command: index:setup
 
+
   PAGEmachine\Searchable\DataCollector\TcaDataCollector:
     public: true
 
@@ -51,4 +52,17 @@ services:
     public: true
 
   PAGEmachine\Searchable\Preview\SimplePreviewRenderer:
+    public: true
+
+
+  PAGEmachine\Searchable\Feature\CompletionSuggestFeature:
+    public: true
+
+  PAGEmachine\Searchable\Feature\HighlightFeature:
+    public: true
+
+  PAGEmachine\Searchable\Feature\HtmlStripFeature:
+    public: true
+
+  PAGEmachine\Searchable\Feature\TermSuggestFeature:
     public: true

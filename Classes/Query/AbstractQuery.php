@@ -154,7 +154,9 @@ abstract class AbstractQuery implements QueryInterface
 
         if (!empty($features)) {
             foreach ($features as $key => $feature) {
-                $this->features[$key] = GeneralUtility::makeInstance($feature['className'], $feature['config']);
+                $feature = GeneralUtility::makeInstance($feature['className']);
+                $feature->init($feature['config']);
+                $this->features[$key] = $feature;
             }
         }
     }
