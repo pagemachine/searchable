@@ -31,41 +31,54 @@ services:
 
   PAGEmachine\Searchable\DataCollector\TcaDataCollector:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\DataCollector\PagesDataCollector:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\DataCollector\FileDataCollector:
     public: true
+    shared: false
 
 
   PAGEmachine\Searchable\Preview\DefaultPreviewRenderer:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Preview\FluidPreviewRenderer:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Preview\NoPreviewRenderer:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Preview\PreviewRendererInterface:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Preview\SimplePreviewRenderer:
     public: true
+    shared: false
 
 
   PAGEmachine\Searchable\Feature\CompletionSuggestFeature:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Feature\HighlightFeature:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Feature\HtmlStripFeature:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Feature\TermSuggestFeature:
     public: true
+    shared: false
 
   PAGEmachine\Searchable\Query\BulkQuery:
     public: true
+    shared: false
