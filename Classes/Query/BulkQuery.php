@@ -1,6 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
+use Elasticsearch\Client;
+use Psr\Log\LoggerInterface;
+use PAGEmachine\Searchable\Connection;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -14,6 +18,11 @@ class BulkQuery
      * @var string $index
      */
     protected $index;
+
+    /**
+     * @var Client
+     */
+    protected $client;
 
     /**
      * @return string
@@ -79,24 +88,69 @@ class BulkQuery
     }
 
     /**
+     * The array that is filled and later sent to the elasticsearch client for bulk indexing
+     *
+     * @var array $parameters
+     */
+    protected $parameters = [];
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param array $parameters
+     * @return QueryInterface
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getParameter($key)
+    {
+        return $this->parameters[$key] ?? null;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $parameter
+     * @return void
+     */
+    public function setParameter($key, mixed $parameter)
+    {
+        $this->parameters[$key] = $parameter;
+    }
+
+    /**
      * @param string $index
      * @param string $type
      */
-    public function __construct($index, $type, $pipeline = null)
+    public function __construct(protected readonly LoggerInterface $logger, Client $client = null)
     {
-        $this->index = $index;
-        $this->type = $type;
-        $this->pipeline = $pipeline;
-
-        $this->init();
+        $this->client = $client ?: Connection::getClient();
     }
 
     /**
      * Creates the basic information for bulk indexing
      * @return void
      */
-    public function init()
+    public function init($index, $type, $pipeline = null)
     {
+        $this->index = $index;
+        $this->type = $type;
+        $this->pipeline = $pipeline;
+
         $this->parameters =  [
             'index' => $this->getIndex(),
             'type' => $this->getType(),
