@@ -29,19 +29,18 @@ class UpdateQuery extends AbstractQuery
     /**
      * @return void
      */
-    public function __construct()
+    public function __construct(...$args)
     {
-        parent::__construct();
-        $this->index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
+        parent::__construct(...$args);
 
-        $this->init();
+        $this->index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
     }
 
     /**
      * Creates the basic information for bulk indexing
      * @return void
      */
-    public function init()
+    public function initParameters()
     {
         $this->parameters =  [
             'index' => $this->getIndex(),
@@ -60,6 +59,7 @@ class UpdateQuery extends AbstractQuery
         // Use querystring hash as id to mark each update only once
         $docid = sha1($type . "." . $property . ":" . $id);
 
+        $this->initParameters();
         $this->parameters['id'] = $docid;
         $this->parameters['type'] = $type;
         $this->parameters['body']['property'] = $property;
@@ -83,7 +83,7 @@ class UpdateQuery extends AbstractQuery
     {
         $recordids = [];
 
-        $this->init();
+        $this->initParameters();
 
         $this->parameters['type'] = $type;
         $this->parameters['body'] = [

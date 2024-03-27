@@ -11,7 +11,7 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 /**
  * Query class for searching
  */
-class SearchQuery extends AbstractQuery
+class SearchQuery extends AbstractSearchQuery
 {
     use LanguageIdTrait;
 

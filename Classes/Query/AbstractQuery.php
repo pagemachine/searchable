@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Abstract helper class for elasticsearch querying
  */
-abstract class AbstractQuery implements QueryInterface
+abstract class AbstractQuery
 {
     /**
      * The array that is filled and later sent to the elasticsearch client for bulk indexing
@@ -63,102 +63,17 @@ abstract class AbstractQuery implements QueryInterface
     }
 
     /**
-     * @return string
-     */
-    public function getTerm()
-    {
-        return '';
-    }
-
-    /**
-     * @param string $term
-     * @return QueryInterface
-     */
-    public function setTerm($term)
-    {
-        return $this;
-    }
-
-    /**
      * @var Client
      */
     protected $client;
 
     /**
-     * Features
-     *
-     * @var array
-     */
-    protected $features = [];
-
-    /**
-     * @var array $featureSettings
-     */
-    protected $featureSettings;
-
-    /**
-     * @return array
-     */
-    public function getFeatureSettings()
-    {
-        return $this->featureSettings;
-    }
-
-    /**
-     * @param array $featureSettings
-     * @return AbstractQuery
-     */
-    public function setFeatureSettings($featureSettings)
-    {
-        $this->featureSettings = $featureSettings;
-
-        return $this;
-    }
-
-
-    /**
-     * @var bool $pluginMode
-     */
-    protected $pluginMode = false;
-
-    /**
-     * @return bool
-     */
-    public function getPluginMode()
-    {
-        return $this->pluginMode;
-    }
-
-    /**
-     * @param bool $pluginMode
-     * @return AbstractQuery
-     */
-    public function setPluginMode($pluginMode)
-    {
-        $this->pluginMode = $pluginMode;
-
-        return $this;
-    }
-
-    /**
      * @param Client|null $client
      * @param Logger|null $logger
-     * @param array $features
      */
-    public function __construct(protected readonly LoggerInterface $logger, Client $client = null, $features = null)
+    public function __construct(protected readonly LoggerInterface $logger, Client $client = null)
     {
         $this->client = $client ?: Connection::getClient();
-
-        // Use get_class() instead of static self::class to retrieve the inherited child classname
-        $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(static::class)['features'] ?? [];
-
-        if (!empty($features)) {
-            foreach ($features as $key => $feature) {
-                $feature = GeneralUtility::makeInstance($feature['className']);
-                $feature->init($feature['config']);
-                $this->features[$key] = $feature;
-            }
-        }
     }
 
     /**
@@ -170,36 +85,5 @@ abstract class AbstractQuery implements QueryInterface
     public function execute()
     {
         return [];
-    }
-
-    /**
-     * Apply features to query
-     *
-     */
-    protected function applyFeatures()
-    {
-        foreach ($this->features as $name => $feature) {
-            if ($this->isFeatureEnabled($name)) {
-                $feature->modifyQuery($this);
-            }
-        }
-    }
-
-    /**
-     * Checks if a feature is enabled for this query.
-     * This only applies if the query is in plugin mode (where the controller decides which feature to use).
-     * Otherwise all features assigned in $_EXTCONF will be executed
-     *
-     * @param string  $featureName
-     * @return bool
-     */
-    public function isFeatureEnabled($featureName)
-    {
-        if (!$this->pluginMode ||
-            (isset($this->featureSettings[$featureName]) && $this->featureSettings[$featureName] == 1)
-            ) {
-            return true;
-        }
-        return false;
     }
 }
