@@ -64,8 +64,8 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
             $language
         );
 
-        foreach ($contentUids as $content) {
-            $processedField[] = $childCollector->getRecord($content['uid']);
+        while($row = $contentUids->fetchAssociative()) {
+            $processedField[] = $childCollector->getRecord($row['uid']);
         }
 
         return $processedField;
@@ -76,7 +76,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      *
      * @param  int $pid
      * @param  string $languages Language constraint, if null default is assumed (0,-1)
-     * @return array
      */
     protected function fetchContentUids($pid, $languages = null)
     {
@@ -87,6 +86,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
             $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
             $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
         );
-        return $queryBuilder->execute();
+
+        return $queryBuilder->executeQuery();
     }
 }

@@ -44,16 +44,7 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected $config = [
         'templateName' => 'Preview/Default',
-
     ];
-
-    /**
-     * @return void
-     */
-    public function initializeObject()
-    {
-        $this->prepareView();
-    }
 
     /**
      * Renders the preview
@@ -63,6 +54,8 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     public function render($record)
     {
+        $this->prepareView();
+
         if ($this->config['fields']) {
             $assignFields = [];
 
