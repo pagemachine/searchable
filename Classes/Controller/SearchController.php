@@ -26,6 +26,7 @@ class SearchController extends ActionController
 
     public function initializeObject()
     {
+        $this->searchQuery->init();
         $this->searchQuery->setDefaultSettings($this->settings['search']);
     }
 

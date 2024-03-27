@@ -99,9 +99,9 @@ abstract class AbstractSearchQuery extends AbstractQuery implements QueryInterfa
         $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(static::class)['features'] ?? [];
 
         if (!empty($features)) {
-            foreach ($features as $key => $feature) {
-                $feature = GeneralUtility::makeInstance($feature['className']);
-                $feature->init($feature['config']);
+            foreach ($features as $key => $featureConfig) {
+                $feature = GeneralUtility::makeInstance($featureConfig['className']);
+                $feature->init($featureConfig['config']);
                 $this->features[$key] = $feature;
             }
         }
