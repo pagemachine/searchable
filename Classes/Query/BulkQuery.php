@@ -1,10 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
-use Elasticsearch\Client;
-use Psr\Log\LoggerInterface;
-use PAGEmachine\Searchable\Connection;
-
 /*
  * This file is part of the PAGEmachine Searchable project.
  */

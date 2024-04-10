@@ -1,10 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
-use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;

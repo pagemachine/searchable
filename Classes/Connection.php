@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable;
 
-use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\Service\ExtconfService;
 

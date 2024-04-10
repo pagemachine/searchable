@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Enumeration;
 
 use TYPO3\CMS\Core\Type\Enumeration;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */

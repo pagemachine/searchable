@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use Doctrine\DBAL\Connection;
 
 /*

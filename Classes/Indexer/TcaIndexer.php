@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */

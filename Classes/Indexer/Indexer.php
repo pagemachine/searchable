@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
-use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
@@ -10,7 +9,6 @@ use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -166,6 +164,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function __construct(string $index, int $language, $config = [], BulkQuery $query = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
     {
+
         $this->index = $index;
         $this->config = $config;
         $this->language = $language;

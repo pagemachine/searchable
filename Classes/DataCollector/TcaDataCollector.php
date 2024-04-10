@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
@@ -293,6 +292,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 $fieldname = $subconfig['config']['field'];
 
                 $resolver = $this->relationResolvers[$key];
+
                 $resolvedField = $resolver->resolveRelation($fieldname, $record, $this->getSubCollectorForField($key), $this);
 
                 //Unset the original column

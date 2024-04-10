@@ -1,9 +1,9 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 
-use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
-use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\InlineRelationResolver;
+use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /*

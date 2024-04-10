@@ -22,6 +22,7 @@ class Search extends AbstractEidHandler
     protected function getResults($term)
     {
         $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->init();
         $page = (int)($this->options['page'] ?: 1);
         $language = (int)($this->options['lang'] ?: 0);
 

@@ -64,7 +64,7 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
             $language
         );
 
-        while($row = $contentUids->fetchAssociative()) {
+        while ($row = $contentUids->fetchAssociative()) {
             $processedField[] = $childCollector->getRecord($row['uid']);
         }
 

@@ -2,11 +2,12 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
-use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
-use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
-use PAGEmachine\Searchable\Mapper\DefaultMapper;
-use PAGEmachine\Searchable\Feature\HighlightFeature;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use PAGEmachine\Searchable\Feature\HighlightFeature;
+use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use PAGEmachine\Searchable\Mapper\DefaultMapper;
+use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */

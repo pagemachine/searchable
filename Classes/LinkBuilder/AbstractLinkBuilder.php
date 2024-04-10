@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\LinkBuilder;
 
-use PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequestInterface;
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequest;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;

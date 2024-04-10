@@ -1,17 +1,15 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
-use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
-use TYPO3\CMS\Core\Http\RequestFactory;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Backend\View\BackendTemplateView;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 

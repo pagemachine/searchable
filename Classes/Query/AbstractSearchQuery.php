@@ -1,11 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
-use TYPO3\CMS\Core\Log\LogManager;
-use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
-use PAGEmachine\Searchable\Connection;
-use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*

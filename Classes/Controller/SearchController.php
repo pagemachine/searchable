@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use Psr\Http\Message\ResponseInterface;
 use PAGEmachine\Searchable\Query\SearchQuery;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /*

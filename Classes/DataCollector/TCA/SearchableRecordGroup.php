@@ -1,15 +1,15 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector\TCA;
 
-use TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems;
-use PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaSelectRelations;
-use TYPO3\CMS\Backend\Form\FormDataProvider\TcaInputPlaceholders;
-use TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectTreeItems;
-use TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessShowitem;
-use TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessRecordTitle;
 use PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaInlineCopyToDbRecord;
-use TYPO3\CMS\Backend\Form\FormDataProvider\TcaInline;
+use PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaSelectRelations;
 use TYPO3\CMS\Backend\Form\FormDataGroupInterface;
+use TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessRecordTitle;
+use TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsProcessShowitem;
+use TYPO3\CMS\Backend\Form\FormDataProvider\TcaInline;
+use TYPO3\CMS\Backend\Form\FormDataProvider\TcaInputPlaceholders;
+use TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems;
+use TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectTreeItems;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Service\DependencyOrderingService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

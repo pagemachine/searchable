@@ -4,8 +4,6 @@ namespace PAGEmachine\Searchable\Database\Query;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-use PAGEmachine\Searchable\Database\Connection;
-use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;
 use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;

@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Service;
 
-use Psr\Log\LoggerInterface;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Events\AfterIndexRunEvent;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
@@ -14,7 +13,6 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 final class IndexingService implements \Stringable
 {
