@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -23,6 +23,8 @@ class CompletionSuggestFeatureTest extends UnitTestCase
      */
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->feature = new CompletionSuggestFeature([
             'fields' => [
                 'fieldone',

@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
@@ -12,6 +11,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Testcase for TcaDataCollector
@@ -45,6 +45,8 @@ class TcaDataCollectorTest extends UnitTestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->formDataRecord = $this->prophesize(FormDataRecord::class);
         $this->plainValueProcessor = $this->prophesize(PlainValueProcessor::class);
 

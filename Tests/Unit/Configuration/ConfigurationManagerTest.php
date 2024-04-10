@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestDataCollectorFixture;
@@ -10,6 +9,7 @@ use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestIndexerFixture;
 use PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures\TestMapperFixture;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -37,6 +37,8 @@ class ConfigurationManagerTest extends UnitTestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->configurationManager = new ConfigurationManager();
 
         $this->extconfService = $this->prophesize(ExtconfService::class);

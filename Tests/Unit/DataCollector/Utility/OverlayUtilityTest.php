@@ -5,10 +5,10 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
  * This file is part of the Pagemachine Searchable project.
  */
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Testcase for PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility

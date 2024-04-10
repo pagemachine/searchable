@@ -30,6 +30,8 @@ class SiteLanguageViewHelperTest extends TestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->viewHelper = new SiteLanguageViewHelper();
     }
 
