@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Middleware;
 
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\RequestFactory;
@@ -19,7 +19,7 @@ final class UriBuilderTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
     ];
 

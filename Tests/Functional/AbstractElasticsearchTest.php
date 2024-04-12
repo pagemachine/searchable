@@ -5,7 +5,7 @@ namespace PAGEmachine\Searchable\Tests\Functional;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
@@ -30,7 +30,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/unlocalized_table_test',

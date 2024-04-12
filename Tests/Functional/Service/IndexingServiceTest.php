@@ -23,7 +23,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @var array
      */
-    protected $configurationToUseInTestInstance = [
+    protected array $configurationToUseInTestInstance = [
         'DB' => [
             'Connections' => [
                 'Default' => [
