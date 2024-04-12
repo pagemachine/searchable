@@ -2,6 +2,9 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\AbstractLinkBuilder;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -13,16 +16,14 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class AbstractLinkBuilderTest extends UnitTestCase
 {
-    /**
-     * @var AbstractLinkBuilder
-     */
-    protected $linkBuilder;
+    use ProphecyTrait;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class);
+        $requestFactoryProphecy = $this->prophesize(RequestFactory::class);
+        GeneralUtility::addInstance(RequestFactory::class, $requestFactoryProphecy->reveal());
     }
 
     /**
@@ -47,8 +48,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, $language);
+        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkConfiguration = $linkBuilder->createLinkConfiguration($record, $language);
 
         $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
     }
@@ -56,7 +57,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function languagesAndLinkConfigurations()
+    public static function languagesAndLinkConfigurations()
     {
         return [
             'default language' => [
@@ -98,8 +99,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
             'page' => '123',
         ];
 
-        $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
+        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
         $expectedLinkConfiguration = [
             'pageUid' => '123',
         ];
@@ -131,8 +132,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
             'property2' => 'value2',
         ];
 
-        $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
+        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
         $this->assertSame(['param1' => 'value1', 'param2' => 'value2'], $linkConfiguration['additionalParams'] ?? null);
@@ -152,8 +153,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
         $record = [];
 
-        $this->linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
-        $linkConfiguration = $this->linkBuilder->createLinkConfiguration($record, 0);
+        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
     }

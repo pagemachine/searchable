@@ -41,7 +41,7 @@ class FieldListUtilityTest extends UnitTestCase
      *
      * @return array
      */
-    public function whitelistCombinations()
+    public static function whitelistCombinations()
     {
         return [
             'item included' => ['allowed', ['allowed', 'foo', 'bar'], true],
@@ -64,7 +64,7 @@ class FieldListUtilityTest extends UnitTestCase
      *
      * @return array
      */
-    public function blacklistCombinations()
+    public static function blacklistCombinations()
     {
         return [
             'item included' => ['notallowed', ['notallowed', 'foo', 'bar'], false],

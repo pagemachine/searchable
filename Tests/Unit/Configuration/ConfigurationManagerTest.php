@@ -43,6 +43,7 @@ class ConfigurationManagerTest extends UnitTestCase
 
         $this->extconfService = $this->prophesize(ExtconfService::class);
 
+        $this->resetSingletonInstances = true;
         GeneralUtility::setSingletonInstance(ExtconfService::class, $this->extconfService->reveal());
     }
 

@@ -7,7 +7,6 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -44,6 +43,8 @@ class PagesDataCollectorTest extends UnitTestCase
     {
         parent::setUp();
 
+        $this->resetSingletonInstances = true;
+
         $GLOBALS['TCA']['pages'] = [
             'columns' => [
                 'title' => [
@@ -70,18 +71,15 @@ class PagesDataCollectorTest extends UnitTestCase
             ],
         ];
 
-        $this->objectManager = $this->prophesize(ObjectManager::class);
-        $this->objectManager->get(Argument::any())->willReturn(null);
-
         $this->pagesDataCollector = $this->getMockBuilder(PagesDataCollector::class)
-        ->setConstructorArgs([$configuration, 0, $this->objectManager->reveal()])
-        ->setMethods([
-                'getRecord',
-            ])
+        ->onlyMethods([
+            'getRecord',
+        ])
         ->getMock();
+        $this->pagesDataCollector->init($configuration, 0);
 
         $this->pageRepository = $this->prophesize(PageRepository::class);
-        $this->inject($this->pagesDataCollector, "pageRepository", $this->pageRepository->reveal());
+        $this->pagesDataCollector->injectPageRepository($this->pageRepository->reveal());
 
         $this->formDataRecord = $this->prophesize(FormDataRecord::class);
         GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());

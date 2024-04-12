@@ -25,7 +25,8 @@ class CompletionSuggestFeatureTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->feature = new CompletionSuggestFeature([
+        $this->feature = new CompletionSuggestFeature();
+        $this->feature->init([
             'fields' => [
                 'fieldone',
                 'fieldtwo',

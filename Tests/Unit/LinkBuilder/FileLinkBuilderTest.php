@@ -2,6 +2,9 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -13,10 +16,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class FileLinkBuilderTest extends UnitTestCase
 {
-    /**
-     * @var FileLinkBuilder
-     */
-    protected $linkBuilder;
+    use ProphecyTrait;
 
     /**
      * Set up this testcase
@@ -25,7 +25,8 @@ class FileLinkBuilderTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->linkBuilder = new FileLinkBuilder();
+        $requestFactoryProphecy = $this->prophesize(RequestFactory::class);
+        GeneralUtility::addInstance(RequestFactory::class, $requestFactoryProphecy->reveal());
     }
 
     /**
@@ -46,9 +47,9 @@ class FileLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $this->linkBuilder = new FileLinkBuilder($config);
+        $linkBuilder = new FileLinkBuilder($config);
 
-        $linkConfiguration = $this->linkBuilder->finalizeTypoLinkConfig([], $record);
+        $linkConfiguration = $linkBuilder->finalizeTypoLinkConfig([], $record);
 
         $this->assertEquals('t3://file?uid=22', $linkConfiguration['parameter']);
     }
@@ -71,9 +72,9 @@ class FileLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $this->linkBuilder = new FileLinkBuilder($config);
+        $linkBuilder = new FileLinkBuilder($config);
 
-        $linkConfiguration = $this->linkBuilder->finalizeTypoLinkConfig([], $record);
+        $linkConfiguration = $linkBuilder->finalizeTypoLinkConfig([], $record);
 
         $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
@@ -98,9 +99,9 @@ class FileLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $this->linkBuilder = new FileLinkBuilder($config);
+        $linkBuilder = new FileLinkBuilder($config);
 
-        $linkConfiguration = $this->linkBuilder->finalizeTypoLinkConfig([], $record);
+        $linkConfiguration = $linkBuilder->finalizeTypoLinkConfig([], $record);
 
         $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }

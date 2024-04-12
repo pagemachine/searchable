@@ -24,11 +24,7 @@ class OverlayUtilityTest extends UnitTestCase
     public function performsPagesLanguageOverlay(array $page, $language, $overlayMode, $pageOverlay, $expected)
     {
         $pageRepository = $this->prophesize(PageRepository::class);
-        $overlayUtility = $this->getMockBuilder(OverlayUtility::class)
-            ->disableOriginalConstructor()
-            ->setMethods()
-            ->getMock();
-        $this->inject($overlayUtility, 'pageRepository', $pageRepository->reveal());
+        $overlayUtility = new OverlayUtility($pageRepository->reveal());
 
         $pageRepository->getPageOverlay($page, $language)->willReturn($pageOverlay);
 
@@ -40,7 +36,7 @@ class OverlayUtilityTest extends UnitTestCase
     /**
      * @return array
      */
-    public function pagesToOverlay()
+    public static function pagesToOverlay()
     {
         return [
             'regular' => [
