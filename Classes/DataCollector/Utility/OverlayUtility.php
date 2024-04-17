@@ -41,7 +41,6 @@ class OverlayUtility implements SingletonInterface
      * @param  array          $record
      * @param  int            $language
      * @param  array          $fieldWhitelist
-     * @param  mixed          $overlayMode
      * @return array
      */
     public function languageOverlay($table, $record, $language, $fieldWhitelist = [], mixed $overlayMode = 1)

@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
@@ -85,9 +86,7 @@ class PagesDataCollectorTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function collectsPageListSingleLevel()
     {
         $pageList = [
@@ -125,9 +124,7 @@ class PagesDataCollectorTest extends UnitTestCase
         $this->assertEquals($pageList[1], $records->current());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function collectsPageListRecursive()
     {
         $pageList = [

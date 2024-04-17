@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-
+use PHPUnit\Framework\Attributes\Test;
 use PAGEmachine\Searchable\ViewHelpers\SiteLanguageViewHelper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -38,9 +38,7 @@ class SiteLanguageViewHelperTest extends TestCase
         unset($GLOBALS['TSFE']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsCurrentLanguage()
     {
         $GLOBALS['TSFE'] = $this->prophesize(TypoScriptFrontendController::class)->reveal();
@@ -50,9 +48,7 @@ class SiteLanguageViewHelperTest extends TestCase
         $this->assertEquals(1, $this->viewHelper->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroIfTsfeDoesNotExist()
     {
         $this->assertEquals(0, $this->viewHelper->render());

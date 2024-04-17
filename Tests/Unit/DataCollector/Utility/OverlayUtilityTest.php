@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 /*
  * This file is part of the Pagemachine Searchable project.
  */
-
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -18,9 +18,9 @@ class OverlayUtilityTest extends UnitTestCase
     use ProphecyTrait;
 
     /**
-     * @test
      * @dataProvider pagesToOverlay
      */
+    #[Test]
     public function performsPagesLanguageOverlay(array $page, $language, $overlayMode, $pageOverlay, $expected)
     {
         $pageRepository = $this->prophesize(PageRepository::class);

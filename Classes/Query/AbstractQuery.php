@@ -54,7 +54,6 @@ abstract class AbstractQuery implements QueryInterface
 
     /**
      * @param string $key
-     * @param mixed $parameter
      * @return void
      */
     public function setParameter($key, mixed $parameter)

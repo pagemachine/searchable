@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 
@@ -33,9 +34,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsFieldsToplevel()
     {
         $record = [
@@ -47,9 +46,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         $this->assertEquals(['one', 'two'], $record['autosuggest']['input']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsFieldsFromChild()
     {
         $record = [
@@ -68,9 +65,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         $this->assertArrayNotHasKey('autosuggest', $record['child']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsFieldsFromChildren()
     {
         $record = [

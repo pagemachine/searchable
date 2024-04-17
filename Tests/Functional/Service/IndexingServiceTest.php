@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
+use PHPUnit\Framework\Attributes\Test;
 use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
@@ -46,9 +47,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         ],
     ];
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordsFully(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
@@ -74,9 +73,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordTranslations(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
@@ -113,9 +110,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function appliesLanguageForRecordTranslationIndexing(): void
     {
         $this->getDatabaseConnection()->insertArray('tt_content', [
@@ -159,9 +154,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordsPartially(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
@@ -205,9 +198,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [
@@ -247,9 +238,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentInIndex(6);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function respectsSiteBase(): void
     {
         $siteConfiguration = GeneralUtility::makeInstance(
@@ -303,9 +292,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordsOfUnlocalizableTables(): void
     {
         $this->getDatabaseConnection()->insertArray('tx_unlocalizedtabletest_unlocalizedtable', [

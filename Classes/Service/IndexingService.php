@@ -23,9 +23,6 @@ final class IndexingService implements \Stringable
      */
     protected $indexerFactory;
 
-    /**
-     * @param IndexerFactory $indexerFactory
-     */
     public function injectIndexerFactory(IndexerFactory $indexerFactory): void
     {
         $this->indexerFactory = $indexerFactory;
@@ -36,9 +33,6 @@ final class IndexingService implements \Stringable
      */
     protected $persistenceManager;
 
-    /**
-     * @param PersistenceManagerInterface $persistenceManager
-     */
     public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager): void
     {
         $this->persistenceManager = $persistenceManager;
@@ -65,13 +59,10 @@ final class IndexingService implements \Stringable
     }
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
 
-    /**
-     * @param LogManager $logManager
-     */
     public function injectLogManager(LogManager $logManager): void
     {
         $this->logger = $logManager->getLogger(self::class);
@@ -152,8 +143,6 @@ final class IndexingService implements \Stringable
 
     /**
      * Reset index for one or all languages
-     *
-     * @param int $language
      */
     public function resetIndex(int $language = null): void
     {

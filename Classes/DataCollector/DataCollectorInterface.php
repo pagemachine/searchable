@@ -21,7 +21,6 @@ interface DataCollectorInterface
      * Adds a new SubCollector for subtypes
      *
      * @param string                 $field        Fieldname to apply this collector to
-     * @param DataCollectorInterface $subCollector
      */
     public function addSubCollector($field, DataCollectorInterface $subCollector);
 

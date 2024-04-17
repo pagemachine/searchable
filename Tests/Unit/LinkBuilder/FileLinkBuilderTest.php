@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;
 
@@ -26,9 +27,7 @@ class FileLinkBuilderTest extends UnitTestCase
         $this->linkBuilder = new FileLinkBuilder();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createsFileLinkForToplevelFileRecord()
     {
         $config = [
@@ -51,9 +50,7 @@ class FileLinkBuilderTest extends UnitTestCase
         $this->assertEquals('t3://file?uid=22', $linkConfiguration['parameter']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createsFileLinkForSingleSublevelFile()
     {
         $config = [
@@ -76,9 +73,7 @@ class FileLinkBuilderTest extends UnitTestCase
         $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createsFileLinkForNestedSublevelFile()
     {
         $config = [

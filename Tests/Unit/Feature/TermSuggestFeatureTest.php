@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;
 use PAGEmachine\Searchable\Query\QueryInterface;
@@ -30,9 +31,7 @@ class TermSuggestFeatureTest extends UnitTestCase
         $this->feature = new TermSuggestFeature();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsSuggestionQueryString()
     {
         $query = $this->prophesize(QueryInterface::class);

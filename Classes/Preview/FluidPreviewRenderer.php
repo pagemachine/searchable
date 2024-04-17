@@ -18,9 +18,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected $view;
 
-    /**
-     * @param StandaloneView $view
-     */
     public function injectView(StandaloneView $view): void
     {
         $this->view = $view;
@@ -31,9 +28,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected $configurationManager;
 
-    /**
-     * @param ConfigurationManagerInterface $configurationManager
-     */
     public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void
     {
         $this->configurationManager = $configurationManager;

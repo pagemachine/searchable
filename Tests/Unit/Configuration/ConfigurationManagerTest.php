@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -44,9 +45,7 @@ class ConfigurationManagerTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(ExtconfService::class, $this->extconfService->reveal());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mergesToplevelConfiguration()
     {
         $configuration = [
@@ -72,9 +71,7 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function doesNothingIfNoClassIsAvailable()
     {
         $configuration = [
@@ -89,9 +86,7 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($configuration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mergesRecursiveConfiguration()
     {
         $configuration = [
@@ -131,9 +126,7 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mergesMultipleConfigurationsOnTheSameLevel()
     {
         $configuration = [
@@ -191,9 +184,7 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createsMappingWithUserPrecedence()
     {
         $configuration = [
@@ -222,9 +213,7 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals('newMapperValue', $mapping['pages']['properties']['newKey']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function enrichesMappingByFeatures()
     {
         $configuration = [
@@ -256,9 +245,7 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals('featurevalue', $mapping['pages']['featureproperty']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createsUpdateConfiguration()
     {
         $configuration = [

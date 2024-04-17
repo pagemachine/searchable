@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 
@@ -26,9 +27,7 @@ class PageLinkBuilderTest extends UnitTestCase
         $this->pageLinkBuilder = new PageLinkBuilder();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function convertsFromViewHelperConfigToTypoLinkConfig()
     {
         $this->pageLinkBuilder = new PageLinkBuilder();

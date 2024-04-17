@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\ResolverManager;
@@ -59,9 +60,7 @@ class TcaDataCollectorTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(OverlayUtility::class, $this->overlayUtility->reveal());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function processesFlatRecord()
     {
         $recordTca = [
@@ -160,9 +159,7 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function processesRelations()
     {
         $subCollector = $this->prophesize(TcaDataCollector::class);
@@ -249,9 +246,7 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function processesTranslations()
     {
         $configuration = [

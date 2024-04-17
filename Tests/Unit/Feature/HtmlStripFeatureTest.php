@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 /*
  * This file is part of the Pagemachine TÜV Hessen project.
  */
-
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -35,9 +35,7 @@ class HtmlStripFeatureTest extends UnitTestCase
         GeneralUtility::purgeInstances();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function stripsHtmlTags()
     {
         $record = [

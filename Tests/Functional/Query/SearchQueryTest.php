@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Query;
 
+use PHPUnit\Framework\Attributes\Test;
 use PAGEmachine\Searchable\Query\SearchQuery;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -13,9 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class SearchQueryTest extends AbstractElasticsearchTest
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function searchesByTerm(): void
     {
         $this->getDatabaseConnection()->insertArray('pages', [

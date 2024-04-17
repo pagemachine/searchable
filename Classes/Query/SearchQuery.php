@@ -35,7 +35,6 @@ class SearchQuery extends AbstractQuery
 
     /**
      * @param string $key
-     * @param mixed $parameter
      * @return SearchQuery
      */
     public function setBodyParameter($key, mixed $parameter)

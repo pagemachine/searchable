@@ -5,16 +5,8 @@ namespace PAGEmachine\Searchable\Events;
 
 final class AfterIndexRunEvent
 {
-    private bool $fullIndexing;
-
-    private int $elapsedTime;
-
-    public function __construct(
-        bool $fullIndexing,
-        int $elapsedTime
-    ) {
-        $this->fullIndexing = $fullIndexing;
-        $this->elapsedTime = $elapsedTime;
+    public function __construct(private readonly bool $fullIndexing, private readonly int $elapsedTime)
+    {
     }
 
     public function isFullIndexing(): bool

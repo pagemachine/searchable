@@ -38,12 +38,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      */
     protected $objectManager;
 
-
-    /**
-     * @var array $config
-     */
-    protected $config = [];
-
     /**
      *
      * @param array $config
@@ -61,12 +55,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
     {
         return $this->config;
     }
-
-
-    /**
-     * @var int $language
-     */
-    protected $language = 0;
 
     /**
      * @return int
@@ -107,7 +95,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
      * Adds a new SubCollector for subtypes
      *
      * @param string                 $field        Fieldname to apply this collector to
-     * @param DataCollectorInterface $collector
      */
     public function addSubCollector($field, DataCollectorInterface $collector)
     {
@@ -145,17 +132,13 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
 
     /**
      *
-     * @param array $configuration
+     * @param array $config
      * @param int $language
      * @param ObjectManager $objectManager
      */
-    public function __construct($configuration = [], $language = 0, ObjectManager $objectManager = null)
+    public function __construct(protected $config = [], protected $language = 0, ObjectManager $objectManager = null)
     {
-        $this->language = $language;
-
         $this->objectManager = $objectManager ?: GeneralUtility::makeInstance(ObjectManager::class);
-
-        $this->config = $configuration;
 
         if (!empty($this->config['features'])) {
             foreach ($this->config['features'] as $key => $featureConfig) {

@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\TCA;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 
@@ -26,9 +27,7 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->plainValueProcessor = new PlainValueProcessor();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function convertsCheckboxValues()
     {
         $fieldTca = [
@@ -50,9 +49,7 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function convertsRadioValues()
     {
         $fieldTca = [
@@ -73,9 +70,7 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function convertsStringRadioValues()
     {
         $fieldTca = [

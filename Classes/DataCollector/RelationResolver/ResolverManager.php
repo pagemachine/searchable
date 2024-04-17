@@ -30,8 +30,6 @@ class ResolverManager implements SingletonInterface
      * Finds a suitable resolver
      *
      * @param  string                 $fieldname
-     * @param  DataCollectorInterface $childCollector
-     * @param  DataCollectorInterface $parentCollector
      * @return RelationResolverInterface
      */
     public function findResolverForRelation($fieldname, DataCollectorInterface $childCollector, DataCollectorInterface $parentCollector)

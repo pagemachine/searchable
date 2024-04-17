@@ -11,7 +11,6 @@ use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -29,9 +28,6 @@ class BackendController extends ActionController
     {
     }
 
-    /**
-     * @param IndexerFactory $indexerFactory
-     */
     public function injectIndexerFactory(IndexerFactory $indexerFactory): void
     {
         $this->indexerFactory = $indexerFactory;

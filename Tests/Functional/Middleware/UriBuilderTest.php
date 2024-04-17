@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Middleware;
 
+use PHPUnit\Framework\Attributes\Test;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -23,9 +24,7 @@ final class UriBuilderTest extends FunctionalTestCase
         'typo3conf/ext/searchable',
     ];
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildsUriForTypolinkParameter(): void
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
