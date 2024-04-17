@@ -104,7 +104,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Translated test page',
                 'searchable_meta' => [
-                    'renderedLink' => '/da/translated-test-page/',
+                    'renderedLink' => '/de/translated-test-page/',
                 ],
             ],
             1
@@ -283,7 +283,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Bar test page',
                 'searchable_meta' => [
-                    'renderedLink' => 'https://bar.example.org/bar-test-page/',
+                    'renderedLink' => 'https://bar.example.org/100/bar-test-page/',
                 ],
             ]
         );
@@ -292,7 +292,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Qux test page',
                 'searchable_meta' => [
-                    'renderedLink' => 'https://qux.example.org/qux-test-page/',
+                    'renderedLink' => 'https://qux.example.org/200/qux-test-page/',
                 ],
             ]
         );

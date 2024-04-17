@@ -321,7 +321,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $counter = 0;
         $overallCounter = 0;
 
-        $updateQuery = new UpdateQuery();
+        $updateQuery = GeneralUtility::makeInstance(UpdateQuery::class);
 
         $updates = $updateQuery->getUpdates($this->index, $this->type);
 

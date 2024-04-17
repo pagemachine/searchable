@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Middleware;
 
+use PAGEmachine\Searchable\Tests\Functional\SiteBasedTestTrait;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\RequestFactory;
@@ -15,12 +16,19 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 final class UriBuilderTest extends FunctionalTestCase
 {
     use WebserverTrait;
+    use SiteBasedTestTrait;
 
     /**
      * @var array
      */
     protected array $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
+        'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/test_webserver',
+    ];
+
+    protected const LANGUAGE_PRESETS = [
+        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8'],
+        'DE' => ['id' => 1, 'title' => 'Deutsch', 'locale' => 'de_DE.UTF8'],
     ];
 
     /**
@@ -67,6 +75,13 @@ final class UriBuilderTest extends FunctionalTestCase
         );
 
         $this->setUpFrontendRootPage(1);
+        $this->writeSiteConfiguration(
+            '1',
+            $this->buildSiteConfiguration(1, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '/'),
+            ]
+        );
 
         $response = GeneralUtility::makeInstance(RequestFactory::class)->request(
             'http://localhost:8080/-/searchable/urls',

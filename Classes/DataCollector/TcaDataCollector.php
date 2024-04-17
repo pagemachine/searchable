@@ -162,10 +162,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $queryBuilder = $this->buildUidListQueryBuilder(true);
 
-        /** @var \Doctrine\DBAL\ForwardCompatibility\Result */
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
 
-        foreach ($result as $rawRecord) {
+        while ($rawRecord = $result->fetchAssociative()) {
             yield $this->getRecord($rawRecord['uid']);
         }
     }

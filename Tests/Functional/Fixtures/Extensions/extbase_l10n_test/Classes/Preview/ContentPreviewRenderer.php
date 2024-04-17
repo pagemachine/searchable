@@ -6,18 +6,23 @@ namespace Pagemachine\SearchableExtbaseL10nTest\Preview;
 use PAGEmachine\Searchable\Preview\AbstractPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use Pagemachine\SearchableExtbaseL10nTest\Domain\Repository\ContentRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class ContentPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
 {
+    protected ?ContentRepository $contentRepository = null;
+
+    public function injectContentRepository(ContentRepository $contentRepository)
+    {
+        $this->contentRepository = $contentRepository;
+    }
+
     /**
      * @param  array $record
      * @return string
      */
     public function render($record)
     {
-        $repository = GeneralUtility::makeInstance(ContentRepository::class);
-        $content = $repository->findByIdentifier($record['uid']);
+        $content = $this->contentRepository->findByIdentifier($record['uid']);
         $preview = sprintf(
             'Preview: %s [%d]',
             $content->getHeader(),
