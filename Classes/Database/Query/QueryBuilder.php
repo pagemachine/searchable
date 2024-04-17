@@ -4,8 +4,9 @@ namespace PAGEmachine\Searchable\Database\Query;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
+use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 
 /**
@@ -64,7 +65,7 @@ class QueryBuilder extends BaseQueryBuilder
     protected function getQuery(): DatabaseRecordUpdateQuery
     {
         if ($this->updateQuery == null) {
-            $this->updateQuery = new DatabaseRecordUpdateQuery();
+            $this->updateQuery = GeneralUtility::makeInstance(DatabaseRecordUpdateQuery::class);
         }
 
         return $this->updateQuery;

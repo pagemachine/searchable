@@ -5,27 +5,30 @@ namespace PAGEmachine\Searchable\Tests\Functional;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
 use PAGEmachine\Searchable\Preview\NoPreviewRenderer;
 use PAGEmachine\Searchable\Service\IndexingService;
+use PAGEmachine\Searchable\Tests\Functional\SiteBasedTestTrait;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
-use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Http\NormalizedParams;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequestContext;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
     use ArraySubsetAsserts;
     use WebserverTrait;
+    use SiteBasedTestTrait;
 
     /**
      * @var array
@@ -34,6 +37,12 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         'typo3conf/ext/searchable',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/unlocalized_table_test',
+        'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/test_webserver',
+    ];
+
+    protected const LANGUAGE_PRESETS = [
+        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8'],
+        'DE' => ['id' => 1, 'title' => 'Deutsch', 'locale' => 'de_DE.UTF8'],
     ];
 
     /**
@@ -156,12 +165,12 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
             ]
         );
 
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Foo Root',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 2,
             'pid' => 1,
             'sys_language_uid' => 1,
@@ -169,50 +178,71 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Dansk Foo Root',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 100,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Bar Root',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 200,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Qux Root',
         ]);
 
-        $typoScriptConstantsFile = 'EXT:searchable/Configuration/TypoScript/constants.typoscript';
-        $typoScriptSetupFile = 'EXT:searchable/Configuration/TypoScript/setup.typoscript';
-        $this->setUpFrontendRootPage(1, [
-            __DIR__ . '/Fixtures/TypoScript/page.typoscript',
-            $typoScriptSetupFile,
-        ]);
-        $this->setUpFrontendRootPage(100);
-        $this->setUpFrontendRootPage(200);
-        $this->getDatabaseConnection()->updateArray(
-            'sys_template',
-            [
-                'pid' => 1,
+        $rootPageConfig = [
+            'setup' => [
+                __DIR__ . '/Fixtures/TypoScript/page.typoscript',
+                'EXT:searchable/Configuration/TypoScript/setup.typoscript',
             ],
-            [
-                'constants' => '<INCLUDE_TYPOSCRIPT: source="FILE:' . $typoScriptConstantsFile . '">',
-            ]
-        );
+            'constants' => [
+                'EXT:searchable/Configuration/TypoScript/constants.typoscript',
+            ],
+        ];
+        $this->setUpFrontendRootPage(1, $rootPageConfig);
+        $this->setUpFrontendRootPage(100, $rootPageConfig);
+        $this->setUpFrontendRootPage(200, $rootPageConfig);
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->indexingService = $objectManager->get(IndexingService::class);
+        $this->indexingService = $this->get(IndexingService::class);
         $this->indexingService->setup();
 
         $this->startWebserver();
 
-        // Update internally created site to flush all caches
-        $siteConfiguration = GeneralUtility::makeInstance(
-            SiteConfiguration::class,
-            Environment::getConfigPath() . '/sites'
+        $this->writeSiteConfiguration(
+            '1',
+            $this->buildSiteConfiguration(1, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '/'),
+                $this->buildDefaultLanguageConfiguration('DE', '/de/'),
+            ]
         );
-        $siteConfiguration->write('1', $siteConfiguration->load('1'));
+        $this->writeSiteConfiguration(
+            '100',
+            $this->buildSiteConfiguration(100, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '100/'),
+            ]
+        );
+        $this->writeSiteConfiguration(
+            '200',
+            $this->buildSiteConfiguration(200, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '200/'),
+            ]
+        );
+
+
+        $request = (new ServerRequest('https://foo.de', 'GET'));
+        $normalizedParams = NormalizedParams::createFromRequest($request);
+        $request = $request
+            ->withAttribute('normalizedParams', $normalizedParams)
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
+            ->withAttribute('typo3.testing.context', new InternalRequestContext());
+        $GLOBALS['TYPO3_REQUEST'] = $request;
 
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
-        $this->setUpBackendUserFromFixture(1);
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/be_users.csv');
+        $this->setUpBackendUser(1);
+
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
         Bootstrap::initializeLanguageObject();
     }
@@ -227,6 +257,16 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         ]);
 
         $this->stopWebserver();
+    }
+
+    protected function insertArray($tableName, $record)
+    {
+        return $this->getConnectionPool()->getConnectionForTable($tableName)->insert($tableName, $record);
+    }
+
+    protected function updateArray($tableName, $record, $identifier)
+    {
+        return $this->getConnectionPool()->getConnectionForTable($tableName)->update($tableName, $record, $identifier);
     }
 
     protected function assertIndexEmpty(int $languageId = 0): void

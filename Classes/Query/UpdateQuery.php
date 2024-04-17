@@ -5,6 +5,9 @@ namespace PAGEmachine\Searchable\Query;
  * This file is part of the PAGEmachine Searchable project.
  */
 
+use Elasticsearch\Client;
+use Psr\Log\LoggerInterface;
+
 /**
  * Query class to store update information
  * This is NOT the query for updating records, use a BulkQuery instead!
@@ -29,9 +32,9 @@ class UpdateQuery extends AbstractQuery
     /**
      * @return void
      */
-    public function __construct(...$args)
+    public function __construct(LoggerInterface $logger, Client $client = null)
     {
-        parent::__construct(...$args);
+        parent::__construct($logger, $client);
 
         $this->index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
     }

@@ -112,7 +112,7 @@ class Connection extends BaseConnection
     protected function getQuery(): DatabaseRecordUpdateQuery
     {
         if ($this->updateQuery == null) {
-            $this->updateQuery = new DatabaseRecordUpdateQuery();
+            $this->updateQuery = GeneralUtility::makeInstance(DatabaseRecordUpdateQuery::class);
         }
 
         return $this->updateQuery;

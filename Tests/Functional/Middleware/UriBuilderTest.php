@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Middleware;
 
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Testcase for PAGEmachine\Searchable\Middleware\UriBuilder

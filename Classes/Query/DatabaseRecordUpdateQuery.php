@@ -6,6 +6,7 @@ namespace PAGEmachine\Searchable\Query;
  */
 
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Query for partial index updates of database record changes
@@ -27,7 +28,7 @@ class DatabaseRecordUpdateQuery
      */
     public function __construct(UpdateQuery $updateQuery = null, array $updateConfiguration = null)
     {
-        $this->updateQuery = $updateQuery ?: new UpdateQuery();
+        $this->updateQuery = $updateQuery ?: GeneralUtility::makeInstance(UpdateQuery::class);
         $this->updateConfiguration = $updateConfiguration ?: ConfigurationManager::getInstance()->getUpdateConfiguration();
     }
 
