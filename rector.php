@@ -13,7 +13,6 @@ return RectorConfig::configure()
         __DIR__ . '/Classes',
         __DIR__ . '/Tests',
     ])
-    ->withRootFiles()
     ->withImportNames(
         importShortClasses: false,
         removeUnusedImports: true,
