@@ -13,6 +13,9 @@ return RectorConfig::configure()
         __DIR__ . '/Classes',
         __DIR__ . '/Tests',
     ])
+    ->withSkip([
+        __DIR__ . '/Tests/Functional/Fixtures/Extensions/*/Configuration/*',
+    ])
     ->withImportNames(
         importShortClasses: false,
         removeUnusedImports: true,
