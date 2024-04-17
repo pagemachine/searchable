@@ -86,11 +86,14 @@
             "@lint:php",
             "@lint:style",
             "@analyze:php",
-            "@lint:xml"
+            "@lint:xml",
+            "@php:rector:lint"
         ],
         "lint:php": "parallel-lint --show-deprecated --exclude bin --exclude vendor --exclude web .",
         "lint:style": "phpcs",
         "lint:xml": "xmllint --pattern '*.xlf,*.svg' Resources --ansi",
+        "php:rector:fix": "rector",
+        "php:rector:lint": "rector --dry-run --no-progress-bar",
         "test": [
             "@test:unit",
             "@test:functional"

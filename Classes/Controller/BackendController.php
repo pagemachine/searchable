@@ -166,4 +166,6 @@ class BackendController extends ActionController
         return [
             'status' => $response->getStatusCode(),
             'body' => $response->getBody()->getContents(),
-      
+        ];
+    }
+}
