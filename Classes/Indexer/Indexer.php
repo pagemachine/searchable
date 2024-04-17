@@ -9,6 +9,7 @@ use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*

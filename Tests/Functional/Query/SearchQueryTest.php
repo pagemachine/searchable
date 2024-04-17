@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace PAGEmachine\Searchable\Tests\Functional\Query;
 
 use PAGEmachine\Searchable\Query\SearchQuery;
-use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearch;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Testcase for PAGEmachine\Searchable\Query\SearchQuery
  */
-final class SearchQueryTest extends AbstractElasticsearchTest
+final class SearchQueryTest extends AbstractElasticsearch
 {
     /**
      * @test

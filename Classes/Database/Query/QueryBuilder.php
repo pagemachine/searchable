@@ -4,10 +4,11 @@ namespace PAGEmachine\Searchable\Database\Query;
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
+
 use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;
+use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Query builder which tracks inserts/updates for partial index updates

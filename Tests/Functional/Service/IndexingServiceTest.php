@@ -5,7 +5,7 @@ namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
 use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
-use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearch;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -16,7 +16,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Testcase for PAGEmachine\Searchable\Service\IndexingService
  */
-final class IndexingServiceTest extends AbstractElasticsearchTest
+final class IndexingServiceTest extends AbstractElasticsearch
 {
     /**
      * @var array
