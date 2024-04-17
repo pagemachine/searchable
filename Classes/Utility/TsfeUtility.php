@@ -67,7 +67,6 @@ class TsfeUtility
             $request->getAttribute('frontend.user')
         );
         $frontendController->determineId($request);
-        $frontendController->getConfigArray($request);
 
         $GLOBALS['TSFE'] = $frontendController;
     }

@@ -18,7 +18,5 @@ abstract class AbstractIndexCommand extends Command
     public function __construct(...$arguments)
     {
         parent::__construct(...$arguments);
-
-        $GLOBALS['BE_USER']->initializeUserSessionManager();
     }
 }

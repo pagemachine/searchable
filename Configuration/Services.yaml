@@ -79,6 +79,23 @@ services:
     public: true
     shared: false
 
+
+  PAGEmachine\Searchable\Query\AbstractQuery:
+    public: true
+    shared: false
+
+  PAGEmachine\Searchable\Query\AutosuggestQuery:
+    public: true
+    shared: false
+
   PAGEmachine\Searchable\Query\BulkQuery:
+    public: true
+    shared: false
+
+  PAGEmachine\Searchable\Query\SearchQuery:
+    public: true
+    shared: false
+
+  PAGEmachine\Searchable\Query\UpdateQuery:
     public: true
     shared: false
