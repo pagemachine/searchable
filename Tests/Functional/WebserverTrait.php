@@ -34,6 +34,7 @@ trait WebserverTrait
     protected function stopWebserver(): void
     {
         $this->serverProcess->stop(0);
+        unset($this->serverProcess);
     }
 
     private function waitForServer(string $host, int $port): void

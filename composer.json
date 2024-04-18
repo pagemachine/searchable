@@ -48,7 +48,7 @@
         "psr-4": {
             "PAGEmachine\\Searchable\\Tests\\": "Tests/",
             "Pagemachine\\SearchableExtbaseL10nTest\\": "Tests/Functional/Fixtures/Extensions/extbase_l10n_test/Classes/",
-            "TYPO3\\CMS\\Core\\Tests\\": "vendor/typo3/cms/typo3/sysext/core/Tests/"
+            "TYPO3\\CMS\\Core\\Tests\\": "web/typo3/sysext/core/Tests/"
         },
         "classmap": [
             "Tests/StaticAnalysis/Stubs/CommandController.php"
@@ -60,6 +60,9 @@
             "ergebnis/composer-normalize": true,
             "typo3/class-alias-loader": true,
             "typo3/cms-composer-installers": true
+        },
+        "preferred-install": {
+            "typo3/cms-core": "source"
         },
         "sort-packages": true
     },

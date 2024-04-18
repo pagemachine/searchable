@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Middleware;
 
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PAGEmachine\Searchable\Tests\Functional\WebserverTrait;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Testcase for PAGEmachine\Searchable\Middleware\UriBuilder
@@ -15,12 +16,22 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 final class UriBuilderTest extends FunctionalTestCase
 {
     use WebserverTrait;
+    use SiteBasedTestTrait;
 
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
+    ];
+
+    protected $frameworkExtensionsToLoad = [
+        'Resources/Core/Functional/Extensions/private_container',
+    ];
+
+    protected const LANGUAGE_PRESETS = [
+        'EN' => ['id' => 0, 'title' => 'English', 'locale' => 'en_US.UTF8'],
+        'DE' => ['id' => 1, 'title' => 'Deutsch', 'locale' => 'de_DE.UTF8'],
     ];
 
     /**
@@ -67,6 +78,13 @@ final class UriBuilderTest extends FunctionalTestCase
         );
 
         $this->setUpFrontendRootPage(1);
+        $this->writeSiteConfiguration(
+            '1',
+            $this->buildSiteConfiguration(1, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '/'),
+            ]
+        );
 
         $response = GeneralUtility::makeInstance(RequestFactory::class)->request(
             'http://localhost:8080/-/searchable/urls',
