@@ -31,10 +31,12 @@
         "phpstan/phpstan": "^1.0.0",
         "phpunit/phpunit": "^9.0",
         "psr/http-server-middleware": "^1.0",
+        "rector/rector": "^1.0",
         "saschaegerer/phpstan-typo3": "^1.0.0",
         "sclable/xml-lint": "^0.5.0",
         "slevomat/coding-standard": "^8.0",
         "squizlabs/php_codesniffer": "^3.0",
+        "ssch/typo3-rector": "^2.4",
         "symfony/process": "^5.1"
     },
     "autoload": {
@@ -85,11 +87,14 @@
             "@lint:php",
             "@lint:style",
             "@analyze:php",
-            "@lint:xml"
+            "@lint:xml",
+            "@php:rector:lint"
         ],
         "lint:php": "parallel-lint --show-deprecated --exclude bin --exclude vendor --exclude web .",
         "lint:style": "phpcs",
         "lint:xml": "xmllint --pattern '*.xlf,*.svg' Resources --ansi",
+        "php:rector:fix": "rector",
+        "php:rector:lint": "rector --dry-run --no-progress-bar",
         "test": [
             "@test:unit",
             "@test:functional"
