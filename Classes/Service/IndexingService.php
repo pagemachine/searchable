@@ -73,7 +73,7 @@ final class IndexingService
      */
     public function injectLogManager(LogManager $logManager): void
     {
-        $this->logger = $logManager->getLogger(__CLASS__);
+        $this->logger = $logManager->getLogger(self::class);
     }
 
     /**
@@ -279,7 +279,7 @@ final class IndexingService
             'memoryUsage' => memory_get_peak_usage(true) / 1000000,
         ]);
 
-        $this->signalDispatcher->dispatch(__CLASS__, 'afterIndexRun', [
+        $this->signalDispatcher->dispatch(self::class, 'afterIndexRun', [
             $this->runFullIndexing,
             $elapsedTime,
         ]);
@@ -360,6 +360,6 @@ final class IndexingService
 
     public function __toString(): string
     {
-        return __CLASS__;
+        return self::class;
     }
 }

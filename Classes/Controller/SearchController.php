@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Controller;
 
 use PAGEmachine\Searchable\Query\SearchQuery;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /*
@@ -32,22 +33,21 @@ class SearchController extends ActionController
      * Renders the search form
      *
      * @param string $term
-     * @return void
      */
-    public function searchbarAction($term = null)
+    public function searchbarAction($term = null): ResponseInterface
     {
         $this->view->assign("settings", $this->settings);
         $this->view->assign("term", $term);
+        return $this->htmlResponse();
     }
 
     /**
      * Renders the search form for a live search
-     *
-     * @return void
      */
-    public function liveSearchbarAction()
+    public function liveSearchbarAction(): ResponseInterface
     {
         $this->view->assign("settings", $this->settings);
+        return $this->htmlResponse();
     }
 
     /**
@@ -55,9 +55,8 @@ class SearchController extends ActionController
      *
      * @param string $term
      * @param int $page
-     * @return void
      */
-    public function resultsAction($term = null, $page = 1)
+    public function resultsAction($term = null, $page = 1): ResponseInterface
     {
         $result = [];
 
@@ -82,5 +81,6 @@ class SearchController extends ActionController
             'totalPages' => $pagesArray,
             'result' => $result,
         ]);
+        return $this->htmlResponse();
     }
 }

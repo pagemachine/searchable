@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Hook;
 
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -33,7 +34,7 @@ class DynamicFlexFormHook
     public function parseDataStructureByIdentifierPostProcess($dataStructure, $identifier)
     {
         if ($identifier['tableName'] == 'tt_content' && $identifier['fieldName'] == 'pi_flexform' && in_array($identifier['dataStructureKey'], $this->allowedIdentifiers)) {
-            list($pluginKey, $listType) = explode(",", $identifier['dataStructureKey']);
+            [$pluginKey, $listType] = explode(",", $identifier['dataStructureKey']);
             $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($pluginKey);
         }
         return $dataStructure;
@@ -115,7 +116,7 @@ class DynamicFlexFormHook
             $pluginSignature = strtolower('tx_' . $pluginName);
             if (is_array($setup['plugin.'][$pluginSignature . '.'])) {
                 $overruleConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($setup['plugin.'][$pluginSignature . '.']);
-                \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($pluginConfiguration, $overruleConfiguration);
+                ArrayUtility::mergeRecursiveWithOverrule($pluginConfiguration, $overruleConfiguration);
             }
         }
         return $pluginConfiguration;

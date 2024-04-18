@@ -1,7 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
+use PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
@@ -28,7 +31,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         ],
         'features' => [
             'completion' => [
-                'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                'className' => CompletionSuggestFeature::class,
                 'config' => [
                     'fields' => [
                         'title',
@@ -36,17 +39,17 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 ],
             ],
             'htmlStrip' => [
-                'className' => \PAGEmachine\Searchable\Feature\HtmlStripFeature::class,
+                'className' => HtmlStripFeature::class,
             ],
         ],
         'subCollectors' => [
             'content' => [
-                'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
+                'className' => TcaDataCollector::class,
                 'config' => [
                     'field' => 'content',
                     'table' => 'tt_content',
                     'resolver' => [
-                        'className' => \PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver::class,
+                        'className' => TtContentRelationResolver::class,
                     ],
                     'fields' => [
                         'header',

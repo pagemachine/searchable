@@ -5,6 +5,7 @@ use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -48,7 +49,7 @@ abstract class AbstractQuery implements QueryInterface
      */
     public function getParameter($key)
     {
-        return isset($this->parameters[$key]) ? $this->parameters[$key] : null;
+        return $this->parameters[$key] ?? null;
     }
 
     /**
@@ -152,7 +153,7 @@ abstract class AbstractQuery implements QueryInterface
     public function __construct(Client $client = null, Logger $logger = null, $features = null)
     {
         $this->client = $client ?: Connection::getClient();
-        $this->logger = $logger ?: GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
+        $this->logger = $logger ?: GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
 
         // Use get_class() instead of static self::class to retrieve the inherited child classname
         $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(get_class($this))['features'] ?? [];

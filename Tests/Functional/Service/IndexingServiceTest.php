@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
+use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
@@ -26,7 +27,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         'DB' => [
             'Connections' => [
                 'Default' => [
-                    'wrapperClass' => \PAGEmachine\Searchable\Database\Connection::class,
+                    'wrapperClass' => Connection::class,
                 ],
             ],
         ],
