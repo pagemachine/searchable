@@ -10,18 +10,15 @@
   stopOnFailure="false"
   stopOnIncomplete="false"
   stopOnSkipped="false"
-  cacheDirectory=".phpunit.cache"
-  backupStaticProperties="false"
-  requireCoverageMetadata="false"
 >
+  <coverage>
+    <include>
+      <directory suffix=".php">Classes/</directory>
+    </include>
+  </coverage>
   <testsuites>
     <testsuite name="Functional tests">
       <directory>Tests/Functional/</directory>
     </testsuite>
   </testsuites>
-  <source>
-    <include>
-      <directory suffix=".php">Classes/</directory>
-    </include>
-  </source>
 </phpunit>
