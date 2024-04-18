@@ -1,15 +1,19 @@
 <?php
-if (!defined('TYPO3_MODE')) {
+
+use PAGEmachine\Searchable\Controller\BackendController;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
+if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+ExtensionUtility::registerModule(
     'Searchable',
     'web',
     'searchable',
     '',
     [
-        \PAGEmachine\Searchable\Controller\BackendController::class => 'start, search, request, resetIndices, indexFull, indexPartial',
+        BackendController::class => 'start, search, request, resetIndices, indexFull, indexPartial',
     ],
     [
         'access' => 'user,group',

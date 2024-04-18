@@ -27,7 +27,7 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
         ],
         'subCollectors' => [
             'file' => [
-                'className' => \PAGEmachine\Searchable\DataCollector\TcaDataCollector::class,
+                'className' => TcaDataCollector::class,
                 'config' => [
                     'field' => 'file',
                     'fields' => [],

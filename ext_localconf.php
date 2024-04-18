@@ -1,47 +1,65 @@
 <?php
-if (!defined('TYPO3_MODE')) {
+
+use PAGEmachine\Searchable\Controller\SearchController;
+use PAGEmachine\Searchable\Eid\Autosuggest;
+use PAGEmachine\Searchable\Eid\Search;
+use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use PAGEmachine\Searchable\Feature\HighlightFeature;
+use PAGEmachine\Searchable\Feature\TermSuggestFeature;
+use PAGEmachine\Searchable\Hook\DynamicFlexFormHook;
+use PAGEmachine\Searchable\Query\AutosuggestQuery;
+use PAGEmachine\Searchable\Query\SearchQuery;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Log\LogLevel;
+use TYPO3\CMS\Core\Log\Writer\FileWriter;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
+if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+ExtensionUtility::configurePlugin(
     'Searchable',
     'Searchbar',
     [
-        \PAGEmachine\Searchable\Controller\SearchController::class => 'searchbar',
+        SearchController::class => 'searchbar',
     ],
     [
-        \PAGEmachine\Searchable\Controller\SearchController::class => 'searchbar',
+        SearchController::class => 'searchbar',
     ]
 );
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+ExtensionUtility::configurePlugin(
     'Searchable',
     'LiveSearchbar',
     [
-        \PAGEmachine\Searchable\Controller\SearchController::class => 'liveSearchbar',
+        SearchController::class => 'liveSearchbar',
     ],
     [
-        \PAGEmachine\Searchable\Controller\SearchController::class => 'liveSearchbar',
+        SearchController::class => 'liveSearchbar',
     ]
 );
 
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+ExtensionUtility::configurePlugin(
     'Searchable',
     'Results',
     [
-        \PAGEmachine\Searchable\Controller\SearchController::class => 'results',
+        SearchController::class => 'results',
     ],
     [
-        \PAGEmachine\Searchable\Controller\SearchController::class => 'results',
+        SearchController::class => 'results',
     ]
 );
 
 // Add custom logging
 if (empty($GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'])) {
     $GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'] = [
-        \TYPO3\CMS\Core\Log\LogLevel::ERROR => [
-            \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+        LogLevel::ERROR => [
+            FileWriter::class => [
                 'logFile' => 'typo3temp/logs/searchable.log',
             ],
         ],
@@ -79,20 +97,20 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         'number_of_replicas' => 0,
     ],
     'query' => [
-        PAGEmachine\Searchable\Query\SearchQuery::class => [
+        SearchQuery::class => [
             'features' => [
                 'highlighting' => [
-                    'className' => PAGEmachine\Searchable\Feature\HighlightFeature::class,
+                    'className' => HighlightFeature::class,
                 ],
                 'termSuggest' => [
-                    'className' => PAGEmachine\Searchable\Feature\TermSuggestFeature::class,
+                    'className' => TermSuggestFeature::class,
                 ],
             ],
         ],
-        PAGEmachine\Searchable\Query\AutosuggestQuery::class => [
+        AutosuggestQuery::class => [
             'features' => [
                 'completionSuggest' => [
-                    'className' => PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                    'className' => CompletionSuggestFeature::class,
                 ],
             ],
         ],
@@ -102,10 +120,10 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
 // Load Extension Manager settings
 (function (): void {
     try {
-        $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+        $extensionConfiguration = GeneralUtility::makeInstance(
+            ExtensionConfiguration::class
         )->get('searchable');
-    } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
+    } catch (ExtensionConfigurationExtensionNotConfiguredException $e) {
         $extensionConfiguration = [];
     }
 
@@ -122,9 +140,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
 })();
 
 //Register eid
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = \PAGEmachine\Searchable\Eid\Autosuggest::class . '::processRequest';
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = \PAGEmachine\Searchable\Eid\Search::class . '::processRequest';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = Autosuggest::class . '::processRequest';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = Search::class . '::processRequest';
 
 // Register Hook for dynamic Plugin FlexForms
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['searchable'] =
-        \PAGEmachine\Searchable\Hook\DynamicFlexFormHook::class;
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][FlexFormTools::class]['flexParsing']['searchable'] =
+        DynamicFlexFormHook::class;

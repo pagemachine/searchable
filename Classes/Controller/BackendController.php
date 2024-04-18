@@ -6,7 +6,9 @@ use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Search;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Backend\View\BackendTemplateView;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -21,6 +23,11 @@ class BackendController extends ActionController
      * @var IndexerFactory $indexerFactory
      */
     protected $indexerFactory;
+    private ModuleTemplateFactory $moduleTemplateFactory;
+    public function __construct(ModuleTemplateFactory $moduleTemplateFactory)
+    {
+        $this->moduleTemplateFactory = $moduleTemplateFactory;
+    }
 
     /**
      * @param IndexerFactory $indexerFactory
@@ -31,19 +38,11 @@ class BackendController extends ActionController
     }
 
     /**
-     * Backend Template Container
-     *
-     * @var string
-     */
-    protected $defaultViewObjectName = BackendTemplateView::class;
-
-    /**
      * Backend controller overview action to show general information about the elasticsearch instance
-     *
-     * @return void
      */
-    public function startAction()
+    public function startAction(): ResponseInterface
     {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         try {
             $this->view->assign("updates", $this->fetchScheduledUpdates());
 
@@ -54,6 +53,8 @@ class BackendController extends ActionController
         } catch (\Exception $e) {
             $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR);
         }
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
     }
 
     /**
@@ -84,14 +85,16 @@ class BackendController extends ActionController
      * Function to run search tests in the backend.
      * @todo remove this when everything works or extend to a debuggig device
      * @param string $term
-     * @return void
      */
-    public function searchAction($term)
+    public function searchAction($term): ResponseInterface
     {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $result = Search::getInstance()->search($term);
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
     }
 
     /**
@@ -99,10 +102,10 @@ class BackendController extends ActionController
      *
      * @param  string $url
      * @param  string $body
-     * @return void
      */
-    public function requestAction($url = '', $body = '')
+    public function requestAction($url = '', $body = ''): ResponseInterface
     {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         if ($url != '') {
             $result = $this->request($url, $body);
 
@@ -131,6 +134,8 @@ class BackendController extends ActionController
 
         $this->view->assign("url", $url);
         $this->view->assign("body", $body);
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
     }
 
     /**
@@ -142,7 +147,7 @@ class BackendController extends ActionController
      */
     protected function request($url, $body)
     {
-        $requestFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Http\RequestFactory::class);
+        $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
 
         $response = $requestFactory->request(
             $url,

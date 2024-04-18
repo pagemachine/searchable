@@ -1,10 +1,16 @@
 <?php
 namespace PAGEmachine\Searchable\Indexer;
 
+use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
+use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use PAGEmachine\Searchable\Feature\HighlightFeature;
+use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use PAGEmachine\Searchable\Mapper\DefaultMapper;
+use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
-
 class PagesIndexer extends Indexer
 {
     /**
@@ -13,10 +19,10 @@ class PagesIndexer extends Indexer
     protected static $defaultConfiguration = [
         'type' => 'pages',
         'collector' => [
-            'className' => \PAGEmachine\Searchable\DataCollector\PagesDataCollector::class,
+            'className' => PagesDataCollector::class,
         ],
         'link' => [
-            'className' => \PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder::class,
+            'className' => PageLinkBuilder::class,
             'config' => [
                 'titleField' => 'title',
                 'dynamicParts' => [
@@ -25,18 +31,18 @@ class PagesIndexer extends Indexer
             ],
         ],
         'preview' => [
-            'className' => \PAGEmachine\Searchable\Preview\FluidPreviewRenderer::class,
+            'className' => FluidPreviewRenderer::class,
             'config' => [
                 'templateName' => 'Preview/Pages',
                 'fields' => ['content'],
             ],
         ],
         'mapper' => [
-            'className' => \PAGEmachine\Searchable\Mapper\DefaultMapper::class,
+            'className' => DefaultMapper::class,
         ],
         'features' => [
             'highlighting' => [
-                'className' => \PAGEmachine\Searchable\Feature\HighlightFeature::class,
+                'className' => HighlightFeature::class,
                 'config' => [
                     'fields' => [
                         'content' => [
@@ -48,7 +54,7 @@ class PagesIndexer extends Indexer
                 ],
             ],
             'completion' => [
-                'className' => \PAGEmachine\Searchable\Feature\CompletionSuggestFeature::class,
+                'className' => CompletionSuggestFeature::class,
             ],
         ],
         'mapping' => [
