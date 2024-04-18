@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\TCA;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -23,6 +23,8 @@ class PlainValueProcessorTest extends UnitTestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->plainValueProcessor = new PlainValueProcessor();
     }
 
