@@ -17,7 +17,7 @@ ExtensionUtility::registerModule(
     ],
     [
         'access' => 'user,group',
-        'icon' => 'EXT:searchable/ext_icon.svg',
+        'icon' => 'EXT:searchable/Resources/Public/Icons/Extension.svg',
         'labels' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_mod.xlf',
     ]
 );
