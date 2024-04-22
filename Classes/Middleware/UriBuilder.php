@@ -28,7 +28,7 @@ final class UriBuilder implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // Simple static check for speed and to avoid side effects for unrelated requests
-        if (strpos($request->getUri()->getPath(), '/-/searchable/urls') !== 0) {
+        if (!str_starts_with($request->getUri()->getPath(), '/-/searchable/urls')) {
             return $handler->handle($request);
         }
 

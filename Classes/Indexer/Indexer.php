@@ -46,12 +46,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     protected $objectManager;
 
-
-    /**
-     * @var String $index
-     */
-    protected $index;
-
     /**
      * @var BulkQuery
      */
@@ -117,12 +111,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->type = $type;
     }
 
-
-    /**
-     * @var int $language
-     */
-    protected $language;
-
     /**
      * @return int
      */
@@ -139,12 +127,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     {
         $this->language = $language;
     }
-
-
-    /**
-     * @var array $config
-     */
-    protected $config;
 
     /**
      * @return array
@@ -173,12 +155,8 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      * @param LinkBuilderInterface|null $linkBuilder
      * @param array       $features
      */
-    public function __construct($index, $language, $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
+    public function __construct(protected $index, protected $language, protected $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
     {
-        $this->index = $index;
-        $this->config = $config;
-        $this->language = $language;
-
         $this->type = $this->config['type'] ?? null;
 
         $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
@@ -188,7 +166,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         $this->query = $query ?: new BulkQuery(
             $this->index,
             $this->type,
-            $config['pipeline'] ?? null
+            $this->config['pipeline'] ?? null
         );
 
         $this->setPreviewRenderer($previewRenderer);

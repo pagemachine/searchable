@@ -49,11 +49,6 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     }
 
     /**
-     * @var array
-     */
-    protected $config = [];
-
-    /**
      * @var \PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequestInterface
      */
     protected $frontendRequest;
@@ -61,10 +56,8 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     /**
      * @param array $config
      */
-    public function __construct($config = null)
+    public function __construct(protected $config = null)
     {
-        $this->config = $config;
-
         $this->frontendRequest = GeneralUtility::makeInstance(FrontendRequest::class);
     }
 

@@ -123,7 +123,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         $extensionConfiguration = GeneralUtility::makeInstance(
             ExtensionConfiguration::class
         )->get('searchable');
-    } catch (ExtensionConfigurationExtensionNotConfiguredException $e) {
+    } catch (ExtensionConfigurationExtensionNotConfiguredException) {
         $extensionConfiguration = [];
     }
 

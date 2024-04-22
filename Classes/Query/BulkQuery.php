@@ -11,11 +11,6 @@ namespace PAGEmachine\Searchable\Query;
 class BulkQuery extends AbstractQuery
 {
     /**
-     * @var string $index
-     */
-    protected $index;
-
-    /**
      * @return string
      */
     public function getIndex()
@@ -32,12 +27,6 @@ class BulkQuery extends AbstractQuery
         $this->index = $index;
     }
 
-
-    /**
-     * @var string $type
-     */
-    protected $type;
-
     /**
      * @return string
      */
@@ -47,19 +36,12 @@ class BulkQuery extends AbstractQuery
     }
 
     /**
-     * @param string $type
      * @return void
      */
     public function setType(string $type)
     {
         $this->type = $type;
     }
-
-
-    /**
-     * @var string $pipeline
-     */
-    protected $pipeline;
 
     /**
      * @return string
@@ -81,14 +63,11 @@ class BulkQuery extends AbstractQuery
     /**
      * @param string $index
      * @param string $type
+     * @param string $pipeline
      */
-    public function __construct($index, $type, $pipeline = null)
+    public function __construct(protected $index, protected $type, protected $pipeline = null)
     {
         parent::__construct();
-
-        $this->index = $index;
-        $this->type = $type;
-        $this->pipeline = $pipeline;
 
         $this->init();
     }

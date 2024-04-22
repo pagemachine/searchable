@@ -30,7 +30,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
      * @dataProvider languagesAndLinkConfigurations
      *
      * @param int $language
-     * @param array $expectedLinkConfiguration
      */
     public function createsFixedLinkConfigurationWithLanguage($language, array $expectedLinkConfiguration)
     {

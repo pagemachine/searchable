@@ -30,8 +30,6 @@ class LinkBuilder
 
     /**
      * Process request
-     *
-     * @param ServerRequestInterface $request
      */
     public function processRequest(ServerRequestInterface $request): ResponseInterface
     {
