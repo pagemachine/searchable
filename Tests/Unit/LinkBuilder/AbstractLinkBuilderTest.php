@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\LinkBuilder\AbstractLinkBuilder;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -20,6 +20,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class);
     }
 

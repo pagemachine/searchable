@@ -7,7 +7,6 @@ use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Log\LogLevel;
@@ -23,7 +22,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @var array
      */
-    protected $configurationToUseInTestInstance = [
+    protected array $configurationToUseInTestInstance = [
         'DB' => [
             'Connections' => [
                 'Default' => [
@@ -51,7 +50,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function indexesRecordsFully(): void
     {
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
@@ -79,14 +78,14 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function indexesRecordTranslations(): void
     {
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
             'slug' => '/test-page/',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 4,
             'pid' => 1,
             'sys_language_uid' => 1,
@@ -106,7 +105,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Translated test page',
                 'searchable_meta' => [
-                    'renderedLink' => '/da/translated-test-page/',
+                    'renderedLink' => '/de/translated-test-page/',
                 ],
             ],
             1
@@ -118,12 +117,12 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function appliesLanguageForRecordTranslationIndexing(): void
     {
-        $this->getDatabaseConnection()->insertArray('tt_content', [
+        $this->insertArray('tt_content', [
             'uid' => 1,
             'pid' => 1,
             'header' => 'Test content',
         ]);
-        $this->getDatabaseConnection()->insertArray('tt_content', [
+        $this->insertArray('tt_content', [
             'uid' => 2,
             'pid' => 1,
             'l18n_parent' => 1, // [sic!]
@@ -164,7 +163,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function indexesRecordsPartially(): void
     {
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
@@ -210,27 +209,27 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'First page to exclude',
             'no_search' => 1,
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 4,
             'pid' => 3,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'First regular page',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 5,
             'pid' => 4,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Second page to exclude',
             'no_search' => 1,
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 6,
             'pid' => 5,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
@@ -252,10 +251,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function respectsSiteBase(): void
     {
-        $siteConfiguration = GeneralUtility::makeInstance(
-            SiteConfiguration::class,
-            Environment::getConfigPath() . '/sites'
-        );
+        $siteConfiguration = GeneralUtility::makeInstance(SiteConfiguration::class);
         $configuration = $siteConfiguration->load('100');
         $configuration['base'] = 'https://bar.example.org/';
         $siteConfiguration->write('100', $configuration);
@@ -264,14 +260,14 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $configuration['base'] = 'https://qux.example.org/';
         $siteConfiguration->write('200', $configuration);
 
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 101,
             'pid' => 100,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Bar test page',
             'slug' => '/bar-test-page/',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 201,
             'pid' => 200,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
@@ -288,7 +284,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Bar test page',
                 'searchable_meta' => [
-                    'renderedLink' => 'https://bar.example.org/bar-test-page/',
+                    'renderedLink' => 'https://bar.example.org/100/bar-test-page/',
                 ],
             ]
         );
@@ -297,7 +293,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
             [
                 'title' => 'Qux test page',
                 'searchable_meta' => [
-                    'renderedLink' => 'https://qux.example.org/qux-test-page/',
+                    'renderedLink' => 'https://qux.example.org/200/qux-test-page/',
                 ],
             ]
         );
@@ -308,7 +304,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
      */
     public function indexesRecordsOfUnlocalizableTables(): void
     {
-        $this->getDatabaseConnection()->insertArray('tx_unlocalizedtabletest_unlocalizedtable', [
+        $this->insertArray('tx_unlocalizedtabletest_unlocalizedtable', [
             'uid' => 1,
             'pid' => 1,
             'title' => 'Test',

@@ -1,10 +1,10 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;
 use PAGEmachine\Searchable\Query\QueryInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -27,6 +27,8 @@ class TermSuggestFeatureTest extends UnitTestCase
      */
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->feature = new TermSuggestFeature();
     }
 

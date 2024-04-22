@@ -18,19 +18,19 @@ final class SearchQueryTest extends AbstractElasticsearchTest
      */
     public function searchesByTerm(): void
     {
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 3,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Test page',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 4,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Another test page',
         ]);
-        $this->getDatabaseConnection()->insertArray('pages', [
+        $this->insertArray('pages', [
             'uid' => 5,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,

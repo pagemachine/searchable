@@ -1,8 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -23,6 +23,8 @@ class PageLinkBuilderTest extends UnitTestCase
      */
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->pageLinkBuilder = new PageLinkBuilder();
     }
 

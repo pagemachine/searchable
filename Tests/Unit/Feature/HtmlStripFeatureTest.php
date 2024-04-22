@@ -5,9 +5,9 @@ namespace PAGEmachine\Searchable\Tests\Unit\Feature;
  * This file is part of the Pagemachine TÜV Hessen project.
  */
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Testcase for Pagemachine\TuevHessenSite\Searchable\Feature\HtmlStripFeature
@@ -24,6 +24,8 @@ class HtmlStripFeatureTest extends UnitTestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->htmlStripFeature = new HtmlStripFeature();
     }
 
