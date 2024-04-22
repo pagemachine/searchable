@@ -76,12 +76,15 @@
     "scripts": {
         "build": [
             "@composer require --no-progress --ansi --update-with-dependencies typo3/cms-core $TYPO3_VERSION",
-            "@composer validate --ansi",
-            "@composer normalize --no-update-lock --dry-run",
             "@lint",
             "@test"
         ],
+        "composer:lint": [
+            "@composer validate --ansi",
+            "@composer normalize --no-update-lock --dry-run"
+        ],
         "lint": [
+            "@composer:lint",
             "@php:syntax:lint",
             "@php:style:lint",
             "@php:static:lint",
