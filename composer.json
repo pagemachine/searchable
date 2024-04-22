@@ -74,7 +74,6 @@
         }
     },
     "scripts": {
-        "analyze:php": "phpstan analyse --ansi --no-progress --configuration=phpstan.neon",
         "build": [
             "@composer require --no-progress --ansi --update-with-dependencies typo3/cms-core $TYPO3_VERSION",
             "@composer validate --ansi",
@@ -82,24 +81,25 @@
             "@lint",
             "@test"
         ],
-        "fix:style": "phpcbf",
         "lint": [
-            "@lint:php",
-            "@lint:style",
-            "@analyze:php",
-            "@lint:xml",
+            "@php:syntax:lint",
+            "@php:style:lint",
+            "@php:static:lint",
+            "@xml:lint",
             "@php:rector:lint"
         ],
-        "lint:php": "parallel-lint --show-deprecated --exclude bin --exclude vendor --exclude web .",
-        "lint:style": "phpcs",
-        "lint:xml": "xmllint --pattern '*.xlf,*.svg' Resources --ansi",
+        "php:functional:test": "phpunit --configuration phpunit-functional.xml --colors=always",
         "php:rector:fix": "rector",
         "php:rector:lint": "rector --dry-run --no-progress-bar",
+        "php:static:lint": "phpstan analyse --ansi --no-progress --configuration=phpstan.neon",
+        "php:style:fix": "phpcbf",
+        "php:style:lint": "phpcs",
+        "php:syntax:lint": "parallel-lint --show-deprecated --exclude bin --exclude vendor --exclude web .",
+        "php:unit:test": "phpunit --colors=always",
         "test": [
-            "@test:unit",
-            "@test:functional"
+            "@php:unit:test",
+            "@php:functional:test"
         ],
-        "test:functional": "phpunit --configuration phpunit-functional.xml --colors=always",
-        "test:unit": "phpunit --colors=always"
+        "xml:lint": "xmllint --pattern '*.xlf,*.svg' Resources --ansi"
     }
 }
