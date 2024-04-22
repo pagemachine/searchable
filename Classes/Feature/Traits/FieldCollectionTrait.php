@@ -68,10 +68,9 @@ trait FieldCollectionTrait
     /**
      *
      * @param array $collection
-     * @param mixed $field
      * @return array $collection
      */
-    protected function mergeOrAddField($collection, $field)
+    protected function mergeOrAddField($collection, mixed $field)
     {
         if (is_array($field)) {
             $collection = array_merge($collection, $field);

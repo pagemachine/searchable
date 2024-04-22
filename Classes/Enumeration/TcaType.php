@@ -74,16 +74,10 @@ class TcaType extends Enumeration
      */
     public function convertToESType()
     {
-        switch ($this->__toString()) {
-            case self::INPUT:
-            case self::TEXT:
-                return 'text';
-
-            case self::RADIO:
-                return 'keyword';
-
-            default:
-                return 'text';
-        }
+        return match ($this->__toString()) {
+            self::INPUT, self::TEXT => 'text',
+            self::RADIO => 'keyword',
+            default => 'text',
+        };
     }
 }

@@ -15,16 +15,13 @@ use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
-final class IndexingService
+final class IndexingService implements \Stringable
 {
     /**
      * @var IndexerFactory $indexerFactory
      */
     protected $indexerFactory;
 
-    /**
-     * @param IndexerFactory $indexerFactory
-     */
     public function injectIndexerFactory(IndexerFactory $indexerFactory): void
     {
         $this->indexerFactory = $indexerFactory;
@@ -35,9 +32,6 @@ final class IndexingService
      */
     protected $persistenceManager;
 
-    /**
-     * @param PersistenceManagerInterface $persistenceManager
-     */
     public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager): void
     {
         $this->persistenceManager = $persistenceManager;
@@ -48,9 +42,6 @@ final class IndexingService
      */
     protected $signalDispatcher;
 
-    /**
-     * @param Dispatcher $signalDispatcher
-     */
     public function injectSignalDispatcher(Dispatcher $signalDispatcher)
     {
         $this->signalDispatcher = $signalDispatcher;
@@ -68,9 +59,6 @@ final class IndexingService
      */
     protected $logger;
 
-    /**
-     * @param LogManager $logManager
-     */
     public function injectLogManager(LogManager $logManager): void
     {
         $this->logger = $logManager->getLogger(self::class);
@@ -119,7 +107,7 @@ final class IndexingService
             $this->logger->error(sprintf(
                 'Invalid indexers configuration: %s [%s]',
                 $e->getMessage(),
-                get_class($e)
+                $e::class
             ));
 
             return;
@@ -151,8 +139,6 @@ final class IndexingService
 
     /**
      * Reset index for one or all languages
-     *
-     * @param int $language
      */
     public function resetIndex(int $language = null): void
     {

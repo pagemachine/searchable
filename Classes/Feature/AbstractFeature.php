@@ -34,16 +34,10 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
     }
 
     /**
-     * @var array
-     */
-    protected $config = [];
-
-    /**
      * @param array $config
      */
-    public function __construct($config = null)
+    public function __construct(protected $config = null)
     {
-        $this->config = $config;
     }
 
     /**
@@ -88,7 +82,6 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
     /**
      * Modifies a query before it is executed
      *
-     * @param QueryInterface $query
      * @return QueryInterface
      */
     public function modifyQuery(QueryInterface $query)

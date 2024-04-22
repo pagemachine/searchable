@@ -16,9 +16,6 @@ class SearchController extends ActionController
      */
     protected $searchQuery;
 
-    /**
-     * @param SearchQuery $searchQuery
-     */
     public function injectSearchQuery(SearchQuery $searchQuery): void
     {
         $this->searchQuery = $searchQuery;

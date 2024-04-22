@@ -23,8 +23,6 @@ abstract class AbstractEidHandler
 
     /**
      * Process request
-     *
-     * @param ServerRequestInterface $request
      */
     public function processRequest(ServerRequestInterface $request): ResponseInterface
     {

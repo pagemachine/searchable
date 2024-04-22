@@ -60,7 +60,7 @@ class FileIndexer extends TcaIndexer
                             'filename' => $file->getProperty('name'),
                             'data' => base64_encode($file->getContents()),
                         ];
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         // The actual file on disk does not exist for this file record.
                         // This should be logged, but for now we just skip it.
                         unset($records[$key]);

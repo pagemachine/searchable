@@ -17,9 +17,6 @@ class IndexerFactory implements SingletonInterface
      */
     protected $objectManager;
 
-    /**
-     * @param ObjectManager $objectManager
-     */
     public function injectObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;

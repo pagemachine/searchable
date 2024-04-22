@@ -23,15 +23,10 @@ class BackendController extends ActionController
      * @var IndexerFactory $indexerFactory
      */
     protected $indexerFactory;
-    private ModuleTemplateFactory $moduleTemplateFactory;
-    public function __construct(ModuleTemplateFactory $moduleTemplateFactory)
+    public function __construct(private ModuleTemplateFactory $moduleTemplateFactory)
     {
-        $this->moduleTemplateFactory = $moduleTemplateFactory;
     }
 
-    /**
-     * @param IndexerFactory $indexerFactory
-     */
     public function injectIndexerFactory(IndexerFactory $indexerFactory): void
     {
         $this->indexerFactory = $indexerFactory;
@@ -51,7 +46,7 @@ class BackendController extends ActionController
             $this->view->assign("health", $stats['health']);
             $this->view->assign("indices", $stats['indices']);
         } catch (\Exception $e) {
-            $this->addFlashMessage($e->getMessage(), get_class($e), AbstractMessage::ERROR);
+            $this->addFlashMessage($e->getMessage(), $e::class, AbstractMessage::ERROR);
         }
         $moduleTemplate->setContent($this->view->render());
         return $this->htmlResponse($moduleTemplate->renderContent());
@@ -111,17 +106,11 @@ class BackendController extends ActionController
 
             $this->view->assign('response', json_decode($result['body'], true));
 
-            switch ($result['status']) {
-                case '200':
-                    $resultColor = 'success';
-                    break;
-                case '404':
-                    $resultColor = 'danger';
-                    break;
-                default:
-                    $resultColor = 'warning';
-                    break;
-            }
+            $resultColor = match ($result['status']) {
+                '200' => 'success',
+                '404' => 'danger',
+                default => 'warning',
+            };
 
             $this->view->assignMultiple([
                 'status' => $result['status'],

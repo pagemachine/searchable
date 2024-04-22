@@ -27,9 +27,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected $pageRepository;
 
-    /**
-     * @param PageRepository $pageRepository
-     */
     public function injectPageRepository(PageRepository $pageRepository): void
     {
         $this->pageRepository = $pageRepository;
@@ -40,9 +37,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected $resolverManager;
 
-    /**
-     * @param ResolverManager $resolverManager
-     */
     public function injectResolverManager(ResolverManager $resolverManager): void
     {
         $this->resolverManager = $resolverManager;

@@ -54,10 +54,9 @@ abstract class AbstractQuery implements QueryInterface
 
     /**
      * @param string $key
-     * @param mixed $parameter
      * @return void
      */
-    public function setParameter($key, $parameter)
+    public function setParameter($key, mixed $parameter)
     {
         $this->parameters[$key] = $parameter;
     }
@@ -156,7 +155,7 @@ abstract class AbstractQuery implements QueryInterface
         $this->logger = $logger ?: GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
 
         // Use get_class() instead of static self::class to retrieve the inherited child classname
-        $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(get_class($this))['features'] ?? [];
+        $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(static::class)['features'] ?? [];
 
         if (!empty($features)) {
             foreach ($features as $key => $feature) {

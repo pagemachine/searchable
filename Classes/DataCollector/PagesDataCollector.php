@@ -178,8 +178,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     /**
      * Returns a list of page UIDs that are part of the given rootline page
      *
-     * @param array $pageUids
-     * @param int $rootlinePageUid
      * @return array
      */
     protected function filterPageListByRootline(array $pageUids, int $rootlinePageUid): array
@@ -193,7 +191,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
                     $filteredPageUids[] = $uid;
                 }
-            } catch (\RuntimeException $e) {
+            } catch (\RuntimeException) {
                 // If the page is deleted, RootlineUtility will throw a RuntimeException.
                 // We still queue the uid then to ensure it gets deleted in ES as well
                 $filteredPageUids[] = $uid;
