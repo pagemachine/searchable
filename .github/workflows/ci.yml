@@ -20,7 +20,6 @@ jobs:
     strategy:
       matrix:
         php:
-          - '8.0'
           - '8.1'
         typo3:
           - '^11.5'

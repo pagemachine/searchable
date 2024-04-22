@@ -23,7 +23,7 @@ class BackendController extends ActionController
      * @var IndexerFactory $indexerFactory
      */
     protected $indexerFactory;
-    public function __construct(private ModuleTemplateFactory $moduleTemplateFactory)
+    public function __construct(private readonly ModuleTemplateFactory $moduleTemplateFactory)
     {
     }
 
@@ -104,7 +104,7 @@ class BackendController extends ActionController
         if ($url != '') {
             $result = $this->request($url, $body);
 
-            $this->view->assign('response', json_decode($result['body'], true));
+            $this->view->assign('response', json_decode((string) $result['body'], true));
 
             $resultColor = match ($result['status']) {
                 '200' => 'success',
