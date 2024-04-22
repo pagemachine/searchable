@@ -27,7 +27,7 @@ class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRe
     {
         $rawfield = $record[$this->config['field']];
 
-        $processedField = substr($rawfield, 0, 200) . "...";
+        $processedField = substr((string) $rawfield, 0, 200) . "...";
 
         return $processedField;
     }

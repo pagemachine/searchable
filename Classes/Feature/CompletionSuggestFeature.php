@@ -96,7 +96,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
         $splittedContent = [];
         if (!empty($fields)) {
             foreach ($fields as $field) {
-                $split = preg_split($this->config['splitRegex'], $field);
+                $split = preg_split($this->config['splitRegex'], (string) $field);
                 $splittedContent = array_merge($splittedContent, $split);
             }
         }
