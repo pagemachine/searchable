@@ -47,7 +47,10 @@
         "psr-4": {
             "PAGEmachine\\Searchable\\Tests\\": "Tests/",
             "Pagemachine\\SearchableExtbaseL10nTest\\": "Tests/Functional/Fixtures/Extensions/extbase_l10n_test/Classes/",
-            "TYPO3\\CMS\\Core\\Tests\\": "web/typo3/sysext/core/Tests/"
+            "TYPO3\\CMS\\Core\\Tests\\": [
+                "web/typo3/sysext/core/Tests/",
+                "vendor/typo3/cms-core/Tests/"
+            ]
         },
         "classmap": [
             "Tests/StaticAnalysis/Stubs/CommandController.php"
