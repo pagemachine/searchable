@@ -13,14 +13,13 @@
         "php": "^8.1",
         "elasticsearch/elasticsearch": "^5.0 || ^7.0",
         "symfony/polyfill-php80": "^1.26",
-        "typo3/cms-backend": "^11.5",
-        "typo3/cms-core": "^11.5",
-        "typo3/cms-extbase": "^11.5",
-        "typo3/cms-fluid": "^11.5",
-        "typo3/cms-frontend": "^11.5"
+        "typo3/cms-backend": "^11.5 || ^12.4",
+        "typo3/cms-core": "^11.5 || ^12.4",
+        "typo3/cms-extbase": "^11.5 || ^12.4",
+        "typo3/cms-fluid": "^11.5 || ^12.4",
+        "typo3/cms-frontend": "^11.5 || ^12.4"
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": "^0.32.0",
         "dms/phpunit-arraysubset-asserts": "^0.5.0",
         "ergebnis/composer-normalize": "^2.6",
         "jangregor/phpstan-prophecy": "^1.0.0",
