@@ -4,6 +4,10 @@ services:
     autoconfigure: true
     public: false
 
+  PAGEmachine\Searchable\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
+
   PAGEmachine\Searchable\Command\Index\UpdateFullCommand:
     tags:
       - name: console.command
@@ -26,9 +30,3 @@ services:
 
   PAGEmachine\Searchable\Service\IndexingService:
     public: true
-
-  PAGEmachine\Searchable\Indexer\IndexerFactory:
-    public: false
-
-  PAGEmachine\Searchable\Controller\BackendController:
-    public: false
