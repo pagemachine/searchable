@@ -336,7 +336,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     {
         parent::setUp();
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->indexingService = $objectManager->get(IndexingService::class);
+        $this->indexingService = $this->get(IndexingService::class);
     }
 }

@@ -233,8 +233,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
         Bootstrap::initializeLanguageObject();
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->indexingService = $objectManager->get(IndexingService::class);
+        $this->indexingService = $this->get(IndexingService::class);
         $this->indexingService->setup();
 
         $this->startWebserver();

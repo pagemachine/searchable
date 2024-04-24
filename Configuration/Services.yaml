@@ -23,3 +23,9 @@ services:
     tags:
       - name: console.command
         command: index:setup
+
+  PAGEmachine\Searchable\Service\IndexingService:
+    public: true
+
+  PAGEmachine\Searchable\Indexer\IndexerFactory:
+    public: false
