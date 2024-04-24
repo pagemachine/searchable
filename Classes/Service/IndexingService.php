@@ -13,7 +13,6 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 final class IndexingService implements \Stringable
 {
@@ -35,16 +34,6 @@ final class IndexingService implements \Stringable
     public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager): void
     {
         $this->persistenceManager = $persistenceManager;
-    }
-
-    /**
-     * @var Dispatcher $signalDispatcher
-     */
-    protected $signalDispatcher;
-
-    public function injectSignalDispatcher(Dispatcher $signalDispatcher)
-    {
-        $this->signalDispatcher = $signalDispatcher;
     }
 
     private EventDispatcherInterface $eventDispatcher;
@@ -265,10 +254,6 @@ final class IndexingService implements \Stringable
             'memoryUsage' => memory_get_peak_usage(true) / 1000000,
         ]);
 
-        $this->signalDispatcher->dispatch(self::class, 'afterIndexRun', [
-            $this->runFullIndexing,
-            $elapsedTime,
-        ]);
         $this->eventDispatcher->dispatch(new AfterIndexRunEvent(
             $this->runFullIndexing,
             $elapsedTime
