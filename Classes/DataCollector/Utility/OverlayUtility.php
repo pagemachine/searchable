@@ -2,9 +2,9 @@
 namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -67,7 +67,6 @@ class OverlayUtility implements SingletonInterface
             } else {
                 $rawOverlay = $this->pageRepository->getLanguageOverlay($table, $tempRecord, $this->context->getAspect('language'));
             }
-
         } elseif ($language === 0) {
             return $record;
         }
