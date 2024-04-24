@@ -76,7 +76,6 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      *
      * @param  int $pid
      * @param  string $languages Language constraint, if null default is assumed (0,-1)
-     * @return array
      */
     protected function fetchContentUids($pid, $languages = null)
     {

@@ -86,7 +86,7 @@ abstract class AbstractQuery implements QueryInterface
     /**
      * @var Logger
      */
-    protected $logger;
+    protected Logger $logger;
 
     /**
      * Features
@@ -146,7 +146,6 @@ abstract class AbstractQuery implements QueryInterface
 
     /**
      * @param Client|null $client
-     * @param Logger|null $logger
      * @param array $features
      */
     public function __construct(Client $client = null, $features = null)

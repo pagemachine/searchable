@@ -17,7 +17,7 @@ class InlineRelationResolver implements SingletonInterface, RelationResolverInte
 {
     /**
      *
-     * @return SelectRelationResolver
+     * @return InlineRelationResolver
      */
     public static function getInstance()
     {
