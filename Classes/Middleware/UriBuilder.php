@@ -37,6 +37,7 @@ final class UriBuilder implements MiddlewareInterface
         $configurations = $request->getParsedBody()['configurations'] ?? [];
         $uris = [];
         $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $contentObjectRenderer->setRequest($request);
 
         foreach ($configurations as $index => $configuration) {
             $uris[$index] = $contentObjectRenderer->typoLink_URL($configuration);
