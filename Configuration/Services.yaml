@@ -29,3 +29,6 @@ services:
 
   PAGEmachine\Searchable\Indexer\IndexerFactory:
     public: false
+
+  PAGEmachine\Searchable\Controller\BackendController:
+    public: false
