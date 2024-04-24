@@ -20,11 +20,6 @@ class OverlayUtility implements SingletonInterface
     protected $pageRepository;
 
     /**
-     * @var Context
-     */
-    protected $context;
-
-    /**
      * @return OverlayUtility
      */
     public static function getInstance()
@@ -39,7 +34,6 @@ class OverlayUtility implements SingletonInterface
     public function __construct(PageRepository $pageRepository = null)
     {
         $this->pageRepository = $pageRepository ?: GeneralUtility::makeInstance(PageRepository::class);
-        $this->context = GeneralUtility::makeInstance(Context::class);
     }
 
     /**
@@ -65,7 +59,8 @@ class OverlayUtility implements SingletonInterface
             if ((new Typo3Version())->getMajorVersion() < 12) {
                 $rawOverlay = $this->pageRepository->getRecordOverlay($table, $tempRecord, $language, $overlayMode);
             } else {
-                $rawOverlay = $this->pageRepository->getLanguageOverlay($table, $tempRecord, $this->context->getAspect('language'));
+                $context = GeneralUtility::makeInstance(Context::class);
+                $rawOverlay = $this->pageRepository->getLanguageOverlay($table, $tempRecord, $context->getAspect('language'));
             }
         } elseif ($language === 0) {
             return $record;
