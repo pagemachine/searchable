@@ -11,13 +11,6 @@ namespace PAGEmachine\Searchable\Preview;
 class SimplePreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
 {
     /**
-     * @param array $config
-     */
-    public function __construct(protected $config)
-    {
-    }
-
-    /**
      * Renders the preview
      *
      * @param  array $record
