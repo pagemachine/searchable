@@ -7,7 +7,6 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -31,11 +30,6 @@ class PagesDataCollectorTest extends UnitTestCase
      * @var FormDataRecord
      */
     protected $formDataRecord;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
 
     /**
      * Set up this testcase
@@ -72,18 +66,15 @@ class PagesDataCollectorTest extends UnitTestCase
             ],
         ];
 
-        $this->objectManager = $this->prophesize(ObjectManager::class);
-        $this->objectManager->get(Argument::any())->willReturn(null);
+        $this->pageRepository = $this->prophesize(PageRepository::class);
+        GeneralUtility::addInstance(PageRepository::class, $this->pageRepository->reveal());
 
         $this->pagesDataCollector = $this->getMockBuilder(PagesDataCollector::class)
-        ->setConstructorArgs([$configuration, 0, $this->objectManager->reveal()])
-        ->setMethods([
+            ->setConstructorArgs([$configuration, 0])
+            ->onlyMethods([
                 'getRecord',
             ])
-        ->getMock();
-
-        $this->pageRepository = $this->prophesize(PageRepository::class);
-        $this->pagesDataCollector->injectPageRepository($this->pageRepository->reveal());
+            ->getMock();
 
         $this->formDataRecord = $this->prophesize(FormDataRecord::class);
         GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());
@@ -122,6 +113,8 @@ class PagesDataCollectorTest extends UnitTestCase
         $this->pageRepository->getMenu(3, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
         $this->pageRepository->getMenu(4, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
 
+        GeneralUtility::addInstance(PageRepository::class, $this->pageRepository->reveal());
+
         $records = $this->pagesDataCollector->getRecords();
 
         $this->assertEquals($pageList[0], $records->current());
@@ -159,6 +152,8 @@ class PagesDataCollectorTest extends UnitTestCase
         $this->pageRepository->getMenu(0, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['3' => ['doktype' => '1']]);
         $this->pageRepository->getMenu(3, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['4' => ['doktype' => '1']]);
         $this->pageRepository->getMenu(4, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
+
+        GeneralUtility::addInstance(PageRepository::class, $this->pageRepository->reveal());
 
         $records = $this->pagesDataCollector->getRecords();
 

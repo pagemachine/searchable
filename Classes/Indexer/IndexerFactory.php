@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Indexer;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -12,16 +12,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class IndexerFactory implements SingletonInterface
 {
-    /**
-     * @var ObjectManager $objectManager
-     */
-    protected $objectManager;
-
-    public function injectObjectManager(ObjectManager $objectManager): void
-    {
-        $this->objectManager = $objectManager;
-    }
-
     /**
      * Builds an array of indexers
      *
@@ -41,7 +31,7 @@ class IndexerFactory implements SingletonInterface
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
         foreach ($indexerConfiguration as $indexer) {
-            $indexers[] = $this->objectManager->get($indexer['className'], $index, $language, $indexer['config']);
+            $indexers[] = GeneralUtility::makeInstance($indexer['className'], $index, $language, $indexer['config']);
         }
 
         return $indexers;
@@ -64,7 +54,7 @@ class IndexerFactory implements SingletonInterface
         $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
 
         if ($indexerConfiguration[$type]) {
-            return $this->objectManager->get($indexerConfiguration[$type]['className'], $index, $language, $indexerConfiguration[$type]['config']);
+            return GeneralUtility::makeInstance($indexerConfiguration[$type]['className'], $index, $language, $indexerConfiguration[$type]['config']);
         } else {
             return null;
         }

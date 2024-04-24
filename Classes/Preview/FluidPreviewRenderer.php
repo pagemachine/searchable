@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -18,21 +20,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected $view;
 
-    public function injectView(StandaloneView $view): void
-    {
-        $this->view = $view;
-    }
-
-    /**
-     * @var ConfigurationManagerInterface $configurationManager
-     */
-    protected $configurationManager;
-
-    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void
-    {
-        $this->configurationManager = $configurationManager;
-    }
-
     /**
      * @var array
      */
@@ -41,11 +28,10 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
 
     ];
 
-    /**
-     * @return void
-     */
-    public function initializeObject()
+    public function __construct(...$arguments)
     {
+        parent::__construct(...$arguments);
+
         $this->prepareView();
     }
 
@@ -81,7 +67,9 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected function prepareView()
     {
-        $configuration = $this->configurationManager->getConfiguration(
+        $this->view = GeneralUtility::makeInstance(StandaloneView::class);
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+        $configuration = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
             'Searchable'
         );

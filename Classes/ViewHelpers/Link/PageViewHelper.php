@@ -7,7 +7,6 @@ namespace PAGEmachine\Searchable\ViewHelpers\Link;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**
@@ -40,8 +39,7 @@ class PageViewHelper extends AbstractTagBasedViewHelper
      */
     public function render($arguments = [])
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $uriBuilder = $objectManager->get(UriBuilder::class);
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $uri = $uriBuilder->reset()
             ->setTargetPageUid($arguments['pageUid'] ?: null)
             ->setTargetPageType($arguments['pageType'] ?: 0)

@@ -11,7 +11,6 @@ use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -38,13 +37,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     {
         return static::$defaultConfiguration;
     }
-
-    /**
-     * ObjectManager
-     *
-     * @var ObjectManager
-     */
-    protected $objectManager;
 
     /**
      * @var BulkQuery
@@ -150,18 +142,15 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      * @param int         $language The language uid to index
      * @param array      $config   The configuration to apply
      * @param BulkQuery|null $query
-     * @param ObjectManager|null $objectManager
      * @param PreviewRendererInterface|null $previewRenderer
      * @param LinkBuilderInterface|null $linkBuilder
      * @param array       $features
      */
-    public function __construct(protected $index, protected $language, protected $config = [], BulkQuery $query = null, ObjectManager $objectManager = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
+    public function __construct(protected $index, protected $language, protected $config = [], BulkQuery $query = null, PreviewRendererInterface $previewRenderer = null, LinkBuilderInterface $linkBuilder = null, $features = null)
     {
         $this->type = $this->config['type'] ?? null;
 
-        $this->objectManager = $objectManager?: GeneralUtility::makeInstance(ObjectManager::class);
-
-        $this->dataCollector = $this->objectManager->get($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
+        $this->dataCollector = GeneralUtility::makeInstance($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
 
         $this->query = $query ?: new BulkQuery(
             $this->index,
@@ -186,9 +175,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         } else {
             if (isset($this->config['preview'])) {
                 if (!empty($this->config['preview']['className'])) {
-                    $this->previewRenderer = $this->objectManager->get($this->config['preview']['className'], $this->config['preview']['config']);
+                    $this->previewRenderer = GeneralUtility::makeInstance($this->config['preview']['className'], $this->config['preview']['config']);
                 } else {
-                    $this->previewRenderer = $this->objectManager->get(DefaultPreviewRenderer::class, $this->config['preview']['config']);
+                    $this->previewRenderer = GeneralUtility::makeInstance(DefaultPreviewRenderer::class, $this->config['preview']['config']);
                 }
             }
         }
@@ -206,9 +195,9 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
         } else {
             if (isset($this->config['link'])) {
                 if (!empty($this->config['link']['className'])) {
-                    $this->linkBuilder = $this->objectManager->get($this->config['link']['className'], $this->config['link']['config']);
+                    $this->linkBuilder = GeneralUtility::makeInstance($this->config['link']['className'], $this->config['link']['config']);
                 } else {
-                    $this->linkBuilder = $this->objectManager->get(PageLinkBuilder::class, $this->config['link']['config']);
+                    $this->linkBuilder = GeneralUtility::makeInstance(PageLinkBuilder::class, $this->config['link']['config']);
                 }
             }
         }
@@ -225,7 +214,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
         if (!empty($features)) {
             foreach ($features as $key => $featureConfig) {
-                $this->features[$key] = $this->objectManager->get($featureConfig['className'], $featureConfig['config']);
+                $this->features[$key] = GeneralUtility::makeInstance($featureConfig['className'], $featureConfig['config']);
             }
         }
     }
