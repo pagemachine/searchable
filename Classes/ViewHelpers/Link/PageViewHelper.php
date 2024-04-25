@@ -44,7 +44,6 @@ class PageViewHelper extends AbstractTagBasedViewHelper
             ->setTargetPageUid($arguments['pageUid'] ?: null)
             ->setTargetPageType($arguments['pageType'] ?: 0)
             ->setNoCache($arguments['noCache'] ?: false)
-            ->setUseCacheHash(!($arguments['noCacheHash'] ?: false))
             ->setSection($arguments['section'] ?: '')
             ->setLinkAccessRestrictedPages($arguments['linkAccessRestrictedPages'] ?: false)
             ->setArguments($arguments['additionalParams'] ?: [])
