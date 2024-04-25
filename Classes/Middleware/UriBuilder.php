@@ -50,6 +50,7 @@ final class UriBuilder implements MiddlewareInterface
 
     private function bootFrontendController(ServerRequestInterface $request): void
     {
+        /** @var \TYPO3\CMS\Core\Site\Entity\Site|NullSite */
         $site = $request->getAttribute('site');
 
         if ($site instanceof NullSite) {
