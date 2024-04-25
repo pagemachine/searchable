@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
@@ -24,4 +25,8 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         AddLiteralSeparatorToNumberRector::class,
+        RemoveExtraParametersRector::class => [
+            __DIR__ . '/Classes/DataCollector/TCA/FormDataRecord.php',
+            __DIR__ . '/Classes/DataCollector/Utility/OverlayUtility.php',
+        ],
     ]);
