@@ -22,5 +22,6 @@ abstract class AbstractIndexCommand extends Command
         $this->indexingService = GeneralUtility::makeInstance(IndexingService::class);
 
         Bootstrap::initializeBackendAuthentication();
+        $GLOBALS['BE_USER']->initializeUserSessionManager();
     }
 }
