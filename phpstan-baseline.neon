@@ -1,0 +1,20 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method TYPO3\\\\CMS\\\\Backend\\\\Form\\\\FormDataCompiler\\:\\:compile\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: Classes/DataCollector/TCA/FormDataRecord.php
+
+		-
+			message: "#^Method TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\:\\:getLanguageOverlay\\(\\) invoked with 3 parameters, 2 required\\.$#"
+			count: 1
+			path: Classes/DataCollector/Utility/OverlayUtility.php
+		-
+			message: "#^Call to protected method getRecordOverlay\\(\\) of class TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\.$#"
+			count: 1
+			path: Classes/DataCollector/Utility/OverlayUtility.php
+
+		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Frontend\\\\Controller\\\\TypoScriptFrontendController\\:\\:getConfigArray\\(\\)\\.$#"
+			count: 1
+			path: Classes/Utility/TsfeUtility.php

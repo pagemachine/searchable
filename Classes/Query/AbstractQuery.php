@@ -86,7 +86,7 @@ abstract class AbstractQuery implements QueryInterface
     /**
      * @var Logger
      */
-    protected $logger;
+    protected Logger $logger;
 
     /**
      * Features
@@ -146,13 +146,12 @@ abstract class AbstractQuery implements QueryInterface
 
     /**
      * @param Client|null $client
-     * @param Logger|null $logger
      * @param array $features
      */
-    public function __construct(Client $client = null, Logger $logger = null, $features = null)
+    public function __construct(Client $client = null, $features = null)
     {
         $this->client = $client ?: Connection::getClient();
-        $this->logger = $logger ?: GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
+        $this->logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
 
         // Use get_class() instead of static self::class to retrieve the inherited child classname
         $features = $features ?: ConfigurationManager::getInstance()->getQueryConfiguration(static::class)['features'] ?? [];

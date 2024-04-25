@@ -10,7 +10,6 @@ use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
@@ -36,11 +35,6 @@ class TcaDataCollectorTest extends UnitTestCase
     protected $plainValueProcessor;
 
     /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
-    /**
      * Set up this testcase
      */
     protected function setUp(): void
@@ -53,10 +47,6 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->plainValueProcessor = $this->prophesize(PlainValueProcessor::class);
 
         $this->overlayUtility = $this->prophesize(OverlayUtility::class);
-
-        $this->objectManager = $this->prophesize(ObjectManager::class);
-        $this->objectManager->get(Argument::any())->willReturn(null);
-
 
         GeneralUtility::setSingletonInstance(FormDataRecord::class, $this->formDataRecord->reveal());
         GeneralUtility::setSingletonInstance(PlainValueProcessor::class, $this->plainValueProcessor->reveal());
@@ -133,7 +123,7 @@ class TcaDataCollectorTest extends UnitTestCase
 
         ];
 
-        $tcaDataCollector = new TcaDataCollector($configuration, 0, $this->objectManager->reveal());
+        $tcaDataCollector = new TcaDataCollector($configuration, 0);
 
         $this->formDataRecord->getRecord(123, 'example_table', [
             'uid',
@@ -173,8 +163,6 @@ class TcaDataCollectorTest extends UnitTestCase
         $subCollector->getConfig()->willReturn(
             ['field' => 'selectfield']
         );
-
-        $this->objectManager->get(TcaDataCollector::class, Argument::type("array"), 0)->willReturn($subCollector->reveal());
 
         $configuration = [
             'table' => 'example_table',
@@ -219,7 +207,6 @@ class TcaDataCollectorTest extends UnitTestCase
             'processedTca' => $recordTca,
         ];
 
-        $tcaDataCollector = new TcaDataCollector($configuration, 0, $this->objectManager->reveal());
 
         $this->formDataRecord->getRecord(123, 'example_table', Argument::type('array'))->willReturn($record);
 
@@ -228,14 +215,16 @@ class TcaDataCollectorTest extends UnitTestCase
             ->willReturn($record['databaseRow']);
 
         $resolver = $this->prophesize(SelectRelationResolver::class);
-        $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, $tcaDataCollector)->willReturn([[
+        $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, Argument::any())->willReturn([[
             'uid' => 123,
             'title' => 'foobar',
         ]]);
 
         $resolverManager = $this->prophesize(ResolverManager::class);
-        $resolverManager->findResolverForRelation("selectfield", $subCollector, $tcaDataCollector)->willReturn($resolver->reveal());
-        $tcaDataCollector->injectResolverManager($resolverManager->reveal());
+        $resolverManager->findResolverForRelation("selectfield", Argument::any(), Argument::any())->willReturn($resolver->reveal());
+        GeneralUtility::setSingletonInstance(ResolverManager::class, $resolverManager->reveal());
+
+        $tcaDataCollector = new TcaDataCollector($configuration, 0);
 
         $tcaDataCollector->addSubCollector("es_selectfield", $subCollector->reveal());
 
@@ -294,7 +283,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'processedTca' => $recordTca,
         ];
 
-        $tcaDataCollector = new TcaDataCollector($configuration, 1, $this->objectManager->reveal());
+        $tcaDataCollector = new TcaDataCollector($configuration, 1);
 
         $this->formDataRecord->getRecord(1, 'example_table', Argument::type('array'))->willReturn($record);
 

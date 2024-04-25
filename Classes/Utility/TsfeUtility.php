@@ -5,6 +5,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspectFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -67,7 +68,10 @@ class TsfeUtility
             $request->getAttribute('frontend.user')
         );
         $frontendController->determineId($request);
-        $frontendController->getConfigArray($request);
+
+        if ((new Typo3Version())->getMajorVersion() < 12) {
+            $frontendController->getConfigArray($request);
+        }
 
         $GLOBALS['TSFE'] = $frontendController;
     }

@@ -2,7 +2,9 @@
 namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -48,11 +50,18 @@ class OverlayUtility implements SingletonInterface
         $tca = $GLOBALS['TCA'][$table];
 
         if (isset($tca['ctrl']['languageField'])) {
-            $rawOverlay = $this->pageRepository->getRecordOverlay($table, [
+            $tempRecord = [
                 'uid' => $record['uid'],
                 'pid' => $record['pid'],
                 $tca['ctrl']['languageField'] => $record[$tca['ctrl']['languageField']],
-            ], $language, $overlayMode);
+            ];
+
+            if ((new Typo3Version())->getMajorVersion() < 12) {
+                $rawOverlay = $this->pageRepository->getRecordOverlay($table, $tempRecord, $language, $overlayMode);
+            } else {
+                $context = GeneralUtility::makeInstance(Context::class);
+                $rawOverlay = $this->pageRepository->getLanguageOverlay($table, $tempRecord, $context->getAspect('language'));
+            }
         } elseif ($language === 0) {
             return $record;
         }

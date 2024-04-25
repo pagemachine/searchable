@@ -37,6 +37,7 @@ final class UriBuilder implements MiddlewareInterface
         $configurations = $request->getParsedBody()['configurations'] ?? [];
         $uris = [];
         $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $contentObjectRenderer->setRequest($request);
 
         foreach ($configurations as $index => $configuration) {
             $uris[$index] = $contentObjectRenderer->typoLink_URL($configuration);
@@ -49,6 +50,7 @@ final class UriBuilder implements MiddlewareInterface
 
     private function bootFrontendController(ServerRequestInterface $request): void
     {
+        /** @var \TYPO3\CMS\Core\Site\Entity\Site|NullSite */
         $site = $request->getAttribute('site');
 
         if ($site instanceof NullSite) {

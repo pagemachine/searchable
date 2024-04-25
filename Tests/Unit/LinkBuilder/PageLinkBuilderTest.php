@@ -2,6 +2,9 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -13,6 +16,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class PageLinkBuilderTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PageLinkBuilder
      */
@@ -25,7 +30,8 @@ class PageLinkBuilderTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->pageLinkBuilder = new PageLinkBuilder();
+        $requestFactoryProphecy = $this->prophesize(RequestFactory::class);
+        GeneralUtility::addInstance(RequestFactory::class, $requestFactoryProphecy->reveal());
     }
 
     /**

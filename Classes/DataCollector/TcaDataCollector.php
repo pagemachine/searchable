@@ -10,7 +10,6 @@ use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -22,26 +21,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TcaDataCollector extends AbstractDataCollector implements DataCollectorInterface
 {
-    /**
-     * @var PageRepository $pageRepository
-     */
-    protected $pageRepository;
-
-    public function injectPageRepository(PageRepository $pageRepository): void
-    {
-        $this->pageRepository = $pageRepository;
-    }
-
-    /**
-     * @var ResolverManager $resolverManager
-     */
-    protected $resolverManager;
-
-    public function injectResolverManager(ResolverManager $resolverManager): void
-    {
-        $this->resolverManager = $resolverManager;
-    }
-
     /**
      * Holds one resolver for each subtype field
      * @var array
@@ -109,7 +88,8 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         parent::addSubCollector($field, $collector);
 
         $column = $collector->getConfig()['field'];
-        $this->relationResolvers[$field] = $this->resolverManager->findResolverForRelation($column, $collector, $this);
+        $resolverManager = GeneralUtility::makeInstance(ResolverManager::class);
+        $this->relationResolvers[$field] = $resolverManager->findResolverForRelation($column, $collector, $this);
     }
 
     /**
@@ -170,10 +150,9 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         $queryBuilder = $this->buildUidListQueryBuilder(true);
 
-        /** @var \Doctrine\DBAL\ForwardCompatibility\Result */
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
 
-        foreach ($result as $rawRecord) {
+        while ($rawRecord = $result->fetchAssociative()) {
             yield $this->getRecord($rawRecord['uid']);
         }
     }
@@ -205,8 +184,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 ]);
             }
 
-            /** @var \Doctrine\DBAL\ForwardCompatibility\Result */
-            $result = $queryBuilder->execute();
+            $result = $queryBuilder->executeQuery();
             $record = $result->fetchAssociative();
 
             if ($record) {

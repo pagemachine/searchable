@@ -7,7 +7,6 @@ namespace PAGEmachine\Searchable\ViewHelpers\Link;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**
@@ -40,20 +39,17 @@ class PageViewHelper extends AbstractTagBasedViewHelper
      */
     public function render($arguments = [])
     {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $uriBuilder = $objectManager->get(UriBuilder::class);
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $uri = $uriBuilder->reset()
             ->setTargetPageUid($arguments['pageUid'] ?: null)
             ->setTargetPageType($arguments['pageType'] ?: 0)
             ->setNoCache($arguments['noCache'] ?: false)
-            ->setUseCacheHash(!($arguments['noCacheHash'] ?: false))
             ->setSection($arguments['section'] ?: '')
             ->setLinkAccessRestrictedPages($arguments['linkAccessRestrictedPages'] ?: false)
             ->setArguments($arguments['additionalParams'] ?: [])
             ->setCreateAbsoluteUri($arguments['absolute'] ?: false)
             ->setAddQueryString($arguments['addQueryString'] ?: false)
             ->setArgumentsToBeExcludedFromQueryString($arguments['argumentsToBeExcludedFromQueryString'] ?: [])
-            ->setAddQueryStringMethod($arguments['addQueryStringMethod'] ?: null)
             ->build();
         if ((string)$uri !== '') {
             $this->tag->addAttribute('href', $uri);

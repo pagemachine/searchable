@@ -1,10 +1,10 @@
 <?php
-if (!defined('TYPO3_MODE')) {
+if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-    'PAGEmachine.Searchable',
+    'Searchable',
     'Searchbar',
     'Searchable: Search bar'
 );
@@ -16,7 +16,7 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_s
 );
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-    'PAGEmachine.Searchable',
+    'Searchable',
     'LiveSearchbar',
     'Searchable: Live Search bar (AJAX)'
 );
@@ -28,7 +28,7 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_l
 );
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-    'PAGEmachine.Searchable',
+    'Searchable',
     'Results',
     'Searchable: Results'
 );

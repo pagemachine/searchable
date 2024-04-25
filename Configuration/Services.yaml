@@ -4,6 +4,10 @@ services:
     autoconfigure: true
     public: false
 
+  PAGEmachine\Searchable\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
+
   PAGEmachine\Searchable\Command\Index\UpdateFullCommand:
     tags:
       - name: console.command
@@ -23,3 +27,9 @@ services:
     tags:
       - name: console.command
         command: index:setup
+
+  PAGEmachine\Searchable\Service\IndexingService:
+    public: true
+
+  PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord:
+    autowire: false

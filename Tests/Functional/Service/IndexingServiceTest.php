@@ -12,7 +12,6 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Testcase for PAGEmachine\Searchable\Service\IndexingService
@@ -336,7 +335,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     {
         parent::setUp();
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->indexingService = $objectManager->get(IndexingService::class);
+        $this->indexingService = $this->get(IndexingService::class);
     }
 }

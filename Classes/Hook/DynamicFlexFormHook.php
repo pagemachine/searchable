@@ -5,7 +5,6 @@ use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -102,9 +101,8 @@ class DynamicFlexFormHook
     protected function getPluginSettings($pluginName)
     {
         $extensionName = 'searchable';
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $backendConfigurationManager = $objectManager->get(BackendConfigurationManager::class);
-        $typoScriptService = $objectManager->get(TypoScriptService::class);
+        $backendConfigurationManager = GeneralUtility::makeInstance(BackendConfigurationManager::class);
+        $typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
 
         $setup = $backendConfigurationManager->getTypoScriptSetup();
 

@@ -5,6 +5,7 @@ use PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResol
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
@@ -112,7 +113,8 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
             ;
 
-        $rawList = $this->pageRepository->getMenu(
+        $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+        $rawList = $pageRepository->getMenu(
             $pid,
             implode(',', [
                 'uid',

@@ -5,8 +5,8 @@ namespace PAGEmachine\Searchable\Command\Index;
 
 use PAGEmachine\Searchable\Service\IndexingService;
 use Symfony\Component\Console\Command\Command;
+use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 abstract class AbstractIndexCommand extends Command
 {
@@ -19,9 +19,9 @@ abstract class AbstractIndexCommand extends Command
     {
         parent::__construct(...$arguments);
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->indexingService = $objectManager->get(IndexingService::class);
+        $this->indexingService = GeneralUtility::makeInstance(IndexingService::class);
 
+        Bootstrap::initializeBackendAuthentication();
         $GLOBALS['BE_USER']->initializeUserSessionManager();
     }
 }
