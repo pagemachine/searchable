@@ -50,7 +50,6 @@ class PageViewHelper extends AbstractTagBasedViewHelper
             ->setCreateAbsoluteUri($arguments['absolute'] ?: false)
             ->setAddQueryString($arguments['addQueryString'] ?: false)
             ->setArgumentsToBeExcludedFromQueryString($arguments['argumentsToBeExcludedFromQueryString'] ?: [])
-            ->setAddQueryStringMethod($arguments['addQueryStringMethod'] ?: null)
             ->build();
         if ((string)$uri !== '') {
             $this->tag->addAttribute('href', $uri);
