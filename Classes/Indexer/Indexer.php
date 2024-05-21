@@ -6,6 +6,7 @@ use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
 use PAGEmachine\Searchable\Preview\PreviewRendererInterface;
+use PAGEmachine\Searchable\Preview\RequestAwarePreviewRendererInterface;
 use PAGEmachine\Searchable\Query\BulkQuery;
 use PAGEmachine\Searchable\Query\UpdateQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -244,6 +245,10 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     {
         TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
 
+        if (is_a($this->previewRenderer, RequestAwarePreviewRendererInterface::class)) {
+            $this->previewRenderer->setRequest($GLOBALS['TYPO3_REQUEST']);
+        }
+
         $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
         $counter = 0;
@@ -286,6 +291,10 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     public function runUpdate()
     {
         TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
+
+        if (is_a($this->previewRenderer, RequestAwarePreviewRendererInterface::class)) {
+            $this->previewRenderer->setRequest($GLOBALS['TYPO3_REQUEST']);
+        }
 
         $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 

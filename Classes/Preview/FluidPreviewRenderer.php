@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Preview;
 
+use PAGEmachine\Searchable\Preview\RequestAwarePreviewRendererInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -13,7 +15,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 /**
  * Fluid Preview Renderer. Uses a Fluid Standalone View to render previews
  */
-class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface
+class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface, RequestAwarePreviewRendererInterface
 {
     /**
      * @var StandaloneView $view
@@ -33,6 +35,10 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
         parent::__construct(...$arguments);
 
         $this->prepareView();
+    }
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->view->setRequest($request);
     }
 
     /**
