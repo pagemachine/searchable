@@ -71,6 +71,8 @@ class TsfeUtility
 
         if ((new Typo3Version())->getMajorVersion() < 12) {
             $frontendController->getConfigArray($request);
+        } else {
+            $GLOBALS['TYPO3_REQUEST'] = $frontendController->getFromCache($GLOBALS['TYPO3_REQUEST']);
         }
 
         $GLOBALS['TSFE'] = $frontendController;
