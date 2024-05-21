@@ -39,7 +39,7 @@ class PlainValueProcessor implements SingletonInterface
         $activeItemKeys = BinaryConversionUtility::convertCheckboxValue($value, $itemCount);
 
         foreach ($activeItemKeys as $key) {
-            $label = $fieldTca['items'][$key][0];
+            $label = $fieldTca['items'][$key]['label'] ?? $fieldTca['items'][$key][0];
 
             if (str_starts_with((string) $label, 'LLL:')) {
                 $label = $this->getLanguageService()->sL($label);
@@ -64,8 +64,11 @@ class PlainValueProcessor implements SingletonInterface
 
         if (is_array($fieldTca['items'])) {
             foreach ($fieldTca['items'] as $set) {
-                if ((string)$set[1] === (string)$value) {
-                    $label = $set[0];
+                $setLabel = $set['label'] ?? $set[0];
+                $setValue = $set['value'] ?? $set[1];
+
+                if ((string)$setValue === (string)$value) {
+                    $label = $setLabel;
                     break;
                 }
             }
