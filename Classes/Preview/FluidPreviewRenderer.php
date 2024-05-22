@@ -38,7 +38,9 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     }
     public function setRequest(ServerRequestInterface $request): void
     {
-        $this->view->setRequest($request);
+        if (method_exists($this->view, 'setRequest')) {
+            $this->view->setRequest($request);
+        }
     }
 
     /**
