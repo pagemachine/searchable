@@ -188,7 +188,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         foreach ($pageUids as $uid) {
             try {
-                $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $uid)->get();
+                $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, (int)$uid)->get();
 
                 if (in_array($rootlinePageUid, array_column($rootLine, 'uid'), true)) {
                     $filteredPageUids[] = $uid;
