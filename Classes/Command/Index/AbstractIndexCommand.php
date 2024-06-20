@@ -5,6 +5,7 @@ namespace PAGEmachine\Searchable\Command\Index;
 
 use PAGEmachine\Searchable\Service\IndexingService;
 use Symfony\Component\Console\Command\Command;
+use TYPO3\CMS\Core\Authentication\CommandLineUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -22,6 +23,9 @@ abstract class AbstractIndexCommand extends Command
         $this->indexingService = GeneralUtility::makeInstance(IndexingService::class);
 
         Bootstrap::initializeBackendAuthentication();
-        $GLOBALS['BE_USER']->initializeUserSessionManager();
+
+        if ($GLOBALS['BE_USER'] instanceof CommandLineUserAuthentication) {
+            $GLOBALS['BE_USER']->initializeUserSessionManager();
+        }
     }
 }
