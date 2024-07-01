@@ -24,7 +24,7 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Creates a new indice for every Indexer. This keeps the configuration simple even if it is not the real index structure in elasticsearch.
+     * Creates a new ES indice for every indece Indexer combination in the config. This keeps the configuration simple even if it is not the real index structure in elasticsearch.
      * This is necessary because since elastic 7.0 one indice can only have one document type.
      *
      * @return array
@@ -61,68 +61,6 @@ class ExtconfService implements SingletonInterface
         return array_keys($indicesConfiguration);
     }
 
-    /**
-     * Returns the indice key of the config for a given elasticsearch index (Should only be needed for the overview in the backend module)
-     *
-     * @return string
-     */
-    public static function getConfigIndex($nameIndex = '')
-    {
-        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['configIndex'];
-
-        if (empty($index)) {
-            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
-        }
-        return $index;
-    }
-
-    /**
-     * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
-     *
-     * @param  string $nameIndex
-     * @return string $index
-     */
-    public static function getIndex($nameIndex = '')
-    {
-        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['name'];
-
-        if (empty($index)) {
-            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
-        }
-        return $index;
-    }
-
-    /**
-     * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
-     *
-     * @param  string $nameIndex
-     * @return int $language
-     */
-    public static function getIndexLanguage($nameIndex = '')
-    {
-        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo3_language'];
-
-        if (!isset($language)) {
-            throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
-        }
-        return $language;
-    }
-
-    /**
-     * Returns the indexer for a given index name, if set. Otherwise throws an error
-     *
-     * @param  string $nameIndex
-     * @return string $indexerName
-     */
-    public static function getIndexIndexer(string $nameIndex)
-    {
-        $indexerName = ExtconfService::getElasticsearchIndices()[$nameIndex]['indexer'];
-
-        if (empty($indexerName)) {
-            throw new UndefinedIndexException('Indexer for Index ' . $nameIndex . ' is not defined!');
-        }
-        return $indexerName;
-    }
 
     /**
      * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
@@ -130,7 +68,7 @@ class ExtconfService implements SingletonInterface
      * @param  int $language
      * @return array $indices
      */
-    public static function getLanguageIndices($language = 0)
+    public static function getIndecesByLanguage($language = 0)
     {
         $indicesConfiguration = ExtconfService::getElasticsearchIndices();
         $indices = [];
@@ -148,12 +86,75 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
+     * Returns the indice key of the config for a given elasticsearch index (Should only be needed for the overview in the backend module)
+     *
+     * @return string
+     */
+    public static function getConfigOfIndex($nameIndex = '')
+    {
+        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['configIndex'];
+
+        if (empty($index)) {
+            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
+        }
+        return $index;
+    }
+
+    /**
+     * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
+     *
+     * @param  string $nameIndex
+     * @return string $index
+     */
+    public static function getNameOfIndex($nameIndex = '')
+    {
+        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['name'];
+
+        if (empty($index)) {
+            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
+        }
+        return $index;
+    }
+
+    /**
+     * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
+     *
+     * @param  string $nameIndex
+     * @return int $language
+     */
+    public static function getLanguageOfIndex($nameIndex = '')
+    {
+        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo3_language'];
+
+        if (!isset($language)) {
+            throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
+        }
+        return $language;
+    }
+
+    /**
+     * Returns the indexer for a given index name, if set. Otherwise throws an error
+     *
+     * @param  string $nameIndex
+     * @return string $indexerName
+     */
+    public static function getIndexerKeysOfIndex(string $nameIndex)
+    {
+        $indexerName = ExtconfService::getElasticsearchIndices()[$nameIndex]['indexer'];
+
+        if (empty($indexerName)) {
+            throw new UndefinedIndexException('Indexer for Index ' . $nameIndex . ' is not defined!');
+        }
+        return $indexerName;
+    }
+
+    /**
      * Returns the index settings for a given index
      *
      * @param  string $indexName
      * @return array $settings
      */
-    public static function getIndexSettings($indexName)
+    public static function getSettingsOfIndex($indexName)
     {
         $indeces = ExtconfService::getElasticsearchIndices();
 
@@ -178,7 +179,7 @@ class ExtconfService implements SingletonInterface
      * @param string $indexName
      * @return array $environment
      */
-    public static function getIndexEnvironment($indexName)
+    public static function getEnviormentOfIndex($indexName)
     {
         foreach (ExtconfService::getElasticsearchIndices() as $index) {
             if ($index['name'] == $indexName && isset($index['environment'])) {
@@ -245,24 +246,14 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns raw indexer configuration
-     *
-     * @return array
-     */
-    public function getIndexerConfiguration()
-    {
-        return ExtconfService::getIndexers();
-    }
-
-    /**
      * Returns indexers configuration
      *
      * @param string $indexerName
      * @return array $config
      */
-    public static function getIndexersConfiguration($indexerName)
+    public static function getTypeOfIndexer($indexerName)
     {
-        return ExtconfService::getIndexers()[$indexerName]['config'];
+        return ExtconfService::getIndexers()[$indexerName]['config']['type'];
     }
 
     /**
