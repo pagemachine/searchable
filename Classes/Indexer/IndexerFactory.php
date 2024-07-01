@@ -33,27 +33,4 @@ class IndexerFactory implements SingletonInterface
 
         return GeneralUtility::makeInstance($indexer['className'], $index, ExtconfService::getLanguageOfIndex($index), $indexer['config']);
     }
-
-    public function makeIndexersForLangauge($language = 0)
-    {
-        $indexers = [];
-
-        if (!empty(ExtconfService::getIndecesByLanguage($language))) {
-            $indices = ExtconfService::getIndecesByLanguage($language);
-        } else {
-            return [];
-        }
-
-        $indexerConfiguration = ConfigurationManager::getInstance()->getIndexerConfiguration();
-
-        foreach ($indices as $index) {
-            foreach ($indexerConfiguration as $indexer) {
-                if ($indexer['config']['type'] == ExtconfService::getTypeOfIndexer(ExtconfService::getIndexerKeyOfIndex($index))) {
-                    $indexers[] = GeneralUtility::makeInstance($indexer['className'], $index, $language, $indexer['config']);
-                }
-            }
-        }
-
-        return $indexers;
-    }
 }
