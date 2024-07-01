@@ -138,7 +138,7 @@ class ExtconfService implements SingletonInterface
      * @param  string $nameIndex
      * @return string $indexerName
      */
-    public static function getIndexerKeysOfIndex(string $nameIndex)
+    public static function getIndexerKeyOfIndex(string $nameIndex)
     {
         $indexerName = ExtconfService::getElasticsearchIndices()[$nameIndex]['indexer'];
 
