@@ -67,7 +67,7 @@ class ConfigurationManager implements SingletonInterface
     public function getIndexerConfiguration()
     {
         if ($this->processedConfiguration == null) {
-            $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
+            $configuration = ExtconfService::getInstance()->getIndexers();
             $mapping = [];
 
             foreach ($configuration as $key => $indexerConfiguration) {

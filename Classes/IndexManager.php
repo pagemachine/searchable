@@ -105,7 +105,7 @@ class IndexManager implements SingletonInterface
         $params = [
             'index' => $index,
             'body' => [
-                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index)),
+                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getSettingsOfIndex($index)),
             ],
         ];
 

@@ -33,9 +33,9 @@ class ExtconfService implements SingletonInterface
     {
         $indices = [];
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $indeceKey => $indece) {
-            $indexer = $indece['indexer'];
-
-            if (!isset($indexer) || empty($indexer)) {
+            if (isset($indece['indexer']) && !empty($indece['indexer'])) {
+                $indexer = $indece['indexer'];
+            } else {
                 // If no indexer are set use all defined indexers
                 $indexer = array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']);
             }
@@ -158,10 +158,8 @@ class ExtconfService implements SingletonInterface
     {
         $indeces = ExtconfService::getElasticsearchIndices();
 
-        $settings = $indeces[$indexName]['settings'];
-
-        if (!empty($settings)) {
-            return $settings;
+        if (!empty($indeces[$indexName]['settings'])) {
+            return $indeces[$indexName]['settings'];
         }
 
         foreach ($indeces as $index) {
@@ -181,10 +179,10 @@ class ExtconfService implements SingletonInterface
      */
     public static function getEnviormentOfIndex($indexName)
     {
-        foreach (ExtconfService::getElasticsearchIndices() as $index) {
-            if ($index['name'] == $indexName && isset($index['environment'])) {
-                return $index['environment'];
-            }
+        $indeces = ExtconfService::getElasticsearchIndices();
+
+        if (!empty($indeces[$indexName]['environment'])) {
+            return $indeces[$indexName]['environment'];
         }
 
         return [];
