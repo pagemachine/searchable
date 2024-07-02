@@ -88,4 +88,30 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
     {
         return $query;
     }
+
+    /**
+     * Adds copy_to flag to field mapping
+     *
+     * @param array $fieldArray
+     * @param array $mapping
+     * @param string $copyToField
+     */
+    protected static function addRecursiveCopyTo($fieldArray, $mapping, $copyToField)
+    {
+        if (!empty($fieldArray)) {
+            foreach ($fieldArray as $key => $field) {
+                if (is_array($field)) {
+                    $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key] ?? [], $copyToField);
+                } else {
+                    $mapping['properties'][$field]['type'] = 'text';
+                    if (!isset($mapping['properties'][$field]['copy_to'])) {
+                        $mapping['properties'][$field]['copy_to'] = [];
+                    }
+                    $mapping['properties'][$field]['copy_to'][] = $copyToField;
+                }
+            }
+        }
+
+        return $mapping;
+    }
 }

@@ -31,11 +31,6 @@ class FileIndexer extends TcaIndexer
         'mapper' => [
             'className' => DefaultMapper::class,
         ],
-        'mapping' => [
-            '_all' => [
-                'store' => true,
-            ],
-        ],
     ];
 
     /**
