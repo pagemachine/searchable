@@ -32,17 +32,21 @@ class ExtconfService implements SingletonInterface
     protected static function getElasticsearchIndices()
     {
         $indices = [];
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $indeceKey => $indece) {
-            if (isset($indece['indexer']) && !empty($indece['indexer'])) {
-                $indexer = $indece['indexer'];
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $indexKey => $index) {
+            if (!isset($index['typo3_language'])) {
+                throw new \Exception('Please set the "typo3_language" for the index ' . $indexKey, 1719935622);
+            }
+
+            if (isset($index['indexer']) && !empty($index['indexer'])) {
+                $indexer = $index['indexer'];
             } else {
                 // If no indexer are set use all defined indexers
                 $indexer = array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']);
             }
             foreach ($indexer as $key) {
-                $indices[$indeceKey . '_' . $key] = $indece;
-                $indices[$indeceKey . '_' . $key]['indexer'] = $key;
-                $indices[$indeceKey . '_' . $key]['configIndex'] = $indeceKey;
+                $indices[$indexKey . '_' . $key] = $index;
+                $indices[$indexKey . '_' . $key]['indexer'] = $key;
+                $indices[$indexKey . '_' . $key]['configIndex'] = $indexKey;
             }
         }
 
