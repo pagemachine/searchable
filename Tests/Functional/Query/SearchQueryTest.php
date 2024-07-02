@@ -45,8 +45,8 @@ final class SearchQueryTest extends AbstractElasticsearchTest
 
         $result = $query->execute();
 
-        $this->assertEquals(2, $result['hits']['total']);
-        $this->assertEquals('Test page', $result['hits']['hits'][1]['_source']['title']);
-        $this->assertEquals('Another test page', $result['hits']['hits'][0]['_source']['title']);
+        $this->assertEquals(2, $result['hits']['total']['value']);
+        $this->assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
+        $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
     }
 }

@@ -170,7 +170,7 @@ class ConfigurationManager implements SingletonInterface
                 foreach ($defaultMapping['features'] as $key => $feature) {
                     if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
                         $indexerConfiguration['config']['mapping'] = $feature['className']::modifyDefaultMapping(
-                            $indexerConfiguration['config']['mapping']
+                            $indexerConfiguration['config']['mapping'] ?? [],
                         );
                     }
                 }
@@ -182,7 +182,7 @@ class ConfigurationManager implements SingletonInterface
 
                     if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
                         $indexerConfiguration['config']['mapping'] = $feature['className']::modifyMapping(
-                            $indexerConfiguration['config']['mapping'],
+                            $indexerConfiguration['config']['mapping'] ?? [],
                             $indexerConfiguration['config']['features'][$key]['config']
                         );
                     }
