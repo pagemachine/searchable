@@ -270,7 +270,7 @@ class ExtconfService implements SingletonInterface
      */
     public function getHostsSettings()
     {
-        $hosts = explode(",", $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts']);
+        $hosts = explode(",", (string) $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts']);
 
         return $hosts;
     }
