@@ -244,17 +244,6 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns indexers configuration
-     *
-     * @param string $indexerName
-     * @return array $config
-     */
-    public static function getTypeOfIndexer($indexerName)
-    {
-        return ExtconfService::getIndexers()[$indexerName]['config']['type'];
-    }
-
-    /**
      * Returns the update index
      * @return string
      */
