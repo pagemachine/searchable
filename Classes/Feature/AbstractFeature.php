@@ -56,6 +56,18 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
     }
 
     /**
+     * Entry point to modify Default mapping.
+     * Static to improve performance
+     *
+     * @param  array  $mapping
+     * @return array  $mapping
+     */
+    public static function modifyDefaultMapping($mapping)
+    {
+        return $mapping;
+    }
+
+    /**
      * Entry point to modify mapping.
      * Static to improve performance
      *

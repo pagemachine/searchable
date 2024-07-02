@@ -30,6 +30,24 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface
     public static $fieldName = "searchable_suggest";
 
     /**
+     * Entry point to modify Default mapping.
+     * Static to improve performance
+     *
+     * @param  array  $mapping
+     * @return array  $mapping
+     */
+    public static function modifyDefaultMapping($mapping)
+    {
+        $mapping['properties'][self::$fieldName] = [
+            'type' => 'text',
+            // Suggestion field needs to be stored as copied content so it is not included in _source
+            'store' => true,
+        ];
+
+        return $mapping;
+    }
+
+    /**
      * Entry point to modify mapping
      *
      * @param  array  $mapping
@@ -38,12 +56,6 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface
      */
     public static function modifyMapping($mapping, $configuration)
     {
-        $mapping['properties'][self::$fieldName] = [
-            'type' => 'text',
-            // Suggestion field needs to be stored as copied content so it is not included in _source
-            'store' => true,
-        ];
-
         $mapping = self::addRecursiveCopyTo($configuration['fields'], $mapping, self::$fieldName);
 
         return $mapping;

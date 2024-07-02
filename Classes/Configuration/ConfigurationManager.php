@@ -161,6 +161,17 @@ class ConfigurationManager implements SingletonInterface
                 $indexerConfiguration['config']['link'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['link'], $indexerConfiguration);
             }
 
+            $defaultMapping = ExtconfService::getInstance()->getDefaultMappingConfiguration();
+            if (!empty($defaultMapping) && !empty($defaultMapping['features'])) {
+                foreach ($defaultMapping['features'] as $key => $feature) {
+                    if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
+                        $indexerConfiguration['config']['mapping'] = $feature['className']::modifyDefaultMapping(
+                            $indexerConfiguration['config']['mapping']
+                        );
+                    }
+                }
+            }
+
             if (!empty($indexerConfiguration['config']['features'])) {
                 foreach ($indexerConfiguration['config']['features'] as $key => $feature) {
                     $indexerConfiguration['config']['features'][$key] = $this->addClassDefaultConfiguration($feature, $indexerConfiguration);

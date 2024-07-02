@@ -286,6 +286,16 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
+     * Returns the globally registered query configuration
+     *
+     * @return array
+     */
+    public function getDefaultMappingConfiguration()
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultMapping'];
+    }
+
+    /**
      * Returns the frontend domain to use for link building
      *
      * @return string
