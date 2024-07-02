@@ -63,7 +63,7 @@ class IndexManager implements SingletonInterface
                 ];
             };
 
-            foreach (ExtconfService::getIndexers() as $name => $config) {
+            foreach (ExtconfService::getInstance()->getIndexers() as $name => $config) {
                 if ($name == ExtconfService::getIndexerKeyOfIndex($index)) {
                     $info[$configKey]['types'][$name] = [
                         'name' => $name,

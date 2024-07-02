@@ -62,7 +62,7 @@ class TermSuggestFeatureTest extends UnitTestCase
                     'suggestion' => [
                         'text' => 'searchword',
                         'term' => [
-                            'field' => '_all',
+                            'field' => 'searchable_suggest',
                         ],
                     ],
                 ],

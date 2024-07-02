@@ -218,7 +218,7 @@ class ExtconfService implements SingletonInterface
      *
      * @return array
      */
-    public static function getIndexers()
+    public function getIndexers()
     {
         $indexer = [];
 

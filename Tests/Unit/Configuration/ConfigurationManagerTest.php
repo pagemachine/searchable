@@ -45,6 +45,8 @@ class ConfigurationManagerTest extends UnitTestCase
 
         $this->extconfService = $this->prophesize(ExtconfService::class);
 
+        $this->extconfService->getDefaultMappingConfiguration()->willReturn([]);
+
         GeneralUtility::setSingletonInstance(ExtconfService::class, $this->extconfService->reveal());
     }
 
@@ -61,7 +63,7 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
         $expectedConfiguration = [
             'pages' => [
@@ -88,7 +90,7 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
         $this->assertEquals($configuration, $this->configurationManager->getIndexerConfiguration());
     }
@@ -112,7 +114,7 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
         $expectedConfiguration = [
             'pages' => [
@@ -162,7 +164,7 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
         $expectedConfiguration = [
             'pages' => [
@@ -217,9 +219,9 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
-        $mapping = $this->configurationManager->getMapping('pages');
+        $mapping = $this->configurationManager->getMapping();
 
         $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
         $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
@@ -251,9 +253,9 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
-        $mapping = $this->configurationManager->getMapping('pages');
+        $mapping = $this->configurationManager->getMapping();
 
         $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
         $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
@@ -316,7 +318,7 @@ class ConfigurationManagerTest extends UnitTestCase
                 ],
             ],
         ];
-        $this->extconfService->getIndexerConfiguration()->willReturn($configuration);
+        $this->extconfService->getIndexers()->willReturn($configuration);
 
         $expectedUpdateConfiguration = [
             'database' => [

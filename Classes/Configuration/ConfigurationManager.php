@@ -89,10 +89,14 @@ class ConfigurationManager implements SingletonInterface
      * @param  string $index The index to pull the mapping from
      * @return array
      */
-    public function getMapping($index)
+    public function getMapping($index = null)
     {
         if ($this->processedMapping == null) {
             $this->getIndexerConfiguration();
+        }
+
+        if ($index == null) {
+            return $this->processedMapping;
         }
 
         $indexer = ExtconfService::getIndexerKeyOfIndex($index);
