@@ -184,6 +184,10 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function filterPageListByRootline(array $pageUids, int $rootlinePageUid): array
     {
+        if ($rootlinePageUid == 0) {
+            return $pageUids;
+        }
+
         $filteredPageUids = [];
 
         foreach ($pageUids as $uid) {
