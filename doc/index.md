@@ -31,3 +31,7 @@
 * [Feature Classes](extending/features.md)
 
     How to use feature classes to append your own code to mapping, records and queries
+
+## Migration
+
+* [Upgrade to 6.0](migration/6-0.md)
