@@ -41,7 +41,7 @@
 		</f:for>
 
 		</div>
-		
+
 		<h2>Update schedule</h2>
 		<p>{updates.count} updates scheduled.</p>
 
@@ -54,7 +54,7 @@
 
 			<f:for each="{updates.hits.hits}" as="update">
 				<tr>
-				 <td>{update._type}</td>
+				 <td>{update._source.type}</td>
 				 <td>{update._source.property}</td>
 				 <td>{update._source.uid}</td>
 				</tr>
@@ -71,7 +71,7 @@
 			<div class="form-group">
 				<label for="term">Search: </label>
 				<f:form.textfield name="term" id="term" class="form-control" />
-				
+
 			</div>
 			<f:form.submit value="Submit" class="btn btn-primary" />
 
