@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use TYPO3\CMS\Core\Core\Environment;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -273,6 +274,11 @@ class SearchQuery extends AbstractQuery
             $this->result = $response;
         } catch (\Exception $e) {
             $this->logger->error("Elasticsearch-PHP encountered an error while searching: " . $e->getMessage());
+
+            $applicationContext = Environment::getContext();
+            if ($applicationContext->isDevelopment()) {
+                throw $e;
+            }
 
             $response = [];
         }
