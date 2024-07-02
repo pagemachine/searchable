@@ -95,7 +95,9 @@ class ConfigurationManager implements SingletonInterface
             $this->getIndexerConfiguration();
         }
 
-        return $this->processedMapping;
+        $indexer = ExtconfService::getIndexerKeyOfIndex($index);
+
+        return $this->processedMapping[$indexer];
     }
 
     /**
