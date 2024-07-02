@@ -151,11 +151,14 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     {
         $this->type = $this->config['type'] ?? null;
 
+        if (empty($this->type)) {
+            throw new \Exception('No type set in config for indexer ' . $index, 1669133301);
+        }
+
         $this->dataCollector = GeneralUtility::makeInstance($this->config['collector']['className'], $this->config['collector']['config'], $this->language);
 
         $this->query = $query ?: new BulkQuery(
             $this->index,
-            $this->type,
             $this->config['pipeline'] ?? null
         );
 

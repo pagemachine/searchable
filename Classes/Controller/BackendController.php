@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Controller;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
-use PAGEmachine\Searchable\Search;
+use PAGEmachine\Searchable\Query\SearchQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
@@ -84,7 +84,12 @@ class BackendController extends ActionController
     public function searchAction($term): ResponseInterface
     {
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
-        $result = Search::getInstance()->search($term);
+        $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query
+            ->setTerm($term)
+            ->setRespectLanguage(false);
+
+        $result = $query->execute();
 
         $this->view->assign('result', $result);
         $this->view->assign('term', $term);

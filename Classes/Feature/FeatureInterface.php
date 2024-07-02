@@ -10,6 +10,15 @@ use PAGEmachine\Searchable\Query\QueryInterface;
 interface FeatureInterface
 {
     /**
+     * Entry point to modify Default mapping. Meaning mapping is added to all indices. Often neccessary to fix missing field errors.
+     * Static to improve performance
+     *
+     * @param  array  $mapping
+     * @return array  $mapping
+     */
+    public static function modifyDefaultMapping($mapping);
+
+    /**
      * Entry point to modify mapping.
      * Static to improve performance
      *

@@ -11,6 +11,7 @@ use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
 use PAGEmachine\Searchable\Preview\NoPreviewRenderer;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Service\IndexingService;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -63,8 +64,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         parent::setUp();
 
         $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
-        $this->indexNames[0] = sprintf('index_%s_en', $id);
-        $this->indexNames[1] = sprintf('index_%s_de', $id);
+        $indexEn = sprintf('index_%s_en', $id);
+        $indexDe = sprintf('index_%s_de', $id);
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -78,18 +79,17 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indices' => [
-                    0 => [
-                        'name' => $this->indexNames[0],
+                    $indexEn => [
+                        'typo3_language' => 0,
                     ],
-                    1 => [
-                        'name' => $this->indexNames[1],
+                    $indexDe => [
+                        'typo3_language' => 1,
                     ],
                 ],
                 'indexers' => [
                     'foo_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'foo_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 1,
@@ -100,7 +100,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'bar_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'bar_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 100,
@@ -111,7 +110,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'qux_pages' => [
                         'className' => PagesIndexer::class,
                         'config' => [
-                            'type' => 'qux_pages',
                             'collector' => [
                                 'config' => [
                                     'pid' => 200,
@@ -122,7 +120,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'content' => [
                         'className' => TcaIndexer::class,
                         'config' => [
-                            'type' => 'content',
                             'collector' => [
                                 'config' => [
                                     'table' => 'tt_content',
@@ -143,7 +140,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     'unlocalized_table' => [
                         'className' => TcaIndexer::class,
                         'config' => [
-                            'type' => 'unlocalized_table',
                             'collector' => [
                                 'config' => [
                                     'table' => 'tx_unlocalizedtabletest_unlocalizedtable',
@@ -164,6 +160,8 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                 ],
             ]
         );
+
+        $this->indexNames = ExtconfService::getIndices();
 
         $this->insertArray('pages', [
             'uid' => 1,
@@ -270,9 +268,9 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->syncIndices();
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => implode(',', ExtconfService::getIndecesByLanguage($languageId)),
         ]);
-        $total = $response['hits']['total'];
+        $total = $response['hits']['total']['value'];
 
         $this->assertEquals(0, $total, 'Documents in index');
     }
@@ -305,7 +303,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $this->syncIndices();
 
         $response = $client->search([
-            'index' => $this->indexNames[$languageId],
+            'index' => implode(',', ExtconfService::getIndecesByLanguage($languageId)),
             'body' => [
                 'query' => [
                     'term' => [
@@ -327,11 +325,6 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
      */
     protected function syncIndices(): void
     {
-        $this->getElasticsearchClient()->indices()->flushSynced([
-            'index' => implode(',', array_merge(
-                $this->indexNames,
-                ['searchable_updates']
-            )),
-        ]);
+        $this->getElasticsearchClient()->indices()->refresh();
     }
 }

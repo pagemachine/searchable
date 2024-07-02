@@ -19,7 +19,7 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
      * @var array
      */
     protected static $defaultConfiguration = [
-        //The fields to include into the highlighting field
+        // The fields to include into the highlighting field
         'fields' => [],
         'highlightField' => 'searchable_highlight',
     ];
@@ -41,12 +41,11 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
     {
         $mapping['properties'][$configuration['highlightField']] = [
             'type' => 'text',
-            'include_in_all' => false,
-            // Highlight field needs to be stored as copied content is not included in _source
+            // Highlight field needs to be stored as copied content so it is not included in _source
             'store' => true,
         ];
 
-        $mapping = self::addRecursiveCopyTo($configuration['fields'], $mapping, $configuration);
+        $mapping = self::addRecursiveCopyTo($configuration['fields'], $mapping, $configuration['highlightField']);
 
         return $mapping;
     }
@@ -71,27 +70,5 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
         $query->setParameters($parameters);
 
         return $query;
-    }
-
-    /**
-     * Adds copy_to flag to field mapping
-     *
-     * @param array $fieldArray
-     * @param array $mapping
-     * @param array $configuration
-     */
-    protected static function addRecursiveCopyTo($fieldArray, $mapping, $configuration)
-    {
-        if (!empty($fieldArray)) {
-            foreach ($fieldArray as $key => $field) {
-                if (is_array($field)) {
-                    $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key], $configuration);
-                } else {
-                    $mapping['properties'][$field]['copy_to'] = $configuration['highlightField'];
-                }
-            }
-        }
-
-        return $mapping;
     }
 }

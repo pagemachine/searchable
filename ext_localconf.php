@@ -96,6 +96,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         'number_of_shards' => 2,
         'number_of_replicas' => 0,
     ],
+    'defaultMapping' => [
+        'features' => [
+            'suggest' => [
+                'className' => TermSuggestFeature::class,
+            ],
+        ],
+    ],
     'query' => [
         SearchQuery::class => [
             'features' => [

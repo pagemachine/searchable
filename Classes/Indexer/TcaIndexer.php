@@ -22,10 +22,5 @@ class TcaIndexer extends Indexer
         'mapper' => [
             'className' => DefaultMapper::class,
         ],
-        'mapping' => [
-            '_all' => [
-                'store' => true,
-            ],
-        ],
     ];
 }
