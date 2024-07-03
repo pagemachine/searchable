@@ -57,7 +57,7 @@ class IndexManager implements SingletonInterface
 
             if (empty($info[$configKey])) {
                 $info[$configKey] = [
-                    'name' => $index,
+                    'name' => $configKey,
                     'nameIndex' => $index,
                     'language' => $language,
                 ];
