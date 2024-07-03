@@ -59,13 +59,9 @@ final class SearchQueryTest extends AbstractElasticsearchTest
             'uid' => 12,
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
-            'title' => 'Test page',
+            'title' => 'Test page Highlighting and more',
         ]);
-        $this->insertArray('tt_content', [
-            'pid' => 12,
-            'header' => 'Test header',
-            'bodytext' => 'Something about Highlighting and Elasticsearch',
-        ]);
+
         $this->indexingService->indexFull();
         $this->syncIndices();
 
