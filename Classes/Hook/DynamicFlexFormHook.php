@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Hook;
 
+use TYPO3\CMS\Core\Configuration\Event\AfterFlexFormDataStructureParsedEvent;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -22,6 +23,12 @@ class DynamicFlexFormHook
         'searchable_livesearchbar,list',
         'searchable_results,list',
     ];
+
+    public function modifyDataStructure(AfterFlexFormDataStructureParsedEvent $event): void
+    {
+        $dataStructure = $this->parseDataStructureByIdentifierPostProcess($event->getDataStructure(), $event->getIdentifier());
+        $event->setDataStructure($dataStructure);
+    }
 
     /**
      * Hook used to add items based on TypoScript configuration
@@ -51,9 +58,7 @@ class DynamicFlexFormHook
 
         $sheet = [
             'ROOT' => [
-                'TCEforms' => [
-                    'sheetTitle' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features',
-                ],
+                'sheetTitle' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features',
                 'el' => [],
             ],
         ];
@@ -78,12 +83,10 @@ class DynamicFlexFormHook
     protected function buildSingleField($fieldname, $value)
     {
         $field = [
-            'TCEforms' => [
-                'label' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features.' . $fieldname,
-                'config' => [
-                    'type' => 'check',
-                    'default' => $value,
-                ],
+            'label' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_flexforms.xlf:flexform.features.' . $fieldname,
+            'config' => [
+                'type' => 'check',
+                'default' => $value,
             ],
         ];
 

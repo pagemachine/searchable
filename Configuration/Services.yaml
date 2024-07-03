@@ -28,6 +28,12 @@ services:
       - name: console.command
         command: index:setup
 
+  PAGEmachine\Searchable\Hook\DynamicFlexFormHook:
+    tags:
+      - name: event.listener
+        identifier: 'form-framework/modify-data-structure'
+        method: 'modifyDataStructure'
+
   PAGEmachine\Searchable\Service\IndexingService:
     public: true
 
