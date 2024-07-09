@@ -14,27 +14,12 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 class UpdateQuery extends AbstractQuery
 {
     /**
-     * Update index
-     *
-     * @var string
-     */
-    protected $index;
-
-    /**
-     * @return string
-     */
-    public function getIndex()
-    {
-        return $this->index;
-    }
-
-    /**
      * @return void
      */
     public function __construct()
     {
         parent::__construct();
-        $this->index = ExtconfService::getInstance()->getUpdateIndex();
+        $this->setIndices([ExtconfService::getInstance()->getUpdateIndex()]);
 
         $this->init();
     }
@@ -46,7 +31,7 @@ class UpdateQuery extends AbstractQuery
     public function init()
     {
         $this->parameters =  [
-            'index' => $this->getIndex(),
+            'index' => implode(',', $this->getIndices()),
             'body' => [
             ],
         ];

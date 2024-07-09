@@ -13,23 +13,6 @@ class BulkQuery extends AbstractQuery
     /**
      * @return string
      */
-    public function getIndex()
-    {
-        return $this->index;
-    }
-
-    /**
-     * @param string $index
-     * @return void
-     */
-    public function setIndex($index)
-    {
-        $this->index = $index;
-    }
-
-    /**
-     * @return string
-     */
     public function getPipeline()
     {
         return $this->pipeline;
@@ -48,10 +31,11 @@ class BulkQuery extends AbstractQuery
      * @param string $index
      * @param string $pipeline
      */
-    public function __construct(protected $index, protected $pipeline = null)
+    public function __construct($index, protected $pipeline = null)
     {
         parent::__construct();
 
+        $this->setIndices([$index]);
         $this->init();
     }
 
@@ -62,7 +46,7 @@ class BulkQuery extends AbstractQuery
     public function init()
     {
         $this->parameters =  [
-            'index' => $this->getIndex(),
+            'index' => implode(',', $this->getElasticsearchIndices()),
             'body' => [],
         ];
 
@@ -84,7 +68,7 @@ class BulkQuery extends AbstractQuery
         //Build meta row for new row
         $this->parameters['body'][] = [
             'index' => [
-                '_index' => $this->index,
+                '_index' => implode(',', $this->getElasticsearchIndices()),
                 '_type' => '_doc',
                 '_id' => $uid,
             ],
@@ -135,7 +119,7 @@ class BulkQuery extends AbstractQuery
     public function delete($id)
     {
         $params = [
-            'index' => $this->index,
+            'index' => implode(',', $this->getElasticsearchIndices()),
             'type' => '_doc',
             'id' => $id,
         ];
