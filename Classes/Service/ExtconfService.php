@@ -67,12 +67,12 @@ class ExtconfService implements SingletonInterface
 
 
     /**
-     * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
+     * Returns the language indices for a given language, if set. Otherwise throws an error so no invalid indices are created
      *
      * @param  int $language
      * @return array $indices
      */
-    public static function getIndecesByLanguage($language = 0)
+    public static function getIndicesByLanguage(int $language = 0)
     {
         $indicesConfiguration = ExtconfService::getElasticsearchIndices();
         $indices = [];
@@ -181,7 +181,7 @@ class ExtconfService implements SingletonInterface
      * @param string $indexName
      * @return array $environment
      */
-    public static function getEnviormentOfIndex($indexName)
+    public static function getEnvironmentOfIndex($indexName)
     {
         $indeces = ExtconfService::getElasticsearchIndices();
 

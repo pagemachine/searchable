@@ -140,12 +140,12 @@ final class IndexingService implements \Stringable
         $indexManager = IndexManager::getInstance();
 
         if ($language !== null) {
-            $indeces = ExtconfService::getIndecesByLanguage($language);
+            $indices = ExtconfService::getIndicesByLanguage($language);
         } else {
-            $indeces = ExtconfService::getIndices();
+            $indices = ExtconfService::getIndices();
         }
 
-        foreach ($indeces as $index) {
+        foreach ($indices as $index) {
             $indexManager->resetIndex($index);
 
             $this->logger->info(sprintf(
@@ -219,7 +219,7 @@ final class IndexingService implements \Stringable
             if (!empty($indexers)) {
                 $this->logger->debug(sprintf('Indexing Index "%s"', $index));
 
-                $environment = ExtconfService::getEnviormentOfIndex($index);
+                $environment = ExtconfService::getEnvironmentOfIndex($index);
                 $restoreEnvironment = $this->applyEnvironment($environment);
 
                 foreach ($indexers as $indexer) {

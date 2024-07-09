@@ -336,7 +336,7 @@ class SearchQuery extends AbstractQuery
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();
 
-            $indices = ExtconfService::getIndecesByLanguage($language);
+            $indices = ExtconfService::getIndicesByLanguage($language);
         } else {
             $indices = ExtconfService::getIndices();
         }
