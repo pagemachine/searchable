@@ -144,10 +144,10 @@ class ExtconfService implements SingletonInterface
      */
     public static function getSettingsOfIndex($indexName)
     {
-        $indeces = ExtconfService::getElasticsearchIndices();
+        $indices = ExtconfService::getElasticsearchIndices();
 
-        if (!empty($indeces[$indexName]['settings'])) {
-            return $indeces[$indexName]['settings'];
+        if (!empty($indices[$indexName]['settings'])) {
+            return $indices[$indexName]['settings'];
         }
 
         return [];
@@ -161,10 +161,10 @@ class ExtconfService implements SingletonInterface
      */
     public static function getEnvironmentOfIndex($indexName)
     {
-        $indeces = ExtconfService::getElasticsearchIndices();
+        $indices = ExtconfService::getElasticsearchIndices();
 
-        if (!empty($indeces[$indexName]['environment'])) {
-            return $indeces[$indexName]['environment'];
+        if (!empty($indices[$indexName]['environment'])) {
+            return $indices[$indexName]['environment'];
         }
 
         return [];
