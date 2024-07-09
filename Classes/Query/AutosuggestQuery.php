@@ -47,7 +47,7 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface
         $this->parameters['body'] = [
         ];
 
-        $this->applyIndex();
+        $this->setIndices($this->getActiveIndices());
         $this->applyFeatures();
     }
 }

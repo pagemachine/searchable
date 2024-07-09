@@ -258,6 +258,7 @@ class SearchQuery extends AbstractQuery
     {
         $this->build();
 
+        $this->parameters['index'] = implode(',', $this->getElasticsearchIndices());
         // Prevent searching over all existing indices if no index is set
         if (empty($this->parameters['index'])) {
             $this->logger->error("No index set for search query");
@@ -327,21 +328,9 @@ class SearchQuery extends AbstractQuery
             'size' => $this->size,
         ];
 
-        $this->applyIndex();
+        // Set active indices as default
+        $this->setIndices($this->getActiveIndices());
         $this->applyFeatures();
-    }
-
-    protected function applyIndex()
-    {
-        if ($this->respectLanguage === true) {
-            $language = $this->language ?: $this->getLanguageId();
-
-            $indices = ExtconfService::getIndicesByLanguage($language);
-        } else {
-            $indices = ExtconfService::getIndices();
-        }
-
-        $this->parameters['index'] = implode(',', $indices);
     }
 
     protected function getActiveIndices()
