@@ -105,22 +105,6 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns the index name for a given language, if set. Otherwise throws an error so no invalid indices are created
-     *
-     * @param  string $nameIndex
-     * @return string $index
-     */
-    public static function getNameOfIndex($nameIndex = '')
-    {
-        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['name'];
-
-        if (empty($index)) {
-            throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
-        }
-        return $index;
-    }
-
-    /**
      * Returns the index language for a given name, if set. Otherwise throws an error so no invalid indices are created
      *
      * @param  string $nameIndex
@@ -164,12 +148,6 @@ class ExtconfService implements SingletonInterface
 
         if (!empty($indeces[$indexName]['settings'])) {
             return $indeces[$indexName]['settings'];
-        }
-
-        foreach ($indeces as $index) {
-            if (($index['name'] == $indexName) && isset($index['settings'])) {
-                return $index['settings'];
-            }
         }
 
         return [];
