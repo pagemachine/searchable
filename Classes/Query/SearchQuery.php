@@ -343,4 +343,15 @@ class SearchQuery extends AbstractQuery
 
         $this->parameters['index'] = implode(',', $indices);
     }
+
+    protected function getActiveIndices()
+    {
+        if ($this->respectLanguage === true) {
+            $language = $this->language ?: $this->getLanguageId();
+
+            return ExtconfService::getIndicesByLanguage($language);
+        } else {
+            return ExtconfService::getIndices();
+        }
+    }
 }

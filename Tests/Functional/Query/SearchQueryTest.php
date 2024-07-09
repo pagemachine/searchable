@@ -75,4 +75,33 @@ final class SearchQueryTest extends AbstractElasticsearchTest
             $result['hits']['hits'][0]['highlight']['searchable_highlight'][0]
         );
     }
+
+    /**
+     * @test
+     */
+    public function normalizeIndicesWithIndex(): void
+    {
+        $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->setLanguage(0);
+        $indices = [$this->configIndexNames[1] . '_foo_pages'];
+
+        $query->setIndices($indices);
+        $this->assertEquals([], $query->getElasticsearchIndices());
+        $query->setRespectLanguage(false);
+        $this->assertEquals($indices, $query->getElasticsearchIndices());
+    }
+
+    /**
+     * @test
+     */
+    public function normalizeIndicesWithIndexer(): void
+    {
+        $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->setLanguage(0);
+
+        $query->setIndices(['foo_pages']);
+        $this->assertEquals([$this->configIndexNames[0] . '_foo_pages'], $query->getElasticsearchIndices());
+        $query->setRespectLanguage(false);
+        $this->assertEquals([$this->configIndexNames[0] . '_foo_pages', $this->configIndexNames[1] . '_foo_pages'], $query->getElasticsearchIndices());
+    }
 }

@@ -31,4 +31,26 @@ interface QueryInterface
      * @return QueryInterface
      */
     public function setTerm($term);
+
+    /**
+     * @param array $indices
+     */
+    public function setIndices($indices);
+
+    /**
+     * @return array
+     */
+    public function getIndices();
+
+    /**
+     * @param string $index
+     * @return QueryInterface
+     */
+    public function addIndex($index);
+
+    /**
+     * @param string $index
+     * @return QueryInterface
+     */
+    public function removeIndex($index);
 }

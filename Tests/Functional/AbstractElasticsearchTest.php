@@ -52,6 +52,11 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     private $indexNames;
 
     /**
+     * @var string[]
+     */
+    protected $configIndexNames;
+
+    /**
      * @var IndexingService
      */
     protected $indexingService;
@@ -64,8 +69,7 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         parent::setUp();
 
         $id = GeneralUtility::makeInstance(Random::class)->generateRandomHexString(8);
-        $indexEn = sprintf('index_%s_en', $id);
-        $indexDe = sprintf('index_%s_de', $id);
+        $this->configIndexNames = [sprintf('index_%s_en', $id), sprintf('index_%s_de', $id)];
 
         ArrayUtility::mergeRecursiveWithOverrule(
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'],
@@ -79,10 +83,10 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
                     ],
                 ],
                 'indices' => [
-                    $indexEn => [
+                    $this->configIndexNames[0] => [
                         'typo3_language' => 0,
                     ],
-                    $indexDe => [
+                    $this->configIndexNames[1] => [
                         'typo3_language' => 1,
                     ],
                 ],
