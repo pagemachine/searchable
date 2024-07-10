@@ -72,7 +72,7 @@ abstract class AbstractQuery implements QueryInterface
     /**
      * @param array $indices
      */
-    public function setIndices($indices)
+    public function setIndices(array $indices): void
     {
         $this->indices = $indices;
     }
@@ -80,7 +80,7 @@ abstract class AbstractQuery implements QueryInterface
     /**
      * @return array
      */
-    public function getIndices()
+    public function getIndices(): array
     {
         return $this->indices;
     }
@@ -88,7 +88,7 @@ abstract class AbstractQuery implements QueryInterface
     /**
      * @param string $index
      */
-    public function addIndex($index)
+    public function addIndex(string $index): static
     {
         $this->indices[] = $index;
         return $this;
@@ -97,7 +97,7 @@ abstract class AbstractQuery implements QueryInterface
     /**
      * @param string $index
      */
-    public function removeIndex($index)
+    public function removeIndex(string $index): static
     {
         $this->indices = array_diff($this->indices, [$index]);
         return $this;
@@ -108,7 +108,7 @@ abstract class AbstractQuery implements QueryInterface
      *
      * @return array
      */
-    public function getElasticsearchIndices()
+    public function getElasticsearchIndices(): array
     {
         $indices = $this->getIndices();
         $activeIndices = $this->getActiveIndices();
@@ -274,7 +274,7 @@ abstract class AbstractQuery implements QueryInterface
      *
      * @return array
      */
-    protected function getActiveIndices()
+    protected function getActiveIndices(): array
     {
         return ExtconfService::getIndices();
     }

@@ -333,7 +333,7 @@ class SearchQuery extends AbstractQuery
         $this->applyFeatures();
     }
 
-    protected function getActiveIndices()
+    protected function getActiveIndices(): array
     {
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();

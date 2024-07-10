@@ -35,22 +35,22 @@ interface QueryInterface
     /**
      * @param array $indices
      */
-    public function setIndices($indices);
+    public function setIndices(array $indices): void;
 
     /**
      * @return array
      */
-    public function getIndices();
+    public function getIndices(): array;
 
     /**
      * @param string $index
      * @return QueryInterface
      */
-    public function addIndex($index);
+    public function addIndex(string $index): QueryInterface;
 
     /**
      * @param string $index
      * @return QueryInterface
      */
-    public function removeIndex($index);
+    public function removeIndex(string $index): QueryInterface;
 }
