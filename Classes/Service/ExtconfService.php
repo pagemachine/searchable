@@ -24,8 +24,8 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Creates a new ES indice for every indece Indexer combination in the config. This keeps the configuration simple even if it is not the real index structure in elasticsearch.
-     * This is necessary because since elastic 7.0 one indice can only have one document type.
+     * Creates a new ES indice for every index/indexer combination in the config. This keeps the configuration simple even if it is not the real index structure in elasticsearch.
+     * This is necessary because since elastic 7.0 one index can only have one document type.
      *
      * @return array
      */
