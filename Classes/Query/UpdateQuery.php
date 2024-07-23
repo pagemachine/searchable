@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\Domain\Repository\UpdateRepository;
-use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
