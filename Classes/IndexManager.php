@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable;
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Domain\Repository\UpdateRepository;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -25,11 +26,17 @@ class IndexManager implements SingletonInterface
     protected $client;
 
     /**
+     * @var UpdateRepository
+     */
+    protected UpdateRepository $updateRepository;
+
+    /**
      * @param Client|null $client
      */
-    public function __construct(Client $client = null)
+    public function __construct(Client $client = null, UpdateRepository $updateRepository = null)
     {
         $this->client = $client ?: Connection::getClient();
+        $this->updateRepository = $updateRepository ?: GeneralUtility::makeInstance(UpdateRepository::class);
     }
 
     /**
@@ -116,12 +123,10 @@ class IndexManager implements SingletonInterface
             ],
         ];
 
-        if ($index != ExtconfService::getInstance()->getUpdateIndex()) {
-            $mapping = ConfigurationManager::getInstance()->getMapping($index);
+        $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
-            if (!empty($mapping)) {
-                $params['body']['mappings'] = $mapping;
-            }
+        if (!empty($mapping)) {
+            $params['body']['mappings'] = $mapping;
         }
 
         return $this->client->indices()->create($params);
@@ -134,8 +139,6 @@ class IndexManager implements SingletonInterface
      */
     public function resetUpdateIndex()
     {
-        $this->resetIndex(
-            ExtconfService::getInstance()->getUpdateIndex()
-        );
+        $this->updateRepository->deleteAll();
     }
 }
