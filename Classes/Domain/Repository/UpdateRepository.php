@@ -45,7 +45,7 @@ class UpdateRepository extends Repository
                         'property_uid' => $propertyUid,
                     ],
                 );
-        } catch (UniqueConstraintViolationException $e) {
+        } catch (UniqueConstraintViolationException) {
             // Ignore duplicate entry error
         }
     }
@@ -59,6 +59,5 @@ class UpdateRepository extends Repository
                     ['uid' => $object->getUid()],
                 );
         }
-
     }
 }
