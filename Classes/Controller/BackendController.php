@@ -1,7 +1,6 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Domain\Repository\UpdateRepository;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
