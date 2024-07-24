@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
-use PAGEmachine\Searchable\Domain\Repository\UpdateRepository;
+use PAGEmachine\Searchable\Domain\Repository\UpdateQueue;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -14,7 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class UpdateQuery extends AbstractQuery
 {
-    protected UpdateRepository $updateRepository;
+    protected UpdateQueue $updateQueue;
 
     /**
      * @return void
@@ -23,7 +23,7 @@ class UpdateQuery extends AbstractQuery
     {
         parent::__construct();
 
-        $this->updateRepository = GeneralUtility::makeInstance(UpdateRepository::class);
+        $this->updateQueue = GeneralUtility::makeInstance(UpdateQueue::class);
 
         $this->init();
     }
@@ -46,7 +46,7 @@ class UpdateQuery extends AbstractQuery
      */
     public function addUpdate($type, $property, $id): void
     {
-        $this->updateRepository->insertUpdate($type, $property, $id);
+        $this->updateQueue->enqueue($type, $property, $id);
     }
 
     /**
@@ -60,7 +60,7 @@ class UpdateQuery extends AbstractQuery
 
         $recordids = [];
 
-        $results = $this->updateRepository->findByType($type);
+        $results = $this->updateQueue->pendingUpdates($type);
 
         $updateParams = [];
 
