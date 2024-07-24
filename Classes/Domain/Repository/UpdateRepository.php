@@ -7,26 +7,13 @@ namespace PAGEmachine\Searchable\Domain\Repository;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
-use TYPO3\CMS\Extbase\Persistence\Repository;
 
-class UpdateRepository extends Repository
+final class UpdateRepository
 {
     private const TABLE_NAME = 'tx_searchable_domain_model_update';
 
-    private ConnectionPool $connectionPool;
-
-    public function injectConnectionPool(ConnectionPool $connectionPool): void
+    public function __construct(private readonly ConnectionPool $connectionPool)
     {
-        $this->connectionPool = $connectionPool;
-    }
-
-    public function initializeObject(): void
-    {
-        $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
-        $querySettings->setRespectStoragePage(false);
-        $this->setDefaultQuerySettings($querySettings);
     }
 
     public function insertUpdate(
@@ -48,6 +35,35 @@ class UpdateRepository extends Repository
         } catch (UniqueConstraintViolationException) {
             // Ignore duplicate entry error
         }
+    }
+
+    public function findAll(): array
+    {
+        $queryBuilder = $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->createQueryBuilder();
+
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME);
+
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    public function findByType(string $type): array
+    {
+        $queryBuilder = $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->createQueryBuilder();
+
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type, \PDO::PARAM_STR)),
+            );
+
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
     public function deleteAll()
