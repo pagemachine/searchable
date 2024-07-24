@@ -39,6 +39,9 @@ services:
 
   PAGEmachine\Searchable\Utility\TsfeUtility:
     public: true
+    
+  PAGEmachine\Searchable\Domain\Repository\UpdateRepository:
+    public: true
 
   PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord:
     autowire: false
