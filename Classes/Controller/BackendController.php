@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use PAGEmachine\Searchable\Domain\Repository\UpdateRepository;
+use PAGEmachine\Searchable\Domain\Repository\UpdateQueue;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Query\SearchQuery;
@@ -21,7 +21,7 @@ class BackendController extends ActionController
 {
     public function __construct(
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
-        private readonly UpdateRepository $updateRepository
+        private readonly UpdateQueue $updateQueue
     ) {
     }
 
@@ -51,7 +51,7 @@ class BackendController extends ActionController
      */
     protected function fetchScheduledUpdates()
     {
-        return $this->updateRepository->findAll();
+        return $this->updateQueue->pendingUpdates();
     }
 
     /**

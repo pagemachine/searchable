@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable;
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
-use PAGEmachine\Searchable\Domain\Repository\UpdateRepository;
+use PAGEmachine\Searchable\Domain\Repository\UpdateQueue;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -25,18 +25,15 @@ class IndexManager implements SingletonInterface
      */
     protected $client;
 
-    /**
-     * @var UpdateRepository
-     */
-    protected UpdateRepository $updateRepository;
+    protected UpdateQueue $updateQueue;
 
     /**
      * @param Client|null $client
      */
-    public function __construct(Client $client = null, UpdateRepository $updateRepository = null)
+    public function __construct(Client $client = null, UpdateQueue $updateQueue = null)
     {
         $this->client = $client ?: Connection::getClient();
-        $this->updateRepository = $updateRepository ?: GeneralUtility::makeInstance(UpdateRepository::class);
+        $this->updateQueue = $updateQueue ?: GeneralUtility::makeInstance(UpdateQueue::class);
     }
 
     /**
@@ -139,6 +136,6 @@ class IndexManager implements SingletonInterface
      */
     public function resetUpdateIndex()
     {
-        $this->updateRepository->deleteAll();
+        $this->updateQueue->clear();
     }
 }
