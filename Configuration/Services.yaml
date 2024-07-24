@@ -40,7 +40,7 @@ services:
   PAGEmachine\Searchable\Utility\TsfeUtility:
     public: true
     
-  PAGEmachine\Searchable\Domain\Repository\UpdateRepository:
+  PAGEmachine\Searchable\Domain\Repository\UpdateQueue:
     public: true
 
   PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord:
