@@ -8,7 +8,7 @@ namespace PAGEmachine\Searchable\Domain\Repository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
-final class UpdateRepository
+final class UpdateQueue
 {
     private const TABLE_NAME = 'tx_searchable_domain_model_update';
 
@@ -16,7 +16,7 @@ final class UpdateRepository
     {
     }
 
-    public function insertUpdate(
+    public function enqueue(
         string $type,
         string $property,
         int $propertyUid,
@@ -37,7 +37,7 @@ final class UpdateRepository
         }
     }
 
-    public function findAll(): array
+    public function pendingUpdates(string $type = null): array
     {
         $queryBuilder = $this->connectionPool
             ->getConnectionForTable(self::TABLE_NAME)
@@ -47,32 +47,23 @@ final class UpdateRepository
             ->select('*')
             ->from(self::TABLE_NAME);
 
-        return $queryBuilder->executeQuery()->fetchAllAssociative();
-    }
-
-    public function findByType(string $type): array
-    {
-        $queryBuilder = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
-            ->createQueryBuilder();
-
-        $queryBuilder
-            ->select('*')
-            ->from(self::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type, \PDO::PARAM_STR)),
-            );
+        if ($type) {
+            $queryBuilder
+                ->where(
+                    $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type, \PDO::PARAM_STR)),
+                );
+        }
 
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
-    public function deleteAll()
+    public function clear()
     {
-        foreach ($this->findAll() as $object) {
+        foreach ($this->pendingUpdates() as $object) {
             $this->connectionPool->getConnectionForTable(self::TABLE_NAME)
                 ->delete(
                     self::TABLE_NAME,
-                    ['uid' => $object->getUid()],
+                    ['uid' => $object['uid']],
                 );
         }
     }
