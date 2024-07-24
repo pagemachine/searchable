@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\Controller;
 
 use PAGEmachine\Searchable\Domain\Repository\UpdateQueue;
-use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Query\SearchQuery;
 use PAGEmachine\Searchable\Service\ExtconfService;
