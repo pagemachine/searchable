@@ -19,22 +19,10 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 class BackendController extends ActionController
 {
-    protected IndexerFactory $indexerFactory;
-
-    protected UpdateRepository $updateRepository;
-
-    public function injectIndexerFactory(IndexerFactory $indexerFactory): void
-    {
-        $this->indexerFactory = $indexerFactory;
-    }
-
-    public function injectUpdateRepository(UpdateRepository $updateRepository): void
-    {
-        $this->updateRepository = $updateRepository;
-    }
-
-    public function __construct(private readonly ModuleTemplateFactory $moduleTemplateFactory)
-    {
+    public function __construct(
+        private readonly ModuleTemplateFactory $moduleTemplateFactory,
+        private readonly UpdateRepository $updateRepository
+    ) {
     }
 
     /**
