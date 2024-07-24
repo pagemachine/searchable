@@ -64,14 +64,14 @@ class UpdateQuery extends AbstractQuery
 
         $updateParams = [];
 
-        foreach ($results as $hit) {
+        foreach ($results as $update) {
             //If this is a simple toplevel uid check, we can add this id directly to the updated uid list
-            if ($hit->getProperty() == 'uid') {
-                $recordids[$hit->getPropertyUid()] = $hit->getPropertyUid();
+            if ($update['property'] == 'uid') {
+                $recordids[$update['property_uid']] = $update['property_uid'];
             } else {
                 $updateParams[] = [
                     "term" => [
-                        $hit->getProperty() => $hit->getPropertyUid(),
+                        $update['property'] => $update['property_uid'],
                     ],
                 ];
             }
