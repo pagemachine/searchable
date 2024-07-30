@@ -31,5 +31,4 @@ services:
   elasticsearch:
     image: elasticsearch:${ELASTICSEARCH_VERSION:-7.17.22}
     environment:
-      - ingest.geoip.downloader.enabled=false
       - discovery.type=single-node
