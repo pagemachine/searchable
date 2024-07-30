@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable;
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
-use PAGEmachine\Searchable\Domain\Repository\UpdateQueue;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
