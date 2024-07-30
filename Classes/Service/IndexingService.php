@@ -89,11 +89,6 @@ final class IndexingService implements \Stringable
         $this->logger->debug('Checking for existing Update Index..');
 
         $indexManager = IndexManager::getInstance();
-        $indexManager->createIndex(
-            ExtconfService::getInstance()->getUpdateIndex()
-        );
-        $this->logger->debug('Ensured update index exists');
-
         $indices = ExtconfService::getIndices();
 
         try {
