@@ -8,11 +8,11 @@ namespace PAGEmachine\Searchable\Queue;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
-final class UpdateQueue
+final readonly class UpdateQueue
 {
     private const TABLE_NAME = 'tx_searchable_domain_model_update';
 
-    public function __construct(private readonly ConnectionPool $connectionPool)
+    public function __construct(private ConnectionPool $connectionPool)
     {
     }
 
