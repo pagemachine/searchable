@@ -37,7 +37,7 @@ services:
   PAGEmachine\Searchable\Service\IndexingService:
     public: true
 
-  PAGEmachine\Searchable\Domain\Repository\UpdateQueue:
+  PAGEmachine\Searchable\Queue\UpdateQueue:
     public: true
 
   PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord:
