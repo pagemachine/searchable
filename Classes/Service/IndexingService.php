@@ -82,6 +82,10 @@ final class IndexingService implements \Stringable
     {
         $this->assertConnectionHealthy();
 
+        $pipelineManager = PipelineManager::getInstance();
+        $pipelineManager->createPipelines();
+        $this->logger->debug('Successfully created pipelines');
+
         $this->logger->debug('Checking for existing Update Index..');
 
         $indexManager = IndexManager::getInstance();
@@ -90,8 +94,14 @@ final class IndexingService implements \Stringable
         );
         $this->logger->debug('Ensured update index exists');
 
+        $indices = ExtconfService::getIndices();
+
         try {
-            $indexers = $this->indexerFactory->makeIndexers();
+            $indexers = [];
+
+            foreach ($indices as $index) {
+                $indexers[] = $this->indexerFactory->makeIndexerForIndex($index);
+            }
         } catch (\Exception $e) {
             $this->logger->error(sprintf(
                 'Invalid indexers configuration: %s [%s]',
@@ -108,10 +118,8 @@ final class IndexingService implements \Stringable
             $this->logger->debug('Successfully validated indexers configuration');
         }
 
-        $indices = ExtconfService::getIndices();
-
         if (!empty($indices)) {
-            foreach ($indices as $language => $index) {
+            foreach ($indices as $index) {
                 $indexManager->createIndex($index);
 
                 $this->logger->debug(sprintf(
@@ -120,10 +128,6 @@ final class IndexingService implements \Stringable
                 ));
             }
         }
-
-        $pipelineManager = PipelineManager::getInstance();
-        $pipelineManager->createPipelines();
-        $this->logger->debug('Successfully created pipelines');
     }
 
     /**
@@ -133,25 +137,21 @@ final class IndexingService implements \Stringable
     {
         $this->assertConnectionHealthy();
 
-        $indexers = $this->indexerFactory->makeIndexers();
         $indexManager = IndexManager::getInstance();
 
         if ($language !== null) {
-            $indexManager->resetIndex(ExtconfService::getIndex($language));
+            $indices = ExtconfService::getIndicesByLanguage($language);
+        } else {
+            $indices = ExtconfService::getIndices();
+        }
+
+        foreach ($indices as $index) {
+            $indexManager->resetIndex($index);
 
             $this->logger->info(sprintf(
                 'Index "%s" was successfully cleared',
-                ExtconfService::getIndex($language)
+                $index
             ));
-        } else {
-            foreach (ExtconfService::getIndices() as $index) {
-                $indexManager->resetIndex($index);
-
-                $this->logger->info(sprintf(
-                    'Index "%s" was successfully cleared',
-                    $index
-                ));
-            }
         }
     }
 
@@ -194,16 +194,11 @@ final class IndexingService implements \Stringable
     {
         $indices = ExtconfService::getIndices();
 
-        foreach ($indices as $language => $index) {
-            if (empty($this->type)) {
-                foreach ($this->indexerFactory->makeIndexers($language) as $indexer) {
-                    $this->scheduledIndexers[$language][] = $indexer;
-                }
-            } else {
-                $indexer = $this->indexerFactory->makeIndexer($language, $this->type);
-                if ($indexer != null) {
-                    $this->scheduledIndexers[$language][] = $indexer;
-                }
+        foreach ($indices as $index) {
+            $indexerName = ExtconfService::getIndexerKeyOfIndex($index);
+
+            if (empty($this->type) || $this->type == $indexerName) {
+                $this->scheduledIndexers[$index][] = $this->indexerFactory->makeIndexerForIndex($index);
             }
         }
     }
@@ -216,17 +211,16 @@ final class IndexingService implements \Stringable
         $starttime = microtime(true);
 
         $this->logger->info(sprintf(
-            'Starting "%s" indexing with %d indexers',
-            $this->runFullIndexing ? 'full' : 'partial',
-            count($this->scheduledIndexers[0])
+            'Starting "%s" indexing',
+            $this->runFullIndexing ? 'full' : 'partial'
         ));
 
-        foreach ($this->scheduledIndexers as $language => $indexers) {
+        foreach ($this->scheduledIndexers as $index => $indexers) {
             if (!empty($indexers)) {
-                $this->logger->debug(sprintf('Indexing language "%s"', $language));
+                $this->logger->debug(sprintf('Indexing Index "%s"', $index));
 
-                $environment = ExtconfService::getIndexEnvironment(ExtconfService::getIndex($language));
-                $restoreEnvironment = $this->applyEnvironment((int)$language, $environment);
+                $environment = ExtconfService::getEnvironmentOfIndex($index);
+                $restoreEnvironment = $this->applyEnvironment($environment);
 
                 foreach ($indexers as $indexer) {
                     $this->runSingleIndexer($indexer);
@@ -235,7 +229,7 @@ final class IndexingService implements \Stringable
                 $restoreEnvironment();
                 $this->resetPersistence();
             } else {
-                $this->logger->warning(sprintf('No indexers found for language "%s", doing nothing', $language));
+                $this->logger->warning(sprintf('No indexers found with name "%s", doing nothing', $index));
             }
         }
 
@@ -283,7 +277,7 @@ final class IndexingService implements \Stringable
      *
      * @return \Closure callback to restore the original environment
      */
-    protected function applyEnvironment(int $languageUid, array $environment): \Closure
+    protected function applyEnvironment(array $environment): \Closure
     {
         // Set environment language if BE_USER lang is not set (happens on CLI calls)
         if ($GLOBALS['BE_USER']->uc !== null) {

@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use TYPO3\CMS\Core\Core\Environment;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -22,6 +23,7 @@ class SearchQuery extends AbstractQuery
      */
     protected $parameters = [
         'body' => [],
+        'index' => '',
     ];
 
     /**
@@ -186,7 +188,7 @@ class SearchQuery extends AbstractQuery
     /**
      * @var array $searchFields
      */
-    protected $searchFields = ["_all"];
+    protected $searchFields = ["*"];
 
     /**
      * @return array
@@ -232,7 +234,6 @@ class SearchQuery extends AbstractQuery
         return $this;
     }
 
-
     /**
      * @var array $result
      */
@@ -257,6 +258,13 @@ class SearchQuery extends AbstractQuery
     {
         $this->build();
 
+        $this->parameters['index'] = implode(',', $this->getElasticsearchIndices());
+        // Prevent searching over all existing indices if no index is set
+        if (empty($this->parameters['index'])) {
+            $this->logger->error("No index set for search query");
+            return [];
+        }
+
         try {
             $response = $this->client->search($this->getParameters());
 
@@ -267,6 +275,11 @@ class SearchQuery extends AbstractQuery
             $this->result = $response;
         } catch (\Exception $e) {
             $this->logger->error("Elasticsearch-PHP encountered an error while searching: " . $e->getMessage());
+
+            $applicationContext = Environment::getContext();
+            if ($applicationContext->isDevelopment()) {
+                throw $e;
+            }
 
             $response = [];
         }
@@ -291,7 +304,7 @@ class SearchQuery extends AbstractQuery
     public function getPageCount()
     {
         if (!empty($this->result)) {
-            return (int)ceil($this->result['hits']['total'] / $this->size);
+            return (int)ceil($this->result['hits']['total']['value'] / $this->size);
         }
 
         return 0;
@@ -315,12 +328,19 @@ class SearchQuery extends AbstractQuery
             'size' => $this->size,
         ];
 
+        // Set active indices as default
+        $this->setIndices($this->getActiveIndices());
+        $this->applyFeatures();
+    }
+
+    protected function getActiveIndices(): array
+    {
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();
 
-            $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+            return ExtconfService::getIndicesByLanguage($language);
+        } else {
+            return ExtconfService::getIndices();
         }
-
-        $this->applyFeatures();
     }
 }

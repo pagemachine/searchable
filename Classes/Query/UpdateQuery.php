@@ -1,6 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
+use PAGEmachine\Searchable\Service\ExtconfService;
+
 /*
  * This file is part of the PAGEmachine Searchable project.
  */
@@ -12,27 +14,12 @@ namespace PAGEmachine\Searchable\Query;
 class UpdateQuery extends AbstractQuery
 {
     /**
-     * Update index
-     *
-     * @var string
-     */
-    protected $index;
-
-    /**
-     * @return string
-     */
-    public function getIndex()
-    {
-        return $this->index;
-    }
-
-    /**
      * @return void
      */
     public function __construct()
     {
         parent::__construct();
-        $this->index = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
+        $this->setIndices([ExtconfService::getInstance()->getUpdateIndex()]);
 
         $this->init();
     }
@@ -44,7 +31,7 @@ class UpdateQuery extends AbstractQuery
     public function init()
     {
         $this->parameters =  [
-            'index' => $this->getIndex(),
+            'index' => implode(',', $this->getIndices()),
             'body' => [
             ],
         ];
@@ -61,13 +48,14 @@ class UpdateQuery extends AbstractQuery
         $docid = sha1($type . "." . $property . ":" . $id);
 
         $this->parameters['id'] = $docid;
-        $this->parameters['type'] = $type;
+        $this->parameters['type'] = '_doc';
+        $this->parameters['body']['type'] = strval($type);
         $this->parameters['body']['property'] = $property;
         $this->parameters['body']['uid'] = $id;
 
         try {
-              $response = $this->client->index($this->getParameters());
-              return $response;
+            $response = $this->client->index($this->getParameters());
+            return $response;
         } catch (\Exception $e) {
             $this->logger->error("Could not track update. Reason: " . $e->getMessage());
             return [];
@@ -85,11 +73,15 @@ class UpdateQuery extends AbstractQuery
 
         $this->init();
 
-        $this->parameters['type'] = $type;
         $this->parameters['body'] = [
-            'size' => '9999',
             'query' => [
-                'match_all' => new \stdClass(),
+                'bool' => [
+                    'filter' => [
+                        'term' => [
+                            'type' => $type,
+                        ],
+                    ],
+                ],
             ],
         ];
 
@@ -107,11 +99,11 @@ class UpdateQuery extends AbstractQuery
             if ($hit['_source']['property'] == 'uid') {
                 $recordids[$hit['_source']['uid']] = $hit['_source']['uid'];
             } else {
-                 $updateParams[] = [
+                $updateParams[] = [
                     "term" => [
                         $hit['_source']['property'] => $hit['_source']['uid'],
                     ],
-                 ];
+                ];
             }
         }
 

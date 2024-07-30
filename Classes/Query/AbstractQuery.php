@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Query;
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -59,6 +60,69 @@ abstract class AbstractQuery implements QueryInterface
     public function setParameter($key, mixed $parameter)
     {
         $this->parameters[$key] = $parameter;
+    }
+
+    /**
+     * Array of strings with indices that should be used in the query. Can contain both ES index names and indexer names
+     *
+     * @var array $indices
+     */
+    protected $indices = [];
+
+    /**
+     * @param array $indices
+     */
+    public function setIndices(array $indices): void
+    {
+        $this->indices = $indices;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIndices(): array
+    {
+        return $this->indices;
+    }
+
+    /**
+     * @param string $index
+     */
+    public function addIndex(string $index): static
+    {
+        $this->indices[] = $index;
+        return $this;
+    }
+
+    /**
+     * @param string $index
+     */
+    public function removeIndex(string $index): static
+    {
+        $this->indices = array_diff($this->indices, [$index]);
+        return $this;
+    }
+
+    /**
+     * Translates the indices to elasticsearch indices. Makes sure only active indices are used
+     *
+     * @return array
+     */
+    public function getElasticsearchIndices(): array
+    {
+        $indices = $this->getIndices();
+        $activeIndices = $this->getActiveIndices();
+
+        $esIndices = [];
+
+        foreach ($activeIndices as $index) {
+            $indexer = ExtconfService::getIndexerKeyOfIndex($index);
+            if (in_array($index, $indices) || in_array($indexer, $indices)) {
+                $esIndices[] = $index;
+            }
+        }
+
+        return $esIndices;
     }
 
     /**
@@ -203,5 +267,15 @@ abstract class AbstractQuery implements QueryInterface
             return true;
         }
         return false;
+    }
+
+    /**
+     * Return all active indices
+     *
+     * @return array
+     */
+    protected function getActiveIndices(): array
+    {
+        return ExtconfService::getIndices();
     }
 }

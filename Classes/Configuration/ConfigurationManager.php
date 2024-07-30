@@ -67,7 +67,7 @@ class ConfigurationManager implements SingletonInterface
     public function getIndexerConfiguration()
     {
         if ($this->processedConfiguration == null) {
-            $configuration = ExtconfService::getInstance()->getIndexerConfiguration();
+            $configuration = ExtconfService::getInstance()->getIndexers();
             $mapping = [];
 
             foreach ($configuration as $key => $indexerConfiguration) {
@@ -89,13 +89,19 @@ class ConfigurationManager implements SingletonInterface
      * @param  string $index The index to pull the mapping from
      * @return array
      */
-    public function getMapping($index)
+    public function getMapping($index = null)
     {
         if ($this->processedMapping == null) {
             $this->getIndexerConfiguration();
         }
 
-        return $this->processedMapping;
+        if ($index == null) {
+            return $this->processedMapping;
+        }
+
+        $indexer = ExtconfService::getIndexerKeyOfIndex($index);
+
+        return $this->processedMapping[$indexer];
     }
 
     /**
@@ -159,13 +165,24 @@ class ConfigurationManager implements SingletonInterface
                 $indexerConfiguration['config']['link'] = $this->addClassDefaultConfiguration($indexerConfiguration['config']['link'], $indexerConfiguration);
             }
 
+            $defaultMapping = ExtconfService::getInstance()->getDefaultMappingConfiguration();
+            if (!empty($defaultMapping) && !empty($defaultMapping['features'])) {
+                foreach ($defaultMapping['features'] as $key => $feature) {
+                    if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
+                        $indexerConfiguration['config']['mapping'] = $feature['className']::modifyDefaultMapping(
+                            $indexerConfiguration['config']['mapping'] ?? [],
+                        );
+                    }
+                }
+            }
+
             if (!empty($indexerConfiguration['config']['features'])) {
                 foreach ($indexerConfiguration['config']['features'] as $key => $feature) {
                     $indexerConfiguration['config']['features'][$key] = $this->addClassDefaultConfiguration($feature, $indexerConfiguration);
 
                     if (in_array(FeatureInterface::class, class_implements($feature['className']))) {
                         $indexerConfiguration['config']['mapping'] = $feature['className']::modifyMapping(
-                            $indexerConfiguration['config']['mapping'],
+                            $indexerConfiguration['config']['mapping'] ?? [],
                             $indexerConfiguration['config']['features'][$key]['config']
                         );
                     }

@@ -2,7 +2,6 @@
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
-use PAGEmachine\Searchable\Service\ExtconfService;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -48,12 +47,7 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface
         $this->parameters['body'] = [
         ];
 
-        if ($this->respectLanguage === true) {
-            $language = $this->language ?: $this->getLanguageId();
-
-            $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
-        }
-
+        $this->setIndices($this->getActiveIndices());
         $this->applyFeatures();
     }
 }

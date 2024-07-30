@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "elasticsearch/elasticsearch": "^5.0 || ^7.0",
+        "elasticsearch/elasticsearch": "^7.0",
         "symfony/polyfill-php80": "^1.26",
         "typo3/cms-backend": "^11.5 || ^12.4",
         "typo3/cms-core": "^11.5 || ^12.4",

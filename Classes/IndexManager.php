@@ -51,20 +51,27 @@ class IndexManager implements SingletonInterface
 
         $info = [];
 
-        foreach (ExtconfService::getIndices() as $language => $index) {
-            $info[$language] = [
-                'name' => $index,
-                'language' => $language,
-            ];
+        foreach (ExtconfService::getIndices() as $index) {
+            $language = ExtconfService::getLanguageOfIndex($index);
+            $configKey = ExtconfService::getConfigOfIndex($index);
 
-            foreach (ExtconfService::getIndexers() as $name => $config) {
-                $info[$language]['types'][$name] = [
-                    'name' => $name,
-                    'documents' => $this->client->count([
-                        'index' => $index,
-                        'type' => $config['config']['type'],
-                    ])['count'],
+            if (empty($info[$configKey])) {
+                $info[$configKey] = [
+                    'name' => $configKey,
+                    'nameIndex' => $index,
+                    'language' => $language,
                 ];
+            };
+
+            foreach (ExtconfService::getInstance()->getIndexers() as $name => $config) {
+                if ($name == ExtconfService::getIndexerKeyOfIndex($index)) {
+                    $info[$configKey]['types'][$name] = [
+                        'name' => $name,
+                        'documents' => $this->client->count([
+                            'index' => $index,
+                        ])['count'],
+                    ];
+                }
             }
         }
 
@@ -105,14 +112,16 @@ class IndexManager implements SingletonInterface
         $params = [
             'index' => $index,
             'body' => [
-                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getIndexSettings($index)),
+                'settings' => ConfigurationMergerService::merge(ExtconfService::getDefaultIndexSettings(), ExtconfService::getSettingsOfIndex($index)),
             ],
         ];
 
-        $mapping = ConfigurationManager::getInstance()->getMapping($index);
+        if ($index != ExtconfService::getInstance()->getUpdateIndex()) {
+            $mapping = ConfigurationManager::getInstance()->getMapping($index);
 
-        if (!empty($mapping)) {
-            $params['body']['mappings'] = $mapping;
+            if (!empty($mapping)) {
+                $params['body']['mappings'] = $mapping;
+            }
         }
 
         return $this->client->indices()->create($params);

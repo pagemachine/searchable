@@ -1,21 +1,21 @@
 # Index Setup
 
-Searchable follows the approach to use one Elasticsearch index for each language. However, it does not create indices automatically.
-You have to configure it in the `indices` section of the extension configuration:
+Searchable follows the approach to use one Elasticsearch index per language and indexer combination. But in the configuartion it is only necessary to define an index per typo3 language. Each index in turn then defines which indexer should run.
 
-```
-#!php
+```php
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
-  '0' => [ // Language key 0, english index
-    'name' => 'typo3', //Index name
+  'english' => [
+    'typo3_language' => 0, // sys_language_uid
+    'indexer' => ['pages'], // Array of indexers to run. If not defined all indexer will be executed
     'settings' => [
-        //Your index settings
+        // Your index settings
     ]
   ],
-  '1' => [ // Language key 1, german index
-    'name' => 'typo3_ger',
+  'german' => [
+    'typo3_language' => 1, // sys_language_uid
+    'indexer' => ['pages'], // Array of indexers to run. If not defined all indexer will be executed
     'settings' => [
-        //Your index settings
+        // Your index settings
     ]
   ],
 ];
@@ -36,11 +36,11 @@ Setting these is essential e.g. for proper translations in preview rendering.
 
 This is how the index configuration could look like to set up the environment for a German index:
 
-```
-#!php
+```php
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
-  '0' => [
-    'name' => 'typo3',
+  'german' => [
+    'typo3_language' => 1, // sys_language_uid
+    'indexer' => ['pages'], // Array of indexers to run. If not defined all indexer will be executed
     'environment' => [
       'language' => 'de',
       'locale' => 'de_DE.utf-8',
@@ -55,22 +55,23 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
 ## Setting default Analyzers
 
 [Analyzers](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis.html) are very important to provide more intelligent search results, f.ex. by taking the current language into account. A recommended analysis setting for a 2-language-setup could look like this:
+```php
+//Analyzer setup for english index
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['english']['settings']['analysis'] = [
+  'analyzer' => [
+    'default' => ['type' => 'english'],
+    'default_search' => ['type' => 'english']
+  ]
+];
 
-    //Analyzer setup for index 0 (english)
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['0']['settings']['analysis'] = [
-      'analyzer' => [
-        'default' => ['type' => 'english'],
-        'default_search' => ['type' => 'english']
-      ]
-    ];
-
-    //Analyzer setup for index 1 (german)
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['1']['settings']['analysis'] = [
-      'analyzer' => [
-        'default' => ['type' => 'german'],
-        'default_search' => ['type' => 'german']
-      ]
-    ];
+//Analyzer setup for german index
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices']['german']['settings']['analysis'] = [
+  'analyzer' => [
+    'default' => ['type' => 'german'],
+    'default_search' => ['type' => 'german']
+  ]
+];
+```
 
 ## Apply setup
 

@@ -4,6 +4,7 @@ namespace PAGEmachine\Searchable\Indexer;
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HighlightFeature;
+use PAGEmachine\Searchable\Feature\TermSuggestFeature;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
 use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
@@ -17,7 +18,6 @@ class PagesIndexer extends Indexer
      * @var array
      */
     protected static $defaultConfiguration = [
-        'type' => 'pages',
         'collector' => [
             'className' => PagesDataCollector::class,
         ],
@@ -45,11 +45,26 @@ class PagesIndexer extends Indexer
                 'className' => HighlightFeature::class,
                 'config' => [
                     'fields' => [
+                        'title',
                         'content' => [
+                            'header',
                             'subheader',
                             'bodytext',
                         ],
 
+                    ],
+                ],
+            ],
+            'suggest' => [
+                'className' => TermSuggestFeature::class,
+                'config' => [
+                    'fields' => [
+                        'title',
+                        'content' => [
+                            'header',
+                            'subheader',
+                            'bodytext',
+                        ],
                     ],
                 ],
             ],
@@ -58,22 +73,15 @@ class PagesIndexer extends Indexer
             ],
         ],
         'mapping' => [
-            '_all' => [
-                'store' => true,
-            ],
             'properties' => [
-                'content' => [
-                    'properties' => [
-                        'header' => [
-                            'type' => 'text',
-                        ],
-                        'subheader' => [
-                            'type' => 'text',
-                        ],
-                        'bodytext' => [
-                            'type' => 'text',
-                        ],
-                    ],
+                'header' => [
+                    'type' => 'text',
+                ],
+                'subheader' => [
+                    'type' => 'text',
+                ],
+                'bodytext' => [
+                    'type' => 'text',
                 ],
             ],
         ],

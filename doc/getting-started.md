@@ -24,21 +24,22 @@ Now simply install it via Extension Manager or TYPO3 console.
 ## Example Configuration
 
 To create a simple setup for a non-multilanguage page, first configure a **default index**:
-
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
-      '0' => [
-        'name' => 'typo3'
-      ]
-    ];
-
+```php
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
+  'english' => [
+    'typo3_language' => 0,
+  ],
+];
+```
 Now we need to define the **indexers** we want to run.
 Usually everything that produces a single search result URL (*pages* and toplevel extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, *tags*, will be appended as **subtypes** in the toplevel indexer configuration.
 
 Let's create a simple setup for page indexing:
-
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['pages'] = [
-        'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class
-    ];
+```php
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['pages'] = [
+    'indexer' => \PAGEmachine\Searchable\Indexer\PagesIndexer::class
+];
+```
 
 That's it. This simply defines a new type (*"pages"*) and tells searchable to use the predefined `PagesIndexer` class for indexing.
 For extension content you need to define some more details, but the `PagesIndexer` contains a lot of default configuration to simplify the job.
