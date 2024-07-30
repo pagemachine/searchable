@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
-use PAGEmachine\Searchable\Domain\Repository\UpdateQueue;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
