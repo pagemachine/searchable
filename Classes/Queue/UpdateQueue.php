@@ -1,5 +1,5 @@
 <?php
-namespace PAGEmachine\Searchable\Domain\Repository;
+namespace PAGEmachine\Searchable\Queue;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
