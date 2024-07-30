@@ -1,9 +1,9 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use PAGEmachine\Searchable\Queue\UpdateQueue;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Query\SearchQuery;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
