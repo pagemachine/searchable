@@ -9,7 +9,6 @@ on:
   pull_request:
     branches:
       - master
-      - ES7V2
   schedule:
     - cron: '0 7 * * *'
 
