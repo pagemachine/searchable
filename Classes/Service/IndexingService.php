@@ -11,6 +11,7 @@ use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
@@ -44,7 +45,7 @@ final class IndexingService implements \Stringable
     }
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
 
