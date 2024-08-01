@@ -312,7 +312,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
+     * @return QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {
