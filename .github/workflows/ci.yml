@@ -36,8 +36,8 @@ jobs:
           PHP_VERSION: ${{matrix.php}}
           TYPO3_VERSION: ${{matrix.typo3}}
           ELASTICSEARCH_VERSION: ${{matrix.elasticsearch}}
-        run: docker-compose run --rm app composer build
+        run: docker compose run --rm app composer build
 
       - name: Cleanup
         if: ${{ always() }}
-        run: docker-compose down --volumes
+        run: docker compose down --volumes
