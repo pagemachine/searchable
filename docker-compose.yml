@@ -13,8 +13,10 @@ services:
       PHP_EXTENSIONS: gd intl
       HTTP_HOST: dummy
     depends_on:
-      - elasticsearch
-      - mysql
+      elasticsearch:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     volumes:
       - ./:/usr/src/app
 
@@ -25,6 +27,11 @@ services:
       - --character-set-server=utf8mb4
     environment:
       MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     tmpfs:
       - /var/lib/mysql
 
@@ -33,3 +40,8 @@ services:
     environment:
       - ingest.geoip.downloader.enabled=false
       - discovery.type=single-node
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent http://localhost:9200/_cluster/health | grep --quiet '\"status\":\"\\(green\\|yellow\\)\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
