@@ -329,6 +329,68 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     }
 
     /**
+     * @test
+     */
+    public function indexesPagesWithinTransientPages(): void
+    {
+        $this->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Regular page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 4,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_LINK,
+            'title' => 'Link page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 5,
+            'pid' => 4,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Link nested page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 6,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_SHORTCUT,
+            'shortcut_mode' => PageRepository::SHORTCUT_MODE_FIRST_SUBPAGE,
+            'title' => 'Shortcut page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 7,
+            'pid' => 6,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Shortcut nested page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 8,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_SPACER,
+            'shortcut_mode' => PageRepository::SHORTCUT_MODE_FIRST_SUBPAGE,
+            'title' => 'Spacer page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 9,
+            'pid' => 8,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Spacer nested page',
+        ]);
+
+        $this->indexingService->resetIndex();
+        $this->indexingService->indexFull('foo_pages');
+
+        $this->assertDocumentInIndex(3);
+        $this->assertDocumentNotInIndex(4);
+        $this->assertDocumentInIndex(5);
+        $this->assertDocumentNotInIndex(6);
+        $this->assertDocumentInIndex(7);
+        $this->assertDocumentNotInIndex(8);
+        $this->assertDocumentInIndex(9);
+    }
+
+    /**
      * @return void
      */
     protected function setUp(): void
