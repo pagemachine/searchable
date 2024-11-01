@@ -94,7 +94,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getRecords()
     {
-        foreach ($this->getPageRecords($this->config['pid']) as $page) {
+        foreach ($this->getPageRecords($this->config['pid'], true) as $page) {
             yield $page;
         }
     }
@@ -104,28 +104,41 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @return \Generator|null
      */
-    protected function getPageRecords($pid = null)
+    protected function getPageRecords($pid = null, $includeSelf = false)
     {
         $whereClause =
             ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
             $this->config['groupWhereClause'] .
-            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
-            ;
+            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0');
+
+        $fields = implode(',', [
+            'uid',
+            'doktype',
+            'shortcut',
+            'shortcut_mode',
+            'no_search',
+        ]);
+
+        $sorting = 'sorting';
 
         $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $rawList = $pageRepository->getMenu(
-            $pid,
-            implode(',', [
-                'uid',
-                'doktype',
-                'shortcut',
-                'shortcut_mode',
-                'no_search',
-            ]),
-            'sorting',
-            $whereClause
-        );
+
+        if ($includeSelf && $pid !== 0) {
+            $rawList = $pageRepository->getMenuForPages(
+                [$pid],
+                $fields,
+                $sorting,
+                $whereClause
+            );
+        } else {
+            $rawList = $pageRepository->getMenu(
+                $pid,
+                $fields,
+                $sorting,
+                $whereClause
+            );
+        }
 
         if (!empty($rawList)) {
             foreach ($rawList as $uid => $page) {
