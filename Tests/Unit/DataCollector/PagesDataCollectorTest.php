@@ -63,8 +63,14 @@ class PagesDataCollectorTest extends UnitTestCase
             'table' => 'pages',
             'pid' => $pid,
             'sysLanguageOverlay' => 1,
-            'doktypes' => ['1'],
-            'transientDoktypes' => ['3', '4', '199'],
+            'doktypes' => [
+                PageRepository::DOKTYPE_DEFAULT,
+            ],
+            'transientDoktypes' => [
+                PageRepository::DOKTYPE_LINK,
+                PageRepository::DOKTYPE_SHORTCUT,
+                PageRepository::DOKTYPE_SPACER,
+            ],
             'groupWhereClause' => ' AND (pages.fe_group = "" OR pages.fe_group = 0)',
             'includeHideInMenu' => false,
             'mode' => 'whitelist',
