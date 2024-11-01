@@ -38,6 +38,7 @@ services:
   elasticsearch:
     image: elasticsearch:${ELASTICSEARCH_VERSION:-7.17.22}
     environment:
+      - "ES_JAVA_OPTS=-Xms1m -Xmx4096m"
       - ingest.geoip.downloader.enabled=false
       - discovery.type=single-node
     healthcheck:
