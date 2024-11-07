@@ -87,6 +87,17 @@
             "@composer validate --ansi",
             "@composer normalize --no-update-lock --dry-run"
         ],
+        "deploy:ter": [
+            "@build:cleanup",
+            "@deploy:ter:setup",
+            "@deploy:ter:upload"
+        ],
+        "deploy:ter:setup": [
+            "@composer global require typo3/tailor"
+        ],
+        "deploy:ter:upload": [
+            "composer global exec -v -- tailor ter:publish --comment \"$(git tag -l --format='%(contents)' $TAG)\" $TAG"
+        ],
         "lint": [
             "@composer:lint",
             "@php:syntax:lint",

@@ -3,6 +3,10 @@ services:
     image: thecodingmachine/php:${PHP_VERSION:-8.1}-v4-cli
     environment:
       TYPO3_VERSION: ${TYPO3_VERSION:-^11.5}
+      TYPO3_API_TOKEN:
+      TYPO3_API_PASSWORD:
+      TYPO3_API_USERNAME:
+      TAG:
       typo3DatabaseHost: mysql
       typo3DatabaseName: typo3
       typo3DatabaseUsername: root

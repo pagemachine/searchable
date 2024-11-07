@@ -42,3 +42,35 @@ jobs:
       - name: Cleanup
         if: ${{ always() }}
         run: docker compose down --volumes
+
+  release-ter:
+    name: TYPO3 TER release
+
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check tag
+        run: |
+          if ! [[ ${{ github.ref }} =~ ^refs/tags/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$ ]]; then
+            exit 1
+          fi
+
+      - name: Get version
+        id: get-version
+        run: echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+      - name: Print version
+        run: echo ${{ env.version }}
+
+      - name: Deploy to TER
+        env:
+          TYPO3_API_TOKEN: ${{secrets.TYPO3_API_TOKEN}}
+          TYPO3_API_USERNAME: ${{secrets.TYPO3_API_USERNAME}}
+          TYPO3_API_PASSWORD: ${{secrets.TYPO3_API_PASSWORD}}
+          TAG: ${{env.version}}
+        run: docker compose run --rm app composer deploy:ter
