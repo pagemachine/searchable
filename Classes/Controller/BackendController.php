@@ -147,6 +147,9 @@ class BackendController extends ActionController
             $url,
             'GET',
             [
+                'headers' => [
+                    'content-type' => 'application/json',
+                ],
                 'body' => $body ?: '',
                 'http_errors' => false,
             ]
