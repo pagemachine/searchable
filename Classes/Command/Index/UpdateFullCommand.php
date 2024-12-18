@@ -19,10 +19,7 @@ final class UpdateFullCommand extends AbstractIndexCommand
             ->addArgument('type', InputArgument::OPTIONAL, 'Type to run indexers for, all by default');
     }
 
-    /**
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->indexingService->indexFull($input->getArgument('type') ?: '');
 
