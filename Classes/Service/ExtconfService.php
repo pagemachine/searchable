@@ -226,15 +226,6 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns the update index
-     * @return string
-     */
-    public function getUpdateIndex()
-    {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['updateIndex']['name'];
-    }
-
-    /**
      * Returns the hosts configuration
      *
      * @return array

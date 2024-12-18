@@ -1,10 +1,9 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
-use PAGEmachine\Searchable\Connection;
-use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\Query\SearchQuery;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
@@ -19,17 +18,10 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 class BackendController extends ActionController
 {
-    /**
-     * @var IndexerFactory $indexerFactory
-     */
-    protected $indexerFactory;
-    public function __construct(private readonly ModuleTemplateFactory $moduleTemplateFactory)
-    {
-    }
-
-    public function injectIndexerFactory(IndexerFactory $indexerFactory): void
-    {
-        $this->indexerFactory = $indexerFactory;
+    public function __construct(
+        private readonly ModuleTemplateFactory $moduleTemplateFactory,
+        private readonly UpdateQueue $updateQueue
+    ) {
     }
 
     /**
@@ -55,25 +47,10 @@ class BackendController extends ActionController
     /**
      * Fetches scheduled updates for backend module
      *
-     * @return array
      */
     protected function fetchScheduledUpdates()
     {
-        $client = Connection::getClient();
-
-        $updates = $client->search([
-            'index' => ExtconfService::getInstance()->getUpdateIndex(),
-            'type' => '',
-            'body' => [
-                'query' => [
-                    'match_all' => new \stdClass(),
-                ],
-            ],
-        ]);
-
-        $updates['count'] = $client->count(['index' => ExtconfService::getInstance()->getUpdateIndex()])['count'];
-
-        return $updates;
+        return $this->updateQueue->pendingUpdates();
     }
 
     /**
