@@ -19,10 +19,7 @@ final class ResetCommand extends AbstractIndexCommand
             ->addArgument('language', InputArgument::OPTIONAL, 'Language of index to reset');
     }
 
-    /**
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $language = $input->getArgument('language');
 
