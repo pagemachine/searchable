@@ -18,10 +18,7 @@ final class SetupCommand extends AbstractIndexCommand
             ->setHelp('Sets up indices and pipelines and verifies the indexer configuration, needs to be run after installation. Can be run multiple times to ensure correct setup.');
     }
 
-    /**
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->indexingService->setup();
 
