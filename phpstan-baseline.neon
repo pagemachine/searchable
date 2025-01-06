@@ -1,6 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Context\\\\VisibilityAspect\\:\\:includeScheduledRecords\\(\\)\\.$#"
+			count: 1
+			path: Classes/Command/Index/AbstractIndexCommand.php
+
+		-
+			message: "#^Unknown parameter \\$includeScheduledRecords in call to TYPO3\\\\CMS\\\\Core\\\\Context\\\\VisibilityAspect constructor\\.$#"
+			count: 1
+			path: Classes/Command/Index/AbstractIndexCommand.php
+
+		-
 			message: "#^Method TYPO3\\\\CMS\\\\Backend\\\\Form\\\\FormDataCompiler\\:\\:compile\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: Classes/DataCollector/TCA/FormDataRecord.php
