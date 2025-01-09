@@ -35,13 +35,13 @@ abstract class AbstractIndexCommand extends Command
         $currentVisibilityAspect = $context->getAspect('visibility');
         if ((new Typo3Version())->getMajorVersion() < 12) {
             $context->setAspect('visibility', new VisibilityAspect(
-                includeHiddenPages: $currentVisibilityAspect->includeHiddenPages(),
+                includeHiddenPages: true,
                 includeHiddenContent: false,
                 includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
             ));
         } else {
             $context->setAspect('visibility', new VisibilityAspect(
-                includeHiddenPages: $currentVisibilityAspect->includeHiddenPages(),
+                includeHiddenPages: true,
                 includeHiddenContent: false,
                 includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
                 includeScheduledRecords: $currentVisibilityAspect->includeScheduledRecords(),
