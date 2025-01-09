@@ -391,6 +391,61 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     }
 
     /**
+     * @test
+     */
+    public function indexesPagesWithinHiddenPages(): void
+    {
+        $this->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'First visible page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 4,
+            'pid' => 3,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Second visible page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 5,
+            'pid' => 3,
+            'hidden' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'First hidden page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 6,
+            'pid' => 5,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Third visible page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 7,
+            'pid' => 3,
+            'hidden' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Second hidden page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 8,
+            'pid' => 7,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Fourth visible page',
+        ]);
+
+        $this->indexingService->resetIndex();
+        $this->indexingService->indexFull('foo_pages');
+
+        $this->assertDocumentInIndex(3);
+        $this->assertDocumentInIndex(4);
+        $this->assertDocumentNotInIndex(5);
+        $this->assertDocumentInIndex(6);
+        $this->assertDocumentNotInIndex(7);
+        $this->assertDocumentInIndex(8);
+    }
+
+    /**
      * @return void
      */
     protected function setUp(): void

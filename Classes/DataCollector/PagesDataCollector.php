@@ -113,13 +113,13 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     protected function getPageRecords($pid = null, $includeSelf = false)
     {
         $whereClause =
-            ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
             $this->config['groupWhereClause'] .
             ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0');
 
         $fields = implode(',', [
             'uid',
+            $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'],
             'doktype',
             'shortcut',
             'shortcut_mode',
@@ -149,8 +149,12 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         if (!empty($rawList)) {
             foreach ($rawList as $uid => $page) {
                 // Check if page is directly indexable or only transient,
-                // also skip page if search has been disabled
-                if (in_array($page['doktype'], $this->config['doktypes']) && !($page['no_search'] ?? false)) {
+                // also skip page if search has been disabled,
+                // also skip page if it is hidden (but keep fetching subpages)
+                if (in_array($page['doktype'], $this->config['doktypes'])
+                    && !($page['no_search'] ?? false)
+                    && !($page[$GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled']] ?? false)
+                ) {
                     yield $this->getRecord($uid);
                 }
 
