@@ -41,6 +41,11 @@ class PagesDataCollectorTest extends UnitTestCase
         $this->resetSingletonInstances = true;
 
         $GLOBALS['TCA']['pages'] = [
+            'ctrl' => [
+                'enablecolumns' => [
+                    'disabled' => 'hidden',
+                ],
+            ],
             'columns' => [
                 'title' => [
                     'config' => [
