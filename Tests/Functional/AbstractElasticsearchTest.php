@@ -283,15 +283,15 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
     {
         $document = $this->searchDocumentByUid($uid, $languageId);
 
-        $this->assertNotEmpty($document, 'Document not in index');
-        $this->assertArraySubset($documentSubset, $document, false, 'Document source mismatch');
+        $this->assertNotEmpty($document, sprintf('Document %d not in index', $uid));
+        $this->assertArraySubset($documentSubset, $document, false, sprintf('Document %d source mismatch', $uid));
     }
 
     protected function assertDocumentNotInIndex(int $uid, int $languageId = 0): void
     {
         $document = $this->searchDocumentByUid($uid, $languageId);
 
-        $this->assertEmpty($document, 'Document in index');
+        $this->assertEmpty($document, sprintf('Document %d in index', $uid));
     }
 
     protected function getElasticsearchClient(): ElasticsearchClient
