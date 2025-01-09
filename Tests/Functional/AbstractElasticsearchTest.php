@@ -14,9 +14,12 @@ use PAGEmachine\Searchable\Preview\NoPreviewRenderer;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Service\IndexingService;
 use Pagemachine\SearchableExtbaseL10nTest\Preview\ContentPreviewRenderer;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -233,6 +236,23 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
 
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
         Bootstrap::initializeLanguageObject();
+
+        $context = GeneralUtility::makeInstance(Context::class);
+        $currentVisibilityAspect = $context->getAspect('visibility');
+        if ((new Typo3Version())->getMajorVersion() < 12) {
+            $context->setAspect('visibility', new VisibilityAspect(
+                includeHiddenPages: true,
+                includeHiddenContent: false,
+                includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
+            ));
+        } else {
+            $context->setAspect('visibility', new VisibilityAspect(
+                includeHiddenPages: true,
+                includeHiddenContent: false,
+                includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
+                includeScheduledRecords: $currentVisibilityAspect->includeScheduledRecords(),
+            ));
+        }
 
         $this->indexingService = $this->get(IndexingService::class);
         $this->indexingService->setup();
