@@ -101,7 +101,7 @@ class BulkQuery extends AbstractQuery
              */
             $response = $this->client->bulk($this->getParameters());
 
-            if ($response['errors']) {
+            if ($response['errors'] ?? false) {
                 $this->logger->error("Bulk Query response contains errors: ", $response);
             }
         }
