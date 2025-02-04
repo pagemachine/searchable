@@ -61,9 +61,7 @@ class QA extends AbstractEidHandler
             } catch (\Exception $e) {
                 $responseData = ['error' => $e->getMessage()];
             }
-        }
-
-        else {
+        } else {
             $responseData = ['error' => "missing parameter"];
         }
 
