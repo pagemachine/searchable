@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QA extends AbstractEidHandler
 {
-    private RequestFactory $requestFactory;
+    private readonly RequestFactory $requestFactory;
     private string $apiUrl = '';
     private string $authToken = '';
 
