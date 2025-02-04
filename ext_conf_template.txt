@@ -3,6 +3,13 @@ connection {
 	hosts = http://localhost:9200
 }
 indexing {
-	# cat=basic; type=string; label=Frontend domain of your site
-	domain = http://localhost:80/
+    # cat=basic; type=string; label=Frontend domain of your site
+    domain = http://localhost:80/
+}
+aigude {
+    # cat=basic; type=string; label=runpod API URL
+    runpodUrl = https://api.runpod.ai/v2/22vlo1l1fn5xqc
+
+    # cat=basic; type=string; label=runpod Auth Token
+    runpodauthToken = rpa_.....
 }

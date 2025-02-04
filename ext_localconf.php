@@ -153,3 +153,4 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = Search::
 // Register Hook for dynamic Plugin FlexForms
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][FlexFormTools::class]['flexParsing']['searchable'] =
         DynamicFlexFormHook::class;
+        

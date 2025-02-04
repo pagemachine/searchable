@@ -6,6 +6,7 @@ use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
@@ -22,14 +23,8 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         'table' => 'pages',
         'pid' => 0,
         'sysLanguageOverlay' => 1,
-        'doktypes' => [
-            PageRepository::DOKTYPE_DEFAULT,
-        ],
-        'transientDoktypes' => [
-            PageRepository::DOKTYPE_LINK,
-            PageRepository::DOKTYPE_SHORTCUT,
-            PageRepository::DOKTYPE_SPACER,
-        ],
+        'doktypes' => ['1'],
+        'transientDoktypes' => ['4', '199'],
         'groupWhereClause' => ' AND (pages.fe_group = "" OR pages.fe_group = 0)',
         'includeHideInMenu' => false,
         'mode' => 'whitelist',
@@ -100,8 +95,106 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     public function getRecords()
     {
-        foreach ($this->getPageRecords($this->config['pid'], true) as $page) {
+        foreach ($this->getPageRecords($this->config['pid']) as $page) {
+            // Generate embedding for `title`
+            if (!empty($page['title'])) {
+                //$page['title_embedding'] = "LOL";
+                $page['title_embedding'] = $this->generateEmbedding($page['title']);
+            }
+
+            // Generate embedding for `abstract`
+            if (!empty($page['abstract'])) {
+                $page['abstract_embedding'] = $this->generateEmbedding($page['abstract']);
+            }
+
+            // Generate embedding for all `content` elements
+            if (!empty($page['content']) && is_array($page['content'])) {
+                foreach ($page['content'] as &$contentBlock) {
+                    // Generate embedding for `header`
+                    if (!empty($contentBlock['header'])) {
+                        $contentBlock['header_embedding'] = $this->generateEmbedding($contentBlock['header']);
+                    }
+                    // Generate embedding for `subheader`
+                    if (!empty($contentBlock['subheader'])) {
+                        $contentBlock['subheader_embedding'] = $this->generateEmbedding($contentBlock['subheader']);
+                    }
+                    // Generate embedding for `bodytext`
+                    if (!empty($contentBlock['bodytext'])) {
+                        $contentBlock['bodytext_embedding'] = $this->generateEmbedding($contentBlock['bodytext']);
+                    }
+                }
+            }
+
             yield $page;
+        }
+    }
+
+    /**
+     *
+     *
+     * @return array
+     */
+    public function generateEmbedding(string $text)
+    {
+        $settings = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['searchable'] ?? [];
+        $apiauthToken = $settings['aigude']['runpodauthToken'] ?? '';
+        $apiUrl = $settings['aigude']['runpodUrl'] ?? '';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $apiauthToken,
+        ];
+        $payload = json_encode(['input' => ['input' => $text]]);
+        try {
+            $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
+            
+            $response = $requestFactory->request("$apiUrl/run", 'POST', [
+                'headers' => $headers,
+                'body' => $payload,
+            ]);
+
+            if ($response->getStatusCode() !== 200) {
+                return null;
+            }
+    
+            $responseJson = json_decode($response->getBody()->getContents(), true);
+            $jobId = $responseJson["id"] ?? null;
+    
+            if (!$jobId) {
+                return null;
+            }
+
+            while (true) {
+                sleep(5);
+    
+                $statusResponse = $requestFactory->request("$apiUrl/status/$jobId", 'GET', [
+                    'headers' => $headers,
+                ]);
+    
+                if ($statusResponse->getStatusCode() !== 200) {
+                    return null;
+                }
+    
+                $statusJson = json_decode($statusResponse->getBody()->getContents(), true);
+    
+                if ($statusJson["status"] === "COMPLETED") {
+                    break;
+                } elseif (!in_array($statusJson["status"], ["IN_PROGRESS", "IN_QUEUE"])) {
+                    return null;
+                }
+            }
+    
+            $output = $statusJson["output"] ?? [];
+            $dataList = $output["data"] ?? [];
+    
+            if (empty($dataList) || !is_array($dataList)) {
+                return null;
+            }
+    
+            $embedding = $dataList[0]["embedding"] ?? [];
+    
+            return is_array($embedding) ? $embedding : null;
+        } catch (\Exception $e) {
+            return [];
         }
     }
 
@@ -110,51 +203,34 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @return \Generator|null
      */
-    protected function getPageRecords($pid = null, $includeSelf = false)
+    protected function getPageRecords($pid = null)
     {
         $whereClause =
+            ' AND pages.hidden = 0' .
             ' AND pages.doktype IN(' . $this->getDoktypes() . ')' .
             $this->config['groupWhereClause'] .
-            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0');
-
-        $fields = implode(',', [
-            'uid',
-            $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'],
-            'doktype',
-            'shortcut',
-            'shortcut_mode',
-            'no_search',
-        ]);
-
-        $sorting = 'sorting';
+            ($this->config['includeHideInMenu'] ? '' : ' AND pages.nav_hide = 0')
+            ;
 
         $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-
-        if ($includeSelf && $pid !== 0) {
-            $rawList = $pageRepository->getMenuForPages(
-                [$pid],
-                $fields,
-                $sorting,
-                $whereClause
-            );
-        } else {
-            $rawList = $pageRepository->getMenu(
-                $pid,
-                $fields,
-                $sorting,
-                $whereClause
-            );
-        }
+        $rawList = $pageRepository->getMenu(
+            $pid,
+            implode(',', [
+                'uid',
+                'doktype',
+                'shortcut',
+                'shortcut_mode',
+                'no_search',
+            ]),
+            'sorting',
+            $whereClause
+        );
 
         if (!empty($rawList)) {
             foreach ($rawList as $uid => $page) {
                 // Check if page is directly indexable or only transient,
-                // also skip page if search has been disabled,
-                // also skip page if it is hidden (but keep fetching subpages)
-                if (in_array($page['doktype'], $this->config['doktypes'])
-                    && !($page['no_search'] ?? false)
-                    && !($page[$GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled']] ?? false)
-                ) {
+                // also skip page if search has been disabled
+                if (in_array($page['doktype'], $this->config['doktypes']) && !($page['no_search'] ?? false)) {
                     yield $this->getRecord($uid);
                 }
 
@@ -207,10 +283,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function filterPageListByRootline(array $pageUids, int $rootlinePageUid): array
     {
-        if ($rootlinePageUid == 0) {
-            return $pageUids;
-        }
-
         $filteredPageUids = [];
 
         foreach ($pageUids as $uid) {

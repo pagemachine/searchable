@@ -3,7 +3,8 @@ namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the PAGEmachine Searchable project.
@@ -23,7 +24,6 @@ class SearchQuery extends AbstractQuery
      */
     protected $parameters = [
         'body' => [],
-        'index' => '',
     ];
 
     /**
@@ -188,7 +188,7 @@ class SearchQuery extends AbstractQuery
     /**
      * @var array $searchFields
      */
-    protected $searchFields = ["*"];
+    protected $searchFields = ["_all"];
 
     /**
      * @return array
@@ -230,10 +230,40 @@ class SearchQuery extends AbstractQuery
     public function setTerm($term)
     {
         $this->term = $term;
-
+        if (empty($this->embedding)) {
+            $embedding = $this->generateEmbedding($term);
+            if (!empty($embedding)) {
+                $this->embedding = $embedding;
+            }
+        }
         return $this;
     }
 
+    /**
+     * @var array $embedding
+     */
+    protected $embedding = [];
+
+    /**
+     * @return array
+     */
+    public function getEmbedding()
+    {
+        return $this->embedding;
+    }
+
+    /**
+     * @param array $embedding
+     * @return SearchQuery
+     */
+    public function setEmbedding(array $embedding)
+    {
+        if (!empty($embedding)) {
+            $this->embedding = $embedding;
+        }
+        return $this;
+    }
+    
     /**
      * @var array $result
      */
@@ -258,13 +288,6 @@ class SearchQuery extends AbstractQuery
     {
         $this->build();
 
-        $this->parameters['index'] = implode(',', $this->getElasticsearchIndices());
-        // Prevent searching over all existing indices if no index is set
-        if (empty($this->parameters['index'])) {
-            $this->logger->error("No index set for search query");
-            return [];
-        }
-
         try {
             $response = $this->client->search($this->getParameters());
 
@@ -275,12 +298,6 @@ class SearchQuery extends AbstractQuery
             $this->result = $response;
         } catch (\Exception $e) {
             $this->logger->error("Elasticsearch-PHP encountered an error while searching: " . $e->getMessage());
-
-            $applicationContext = Environment::getContext();
-            if ($applicationContext->isDevelopment()) {
-                throw $e;
-            }
-
             $response = [];
         }
 
@@ -304,7 +321,7 @@ class SearchQuery extends AbstractQuery
     public function getPageCount()
     {
         if (!empty($this->result)) {
-            return (int)ceil($this->result['hits']['total']['value'] / $this->size);
+            return (int)ceil($this->result['hits']['total'] / $this->size);
         }
 
         return 0;
@@ -319,28 +336,111 @@ class SearchQuery extends AbstractQuery
     {
         $this->parameters['body'] = [
             'query' => [
-                $this->searchType => [
-                    'fields' => $this->searchFields,
-                    'query' => $this->term,
+                'script_score' => [
+                    'query' => ['exists' => ['field' => 'title_embedding']],
+                    'script' => [
+                        'source' => "
+                            double score = 0.0;
+                            
+                            if (doc['title_embedding'].size() > 0) {
+                                score += cosineSimilarity(params.query_vector, 'title_embedding') * 2.5;
+                            }
+                            if (doc['abstract_embedding'].size() > 0) {
+                                score += cosineSimilarity(params.query_vector, 'abstract_embedding') * 2.0;
+                            }
+                            
+                            for (int i = 0; i < doc['content.header_embedding'].size(); i++) {
+                                score += cosineSimilarity(params.query_vector, 'content.header_embedding', i) * 0.2;
+                            }
+                            for (int i = 0; i < doc['content.subheader_embedding'].size(); i++) {
+                                score += cosineSimilarity(params.query_vector, 'content.subheader_embedding', i) * 0.2;
+                            }
+                            for (int i = 0; i < doc['content.bodytext_embedding'].size(); i++) {
+                                score += cosineSimilarity(params.query_vector, 'content.bodytext_embedding', i) * 2.0;
+                            }
+                            
+                            return score + 1.0;
+                        ",
+                        'params' => ['query_vector' => $this->embedding],
+                    ],
                 ],
             ],
             'from' => $this->from,
             'size' => $this->size,
         ];
-
-        // Set active indices as default
-        $this->setIndices($this->getActiveIndices());
-        $this->applyFeatures();
-    }
-
-    protected function getActiveIndices(): array
-    {
+    
         if ($this->respectLanguage === true) {
             $language = $this->language ?: $this->getLanguageId();
+            $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
+        }
+    
+        $this->applyFeatures();
+    }
+    
 
-            return ExtconfService::getIndicesByLanguage($language);
-        } else {
-            return ExtconfService::getIndices();
+    protected function generateEmbedding(string $text)
+    {
+        $settings = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['searchable'] ?? [];
+        $apiauthToken = $settings['aigude']['runpodauthToken'] ?? '';
+        $apiUrl = $settings['aigude']['runpodUrl'] ?? '';
+
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $apiauthToken,
+        ];
+
+        $payload = json_encode(['input' => ['input' => $text]]);
+
+        try {
+            /** @var RequestFactory $requestFactory */
+            $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
+
+            $response = $requestFactory->request("$apiUrl/run", 'POST', [
+                'headers' => $headers,
+                'body' => $payload,
+            ]);
+
+            if ($response->getStatusCode() !== 200) {
+                return null;
+            }
+
+            $responseJson = json_decode($response->getBody()->getContents(), true);
+            $jobId = $responseJson["id"] ?? null;
+
+            if (!$jobId) {
+                return null;
+            }
+
+            while (true) {
+                sleep(5);
+
+                $statusResponse = $requestFactory->request("$apiUrl/status/$jobId", 'GET', [
+                    'headers' => $headers,
+                ]);
+
+                if ($statusResponse->getStatusCode() !== 200) {
+                    return null;
+                }
+
+                $statusJson = json_decode($statusResponse->getBody()->getContents(), true);
+
+                if ($statusJson["status"] === "COMPLETED") {
+                    break;
+                } elseif (!in_array($statusJson["status"], ["IN_PROGRESS", "IN_QUEUE"])) {
+                    return null;
+                }
+            }
+
+            $output = $statusJson["output"] ?? [];
+            $dataList = $output["data"] ?? [];
+
+            if (empty($dataList) || !is_array($dataList)) {
+                return null;
+            }
+
+            return $dataList[0]["embedding"] ?? null;
+        } catch (\Exception $e) {
+            return [];
         }
     }
 }
