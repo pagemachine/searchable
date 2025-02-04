@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Eid;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 class QA extends AbstractEidHandler
 {
@@ -46,7 +47,7 @@ class QA extends AbstractEidHandler
                 "input" => [
                     "question" => $question,
                     "data" => json_encode($reqdata),
-                ]
+                ],
             ];
 
             try {
@@ -64,8 +65,9 @@ class QA extends AbstractEidHandler
         }
         else {
             $responseData = ['error' => "missing parameter"];
+            
         }
-        
+
         header('Content-Type: application/json');
         echo json_encode($responseData);
         exit;
