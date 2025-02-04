@@ -162,7 +162,7 @@
                         $("#div-qa-answer").css("display", "block");
                         $("#p-qa-answer").text("Die Antwort wird generiert dies kann einige Sekunden in Anspruch nehmen.");
                         $("#qa-article-content").html(``);
-                        qaajaxcall("http://46.4.73.197:8004/api/searchable", searchTerm, result); 
+                        qaajaxcall(searchTerm, result);
                     }
                     else{
                         $("#div-qa-answer").css("display", "none");
@@ -211,9 +211,9 @@
             }
         }
 
-        function qaajaxcall(url, question, data) {
+        function qaajaxcall(question, data) {
             $.ajax({
-                url: url,
+                url: "/?eID=searchable_qa",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({

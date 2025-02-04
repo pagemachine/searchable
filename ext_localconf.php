@@ -2,6 +2,7 @@
 
 use PAGEmachine\Searchable\Controller\SearchController;
 use PAGEmachine\Searchable\Eid\Autosuggest;
+use PAGEmachine\Searchable\Eid\QA;
 use PAGEmachine\Searchable\Eid\Search;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HighlightFeature;
@@ -149,6 +150,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = Autosuggest::class . '::processRequest';
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = Search::class . '::processRequest';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_qa'] = QA::class . '::processRequest';
 
 // Register Hook for dynamic Plugin FlexForms
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][FlexFormTools::class]['flexParsing']['searchable'] =
