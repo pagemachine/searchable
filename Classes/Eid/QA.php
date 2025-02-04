@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 class QA extends AbstractEidHandler
 {
     private RequestFactory $requestFactory;
@@ -63,9 +62,9 @@ class QA extends AbstractEidHandler
                 $responseData = ['error' => $e->getMessage()];
             }
         }
+
         else {
             $responseData = ['error' => "missing parameter"];
-            
         }
 
         header('Content-Type: application/json');
