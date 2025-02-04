@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Eid;
@@ -7,7 +6,6 @@ namespace PAGEmachine\Searchable\Eid;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Http\ResponseFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class QA extends AbstractEidHandler
@@ -43,12 +41,11 @@ class QA extends AbstractEidHandler
         $question = $postParams["question"];
         $reqdata = $postParams["data"];
         
-        if($reqdata && $question && $this->apiUrl && $this->authToken)
-        {
+        if ($reqdata && $question && $this->apiUrl && $this->authToken) {
             $data = [
                 "input" => [
                     "question" => $question,
-                    "data" => json_encode($reqdata)
+                    "data" => json_encode($reqdata),
                 ]
             ];
 
@@ -65,9 +62,10 @@ class QA extends AbstractEidHandler
                 $responseData = ['error' => $e->getMessage()];
             }
         }
-        else{
+        else {
             $responseData = ['error' => "missing parameter"];
         }
+        
         header('Content-Type: application/json');
         echo json_encode($responseData);
         exit;
