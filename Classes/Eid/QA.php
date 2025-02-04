@@ -27,10 +27,8 @@ class QA extends AbstractEidHandler
     /**
      * Returns results for given term
      *
-     * @param   string $question
-     * @param   array $data
-     * @return  string $response
-     * @return  int $index
+     * @param   ServerRequestInterface $request The request object
+     * @return  ResponseInterface The response object
      */
     public function processRequest(ServerRequestInterface $request): ResponseInterface
     {
