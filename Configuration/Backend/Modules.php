@@ -17,5 +17,6 @@ return [
                 'start', 'search', 'request', 'resetIndices', 'indexFull', 'indexPartial',
             ],
         ],
+        'inheritNavigationComponentFromMainModule' => false,
     ],
 ];
