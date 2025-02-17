@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 use PAGEmachine\Searchable\DataCollector\FileDataCollector;
 use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;

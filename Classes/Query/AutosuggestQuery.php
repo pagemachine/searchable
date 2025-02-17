@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Query;
 use PAGEmachine\Searchable\LanguageIdTrait;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

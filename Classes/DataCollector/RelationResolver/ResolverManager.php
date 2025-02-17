@@ -7,7 +7,7 @@ use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelat
 use TYPO3\CMS\Core\SingletonInterface;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

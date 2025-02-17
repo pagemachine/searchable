@@ -5,7 +5,7 @@ use PAGEmachine\Searchable\LanguageIdTrait;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

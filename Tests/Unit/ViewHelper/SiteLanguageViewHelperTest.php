@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 use PAGEmachine\Searchable\ViewHelpers\SiteLanguageViewHelper;

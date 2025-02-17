@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Preview;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 interface PreviewRendererInterface

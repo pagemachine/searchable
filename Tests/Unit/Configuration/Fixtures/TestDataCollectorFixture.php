@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 use PAGEmachine\Searchable\DataCollector\AbstractDataCollector;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 
