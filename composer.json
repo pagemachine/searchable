@@ -3,12 +3,6 @@
     "description": "Elasticsearch companion API for TYPO3",
     "license": "GPL-3.0-or-later",
     "type": "typo3-cms-extension",
-    "authors": [
-        {
-            "name": "Saskia Schreiber",
-            "email": "sschreiber@pagemachine.de"
-        }
-    ],
     "require": {
         "php": "^8.1",
         "elasticsearch/elasticsearch": "^7.0",
