@@ -10,7 +10,7 @@ use PAGEmachine\Searchable\Mapper\DefaultMapper;
 use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 class PagesIndexer extends Indexer
 {

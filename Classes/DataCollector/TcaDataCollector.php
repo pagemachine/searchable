@@ -13,7 +13,7 @@ use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

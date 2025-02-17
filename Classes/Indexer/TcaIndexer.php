@@ -5,7 +5,7 @@ use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 /**
  * Simple TCA based indexer reading fields and processing them

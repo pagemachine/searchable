@@ -2,7 +2,7 @@
 namespace PAGEmachine\Searchable\Database\Query;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 use Doctrine\DBAL\Query\QueryBuilder as DoctrineQueryBuilder;

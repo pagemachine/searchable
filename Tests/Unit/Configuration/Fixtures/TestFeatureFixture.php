@@ -5,7 +5,7 @@ use PAGEmachine\Searchable\Feature\AbstractFeature;
 use PAGEmachine\Searchable\Feature\FeatureInterface;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 

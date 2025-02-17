@@ -14,7 +14,7 @@ use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 class Indexer implements IndexerInterface, DynamicConfigurationInterface

@@ -5,7 +5,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

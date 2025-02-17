@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\DataCollector;
 use Doctrine\DBAL\Connection;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

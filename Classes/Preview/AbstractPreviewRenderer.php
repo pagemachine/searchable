@@ -4,7 +4,7 @@ namespace PAGEmachine\Searchable\Preview;
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**

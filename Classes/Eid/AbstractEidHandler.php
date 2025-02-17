@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\Response;
 
 /*
- * This file is part of the PAGEmachine Searchable project.
+ * This file is part of the Pagemachine Searchable project.
  */
 
 /**
