@@ -1,0 +1,69 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<h1>Index Text Analyzer</h1>
+
+<f:flashMessages />
+
+<f:form action="analyze" method="post">
+  <div class="form-group">
+    <label for="hostUrl">Host</label>
+    <f:form.textfield
+      class="form-control"
+      id="hostUrl"
+      name="hostUrl"
+      value="{hostUrl}"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="selectedIndex">Index</label>
+    <f:form.select
+      class="form-control"
+      id="selectedIndex"
+      name="selectedIndex"
+      options="{indices}"
+      value="{selectedIndex}"
+    />
+  </div>
+
+    <div class="form-group">
+      <label for="text">Text to analyze</label>
+      <f:form.textarea class="form-control" id="text" name="text" value="{text}" />
+    </div>
+
+  <f:form.submit value="Submit" class="btn btn-primary" />
+</f:form>
+
+<f:if condition="{response}">
+  <div class="panel panel-default mt-3">
+    <div class="panel-heading">Analysis Result for Index: {selectedIndex}</div>
+    <div class="panel-body">
+      <f:if condition="{response.tokens}">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Position</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <f:for each="{response.tokens}" as="token">
+              <tr>
+                <td>{token.token}</td>
+                <td>{token.position}</td>
+                <td>{token.start_offset}</td>
+                <td>{token.end_offset}</td>
+                <td>{token.type}</td>
+              </tr>
+            </f:for>
+          </tbody>
+        </table>
+      </f:if>
+    </div>
+  </div>
+</f:if>
+
+</html>
