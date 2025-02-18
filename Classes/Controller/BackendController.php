@@ -123,7 +123,8 @@ class BackendController extends ActionController
             ]);
         } else {
             $hosts = ExtconfService::getInstance()->getHostsSettings();
-            $url = sprintf('%s/typo3/', $hosts[0] ?? 'http://localhost:9200');
+            $indices = ExtconfService::getInstance()->getIndices();
+            $url = sprintf('%s/%s/', $hosts[0] ?? 'http://localhost:9200', $indices[0] ?? 'typo3');
         }
 
         $this->view->assign("url", $url);
