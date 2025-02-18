@@ -32,37 +32,35 @@
 				<f:form.textarea class="form-control" id="text" name="text" value="{text}" />
 			</div>
 
-		<f:form.submit value="Submit" class="btn btn-primary" />
+		<f:form.button class="btn btn-primary">Analyze text</f:form.button>
 	</f:form>
 
 	<f:if condition="{response}">
 		<div class="panel panel-default mt-3">
 			<div class="panel-heading">Analysis Result for Index: {selectedIndex}</div>
 			<div class="panel-body">
-				<f:if condition="{response.tokens}">
-					<table class="table">
-						<thead>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Token</th>
+							<th>Position</th>
+							<th>Start</th>
+							<th>End</th>
+							<th>Type</th>
+						</tr>
+					</thead>
+					<tbody>
+						<f:for each="{response.tokens}" as="token">
 							<tr>
-								<th>Token</th>
-								<th>Position</th>
-								<th>Start</th>
-								<th>End</th>
-								<th>Type</th>
+								<td>{token.token}</td>
+								<td>{token.position}</td>
+								<td>{token.start_offset}</td>
+								<td>{token.end_offset}</td>
+								<td>{token.type}</td>
 							</tr>
-						</thead>
-						<tbody>
-							<f:for each="{response.tokens}" as="token">
-								<tr>
-									<td>{token.token}</td>
-									<td>{token.position}</td>
-									<td>{token.start_offset}</td>
-									<td>{token.end_offset}</td>
-									<td>{token.type}</td>
-								</tr>
-							</f:for>
-						</tbody>
-					</table>
-				</f:if>
+						</f:for>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</f:if>
