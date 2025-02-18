@@ -163,7 +163,7 @@ class BackendController extends ActionController
             'text' => $text,
             'indices' => array_combine($indices, $indices),
             'selectedIndex' => $selectedIndex,
-            'hostUrl' => $hostUrl
+            'hostUrl' => $hostUrl,
         ]);
 
         $moduleTemplate->setContent($this->view->render());
