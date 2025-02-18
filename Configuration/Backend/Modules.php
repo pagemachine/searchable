@@ -14,7 +14,9 @@ return [
         'extensionName' => 'Searchable',
         'controllerActions' => [
             BackendController::class => [
-                'start', 'search', 'request', 'resetIndices', 'indexFull', 'indexPartial',
+                'start',
+                'search',
+                'request',
             ],
         ],
         'inheritNavigationComponentFromMainModule' => false,
