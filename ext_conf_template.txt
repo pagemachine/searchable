@@ -6,3 +6,11 @@ indexing {
 	# cat=basic; type=string; label=Frontend domain of your site
 	domain = http://localhost:80/
 }
+api {
+    # cat=basic; type=string; label=QA Url
+    searchUrl = https://api.runpod.ai/v2/1thspq670je76c/runsync
+}
+qa_token {
+    # cat=basic; type=string; label=QA Auth Token
+    authtoken = rpa_3N3J3JLCYQ1VTREP7I6HW0CC47TR4IHDMECHLJXZ19ibyp
+}

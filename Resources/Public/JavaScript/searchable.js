@@ -6,7 +6,8 @@
     $.fn.searchable = function(options){
 
         var settings = $.extend({
-            input : "#term",
+            input: "#term",
+            qabutton: "#searchable-qa-button",
             result: "#searchable-results",
             morebutton: "#searchable-loadmore",
             noresults: "#searchable-noresults",
@@ -64,8 +65,13 @@
                 $(settings.input).on("keyup", function(){
 
                     clearTimeout(timer);
-                    timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
+                    timer = setTimeout(function(){callAjaxSearch("input")}, settings.delay);
                 });
+
+                $(settings.qabutton).on("click",function(){
+
+                    callAjaxSearch("button");
+                })
             }
 
 
@@ -75,25 +81,27 @@
          * Calls the ajax search in fixed intervals
          *
          */
-        function callAjaxSearch() {
-
+        function callAjaxSearch(call) {
             searchTerm = $(settings.input).val();
-
             //No term - clear results
             if (searchTerm == "") {
-
                 clear();
                 resetPage();
                 updateUI();
 
+            }
+            else if (call == "button"){
+                
+                search(call);
+                return
 
             }
             //Different term than last time - clear everything and start search
-            else if (searchTerm != lastTerm) {
-
+            else if ((searchTerm != lastTerm)) {
+                
                 clear();
                 resetPage();
-                search();
+                search(call);
 
             }
             //Same term but different page - append content (if infinite scroll is active)
@@ -104,13 +112,14 @@
                     clear();
                 }
 
-                search();
+                search(call);
 
             }
 
             lastTerm = searchTerm;
             lastPage = currentPage;
-            timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
+            timer = setTimeout(function(){callAjaxSearch(call)}, settings.delay);
+            
         }
 
         function clear() {
@@ -125,8 +134,7 @@
             lastPage = 1;
         }
 
-        function search() {
-
+        function search(call) {
             xhr = $.ajax("/?eID=searchable_search", {
                 dataType: 'json',
                 data: {
@@ -148,18 +156,27 @@
                             features: features,
                         }, data, this);
                     }
-
                     result = data;
-                    populate();
-                    updateUI();
+                    if(call == "button"){
+                        $("#searchable-qa-button").css("display", "none");
+                        $("#div-qa-answer").css("display", "block");
+                        $("#p-qa-answer").text("Die Antwort wird generiert dies kann einige Sekunden in Anspruch nehmen.");
+                        $("#qa-article-content").html(``);
+                        qaajaxcall(searchTerm, result); 
+                    }
+                    else{
+                        $("#div-qa-answer").css("display", "none");
+                        populate();
+                        $("#searchable-qa-button").css("display", "block");
+                        $("#searchable-qa-button").text('Antwort auf die Frage: "' + searchTerm + '" generieren');
+                        updateUI();
+                    }
                 }
             });
         }
 
         function populate() {
-
             if (typeof(settings.callbacks.modifyResultList) === "function") {
-
                 result = settings.callbacks.modifyResultList(result);
             }
 
@@ -192,6 +209,56 @@
 
                 $(settings.morebutton).hide();
             }
+        }
+
+        function qaajaxcall(question, data) {
+            $.ajax({
+                url: "/?eID=searchable_qa",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    question: question,
+                    data: { results: data.results }
+                }),
+                success: function(response) {
+                    try {
+                        const message = response.response;
+                        $("#p-qa-answer").text(message);
+        
+                        var hits = data.results.hits.hits;
+        
+                        // Prüfe, ob der Index existiert
+                        if (response.index !== undefined && hits[response.index]) {
+                            $("#qa-article-content").html(`
+                                <div style="margin-top: 10px;">
+                                    <h3>
+                                        <a href="${hits[response.index]._source.searchable_meta.renderedLink}" target="_blank">
+                                            ${hits[response.index]._source.searchable_meta.linkTitle}
+                                        </a>
+                                    </h3>
+                                    <p>${hits[response.index]._source.searchable_meta.preview}</p>
+                                </div>
+                            `);
+                        } else {
+                            $("#qa-article-content").html("<p>Kein passender Artikel gefunden.</p>");
+                        }
+                    } catch (error) {
+                        console.error("Fehler beim Verarbeiten der Antwort:", error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if(xhr.status == 422){
+                        $("#qa-article-content").html(`
+                            <div style="margin-top: 10px;">
+                                <p>Keine gültige Frage erkannt. Bitte geben Sie eine vollständige und verständliche Frage ein.</p>
+                            </div>
+                        `);
+                    }
+                    else{
+                        console.error("AJAX-Fehler:", status, error);
+                    }
+                }
+            });
         }
 
         /**
