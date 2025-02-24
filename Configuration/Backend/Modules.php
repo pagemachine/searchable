@@ -17,6 +17,7 @@ return [
                 'start',
                 'search',
                 'request',
+                'analyze',
             ],
         ],
         'inheritNavigationComponentFromMainModule' => false,
