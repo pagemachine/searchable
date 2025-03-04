@@ -17,9 +17,10 @@ Now simply install it via Extension Manager or TYPO3 console.
 * Include **Typoscript** and **Constants** into your template (static includes)
 * Create a search page and and *Search* Plugin element inside
 * Configure your **indices** and **indexers** (see the next chapter)
-* Run the `[webroot]/typo3/cli_dispatch.phpsh searchable:setup` to create the configured indices
-* Run `[webroot]/typo3/cli_dispatch.phpsh searchable:indexFull` (runs all defined Indexers)
+* Run the `typo3 index:setup` command to create the configured indices
+* Run the `typo3 index:update:full` command to run all defined indexers
 
+(Use the `typo3cms` CLI binary with TYPO3 Console 7.x or older.)
 
 ## Example Configuration
 
