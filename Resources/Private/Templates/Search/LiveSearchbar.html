@@ -1,69 +1,151 @@
-{namespace s=PAGEmachine\Searchable\ViewHelpers}
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:s="http://typo3.org/ns/PAGEmachine/Searchable/ViewHelpers"
+    data-namespace-typo3-fluid="true">
 <f:layout name="Default" />
 <f:section name="main">
-	<form class="form-inline searchable-searchform" id="searchable-ajaxform" data-lang="{s:siteLanguage()}" data-features="{settings.features -> f:format.json()}">
-		<div class="form-group term-group">
-			<label for="term"><f:translate key="searchbar.label">Search</f:translate>: </label>
-			<input type="text" name="tx_searchable[term]" id="term" class="form-control" value="{term}" placeholder="{f:translate(key:'searchbar.label')}" type="search" autocomplete="off" />
+    <div id="main" style="display: block;">
+        <button id="switch-button-main" style="margin-top: 5px; margin-bottom: 5px;">Wechsel zu QA</button>
 
-		</div>
+        <form class="searchable-searchform" id="searchable-custom-ajaxform" data-lang="{s:siteLanguage()}" data-features="{settings.features -> f:format.json()}">
+            <div class="term-group">
+                <input type="text" name="tx_searchable[term]" id="term" value="{term}" placeholder="{f:translate(key:'searchbar.label')}" type="search" autocomplete="off" />
+            </div>
+        </form>
 
-	</form>
+        <div class="results container" id="searchable-results"></div>
 
-	<button id="searchable-qa-button" style="display: none; width: 100%; padding: 10px; border: none; background: #F7F8FA; border-radius: 8px; cursor: pointer;"></button>
+        <div class="searchable-morewrapper">
+            <span class="btn btn-primary" id="searchable-loadmore" style="display: none;">
+                <f:translate key="results.loadmore">Load more</f:translate>
+            </span>
+        </div>
 
-    <div id="div-qa-answer" style="border: 2px solid #ccc; padding: 10px; border-radius: 5px; display: none;">
-        <p style="font-size: smaller;">
-            Eine direkte Antwort auf Ihre Eingabe :
-        </p>
-        <p id="p-qa-answer"></p>
-        <p style="font-size: smaller;">Weiterlesen:</p>
-        <div id="qa-article-content" style="border: 2px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px;"></div>
-        <p style="font-size: smaller;">
-            Die bereitgestellten Informationen basieren auf vorhandenen Daten und können unvollständig oder fehlerhaft sein. 
-            Bitte überprüfen Sie diese bei Unsicherheiten anhand der empfohlenen Artikel.
-        </p> 
+        <script id="searchable-result-template" type="x-tmpl-mustache">
+            <div class="result [[class]]" data-type="[[_type]]">
+                <h3 class="[[_type]]"><a href="[[_source.searchable_meta.renderedLink]]" target="[[target]]">[[_source.searchable_meta.linkTitle]]</a></h3>
+
+                <f:if condition="{settings.result.showPreview}">
+                    <div class="result-preview">
+                        [[&_source.searchable_meta.preview]]
+                    </div>
+                </f:if>
+
+                <f:if condition="{settings.features.highlighting}">
+                    <div class="result-highlight">
+                        [[#highlight]]
+                            ...
+                            [[#searchable_highlight]]
+                                [[&.]]...
+                            [[/searchable_highlight]]
+                        [[/highlight]]
+                    </div>
+                </f:if>
+            </div>
+        </script>
+
+        <div id="searchable-noresults" class="container" style="display: none;">
+            <f:translate key="results.noresults">No results found.</f:translate>
+        </div>
     </div>
+    <div id="qa" style="display: none;">
+        <button id="switch-button-qa" style="margin-top: 5px; margin-bottom: 5px;">Zurück zu Suche</button>
 
-	<div class="results" id="searchable-results">
+        <div id="div-qa-answer" style="border: 2px solid #ccc; padding: 10px; border-radius: 5px;">
+            <style>
+                .chat-container {
+                    border: 2px solid #faf9f9;
+                    padding: 10px;
+                    border-radius: 5px;
+                    width: 100%;
+                    height: 355px;
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: auto;
+                    gap: 5px;
+                }
 
-	</div>
+                .bot, .user {
+                    padding: 8px 12px;
+                    border-radius: 10px;
+                    word-wrap: break-word;
+                    margin-bottom: 2.5px;
+                    margin-top: 2.5px;
+                }
 
-	<div class="searchable-morewrapper">
-		<span class="btn btn-primary" id="searchable-loadmore" style="display: none;"><f:translate key="results.loadmore">load more</f:translate></span>
-	</div>
+                .bot {
+                    max-width: fit-content;
+                    background-color: #d6d6d6;
+                }
 
+                .user {
+                    max-width: fit-content;
+                    background-color: #c4e1ff;
+                    margin-left: auto;
+                    text-align: right;
+                }
 
-	<script id="searchable-result-template" type="x-tmpl-mustache">
-		<div class="result">
+                .input-button-container {
+                    display: flex;
+                    margin-top: 10px;
+                    gap: 5px;
+                }
 
-				<h3><a href="[[_source.searchable_meta.renderedLink]]">[[_source.searchable_meta.linkTitle]]</a></h3>
+                .full-width-input {
+                    flex: 1;
+                    padding: 5px;
+                }
 
-				<f:if condition="{settings.result.showPreview}">
-					<div class="result-preview">
-							[[&_source.searchable_meta.preview]]
-					</div>
-				</f:if>
-				<f:if condition="{settings.features.highlighting}">
-					<div class="result-highlight">
-						[[#highlight]]
-							[[#searchable_highlight]]
-								...[[&.]]
-							[[/searchable_highlight]]
-						[[/highlight]]
-					</div>
-				</f:if>
+                .full-width-button, .full-width-select {
+                    width: 20%;
+                    padding: 5px 15px;
+                }
 
-				<div class="result-meta">
-						<span class="result-score"><f:translate key="results.score">Score</f:translate>: [[_score]]</span>
-				</div>
+                .loading-dots {
+                    display: inline-block;
+                    width: 170px;
+                    padding: 8px 12px;
+                    border-radius: 10px;
+                    margin-bottom: 2.5px;
+                    margin-top: 2.5px;
+                    background-color: #c0c0c0;
+                }
 
-		</div>
-	</script>
+                .loading-dots::after {
+                    content: "...";
+                    display: inline-block;
+                    animation: dots 3s infinite steps(3);
+                }
 
-	<div id="searchable-noresults" style="display: none;">
-		<f:translate key="results.noresults">No results found.</f:translate>
-	</div>
+                @keyframes dots {
+                    0% { content: "   "; }
+                    33% { content: ".  "; }
+                    66% { content: ".. "; }
+                    100% { content: "..."; }
+                }
+            </style>
 
+            <div id="chat" class="chat-container">
+                <div class="bot">
+                    <p>Hallo, stellen Sie mir eine Frage.</p>
+                </div>
+                <div style="display: none;" id="loading-dots-field" class="loading-dots">Generiere Antwort</div>
+            </div>
 
-</f:section>
+            <div class="input-button-container">
+                <select class="full-width-select" id="qa-lang">
+                    <option value="deu_Latn" selected>Deutsch</option>
+                    <option value="eng_Latn">Englisch</option>
+                </select>
+                <input class="full-width-input" id="qa-searchterm" type="text" placeholder="Geben Sie hier eine Frage ein.">
+                <button class="full-width-button" id="qa-chat-button">Senden</button>
+            </div>
+
+            <p style="font-size: smaller; margin-top: 5px;">
+                Die bereitgestellten Informationen basieren auf vorhandenen Daten und können unvollständig oder fehlerhaft sein. 
+                Bitte überprüfen Sie diese bei Unsicherheiten anhand der empfohlenen Artikel.
+            </p>
+        </div>
+    </div>
+    </f:section>
+</html>
