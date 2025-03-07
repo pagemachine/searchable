@@ -122,15 +122,61 @@ class BackendController extends ActionController
                 'color' => $resultColor,
             ]);
         } else {
-            $hosts = ExtconfService::getInstance()->getHostsSettings();
             $indices = ExtconfService::getInstance()->getIndices();
-            $url = sprintf('%s/%s/', $hosts[0] ?? 'http://localhost:9200', $indices[0] ?? 'typo3');
+            $url = sprintf('%s/%s/', $this->getDefaultHost(), $indices[0] ?? 'typo3');
         }
 
         $this->view->assign("url", $url);
         $this->view->assign("body", $body);
         $moduleTemplate->setContent($this->view->render());
         return $this->htmlResponse($moduleTemplate->renderContent());
+    }
+
+    /**
+     * Shows the analyze form and results
+     */
+    public function analyzeAction(string $text = '', string $selectedIndex = '', string $hostUrl = ''): ResponseInterface
+    {
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        $indices = ExtconfService::getInstance()->getIndices();
+
+        if (empty($selectedIndex) || !in_array($selectedIndex, $indices)) {
+            $selectedIndex = reset($indices);
+        }
+
+        if (empty($hostUrl)) {
+            $hostUrl = $this->getDefaultHost();
+        }
+
+        if (!empty($text)) {
+            try {
+                $url = sprintf('%s/%s/_analyze', $hostUrl, $selectedIndex);
+                $body = json_encode(['text' => $text]);
+                $result = $this->request($url, $body);
+                $this->view->assign('response', json_decode((string) $result['body'], true));
+            } catch (\Exception $e) {
+                $this->addFlashMessage($e->getMessage(), 'Error analyzing text', AbstractMessage::ERROR);
+            }
+        }
+
+        $this->view->assignMultiple([
+            'text' => $text,
+            'indices' => array_combine($indices, $indices),
+            'selectedIndex' => $selectedIndex,
+            'hostUrl' => $hostUrl,
+        ]);
+
+        $moduleTemplate->setContent($this->view->render());
+        return $this->htmlResponse($moduleTemplate->renderContent());
+    }
+
+    /**
+     * Gets the default elasticsearch host URL
+     */
+    private function getDefaultHost(): string
+    {
+        $hosts = ExtconfService::getInstance()->getHostsSettings();
+        return $hosts[0] ?? 'http://localhost:9200';
     }
 
     /**

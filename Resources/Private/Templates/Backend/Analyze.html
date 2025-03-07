@@ -1,0 +1,68 @@
+<f:layout name="Backend" />
+<f:section name="main">
+
+	<h1>Text Analyzer</h1>
+
+	<f:flashMessages />
+
+	<f:form action="analyze" method="post">
+		<div class="form-group">
+			<label for="hostUrl">Host</label>
+			<f:form.textfield
+				class="form-control"
+				id="hostUrl"
+				name="hostUrl"
+				value="{hostUrl}"
+			/>
+		</div>
+
+		<div class="form-group">
+			<label for="selectedIndex">Index</label>
+			<f:form.select
+				class="form-control"
+				id="selectedIndex"
+				name="selectedIndex"
+				options="{indices}"
+				value="{selectedIndex}"
+			/>
+		</div>
+
+			<div class="form-group">
+				<label for="text">Text to analyze</label>
+				<f:form.textarea class="form-control" id="text" name="text" value="{text}" />
+			</div>
+
+		<f:form.button class="btn btn-primary">Analyze text</f:form.button>
+	</f:form>
+
+	<f:if condition="{response}">
+		<div class="panel panel-default mt-3">
+			<div class="panel-heading">Analysis Result for Index: {selectedIndex}</div>
+			<div class="panel-body">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Token</th>
+							<th>Position</th>
+							<th>Start</th>
+							<th>End</th>
+							<th>Type</th>
+						</tr>
+					</thead>
+					<tbody>
+						<f:for each="{response.tokens}" as="token">
+							<tr>
+								<td>{token.token}</td>
+								<td>{token.position}</td>
+								<td>{token.start_offset}</td>
+								<td>{token.end_offset}</td>
+								<td>{token.type}</td>
+							</tr>
+						</f:for>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</f:if>
+
+</f:section>
