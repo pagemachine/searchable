@@ -3,6 +3,22 @@ connection {
 	hosts = http://localhost:9200
 }
 indexing {
-	# cat=basic; type=string; label=Frontend domain of your site
-	domain = http://localhost:80/
+    # cat=basic; type=string; label=Frontend domain of your site
+    domain = http://localhost:80/
+}
+
+aigude {
+    # cat=basic; type=string; label=AI Guide API URL
+    searchUrl = http://46.4.73.197:8004/api/searchable
+
+    # cat=basic; type=string; label=AI Guide API Key
+    apiKey = 8GHFxGuf8shop7JnEUuCjCYbQa3fmggz
+
+    # cat=basic; type=string; label=runpod Auth Token
+    authToken = Bearer rpa_3N3J3JLCYQ1VTREP7I6HW0CC47TR4IHDMECHLJXZ19ibyp
+}
+
+qasupportPrompt {
+    # cat=basic; type=string; label=Support Prompt
+    supportPrompt = Answer the question with the following context.
 }
