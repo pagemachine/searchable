@@ -6,7 +6,6 @@ indexing {
     # cat=basic; type=string; label=Frontend domain of your site
     domain = http://localhost:80/
 }
-
 aigude {
     # cat=basic; type=string; label=AI Guide API URL
     searchUrl = http://46.4.73.197:8004/api/searchable
@@ -14,11 +13,14 @@ aigude {
     # cat=basic; type=string; label=AI Guide API Key
     apiKey = 8GHFxGuf8shop7JnEUuCjCYbQa3fmggz
 
-    # cat=basic; type=string; label=runpod Auth Token
-    authToken = Bearer rpa_3N3J3JLCYQ1VTREP7I6HW0CC47TR4IHDMECHLJXZ19ibyp
+    # cat=basic; type=string; label=Auth Token
+    authToken = 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
 }
-
 qasupportPrompt {
     # cat=basic; type=string; label=Support Prompt
     supportPrompt = Answer the question with the following context.
+}
+usemodel {
+    # cat=basic; type=string; label=The model that should be used
+    model = qwen/qwq-32b:free.
 }

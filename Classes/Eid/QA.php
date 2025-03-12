@@ -16,6 +16,7 @@ class QA extends AbstractEidHandler
     private string $authToken = '';
     private string $apiKey = '';
     private string $supportPrompt = '';
+    private string $model = '';
 
     public function __construct()
     {
@@ -25,6 +26,7 @@ class QA extends AbstractEidHandler
         $this->authToken = $settings['aigude']['authToken'] ?? '';
         $this->apiKey = $settings['aigude']['apiKey'] ?? '';
         $this->supportPrompt = $settings['qasupportPrompt']['supportPrompt'] ?? '';
+        $this->model = $settings['usemodel']['model'] ?? '';
 
         $this->requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
     }
@@ -45,6 +47,7 @@ class QA extends AbstractEidHandler
         $reqdata = $postParams['data'] ?? [];
         $reqlang = $postParams['lang'] ?? '';
         $prompt = $this->supportPrompt;
+        $model = $this->model;
 
         $headers = [
             'Accept' => 'application/json',
@@ -58,6 +61,7 @@ class QA extends AbstractEidHandler
             'prompt' => $prompt,
             'data' => $reqdata,
             'lang' => $reqlang,
+            'model' => $model,
         ];
 
         $responseData = $this->request($this->apiUrl, 'POST', ['headers' => $headers, 'json' => $json]);
