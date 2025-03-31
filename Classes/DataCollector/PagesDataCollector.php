@@ -193,7 +193,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             $embedding = $dataList[0]["embedding"] ?? [];
     
             return is_array($embedding) ? $embedding : null;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return [];
         }
     }

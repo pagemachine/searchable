@@ -446,7 +446,7 @@ class SearchQuery extends AbstractQuery
             }
 
             return $dataList[0]["embedding"] ?? null;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return [];
         }
     }
