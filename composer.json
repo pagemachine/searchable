@@ -33,7 +33,7 @@
         "rector/rector": "^1.0",
         "saschaegerer/phpstan-typo3": "^1.0.0",
         "sclable/xml-lint": "^0.8.0",
-        "slevomat/coding-standard": "^8.0",
+        "slevomat/coding-standard": "^8.16",
         "squizlabs/php_codesniffer": "^3.0",
         "ssch/typo3-rector": "^2.4",
         "symfony/process": "^5.1",
