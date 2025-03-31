@@ -153,14 +153,14 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             ]);
 
             if ($response->getStatusCode() !== 200) {
-                return null;
+                return [];
             }
     
             $responseJson = json_decode($response->getBody()->getContents(), true);
             $jobId = $responseJson["id"] ?? null;
     
             if (!$jobId) {
-                return null;
+                return [];
             }
 
             while (true) {
@@ -171,7 +171,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 ]);
     
                 if ($statusResponse->getStatusCode() !== 200) {
-                    return null;
+                    return [];
                 }
     
                 $statusJson = json_decode($statusResponse->getBody()->getContents(), true);
@@ -179,7 +179,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
                 if ($statusJson["status"] === "COMPLETED") {
                     break;
                 } elseif (!in_array($statusJson["status"], ["IN_PROGRESS", "IN_QUEUE"])) {
-                    return null;
+                    return [];
                 }
             }
     
@@ -187,7 +187,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             $dataList = $output["data"] ?? [];
     
             if (empty($dataList) || !is_array($dataList)) {
-                return null;
+                return [];
             }
     
             $embedding = $dataList[0]["embedding"] ?? [];

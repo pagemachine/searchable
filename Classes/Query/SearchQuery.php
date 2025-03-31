@@ -369,14 +369,21 @@ class SearchQuery extends AbstractQuery
             'size' => $this->size,
         ];
     
-        if ($this->respectLanguage === true) {
-            $language = $this->language ?: $this->getLanguageId();
-            $this->parameters['index'] = ExtconfService::hasIndex($language) ? ExtconfService::getIndex($language) : ExtconfService::getIndex();
-        }
-    
+        // Set active indices as default
+        $this->setIndices($this->getActiveIndices());
         $this->applyFeatures();
     }
     
+    protected function getActiveIndices(): array
+    {
+        if ($this->respectLanguage === true) {
+            $language = $this->language ?: $this->getLanguageId();
+
+            return ExtconfService::getIndicesByLanguage($language);
+        } else {
+            return ExtconfService::getIndices();
+        }
+    }
 
     protected function generateEmbedding(string $text)
     {
