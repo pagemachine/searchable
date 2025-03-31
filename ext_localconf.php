@@ -2,7 +2,6 @@
 
 use PAGEmachine\Searchable\Controller\SearchController;
 use PAGEmachine\Searchable\Eid\Autosuggest;
-use PAGEmachine\Searchable\Eid\QA;
 use PAGEmachine\Searchable\Eid\Search;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HighlightFeature;
