@@ -11,10 +11,10 @@ aigude {
     searchUrl = http://46.4.73.197:8004/api/searchable
 
     # cat=basic; type=string; label=AI Guide API Key
-    apiKey = 8GHFxGuf8shop7JnEUuCjCYbQa3fmggz
+    apiKey = .....
 
     # cat=basic; type=string; label=Auth Token
-    authToken = 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
+    authToken = .....
 }
 qasupportPrompt {
     # cat=basic; type=string; label=Support Prompt
