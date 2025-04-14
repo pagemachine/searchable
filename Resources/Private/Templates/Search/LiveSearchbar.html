@@ -55,4 +55,11 @@
 	</f:if>
 	<f:asset.script identifier="searchable_livesearchbar" src="EXT:searchable/Resources/Public/JavaScript/liveSearchBar.js" />
 
+	<f:asset.script identifier="searchable_livesearchbar_init">
+		document.addEventListener('DOMContentLoaded', () => {
+			const form = document.querySelector("#searchable-ajaxform");
+			if (form) new Searchable(form);
+		});
+	</f:asset.script>
+
 </f:section>

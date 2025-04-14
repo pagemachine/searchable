@@ -170,11 +170,6 @@ class Searchable {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector("#searchable-ajaxform");
-    if (form) new Searchable(form);
-});
-
 function encodeNestedObject(obj, prefix = '') {
   const params = [];
 
