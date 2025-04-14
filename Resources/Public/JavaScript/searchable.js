@@ -1,239 +1,194 @@
-(function( $ ) {
+// Override Mustache tags since "{" and "}" are evaluated by Fluid
+Mustache.tags = ['[[', ']]'];
 
-    // Override Mustache tags since "{" and "}" are evaluated by Fluid
-    Mustache.tags = ['[[', ']]'];
-
-    $.fn.searchable = function(options){
-
-        var settings = $.extend({
-            input : "#term",
+class Searchable {
+    constructor(formElement, options = {}) {
+        this.settings = {
+            input: "#term",
             result: "#searchable-results",
             morebutton: "#searchable-loadmore",
             noresults: "#searchable-noresults",
-            template: $("#searchable-result-template").html(),
+            template: document.querySelector("#searchable-result-template")?.innerHTML,
             delay: 300,
             infiniteScroll: true,
             callbacks: {
                 searchSuccess: false, //Callback on xhr search success
                 modifyResultList: false, //Callback after the results are fetched
                 modifySingleResult: false //Callback before a single result is rendered. Takes one argument: "data" and should return it
-            }
+            },
+            ...options
+        };
 
-        }, options);
+        this.form = formElement;
+        this.lang = this.form.dataset.lang;
+        this.features = JSON.parse(this.form.dataset.features);
+        this.lastPage = 1;
+        this.currentPage = 1;
+        this.searchTerm = "";
+        this.lastTerm = "";
+        this.result = [];
+        this.timer = null;
+        this.template = "";
 
-        var formObject = $(this);
-
-        var lang = formObject.data('lang');
-        var features = formObject.data('features');
-
-        var lastPage = 1;
-        var currentPage = 1;
-
-        var searchTerm = "";
-        var lastTerm = "";
-
-        var result = [];
-
-        var timer;
-
-        var template = "";
-
-        /**
-         * Initializes the search plugin
-         *
-         */
-        function init() {
-
-            if (formObject.length != 0) {
-
-                template = settings.template;
-
-                //Prevent form submit
-                formObject.on("submit", function(e) {
-
-                    e.preventDefault();
-                });
-
-                //Setup more button
-                $(settings.morebutton).on("click", function(){
-
-                    currentPage = currentPage + 1;
-                });
-
-                //Reset the timer each time a keyup is registered
-                $(settings.input).on("keyup", function(){
-
-                    clearTimeout(timer);
-                    timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
-                });
-            }
-
-
-        }
-
-        /**
-         * Calls the ajax search in fixed intervals
-         *
-         */
-        function callAjaxSearch() {
-
-            searchTerm = $(settings.input).val();
-
-            //No term - clear results
-            if (searchTerm == "") {
-
-                clear();
-                resetPage();
-                updateUI();
-
-
-            }
-            //Different term than last time - clear everything and start search
-            else if (searchTerm != lastTerm) {
-
-                clear();
-                resetPage();
-                search();
-
-            }
-            //Same term but different page - append content (if infinite scroll is active)
-            else if (currentPage != lastPage) {
-
-                if (!settings.infiniteScroll) {
-
-                    clear();
-                }
-
-                search();
-
-            }
-
-            lastTerm = searchTerm;
-            lastPage = currentPage;
-            timer = setTimeout(function(){callAjaxSearch()}, settings.delay);
-        }
-
-        function clear() {
-
-            $(settings.result).empty();
-            result = [];
-        }
-
-        function resetPage() {
-
-            currentPage = 1;
-            lastPage = 1;
-        }
-
-        function search() {
-
-            xhr = $.ajax("/?eID=searchable_search", {
-                dataType: 'json',
-                data: {
-                    term: searchTerm,
-                    options: {
-                        page : currentPage,
-                        lang : lang,
-                        features : features
-                    }
-                },
-                success: function(data, textStatus, jqXHR) {
-
-                    if (typeof(settings.callbacks.searchSuccess) === "function") {
-
-                        settings.callbacks.searchSuccess({
-                            term: searchTerm,
-                            page: currentPage,
-                            lang: lang,
-                            features: features,
-                        }, data, this);
-                    }
-
-                    result = data;
-                    populate();
-                    updateUI();
-                }
-            });
-        }
-
-        function populate() {
-
-            if (typeof(settings.callbacks.modifyResultList) === "function") {
-
-                result = settings.callbacks.modifyResultList(result);
-            }
-
-            if (result && result.results.hits.hits.length > 0) {
-                $(settings.noresults).hide();
-                for (var i=0; i < result.results.hits.hits.length; i++) {
-
-                    if (typeof(settings.callbacks.modifySingleResult) === "function") {
-
-                        data = settings.callbacks.modifySingleResult(result.results.hits.hits[i]);
-                    }
-                    else {
-                        data = result.results.hits.hits[i];
-                    }
-                    $(settings.result).append(renderResult(data));
-
-                }
-            } else {
-                $(settings.noresults).show();
-            }
-        }
-
-        function updateUI() {
-
-            if (result && result.totalPages > currentPage) {
-
-                $(settings.morebutton).show();
-            }
-            else {
-
-                $(settings.morebutton).hide();
-            }
-        }
-
-        /**
-         * Renders results
-         *
-         * @param  {Object} data Raw data
-         * @return {String} The rendered result template
-         */
-        function renderResult(data) {
-
-            var output = Mustache.render(template, data);
-
-            return output;
-        }
-        init();
-        return $(this);
+        this.init();
     }
 
-}( jQuery ));
+    init() {
+        if (!this.form) return;
 
-$(document).ready(function(){
+        this.template = this.settings.template;
 
-    $(".tx-searchable .searchable-autosuggest").autocomplete({
-        serviceUrl: '/',
-        paramName: 'term',
-        params: {
-            eID: 'searchable_autosuggest'
-        },
-        dataType: 'json',
-        deferRequestBy: 200,
-        containerClass: 'searchable-autocomplete-suggestions',
-        onSelect: function(suggestion)
-        {
-            var uri = new URI(window.location.href);
-            uri.setQuery("tx_searchable[term]", suggestion.value)
-                .removeQuery("cHash");
+        // Prevent form submit
+        this.form.addEventListener('submit', (e) => e.preventDefault());
 
-            window.location.href = uri.toString();
-        },
-        triggerSelectOnValidInput: false
-    });
+        // Setup more button
+        const moreButton = document.querySelector(this.settings.morebutton);
+        moreButton?.addEventListener('click', () => {
+            this.currentPage = this.currentPage + 1;
+        });
 
-    $("#searchable-ajaxform").searchable();
+        // Setup search input
+        const input = document.querySelector(this.settings.input);
+        input?.addEventListener('keyup', () => {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => this.callAjaxSearch(), this.settings.delay);
+        });
+    }
 
+    async callAjaxSearch() {
+        const input = document.querySelector(this.settings.input);
+        this.searchTerm = input.value;
+
+        if (this.searchTerm === "") {
+            // No term - clear results
+            this.clear();
+            this.resetPage();
+            this.updateUI();
+        } else if (this.searchTerm !== this.lastTerm) {
+            // Different term than last time - clear everything and start search
+            this.clear();
+            this.resetPage();
+            await this.search();
+        } else if (this.currentPage !== this.lastPage) {
+            // Same term but different page - append content (if infinite scroll is active)
+            if (!this.settings.infiniteScroll) {
+                this.clear();
+            }
+            await this.search();
+        }
+
+        this.lastTerm = this.searchTerm;
+        this.lastPage = this.currentPage;
+        this.timer = setTimeout(() => this.callAjaxSearch(), this.settings.delay);
+    }
+
+    clear() {
+        const resultElement = document.querySelector(this.settings.result);
+        if (resultElement) resultElement.innerHTML = '';
+        this.result = [];
+    }
+
+    resetPage() {
+        this.currentPage = 1;
+        this.lastPage = 1;
+    }
+
+    async search() {
+        try {
+            const response = await fetch(
+                '/?' + encodeNestedObject({
+                    eID: 'searchable_search',
+                    term: this.searchTerm,
+                    options: {
+                        page: this.currentPage,
+                        lang: this.lang,
+                        features: this.features
+                    }
+                }).join('&'),
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            const data = await response.json();
+
+            if (typeof this.settings.callbacks.searchSuccess === "function") {
+                this.settings.callbacks.searchSuccess({
+                    term: this.searchTerm,
+                    page: this.currentPage,
+                    lang: this.lang,
+                    features: this.features,
+                }, data, this);
+            }
+
+            this.result = data;
+            this.populate();
+            this.updateUI();
+        } catch (error) {
+            console.error('Search failed:', error);
+        }
+    }
+
+    populate() {
+        if (typeof this.settings.callbacks.modifyResultList === "function") {
+            this.result = this.settings.callbacks.modifyResultList(this.result);
+        }
+
+        const resultElement = document.querySelector(this.settings.result);
+        const noResultsElement = document.querySelector(this.settings.noresults);
+
+        if (this.result && this.result.results.hits.hits.length > 0) {
+            noResultsElement.style.display = 'none';
+            this.result.results.hits.hits.forEach(hit => {
+                let data = hit;
+                if (typeof this.settings.callbacks.modifySingleResult === "function") {
+                    data = this.settings.callbacks.modifySingleResult(hit);
+                }
+                resultElement.insertAdjacentHTML('beforeend', this.renderResult(data));
+            });
+        } else {
+            noResultsElement.style.display = 'block';
+        }
+    }
+
+    updateUI() {
+        const moreButton = document.querySelector(this.settings.morebutton);
+        if (moreButton) {
+            if (this.result && this.result.totalPages > this.currentPage) {
+                moreButton.style.display = 'block';
+            } else {
+                moreButton.style.display = 'none';
+            }
+        }
+    }
+
+    renderResult(data) {
+        return Mustache.render(this.template, data);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector("#searchable-ajaxform");
+    if (form) new Searchable(form);
 });
+
+function encodeNestedObject(obj, prefix = '') {
+  const params = [];
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const paramKey = prefix ? `${prefix}[${key}]` : key;
+
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        params.push(...encodeNestedObject(obj[key], paramKey));
+      } else {
+        params.push(`${encodeURIComponent(paramKey)}=${encodeURIComponent(obj[key])}`);
+      }
+    }
+  }
+
+  return params;
+}
