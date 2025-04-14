@@ -50,5 +50,9 @@
 		<f:translate key="results.noresults">No results found.</f:translate>
 	</div>
 
+	<f:if condition="{settings.includeMustache}">
+		<f:asset.script identifier="mustache" src="EXT:searchable/Resources/Public/JavaScript/mustache.min.js" />
+	</f:if>
+	<f:asset.script identifier="searchable_livesearchbar" src="EXT:searchable/Resources/Public/JavaScript/liveSearchBar.js" />
 
 </f:section>
