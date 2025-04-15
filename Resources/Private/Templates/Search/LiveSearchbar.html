@@ -55,11 +55,20 @@
 	</f:if>
 	<f:asset.script identifier="searchable_livesearchbar" src="EXT:searchable/Resources/Public/JavaScript/liveSearchBar.js" />
 
-	<f:asset.script identifier="searchable_livesearchbar_init">
-		document.addEventListener('DOMContentLoaded', () => {
-			const form = document.querySelector("#searchable-ajaxform");
-			if (form) new Searchable(form);
-		});
+	<f:asset.script identifier="searchable_livesearchbar_init_{identifier}" data-root="#searchable-{identifier}">
+		(function() {
+			const root = document.currentScript.getAttribute('data-root');
+			document.addEventListener('DOMContentLoaded', () => {
+				const form = document.querySelector(`${ root } #searchable-ajaxform`);
+				if (form) new Searchable(form, {
+					input: `${ root } #term`,
+					result: `${ root } #searchable-results`,
+					morebutton: `${ root } #searchable-loadmore`,
+					noresults: `${ root } #searchable-noresults`,
+					template: document.querySelector(`${ root } #searchable-result-template`)?.innerHTML,
+				});
+			});
+		})();
 	</f:asset.script>
 
 </f:section>
