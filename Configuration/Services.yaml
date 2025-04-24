@@ -31,7 +31,7 @@ services:
   PAGEmachine\Searchable\Hook\DynamicFlexFormHook:
     tags:
       - name: event.listener
-        identifier: 'form-framework/modify-data-structure'
+        identifier: 'pagemachine/searchable/modify-data-structure'
         method: 'modifyDataStructure'
 
   PAGEmachine\Searchable\Service\IndexingService:
