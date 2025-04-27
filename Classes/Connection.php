@@ -16,7 +16,7 @@ class Connection
     /**
      * The cached ES client
      *
-     * @var \Elasticsearch\Client
+     * @var Client
      */
     protected static $client = null;
 
@@ -24,7 +24,7 @@ class Connection
     /**
      * Returns the (configured) ES Client
      *
-     * @return \Elasticsearch\Client
+     * @return Client
      */
     public static function getClient()
     {

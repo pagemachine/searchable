@@ -45,7 +45,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     protected $query;
 
     /**
-     * @var \PAGEmachine\Searchable\DataCollector\DataCollectorInterface
+     * @var DataCollectorInterface
      */
     protected $dataCollector;
 

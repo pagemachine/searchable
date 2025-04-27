@@ -49,7 +49,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     }
 
     /**
-     * @var \PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequestInterface
+     * @var FrontendRequestInterface
      */
     protected $frontendRequest;
 

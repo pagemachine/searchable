@@ -44,7 +44,7 @@ final class IndexingService implements \Stringable
     }
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
 
