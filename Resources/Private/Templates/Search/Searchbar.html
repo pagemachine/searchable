@@ -11,5 +11,8 @@
 
 	</form>
 
+	<f:if condition="{settings.features.completionSuggest}">
+		<f:asset.script identifier="searchable_completionsuggest" src="EXT:searchable/Resources/Public/JavaScript/completionSuggest.js" />
+	</f:if>
 
 </f:section>
