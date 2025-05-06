@@ -37,5 +37,8 @@ services:
   PAGEmachine\Searchable\Service\IndexingService:
     public: true
 
+  PAGEmachine\Searchable\Queue\UpdateQueue:
+    public: true
+
   PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord:
     autowire: false
