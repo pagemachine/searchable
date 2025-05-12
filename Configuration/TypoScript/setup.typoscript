@@ -10,8 +10,7 @@ plugin.tx_searchable {
         storagePid = {$plugin.tx_searchable.persistence.storagePid}
     }
     settings {
-        includejQuery = {$plugin.tx_searchable.includejQuery}
-        includejQueryAutocomplete = {$plugin.tx_searchable.includejQueryAutocomplete}
+        includeMustache = {$plugin.tx_searchable.settings.includeMustache}
 
         resultPage = {$plugin.tx_searchable.settings.resultPage}
 
@@ -55,22 +54,3 @@ module.tx_searchable {
 }
 
 page.includeCSS.searchable = EXT:searchable/Resources/Public/Css/searchable.css
-
-# Include JQuery if activated
-[{$plugin.tx_searchable.settings.includejQuery} == 1]
-page.includeJSFooterlibs.jQuery = EXT:searchable/Resources/Public/JavaScript/jquery-3.6.1.min.js
-[global]
-
-# Include Autocomplete if activated
-[{$plugin.tx_searchable.settings.includejQueryAutocomplete} == 1]
-page.includeJSFooter.jQueryAutocomplete = EXT:searchable/Resources/Public/JavaScript/jquery.autocomplete.min.js
-[global]
-
-# Include mustache if activated
-[{$plugin.tx_searchable.settings.includeMustache} == 1]
-page.includeJSFooterlibs.mustache = EXT:searchable/Resources/Public/JavaScript/mustache.min.js
-[global]
-
-page.includeJSFooter.URI = EXT:searchable/Resources/Public/JavaScript/URI.js
-page.includeJSFooter.searchable = EXT:searchable/Resources/Public/JavaScript/searchable.js
-

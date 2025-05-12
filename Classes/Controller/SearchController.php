@@ -26,6 +26,12 @@ class SearchController extends ActionController
         $this->searchQuery->setDefaultSettings($this->settings['search']);
     }
 
+    public function initializeView($view)
+    {
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        $view->assign("identifier", $contentObject->data['uid'] ?? random_int(0, 10000));
+    }
+
     /**
      * Renders the search form
      *
