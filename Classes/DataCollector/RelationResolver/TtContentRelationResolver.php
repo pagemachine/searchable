@@ -5,6 +5,7 @@ use PAGEmachine\Searchable\DataCollector\AbstractDataCollector;
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\DataCollector\RelationResolver\RelationResolverInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -61,7 +62,8 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
 
         $contentUids = $this->fetchContentUids(
             $record['uid'],
-            $language
+            $language,
+            $childCollector->getConfig()['select']['additionalWhereClauses'] ?? [],
         );
 
         while ($row = $contentUids->fetchAssociative()) {
@@ -77,15 +79,25 @@ class TtContentRelationResolver implements SingletonInterface, RelationResolverI
      * @param  int $pid
      * @param  string $languages Language constraint, if null default is assumed (0,-1)
      */
-    protected function fetchContentUids($pid, $languages = null)
+    protected function fetchContentUids($pid, $languages = null, array $additionalWhereClauses = [])
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         $queryBuilder->select('uid')
-        ->from('tt_content')
-        ->where(
+            ->from('tt_content');
+
+        $whereExpressions = [
             $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid)),
-            $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1')
-        );
+            $queryBuilder->expr()->in($GLOBALS['TCA']['tt_content']['ctrl']['languageField'], $languages ?: '0,-1'),
+        ];
+
+        if (!empty($additionalWhereClauses)) {
+            $whereExpressions[] = QueryHelper::stripLogicalOperatorPrefix(
+                implode('', $additionalWhereClauses)
+            );
+        }
+
+        $queryBuilder->where(...$whereExpressions);
+
         return $queryBuilder->executeQuery();
     }
 }
