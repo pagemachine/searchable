@@ -59,6 +59,7 @@
     },
     "config": {
         "allow-plugins": {
+            "cweagans/composer-patches": false,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "ergebnis/composer-normalize": true,
             "phpstan/extension-installer": true,
