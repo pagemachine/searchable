@@ -9,7 +9,6 @@ use TYPO3\CMS\Core\Authentication\CommandLineUserAuthentication;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 abstract class AbstractIndexCommand extends Command
@@ -33,19 +32,11 @@ abstract class AbstractIndexCommand extends Command
 
         $context = GeneralUtility::makeInstance(Context::class);
         $currentVisibilityAspect = $context->getAspect('visibility');
-        if ((new Typo3Version())->getMajorVersion() < 12) {
-            $context->setAspect('visibility', new VisibilityAspect(
-                includeHiddenPages: true,
-                includeHiddenContent: false,
-                includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
-            ));
-        } else {
-            $context->setAspect('visibility', new VisibilityAspect(
-                includeHiddenPages: true,
-                includeHiddenContent: false,
-                includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
-                includeScheduledRecords: $currentVisibilityAspect->includeScheduledRecords(),
-            ));
-        }
+        $context->setAspect('visibility', new VisibilityAspect(
+            includeHiddenPages: true,
+            includeHiddenContent: false,
+            includeDeletedRecords: $currentVisibilityAspect->get('includeDeletedRecords'),
+            includeScheduledRecords: $currentVisibilityAspect->get('includeScheduledRecords'),
+        ));
     }
 }

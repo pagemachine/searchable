@@ -19,7 +19,6 @@ use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -239,20 +238,12 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
 
         $context = GeneralUtility::makeInstance(Context::class);
         $currentVisibilityAspect = $context->getAspect('visibility');
-        if ((new Typo3Version())->getMajorVersion() < 12) {
-            $context->setAspect('visibility', new VisibilityAspect(
-                includeHiddenPages: true,
-                includeHiddenContent: false,
-                includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
-            ));
-        } else {
-            $context->setAspect('visibility', new VisibilityAspect(
-                includeHiddenPages: true,
-                includeHiddenContent: false,
-                includeDeletedRecords: $currentVisibilityAspect->includeDeletedRecords(),
-                includeScheduledRecords: $currentVisibilityAspect->includeScheduledRecords(),
-            ));
-        }
+        $context->setAspect('visibility', new VisibilityAspect(
+            includeHiddenPages: true,
+            includeHiddenContent: false,
+            includeDeletedRecords: $currentVisibilityAspect->get('includeDeletedRecords'),
+            includeScheduledRecords: $currentVisibilityAspect->get('includeScheduledRecords'),
+        ));
 
         $this->indexingService = $this->get(IndexingService::class);
         $this->indexingService->setup();

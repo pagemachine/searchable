@@ -1,7 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\DataCollector;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -64,7 +64,7 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
                     'sys_file.mime_type',
                     $queryBuilder->createNamedParameter(
                         $this->config['mimetypes'],
-                        Connection::PARAM_STR_ARRAY
+                        ArrayParameterType::STRING
                     )
                 )
             );
