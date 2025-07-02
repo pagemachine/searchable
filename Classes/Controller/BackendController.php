@@ -1,6 +1,7 @@
 <?php
 namespace PAGEmachine\Searchable\Controller;
 
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\IndexManager;
@@ -9,7 +10,6 @@ use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -46,7 +46,7 @@ class BackendController extends ActionController
             $this->view->assign("health", $stats['health']);
             $this->view->assign("indices", $stats['indices']);
         } catch (\Exception $e) {
-            $this->addFlashMessage($e->getMessage(), $e::class, AbstractMessage::ERROR);
+            $this->addFlashMessage($e->getMessage(), $e::class, ContextualFeedbackSeverity::ERROR);
         }
         $moduleTemplate->setContent($this->view->render());
         return $this->htmlResponse($moduleTemplate->renderContent());
@@ -155,7 +155,7 @@ class BackendController extends ActionController
                 $result = $this->request($url, $body);
                 $this->view->assign('response', json_decode((string) $result['body'], true));
             } catch (\Exception $e) {
-                $this->addFlashMessage($e->getMessage(), 'Error analyzing text', AbstractMessage::ERROR);
+                $this->addFlashMessage($e->getMessage(), 'Error analyzing text', ContextualFeedbackSeverity::ERROR);
             }
         }
 
