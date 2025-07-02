@@ -7,7 +7,6 @@ parameters:
   paths:
     - ext_emconf.php
     - ext_localconf.php
-    - ext_tables.php
     - Classes
 
   ignoreErrors:
