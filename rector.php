@@ -20,7 +20,7 @@ return RectorConfig::configure()
     ->withPhpSets()
     ->withSets([
         PHPUnitSetList::PHPUNIT_90,
-        Typo3SetList::TYPO3_11,
+        Typo3SetList::TYPO3_12,
     ])
     ->withSkip([
         RemoveExtraParametersRector::class => [
