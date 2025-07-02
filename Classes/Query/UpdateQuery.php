@@ -1,7 +1,8 @@
 <?php
 namespace PAGEmachine\Searchable\Query;
 
-use PAGEmachine\Searchable\Service\ExtconfService;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -13,13 +14,16 @@ use PAGEmachine\Searchable\Service\ExtconfService;
  */
 class UpdateQuery extends AbstractQuery
 {
+    protected UpdateQueue $updateQueue;
+
     /**
      * @return void
      */
     public function __construct()
     {
         parent::__construct();
-        $this->setIndices([ExtconfService::getInstance()->getUpdateIndex()]);
+
+        $this->updateQueue = GeneralUtility::makeInstance(UpdateQueue::class);
 
         $this->init();
     }
@@ -31,35 +35,18 @@ class UpdateQuery extends AbstractQuery
     public function init()
     {
         $this->parameters =  [
-            'index' => implode(',', $this->getIndices()),
-            'body' => [
-            ],
+            'index' => [],
+            'body' => [],
         ];
     }
 
     /**
      * Adds a new update query string
      *
-     * @return array
      */
-    public function addUpdate($type, $property, $id)
+    public function addUpdate($type, $property, $id): void
     {
-        // Use querystring hash as id to mark each update only once
-        $docid = sha1($type . "." . $property . ":" . $id);
-
-        $this->parameters['id'] = $docid;
-        $this->parameters['type'] = '_doc';
-        $this->parameters['body']['type'] = strval($type);
-        $this->parameters['body']['property'] = $property;
-        $this->parameters['body']['uid'] = $id;
-
-        try {
-            $response = $this->client->index($this->getParameters());
-            return $response;
-        } catch (\Exception $e) {
-            $this->logger->error("Could not track update. Reason: " . $e->getMessage());
-            return [];
-        }
+        $this->updateQueue->enqueue($type, $property, $id);
     }
 
     /**
@@ -69,39 +56,22 @@ class UpdateQuery extends AbstractQuery
      */
     public function getUpdates($index, $type)
     {
-        $recordids = [];
-
         $this->init();
 
-        $this->parameters['body'] = [
-            'query' => [
-                'bool' => [
-                    'filter' => [
-                        'term' => [
-                            'type' => $type,
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        $recordids = [];
 
-
-        $result = $this->client->search($this->parameters);
-
-        if (empty($result['hits']['hits'])) {
-            return [];
-        }
+        $results = $this->updateQueue->pendingUpdates($type);
 
         $updateParams = [];
 
-        foreach ($result['hits']['hits'] as $hit) {
+        foreach ($results as $update) {
             //If this is a simple toplevel uid check, we can add this id directly to the updated uid list
-            if ($hit['_source']['property'] == 'uid') {
-                $recordids[$hit['_source']['uid']] = $hit['_source']['uid'];
+            if ($update['property'] == 'uid') {
+                $recordids[$update['property_uid']] = $update['property_uid'];
             } else {
                 $updateParams[] = [
                     "term" => [
-                        $hit['_source']['property'] => $hit['_source']['uid'],
+                        $update['property'] => $update['property_uid'],
                     ],
                 ];
             }
@@ -124,7 +94,7 @@ class UpdateQuery extends AbstractQuery
 
             if (!empty($result['hits']['hits'])) {
                 foreach ($result['hits']['hits'] as $hit) {
-                    $recordids[$hit['_id']] = $hit['_id'];
+                    $recordids[$hit['_id']] = (int) $hit['_id'];
                 }
             }
         }

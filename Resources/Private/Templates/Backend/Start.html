@@ -43,7 +43,7 @@
 		</div>
 
 		<h2>Update schedule</h2>
-		<p>{updates.count} updates scheduled.</p>
+		<p><f:count>{updates}</f:count> updates scheduled.</p>
 
 		<table class="table">
 			<tr>
@@ -52,11 +52,11 @@
 				<th>Uid</th>
 			</tr>
 
-			<f:for each="{updates.hits.hits}" as="update">
+			<f:for each="{updates}" as="update">
 				<tr>
-				 <td>{update._source.type}</td>
-				 <td>{update._source.property}</td>
-				 <td>{update._source.uid}</td>
+				 <td>{update.type}</td>
+				 <td>{update.property}</td>
+				 <td>{update.property_uid}</td>
 				</tr>
 			</f:for>
 
