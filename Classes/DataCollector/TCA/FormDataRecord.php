@@ -4,7 +4,6 @@ namespace PAGEmachine\Searchable\DataCollector\TCA;
 use TYPO3\CMS\Backend\Form\Exception\DatabaseDefaultLanguageException;
 use TYPO3\CMS\Backend\Form\Exception\DatabaseRecordException;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -38,11 +37,7 @@ class FormDataRecord implements SingletonInterface
     public function __construct(SearchableRecordGroup $formDataGroup = null, FormDataCompiler $formDataCompiler = null)
     {
         $this->formDataGroup = $formDataGroup ?: GeneralUtility::makeInstance(SearchableRecordGroup::class);
-        if ((new Typo3Version())->getMajorVersion() < 12) {
-            $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class, $this->formDataGroup);
-        } else {
-            $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class);
-        }
+        $this->formDataCompiler = $formDataCompiler ?: GeneralUtility::makeInstance(FormDataCompiler::class);
     }
 
     /**
@@ -75,11 +70,7 @@ class FormDataRecord implements SingletonInterface
              * @throws DatabaseRecordException
              * @throws DatabaseDefaultLanguageException
              */
-            if ((new Typo3Version())->getMajorVersion() < 12) {
-                $data = $this->formDataCompiler->compile($formDataCompilerInput);
-            } else {
-                $data = $this->formDataCompiler->compile($formDataCompilerInput, $this->formDataGroup);
-            }
+            $data = $this->formDataCompiler->compile($formDataCompilerInput, $this->formDataGroup);
         //Be nice and catch all errors related to inconsistent data (sometimes strange things happen with extbase relations)
         } catch (DatabaseRecordException) {
             $data = [];
