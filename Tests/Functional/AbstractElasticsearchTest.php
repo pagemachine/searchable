@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
-use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
@@ -26,7 +25,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 abstract class AbstractElasticsearchTest extends FunctionalTestCase
 {
-    use ArraySubsetAsserts;
     use WebserverTrait;
     use SiteBasedTestTrait;
 
@@ -295,7 +293,21 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $document = $this->searchDocumentByUid($uid, $languageId);
 
         $this->assertNotEmpty($document, sprintf('Document %d not in index', $uid));
-        $this->assertArraySubset($documentSubset, $document, false, sprintf('Document %d source mismatch', $uid));
+        $this->assertArraySubset($documentSubset, $document, sprintf('Document %d source mismatch', $uid));
+    }
+
+    private function assertArraySubset(array $subset, array $array, string $message = ''): void
+    {
+        foreach ($subset as $key => $expectedValue) {
+            $this->assertArrayHasKey($key, $array, $message ?: sprintf('Key "%s" not found in array', $key));
+
+            if (is_array($expectedValue)) {
+                $this->assertIsArray($array[$key], $message ?: sprintf('Key "%s" is not an array', $key));
+                $this->assertArraySubset($expectedValue, $array[$key], $message);
+            } else {
+                $this->assertEquals($expectedValue, $array[$key], $message ?: sprintf('Key "%s" value mismatch', $key));
+            }
+        }
     }
 
     protected function assertDocumentNotInIndex(int $uid, int $languageId = 0): void
