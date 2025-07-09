@@ -1,9 +1,10 @@
-<f:layout name="Backend" />
-<f:section name="main">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Module" />
+<f:section name="Content">
+	<div class="tx-searchable">
+		<h1>Searchable</h1>
 
-	<h1>Searchable</h1>
-
-	<f:flashMessages />
+		<f:flashMessages />
 
 		<h2>Stats</h2>
 
@@ -80,5 +81,7 @@
 		<h2>Actions</h2>
 		<f:link.action action="request" class="btn btn-default">Http Request</f:link.action>
 		<f:link.action action="analyze" class="btn btn-default">Text Analyzer</f:link.action>
+	</div>
 
 </f:section>
+</html>
