@@ -48,23 +48,34 @@
 						</f:for>
 
 				</div>
-				<div class="pagination">
-					<f:if condition="{previousPage}">
-						<f:link.page additionalParams="{tx_searchable : {term : term, page : previousPage}}"><f:translate key="results.previous">Prev</f:translate></f:link.page>
-					</f:if>
-					<f:for each="{totalPages}" as="whatever" key="page">
-						<f:if condition="{page} == {currentPage}">
-							<f:then>{page}</f:then>
-							<f:else>
-								<f:link.page additionalParams="{tx_searchable : {term : term, page : page}}">{page}</f:link.page>
-							</f:else>
+				<nav aria-label="Search results pages">
+					<ul class="pagination">
+						<f:if condition="{previousPage}">
+							<li class="page-item">
+								<f:link.page class="page-link" additionalParams="{tx_searchable : {term : term, page : previousPage}}">
+									<f:translate key="results.previous">Prev</f:translate>
+								</f:link.page>
+							</li>
 						</f:if>
-					</f:for>
-					<f:if condition="{nextPage}">
-						<f:link.page additionalParams="{tx_searchable : {term : term, page : nextPage}}"><f:translate key="results.next">Next</f:translate></f:link.page>
-					</f:if>
-				</div>
-
+						<f:for each="{totalPages}" as="whatever" key="page">
+							<li class="page-item{f:if(condition: '{page} == {currentPage}', then: ' active')}">
+								<f:if condition="{page} == {currentPage}">
+									<a class="page-link" aria-current="page">{page}</a>
+								</f:if>
+								<f:if condition="{page} != {currentPage}">
+									<f:link.page class="page-link" additionalParams="{tx_searchable : {term : term, page : page}}">{page}</f:link.page>
+								</f:if>
+							</li>
+						</f:for>
+						<f:if condition="{nextPage}">
+							<li class="page-item">
+								<f:link.page class="page-link" additionalParams="{tx_searchable : {term : term, page : nextPage}}">
+									<f:translate key="results.next">Next</f:translate>
+								</f:link.page>
+							</li>
+						</f:if>
+					</ul>
+				</nav>
 		</f:if>
 	</f:if>
 
