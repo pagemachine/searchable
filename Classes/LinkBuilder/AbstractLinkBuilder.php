@@ -2,11 +2,11 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequest;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Typolink\LinkFactory;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -49,16 +49,10 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     }
 
     /**
-     * @var \PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequestInterface
-     */
-    protected $frontendRequest;
-
-    /**
      * @param array $config
      */
     public function __construct(protected $config = null)
     {
-        $this->frontendRequest = GeneralUtility::makeInstance(FrontendRequest::class);
     }
 
     /**
@@ -92,19 +86,13 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
      */
     public function createLinksForBatch($records, $language = 0)
     {
-        $configurationArray = [];
         $metaField = ExtconfService::getInstance()->getMetaFieldname();
 
         foreach ($records as $key => $record) {
             $linkConfiguration = $this->createLinkConfiguration($record, $language);
             $linkConfiguration = $this->finalizeTypoLinkConfig($linkConfiguration, $record);
 
-            $configurationArray[$key] = $linkConfiguration;
-        }
-
-        $links = $this->getFrontendLinks($configurationArray);
-
-        foreach ($links as $key => $link) {
+            $link = $this->getLink($linkConfiguration);
             $records[$key][$metaField]['renderedLink'] = $link;
             $records[$key][$metaField]['linkTitle'] = $this->getLinkTitle($records[$key]);
         }
@@ -180,11 +168,15 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
         return $configuration;
     }
 
-    protected function getFrontendLinks($configuration): array
+    protected function getLink($configuration): string
     {
-        $baseUri = new Uri(ExtconfService::getInstance()->getFrontendDomain());
-        $uris = $this->frontendRequest->send($baseUri, $configuration);
+        if (!$configuration['parameter']) {
+            return '';
+        }
 
-        return $uris;
+        $linkFactory = GeneralUtility::makeInstance(LinkFactory::class);
+        $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $linkResult = $linkFactory->create('', $configuration, $contentObjectRenderer);
+        return $linkResult->getUrl();
     }
 }
