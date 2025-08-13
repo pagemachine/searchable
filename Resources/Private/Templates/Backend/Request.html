@@ -1,9 +1,11 @@
-<f:layout name="Backend" />
-<f:section name="main">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Module" />
+<f:section name="Content">
+	<div class="tx-searchable">
 
-	<h1>Request</h1>
+		<h1>Request</h1>
 
-	<f:flashMessages />
+		<f:flashMessages />
 
 		<f:form action="request" class="form">
 			<div class="form-group">
@@ -33,8 +35,10 @@
 		</f:if>
 
 
-	<div>
-		<f:link.action action="start" class="btn btn-default">Return</f:link.action>
+		<div>
+			<f:link.action action="start" class="btn btn-default">Return</f:link.action>
+		</div>
 	</div>
 
 </f:section>
+</html>

@@ -1,51 +1,55 @@
-{namespace s=PAGEmachine\Searchable\ViewHelpers}
-<f:layout name="Backend" />
-<f:section name="main">
 
-	<h1>Search result</h1>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Module" />
+<f:section name="Content">
+	<div class="tx-searchable">
 
-	<f:flashMessages />
+		<h1>Search result</h1>
 
-		<f:form action="search" class="form-inline">
-			<div class="form-group">
-				<label for="term">Search: </label>
-				<f:form.textfield name="term" id="term" class="form-control" />
+		<f:flashMessages />
 
-			</div>
-			<f:form.submit value="Submit" class="btn btn-primary" />
+			<f:form action="search" class="form-inline">
+				<div class="form-group">
+					<label for="term">Search: </label>
+					<f:form.textfield name="term" id="term" class="form-control" />
 
-		</f:form>
+				</div>
+				<f:form.submit value="Submit" class="btn btn-primary" />
 
-		<p>Search for <b>{term}</b> took {result.took} milliseconds. It found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total.value}</b> entries.</p>
+			</f:form>
 
-		<f:if condition="{result.hits.hits}">
-			<table class="table">
-				<tr>
-					<th>ID</th>
-					<th>Index</th>
-					<th>Linktitle</th>
-					<th>Preview</th>
-					<th>Score</th>
-				</tr>
+			<p>Search for <b>{term}</b> took {result.took} milliseconds. It found <b>{result.hits.hits -> f:count()}</b> occurrences in <b>{result.hits.total.value}</b> entries.</p>
 
-				<f:for each="{result.hits.hits}" as="hit">
+			<f:if condition="{result.hits.hits}">
+				<table class="table">
 					<tr>
-						<td>{hit._id}</td>
-						<td>{hit._index}</td>
-						<td>{hit._source.searchable_meta.linkTitle}</td>
-						<td><f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw></td>
-						<td>{hit._score}</td>
+						<th>ID</th>
+						<th>Index</th>
+						<th>Linktitle</th>
+						<th>Preview</th>
+						<th>Score</th>
 					</tr>
 
-				</f:for>
+					<f:for each="{result.hits.hits}" as="hit">
+						<tr>
+							<td>{hit._id}</td>
+							<td>{hit._index}</td>
+							<td>{hit._source.searchable_meta.linkTitle}</td>
+							<td><f:format.raw>{hit._source.searchable_meta.preview}</f:format.raw></td>
+							<td>{hit._score}</td>
+						</tr>
+
+					</f:for>
 
 
-			</table>
+				</table>
 
-		</f:if>
+			</f:if>
 
-	<div>
-		<f:link.action action="start" class="btn btn-default">Return</f:link.action>
+		<div>
+			<f:link.action action="start" class="btn btn-default">Return</f:link.action>
+		</div>
+
 	</div>
-
 </f:section>
+</html>
