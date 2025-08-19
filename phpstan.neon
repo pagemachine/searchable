@@ -22,5 +22,8 @@ parameters:
     - message: '#Call to an undefined method TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController#'
       paths:
         - Classes/Utility/TsfeUtility.php
+    - message: '#lastInsertId\(\) invoked with 1 parameter, 0 required.#'
+    - message: '#will always evaluate to true.#'
+      path: Classes/Database/Query/QueryBuilder.php
 
   reportUnmatchedIgnoredErrors: false

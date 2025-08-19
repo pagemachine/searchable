@@ -68,7 +68,7 @@ class SearchableRecordGroup implements FormDataGroupInterface
     public function compile(array $result)
     {
         foreach ($this->dataProviders as $providerClassName => $_) {
-            /** @var FormDataProviderInterface $provider */
+            /** @var object $provider */
             $provider = GeneralUtility::makeInstance($providerClassName);
 
             if (!$provider instanceof FormDataProviderInterface) {
