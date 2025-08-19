@@ -138,6 +138,10 @@ class DynamicFlexFormHook
             $full = [];
         }
 
+        if (!isset($full['plugin.'])) {
+            return [];
+        }
+
         $pluginRoot = $full['plugin.'];
         $pluginConfiguration = [];
 
