@@ -24,6 +24,8 @@ parameters:
         - Classes/Utility/TsfeUtility.php
     - message: '#lastInsertId\(\) invoked with 1 parameter, 0 required.#'
     - message: '#will always evaluate to true.#'
-      path: Classes/Database/Query/QueryBuilder.php
+      paths:
+        - Classes/Database/Query/QueryBuilder.php
+        - Classes/Hook/DynamicFlexFormHook.php
 
   reportUnmatchedIgnoredErrors: false
