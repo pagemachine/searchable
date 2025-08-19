@@ -16,5 +16,8 @@ parameters:
       path: Classes/Feature/Traits/FieldCollectionTrait.php
     - message: '#TYPO3\\CMS\\Core\\Configuration\\Event\\AfterFlexFormDataStructureParsedEvent#'
       path: Classes/Hook/DynamicFlexFormHook.php
+    - message: '#lastInsertId\(\) invoked with 1 parameter, 0 required.#'
+    - message: '#will always evaluate to true.#'
+      path: Classes/Database/Query/QueryBuilder.php
 
   reportUnmatchedIgnoredErrors: false
