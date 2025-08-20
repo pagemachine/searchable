@@ -6,12 +6,10 @@ use PAGEmachine\Searchable\Eid\Search;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HighlightFeature;
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;
-use PAGEmachine\Searchable\Hook\DynamicFlexFormHook;
 use PAGEmachine\Searchable\Query\AutosuggestQuery;
 use PAGEmachine\Searchable\Query\SearchQuery;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -149,7 +147,3 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = Autosuggest::class . '::processRequest';
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_search'] = Search::class . '::processRequest';
-
-// Register Hook for dynamic Plugin FlexForms
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][FlexFormTools::class]['flexParsing']['searchable'] =
-        DynamicFlexFormHook::class;

@@ -41,6 +41,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         $this->syncIndices();
 
         $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->setRespectLanguage(false);
         $query->setTerm('test');
 
         $result = $query->execute();
@@ -66,6 +67,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         $this->syncIndices();
 
         $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->setRespectLanguage(false);
         $query->setTerm('highlighting');
         $result = $query->execute();
 
@@ -74,6 +76,56 @@ final class SearchQueryTest extends AbstractElasticsearchTest
             "<span class='searchable-highlight'>Highlighting</span>",
             $result['hits']['hits'][0]['highlight']['searchable_highlight'][0]
         );
+    }
+
+    /**
+     * @test
+     */
+    public function searchesByLanguages(): void
+    {
+        $this->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Test page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 10,
+            'pid' => 1,
+            'sys_language_uid' => 1,
+            'l10n_parent' => 3,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Dansk test page',
+        ]);
+        $this->insertArray('pages', [
+            'uid' => 4,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Another test page',
+        ]);
+
+
+        $this->indexingService->indexFull();
+        $this->syncIndices();
+
+        $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->setLanguage(0);
+        $query->setTerm('test');
+
+        $result = $query->execute();
+
+        $this->assertEquals(2, $result['hits']['total']['value']);
+        $this->assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
+        $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
+
+        $query = GeneralUtility::makeInstance(SearchQuery::class);
+        $query->setLanguage(1);
+        $query->setTerm('test');
+
+        $result = $query->execute();
+
+        $this->assertEquals(1, $result['hits']['total']['value']);
+        $this->assertEquals('Dansk test page', $result['hits']['hits'][0]['_source']['title']);
     }
 
     /**

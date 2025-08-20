@@ -5,6 +5,7 @@ namespace PAGEmachine\Searchable\Database;
  * This file is part of the Pagemachine Searchable project.
  */
 
+use Doctrine\DBAL\Exception\DriverException;
 use PAGEmachine\Searchable\Database\Query\QueryBuilder;
 use PAGEmachine\Searchable\Query\DatabaseRecordUpdateQuery;
 use TYPO3\CMS\Core\Database\Connection as BaseConnection;
@@ -47,11 +48,14 @@ class Connection extends BaseConnection
     {
         $result = parent::insert(...func_get_args());
 
-        $this->getQuery()->updateToplevel($tableName, (int)$this->lastInsertId($tableName));
-
-        // Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
-        if ($tableName == 'tt_content' && !empty($data['pid'])) {
-            $this->getQuery()->updateToplevel('pages', (int)$data['pid']);
+        try {
+            $this->getQuery()->updateToplevel($tableName, (int)$this->lastInsertId($tableName));
+            // Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
+            if ($tableName == 'tt_content' && !empty($data['pid'])) {
+                $this->getQuery()->updateToplevel('pages', (int)$data['pid']);
+            }
+        } catch (DriverException) {
+            // Could not retrieve lastInsertedId
         }
 
         return $result;
@@ -70,7 +74,7 @@ class Connection extends BaseConnection
      *
      * @return int The number of affected rows.
      */
-    public function update($tableName, array $data, array $identifier, array $types = []): int
+    public function update($tableName, array $data, array $identifier = [], array $types = []): int
     {
         $result = parent::update(...func_get_args());
 
@@ -94,7 +98,7 @@ class Connection extends BaseConnection
      *
      * @return int The number of affected rows.
      */
-    public function delete($tableName, array $identifier, array $types = []): int
+    public function delete($tableName, array $identifier = [], array $types = []): int
     {
         $result = parent::delete(...func_get_args());
 
@@ -116,19 +120,5 @@ class Connection extends BaseConnection
         }
 
         return $this->updateQuery;
-    }
-
-    /**
-     * Unquotes an identifier
-     *
-     * @param string $identifier The identifier name to be unquoted
-     * @return string The unquoted identifier string
-     * @see \Doctrine\DBAL\Platforms\AbstractPlatform::quoteIdentifier()
-     */
-    public function unquoteIdentifier(string $identifier): string
-    {
-        $c = $this->getDatabasePlatform()->getIdentifierQuoteCharacter();
-
-        return trim(str_replace($c . $c, $c, $identifier), $c);
     }
 }
