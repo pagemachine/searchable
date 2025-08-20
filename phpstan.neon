@@ -27,5 +27,6 @@ parameters:
       paths:
         - Classes/Database/Query/QueryBuilder.php
         - Classes/Hook/DynamicFlexFormHook.php
+        - Classes/Preview/FluidPreviewRenderer.php
 
   reportUnmatchedIgnoredErrors: false
