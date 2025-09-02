@@ -280,7 +280,7 @@ final class IndexingService implements \Stringable
     protected function applyEnvironment(array $environment): \Closure
     {
         // Set environment language if BE_USER lang is not set (happens on CLI calls)
-        if ($GLOBALS['BE_USER']->uc !== null) {
+        if ($GLOBALS['BE_USER']->uc !== null && isset($GLOBALS['BE_USER']->uc['lang'])) {
             $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
         } else {
             $originalUserLanguage = $environment['language'];
