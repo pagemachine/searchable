@@ -321,7 +321,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
             if (!empty($updates)) {
                 foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
-                    if ($fullRecord['deleted'] ?? 0 == 1) {
+                    if (((int) ($fullRecord['deleted'] ?? 0)) === 1) {
                         $this->query->delete($fullRecord['uid']);
                     } else {
                         $counter++;
