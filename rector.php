@@ -26,5 +26,7 @@ return RectorConfig::configure()
         RemoveExtraParametersRector::class => [
             __DIR__ . '/Classes/DataCollector/TCA/FormDataRecord.php',
             __DIR__ . '/Classes/DataCollector/Utility/OverlayUtility.php',
+            __DIR__ . '/Classes/Database/Connection.php',
+            __DIR__ . '/Classes/Database/Query/QueryBuilder.php',
         ],
     ]);
