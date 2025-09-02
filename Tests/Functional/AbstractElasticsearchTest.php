@@ -18,6 +18,8 @@ use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -229,10 +231,14 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
 
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
         $this->importCSVDataSet(__DIR__ . '/Fixtures/be_users.csv');
-        $this->setUpBackendUser(1);
+        $backendUser = $this->setUpBackendUser(1);
 
-        // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
-        Bootstrap::initializeLanguageObject();
+        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), '13.0', '>=')) {
+            $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($backendUser);
+        } else {
+            // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
+            Bootstrap::initializeLanguageObject();
+        }
 
         $context = GeneralUtility::makeInstance(Context::class);
         $currentVisibilityAspect = $context->getAspect('visibility');

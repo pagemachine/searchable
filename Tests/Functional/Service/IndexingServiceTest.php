@@ -7,8 +7,10 @@ use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\Configuration\SiteWriter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -251,13 +253,19 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     public function respectsSiteBase(): void
     {
         $siteConfiguration = GeneralUtility::makeInstance(SiteConfiguration::class);
+        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), '13.0', '>=')) {
+            $siteWriter = GeneralUtility::makeInstance(SiteWriter::class);
+        } else {
+            $siteWriter = $siteConfiguration;
+        }
+
         $configuration = $siteConfiguration->load('100');
         $configuration['base'] = 'https://bar.example.org/';
-        $siteConfiguration->write('100', $configuration);
+        $siteWriter->write('100', $configuration);
 
         $configuration = $siteConfiguration->load('200');
         $configuration['base'] = 'https://qux.example.org/';
-        $siteConfiguration->write('200', $configuration);
+        $siteWriter->write('200', $configuration);
 
         $this->insertArray('pages', [
             'uid' => 101,
