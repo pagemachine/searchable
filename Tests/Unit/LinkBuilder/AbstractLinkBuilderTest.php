@@ -35,7 +35,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, $language);
 
         $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
@@ -44,7 +44,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function languagesAndLinkConfigurations()
+    public static function languagesAndLinkConfigurations()
     {
         return [
             'default language' => [
@@ -84,7 +84,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
             'page' => '123',
         ];
 
-        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
         $expectedLinkConfiguration = [
             'pageUid' => '123',
@@ -115,7 +115,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
             'property2' => 'value2',
         ];
 
-        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
@@ -134,7 +134,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
         $record = [];
 
-        $linkBuilder = $this->getAccessibleMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
+        $linkBuilder = $this->getMockForAbstractClass(AbstractLinkBuilder::class, ['config' => $configuration]);
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
 
         $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
