@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -19,6 +20,7 @@ class FileLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function createsFileLinkForToplevelFileRecord()
     {
         $config = [
@@ -44,6 +46,7 @@ class FileLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function createsFileLinkForSingleSublevelFile()
     {
         $config = [
@@ -69,6 +72,7 @@ class FileLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function createsFileLinkForNestedSublevelFile()
     {
         $config = [

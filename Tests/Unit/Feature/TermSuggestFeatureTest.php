@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;
 use PAGEmachine\Searchable\Query\QueryInterface;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -35,6 +36,7 @@ class TermSuggestFeatureTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function addsSuggestionQueryString()
     {
         $query = $this->prophesize(QueryInterface::class);

@@ -5,6 +5,7 @@ namespace PAGEmachine\Searchable\Tests\Functional\Query;
 
 use PAGEmachine\Searchable\Query\SearchQuery;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -16,6 +17,7 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function searchesByTerm(): void
     {
         $this->insertArray('pages', [
@@ -54,6 +56,7 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function searchesByTermWithHighlighting(): void
     {
         $this->insertArray('pages', [
@@ -81,6 +84,7 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function searchesByLanguages(): void
     {
         $this->insertArray('pages', [
@@ -131,6 +135,7 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function normalizeIndicesWithIndex(): void
     {
         $query = GeneralUtility::makeInstance(SearchQuery::class);
@@ -146,6 +151,7 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function normalizeIndicesWithIndexer(): void
     {
         $query = GeneralUtility::makeInstance(SearchQuery::class);

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\AbstractLinkBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -75,6 +76,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function replacesDynamicFields()
     {
         $configuration = [
@@ -102,6 +104,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function replacesNestedDynamicFields()
     {
         $configuration = [
@@ -132,6 +135,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead()
     {
         $configuration = [

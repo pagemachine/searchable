@@ -6,6 +6,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\Feature;
  */
 
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -40,6 +41,7 @@ class HtmlStripFeatureTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function stripsHtmlTags()
     {
         $record = [
