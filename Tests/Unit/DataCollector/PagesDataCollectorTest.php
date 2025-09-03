@@ -3,6 +3,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -97,6 +98,7 @@ class PagesDataCollectorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function collectsPageListSingleLevel()
     {
         $pageList = [
@@ -140,6 +142,7 @@ class PagesDataCollectorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function collectsPageListRecursive()
     {
         $pageList = [
@@ -181,6 +184,7 @@ class PagesDataCollectorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function collectsPageIncludingRoot()
     {
         $pageList = [

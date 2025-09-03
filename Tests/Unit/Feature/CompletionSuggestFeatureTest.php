@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -38,6 +39,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function addsFieldsToplevel()
     {
         $record = [
@@ -52,6 +54,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function addsFieldsFromChild()
     {
         $record = [
@@ -73,6 +76,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function addsFieldsFromChildren()
     {
         $record = [

@@ -2,6 +2,8 @@
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -32,6 +34,8 @@ class FieldListUtilityTest extends UnitTestCase
      * @test
      * @dataProvider whitelistCombinations
      */
+    #[Test]
+    #[DataProvider('whitelistCombinations')]
     public function evaluatesWhitelistItem($item, $list, $allowed)
     {
         $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_WHITELIST));
@@ -55,6 +59,8 @@ class FieldListUtilityTest extends UnitTestCase
      * @test
      * @dataProvider blacklistCombinations
      */
+    #[Test]
+    #[DataProvider('blacklistCombinations')]
     public function evaluatesBlacklistItem($item, $list, $allowed)
     {
         $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_BLACKLIST));

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\TCA;
 
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -31,6 +32,7 @@ class PlainValueProcessorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function convertsCheckboxValues()
     {
         $fieldTca = [
@@ -55,6 +57,7 @@ class PlainValueProcessorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function supportsAssociativeCheckboxItems()
     {
         $fieldTca = [
@@ -79,6 +82,7 @@ class PlainValueProcessorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function convertsRadioValues()
     {
         $fieldTca = [
@@ -102,6 +106,7 @@ class PlainValueProcessorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function supportsAssociativeRadioItems()
     {
         $fieldTca = [
@@ -125,6 +130,7 @@ class PlainValueProcessorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function convertsStringRadioValues()
     {
         $fieldTca = [

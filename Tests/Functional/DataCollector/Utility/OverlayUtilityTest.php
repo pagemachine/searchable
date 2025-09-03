@@ -7,6 +7,7 @@ namespace PAGEmachine\Searchable\Tests\Functional\Service;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
 use PAGEmachine\Searchable\Utility\TsfeUtility;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
@@ -22,6 +23,7 @@ final class OverlayUtilityTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function overlayWithFallbackTypeStrict(): void
     {
         $record = [
@@ -61,6 +63,7 @@ final class OverlayUtilityTest extends AbstractElasticsearchTestCase
     /**
      * @test
      */
+    #[Test]
     public function overlayWithFallbackTypeFallback(): void
     {
         $record = [
