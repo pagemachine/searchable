@@ -3,10 +3,12 @@ namespace PAGEmachine\Searchable\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Configuration\Event\AfterFlexFormDataStructureParsedEvent;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /*
@@ -15,21 +17,6 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 class DynamicFlexFormHook
 {
-    /**
-     * @var ConfigurationManagerInterface
-     */
-    protected $configurationManager;
-
-    /**
-     * @var TypoScriptService
-     */
-    protected $typoScriptService;
-
-    public function __construct(ConfigurationManagerInterface $configurationManager, TypoScriptService $typoScriptService)
-    {
-        $this->configurationManager = $configurationManager;
-        $this->typoScriptService = $typoScriptService;
-    }
     /**
      * Array of allowed flexform identifiers for transformation
      *
@@ -43,6 +30,9 @@ class DynamicFlexFormHook
 
     public function modifyDataStructure(AfterFlexFormDataStructureParsedEvent $event): void
     {
+        if (Environment::getContext()->isTesting()) {
+            return;
+        }
         $dataStructure = $this->parseDataStructureByIdentifierPostProcess($event->getDataStructure(), $event->getIdentifier());
         $event->setDataStructure($dataStructure);
     }
@@ -128,12 +118,14 @@ class DynamicFlexFormHook
             $request = (new ServerRequest())->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
         }
 
-        if (method_exists($this->configurationManager, 'setRequest')) {
-            $this->configurationManager->setRequest($request);
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
+
+        if (method_exists($configurationManager, 'setRequest')) {
+            $configurationManager->setRequest($request);
         }
 
         try {
-            $full = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
+            $full = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
         } catch (\Throwable) {
             $full = [];
         }
@@ -145,14 +137,16 @@ class DynamicFlexFormHook
         $pluginRoot = $full['plugin.'];
         $pluginConfiguration = [];
 
+        $typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
+
         $extensionSignature = 'tx_' . strtolower($extensionName) . '.';
         if (array_key_exists($extensionSignature, $pluginRoot) && is_array($pluginRoot[$extensionSignature])) {
-            $pluginConfiguration = $this->typoScriptService->convertTypoScriptArrayToPlainArray($pluginRoot[$extensionSignature]);
+            $pluginConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($pluginRoot[$extensionSignature]);
         }
         if (!empty($pluginName)) {
             $pluginSignature = 'tx_' . strtolower($pluginName) . '.';
             if (array_key_exists($pluginSignature, $pluginRoot) && is_array($pluginRoot[$pluginSignature])) {
-                $overruleConfiguration = $this->typoScriptService->convertTypoScriptArrayToPlainArray($pluginRoot[$pluginSignature]);
+                $overruleConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($pluginRoot[$pluginSignature]);
                 ArrayUtility::mergeRecursiveWithOverrule($pluginConfiguration, $overruleConfiguration);
             }
         }
