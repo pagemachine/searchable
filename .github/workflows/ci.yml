@@ -34,7 +34,7 @@ jobs:
             typo3: '^13.4'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Build
         env:
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Check tag
         run: |
@@ -77,4 +77,4 @@ jobs:
           TYPO3_API_USERNAME: ${{secrets.TYPO3_API_USERNAME}}
           TYPO3_API_PASSWORD: ${{secrets.TYPO3_API_PASSWORD}}
           TAG: ${{env.version}}
-        run: docker compose run --rm app composer deploy:ter
+        run: docker compose run --rm app composer ter:deploy
