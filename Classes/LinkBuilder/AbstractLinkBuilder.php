@@ -4,9 +4,11 @@ namespace PAGEmachine\Searchable\LinkBuilder;
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Typolink\LinkFactory;
+use TYPO3\CMS\Frontend\Typolink\UnableToLinkException;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -87,17 +89,24 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     public function createLinksForBatch($records, $language = 0)
     {
         $metaField = ExtconfService::getInstance()->getMetaFieldname();
+        $finalRecords = [];
 
         foreach ($records as $key => $record) {
             $linkConfiguration = $this->createLinkConfiguration($record, $language);
             $linkConfiguration = $this->finalizeTypoLinkConfig($linkConfiguration, $record);
 
-            $link = $this->getLink($linkConfiguration);
-            $records[$key][$metaField]['renderedLink'] = $link;
-            $records[$key][$metaField]['linkTitle'] = $this->getLinkTitle($records[$key]);
+            try {
+                $link = $this->getLink($linkConfiguration);
+                $record[$metaField]['renderedLink'] = $link;
+                $record[$metaField]['linkTitle'] = $this->getLinkTitle($record);
+                $finalRecords[$key] = $record;
+            } catch (UnableToLinkException $e) {
+                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
+                $logger->warning('Record with UID ' . ($record['uid'] ?? 'unknown') . ' skipped - ' . $e->getMessage());
+            }
         }
 
-        return $records;
+        return $finalRecords;
     }
 
     /**
