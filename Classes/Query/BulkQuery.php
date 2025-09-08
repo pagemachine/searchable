@@ -127,7 +127,7 @@ class BulkQuery extends AbstractQuery
         if ($this->client->exists($params)) {
             $response = $this->client->delete($params);
 
-            if ($response['errors']) {
+            if ($response['errors'] ?? false) {
                 $this->logger->error("Delete Query response contains errors: ", $response);
             }
         }

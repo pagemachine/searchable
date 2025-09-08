@@ -149,15 +149,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
 
         if (!empty($rawList)) {
             foreach ($rawList as $uid => $page) {
-                // Check if page is directly indexable or only transient,
-                // also skip page if search has been disabled,
-                // also skip page if it is hidden (but keep fetching subpages)
-                if (in_array($page['doktype'], $this->config['doktypes'])
-                    && !($page['no_search'] ?? false)
-                    && !($page[$GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled']] ?? false)
-                ) {
-                    yield $this->getRecord($uid);
-                }
+                yield $this->getRecord($uid);
 
                 //@todo: use "yield from" as soon as PHP7 is a requirement
                 $subpages = $this->getPageRecords($uid);
@@ -205,6 +197,35 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             // to indicate that this record should not be indexed.
             return [];
         }
+    }
+
+    protected function shouldIndexRecord($record, $tca)
+    {
+        $result = parent::shouldIndexRecord($record, $tca);
+
+        // If parent already decided against indexing, we can skip further checks
+        if (!$result) {
+            return $result;
+        }
+
+        $doktype = null;
+        if (is_array($record['doktype'])) {
+            $doktype = (int) $record['doktype'][0];
+        } else {
+            $doktype = (int) $record['doktype'];
+        }
+
+        // Check if page is of a valid doktype
+        if (!in_array($doktype, $this->config['doktypes'])) {
+            return false;
+        }
+
+        // Skip page if search has been disabled
+        if (!empty($record['no_search'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
