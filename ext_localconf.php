@@ -12,10 +12,8 @@ use PAGEmachine\Searchable\Query\SearchQuery;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
-use TYPO3\CMS\Core\Log\Writer\PhpErrorLogWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
@@ -63,10 +61,6 @@ if (empty($GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['write
             ],
         ],
     ];
-}
-
-if (Environment::isCli()) {
-    $GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'][LogLevel::INFO][PhpErrorLogWriter::class] = [];
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
