@@ -206,6 +206,48 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    public function indexesHiddenRecordsPartially(): void
+    {
+        $this->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Test page',
+            'slug' => '/test-page/',
+        ]);
+
+        $this->indexingService->indexFull();
+
+        $this->assertDocumentInIndex(
+            3,
+            [
+                'title' => 'Test page',
+            ]
+        );
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('pages');
+        $connection->update(
+            'pages',
+            [
+                'title' => 'Updated test page',
+                'hidden' => 1,
+            ],
+            [
+                'uid' => 3,
+            ]
+        );
+
+        $this->syncIndices();
+
+        $this->indexingService->indexPartial();
+
+        $this->assertDocumentNotInIndex(3);
+    }
+
+    /**
+     * @test
+     */
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
         $this->insertArray('pages', [
