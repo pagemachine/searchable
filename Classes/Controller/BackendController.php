@@ -39,17 +39,16 @@ class BackendController extends ActionController
     {
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         try {
-            $this->view->assign("updates", $this->fetchScheduledUpdates());
+            $moduleTemplate->assign("updates", $this->fetchScheduledUpdates());
 
             $stats = IndexManager::getInstance()->getStats();
 
-            $this->view->assign("health", $stats['health']);
-            $this->view->assign("indices", $stats['indices']);
+            $moduleTemplate->assign("health", $stats['health']);
+            $moduleTemplate->assign("indices", $stats['indices']);
         } catch (\Exception $e) {
             $this->addFlashMessage($e->getMessage(), $e::class, ContextualFeedbackSeverity::ERROR);
         }
-        $moduleTemplate->setContent($this->view->render());
-        return $this->htmlResponse($moduleTemplate->renderContent());
+        return $moduleTemplate->renderResponse('Backend/Start');
     }
 
     /**
@@ -91,10 +90,9 @@ class BackendController extends ActionController
 
         $result = $query->execute();
 
-        $this->view->assign('result', $result);
-        $this->view->assign('term', $term);
-        $moduleTemplate->setContent($this->view->render());
-        return $this->htmlResponse($moduleTemplate->renderContent());
+        $moduleTemplate->assign('result', $result);
+        $moduleTemplate->assign('term', $term);
+        return $moduleTemplate->renderResponse('Backend/Search');
     }
 
     /**
@@ -109,7 +107,7 @@ class BackendController extends ActionController
         if ($url != '') {
             $result = $this->request($url, $body);
 
-            $this->view->assign('response', json_decode((string) $result['body'], true));
+            $moduleTemplate->assign('response', json_decode((string) $result['body'], true));
 
             $resultColor = match ($result['status']) {
                 '200' => 'success',
@@ -117,7 +115,7 @@ class BackendController extends ActionController
                 default => 'warning',
             };
 
-            $this->view->assignMultiple([
+            $moduleTemplate->assignMultiple([
                 'status' => $result['status'],
                 'color' => $resultColor,
             ]);
@@ -126,10 +124,9 @@ class BackendController extends ActionController
             $url = sprintf('%s/%s/', $this->getDefaultHost(), $indices[0] ?? 'typo3');
         }
 
-        $this->view->assign("url", $url);
-        $this->view->assign("body", $body);
-        $moduleTemplate->setContent($this->view->render());
-        return $this->htmlResponse($moduleTemplate->renderContent());
+        $moduleTemplate->assign("url", $url);
+        $moduleTemplate->assign("body", $body);
+        return $moduleTemplate->renderResponse('Backend/Request');
     }
 
     /**
@@ -153,21 +150,20 @@ class BackendController extends ActionController
                 $url = sprintf('%s/%s/_analyze', $hostUrl, $selectedIndex);
                 $body = json_encode(['text' => $text]);
                 $result = $this->request($url, $body);
-                $this->view->assign('response', json_decode((string) $result['body'], true));
+                $moduleTemplate->assign('response', json_decode((string) $result['body'], true));
             } catch (\Exception $e) {
                 $this->addFlashMessage($e->getMessage(), 'Error analyzing text', ContextualFeedbackSeverity::ERROR);
             }
         }
 
-        $this->view->assignMultiple([
+        $moduleTemplate->assignMultiple([
             'text' => $text,
             'indices' => array_combine($indices, $indices),
             'selectedIndex' => $selectedIndex,
             'hostUrl' => $hostUrl,
         ]);
 
-        $moduleTemplate->setContent($this->view->render());
-        return $this->htmlResponse($moduleTemplate->renderContent());
+        return $moduleTemplate->renderResponse('Backend/Analyze');
     }
 
     /**

@@ -16,5 +16,17 @@ parameters:
       path: Classes/Feature/Traits/FieldCollectionTrait.php
     - message: '#TYPO3\\CMS\\Core\\Configuration\\Event\\AfterFlexFormDataStructureParsedEvent#'
       path: Classes/Hook/DynamicFlexFormHook.php
+    - message: '#lastInsertId\(\) invoked with 1 parameter, 0 required.#'
+    - message: '#will always evaluate to true.#'
+      paths:
+        - Classes/Database/Query/QueryBuilder.php
+        - Classes/Hook/DynamicFlexFormHook.php
+        - Classes/Preview/FluidPreviewRenderer.php
+    - message: '#TYPO3\\CMS\\Core\\TypoScript\\FrontendTypoScriptFactory#'
+      paths:
+        - Classes/Utility/TsfeUtility.php
+    - message: '#Call to an undefined method TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController#'
+      paths:
+        - Classes/Utility/TsfeUtility.php
 
   reportUnmatchedIgnoredErrors: false

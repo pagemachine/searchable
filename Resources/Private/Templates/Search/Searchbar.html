@@ -1,15 +1,14 @@
 <f:layout name="Default" />
 <f:section name="main">
 
-	<form action="{f:uri.page(pageUid:settings.resultPage)}" class="form-inline searchable-searchform" method="GET">
+	<f:form pageUid="{settings.resultPage}"class="form-inline searchable-searchform" method="POST">
 		<div class="form-group term-group">
 			<label for="term"><f:translate key="searchbar.label">Search</f:translate>: </label>
-			<f:form.textfield name="tx_searchable[term]" id="term" class="form-control {f:if(condition:settings.features.completionSuggest, then:'searchable-autosuggest')}" value="{term}"/>
-
+			<f:form.textfield name="term" id="term" class="form-control {f:if(condition:settings.features.completionSuggest, then:'searchable-autosuggest')}" value="{term}"/>
 		</div>
-		<button type="submit" class="btn btn-primary"><f:translate key="searchbar.submit">Submit</f:translate></button>
 
-	</form>
+		<f:form.submit class="btn btn-primary" value="{f:translate(key:'searchbar.submit')}" />
+	</f:form>
 
 	<f:if condition="{settings.features.completionSuggest}">
 		<f:asset.script identifier="searchable_completionsuggest" src="EXT:searchable/Resources/Public/JavaScript/completionSuggest.js" />

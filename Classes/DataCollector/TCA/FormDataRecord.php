@@ -63,6 +63,7 @@ class FormDataRecord implements SingletonInterface
             'vanillaUid' => (int)$uid,
             'command' => 'edit',
             'columnsToProcess' => $fieldlist,
+            'request' => $GLOBALS['TYPO3_REQUEST'],
         ];
 
         try {

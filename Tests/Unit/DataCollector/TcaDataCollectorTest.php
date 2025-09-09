@@ -7,6 +7,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -56,6 +57,7 @@ class TcaDataCollectorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function processesFlatRecord()
     {
         $recordTca = [
@@ -157,6 +159,7 @@ class TcaDataCollectorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function processesRelations()
     {
         $subCollector = $this->prophesize(TcaDataCollector::class);
@@ -245,6 +248,7 @@ class TcaDataCollectorTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function processesTranslations()
     {
         $configuration = [

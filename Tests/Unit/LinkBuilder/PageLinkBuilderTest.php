@@ -2,9 +2,8 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
-use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -24,19 +23,9 @@ class PageLinkBuilderTest extends UnitTestCase
     protected $pageLinkBuilder;
 
     /**
-     * Set up this testcase
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $requestFactoryProphecy = $this->prophesize(RequestFactory::class);
-        GeneralUtility::addInstance(RequestFactory::class, $requestFactoryProphecy->reveal());
-    }
-
-    /**
      * @test
      */
+    #[Test]
     public function convertsFromViewHelperConfigToTypoLinkConfig()
     {
         $this->pageLinkBuilder = new PageLinkBuilder();

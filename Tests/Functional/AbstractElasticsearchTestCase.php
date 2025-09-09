@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
-use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Elasticsearch\Client as ElasticsearchClient;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
@@ -19,14 +18,15 @@ use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Tests\Functional\SiteHandling\SiteBasedTestTrait;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-abstract class AbstractElasticsearchTest extends FunctionalTestCase
+abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
 {
-    use ArraySubsetAsserts;
     use WebserverTrait;
     use SiteBasedTestTrait;
 
@@ -231,10 +231,14 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
 
         // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseUserPermissionCheck
         $this->importCSVDataSet(__DIR__ . '/Fixtures/be_users.csv');
-        $this->setUpBackendUser(1);
+        $backendUser = $this->setUpBackendUser(1);
 
-        // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
-        Bootstrap::initializeLanguageObject();
+        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), '13.0', '>=')) {
+            $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($backendUser);
+        } else {
+            // Necessary for \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseSystemLanguageRows
+            Bootstrap::initializeLanguageObject();
+        }
 
         $context = GeneralUtility::makeInstance(Context::class);
         $currentVisibilityAspect = $context->getAspect('visibility');
@@ -295,7 +299,21 @@ abstract class AbstractElasticsearchTest extends FunctionalTestCase
         $document = $this->searchDocumentByUid($uid, $languageId);
 
         $this->assertNotEmpty($document, sprintf('Document %d not in index', $uid));
-        $this->assertArraySubset($documentSubset, $document, false, sprintf('Document %d source mismatch', $uid));
+        $this->assertArraySubset($documentSubset, $document, sprintf('Document %d source mismatch', $uid));
+    }
+
+    private function assertArraySubset(array $subset, array $array, string $message = ''): void
+    {
+        foreach ($subset as $key => $expectedValue) {
+            $this->assertArrayHasKey($key, $array, $message ?: sprintf('Key "%s" not found in array', $key));
+
+            if (is_array($expectedValue)) {
+                $this->assertIsArray($array[$key], $message ?: sprintf('Key "%s" is not an array', $key));
+                $this->assertArraySubset($expectedValue, $array[$key], $message);
+            } else {
+                $this->assertEquals($expectedValue, $array[$key], $message ?: sprintf('Key "%s" value mismatch', $key));
+            }
+        }
     }
 
     protected function assertDocumentNotInIndex(int $uid, int $languageId = 0): void

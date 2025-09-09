@@ -2,9 +2,8 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
-use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -19,17 +18,9 @@ class FileLinkBuilderTest extends UnitTestCase
     use ProphecyTrait;
 
     /**
-     * Set up this testcase
-     */
-    public function setUp(): void
-    {
-        $requestFactoryProphecy = $this->prophesize(RequestFactory::class);
-        GeneralUtility::addInstance(RequestFactory::class, $requestFactoryProphecy->reveal());
-    }
-
-    /**
      * @test
      */
+    #[Test]
     public function createsFileLinkForToplevelFileRecord()
     {
         $config = [
@@ -55,6 +46,7 @@ class FileLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function createsFileLinkForSingleSublevelFile()
     {
         $config = [
@@ -80,6 +72,7 @@ class FileLinkBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    #[Test]
     public function createsFileLinkForNestedSublevelFile()
     {
         $config = [

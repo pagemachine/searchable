@@ -217,7 +217,7 @@ final class IndexingService implements \Stringable
 
         foreach ($this->scheduledIndexers as $index => $indexers) {
             if (!empty($indexers)) {
-                $this->logger->debug(sprintf('Indexing Index "%s"', $index));
+                $this->logger->info(sprintf('Indexing Index "%s"', $index));
 
                 $environment = ExtconfService::getEnvironmentOfIndex($index);
                 $restoreEnvironment = $this->applyEnvironment($environment);
@@ -261,15 +261,21 @@ final class IndexingService implements \Stringable
     {
         $this->logger->debug(sprintf('Running indexer type "%s"', $indexer->getType()));
 
+        $finalMessage = '';
+
         if ($this->runFullIndexing) {
             foreach ($indexer->run() as $resultMessage) {
                 $this->logger->debug(sprintf('Indexer type "%s" status: %s', $indexer->getType(), $resultMessage));
+                $finalMessage = $resultMessage;
             }
         } else {
             foreach ($indexer->runUpdate() as $resultMessage) {
                 $this->logger->debug(sprintf('Indexer type "%s" status: %s', $indexer->getType(), $resultMessage));
+                $finalMessage = $resultMessage;
             }
         }
+
+        $this->logger->info(sprintf('Finished indexer "%s": %s', $indexer->getIndex(), $finalMessage));
     }
 
     /**
@@ -280,7 +286,7 @@ final class IndexingService implements \Stringable
     protected function applyEnvironment(array $environment): \Closure
     {
         // Set environment language if BE_USER lang is not set (happens on CLI calls)
-        if ($GLOBALS['BE_USER']->uc !== null) {
+        if ($GLOBALS['BE_USER']->uc !== null && isset($GLOBALS['BE_USER']->uc['lang'])) {
             $originalUserLanguage = $GLOBALS['BE_USER']->uc['lang'];
         } else {
             $originalUserLanguage = $environment['language'];

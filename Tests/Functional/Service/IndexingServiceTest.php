@@ -5,10 +5,13 @@ namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
 use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
-use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\Configuration\SiteWriter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -16,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Testcase for PAGEmachine\Searchable\Service\IndexingService
  */
-final class IndexingServiceTest extends AbstractElasticsearchTest
+final class IndexingServiceTest extends AbstractElasticsearchTestCase
 {
     /**
      * @var array
@@ -47,6 +50,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function indexesRecordsFully(): void
     {
         $this->insertArray('pages', [
@@ -75,6 +79,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function indexesRecordTranslations(): void
     {
         $this->insertArray('pages', [
@@ -114,6 +119,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function appliesLanguageForRecordTranslationIndexing(): void
     {
         $this->insertArray('tt_content', [
@@ -160,6 +166,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function indexesRecordsPartially(): void
     {
         $this->insertArray('pages', [
@@ -206,6 +213,50 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
+    public function indexesHiddenRecordsPartially(): void
+    {
+        $this->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Test page',
+            'slug' => '/test-page/',
+        ]);
+
+        $this->indexingService->indexFull();
+
+        $this->assertDocumentInIndex(
+            3,
+            [
+                'title' => 'Test page',
+            ]
+        );
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('pages');
+        $connection->update(
+            'pages',
+            [
+                'title' => 'Updated test page',
+                'hidden' => 1,
+            ],
+            [
+                'uid' => 3,
+            ]
+        );
+
+        $this->syncIndices();
+
+        $this->indexingService->indexPartial();
+
+        $this->assertDocumentNotInIndex(3);
+    }
+
+    /**
+     * @test
+     */
+    #[Test]
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
         $this->insertArray('pages', [
@@ -248,16 +299,23 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function respectsSiteBase(): void
     {
         $siteConfiguration = GeneralUtility::makeInstance(SiteConfiguration::class);
+        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), '13.0', '>=')) {
+            $siteWriter = GeneralUtility::makeInstance(SiteWriter::class);
+        } else {
+            $siteWriter = $siteConfiguration;
+        }
+
         $configuration = $siteConfiguration->load('100');
         $configuration['base'] = 'https://bar.example.org/';
-        $siteConfiguration->write('100', $configuration);
+        $siteWriter->write('100', $configuration);
 
         $configuration = $siteConfiguration->load('200');
         $configuration['base'] = 'https://qux.example.org/';
-        $siteConfiguration->write('200', $configuration);
+        $siteWriter->write('200', $configuration);
 
         $this->insertArray('pages', [
             'uid' => 101,
@@ -301,6 +359,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function indexesRecordsOfUnlocalizableTables(): void
     {
         $this->insertArray('tx_unlocalizedtabletest_unlocalizedtable', [
@@ -331,6 +390,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function indexesPagesWithinTransientPages(): void
     {
         $this->insertArray('pages', [
@@ -393,6 +453,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     /**
      * @test
      */
+    #[Test]
     public function indexesPagesWithinHiddenPages(): void
     {
         $this->insertArray('pages', [

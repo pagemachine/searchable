@@ -2,11 +2,13 @@
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
-use PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequest;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
-use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Typolink\LinkFactory;
+use TYPO3\CMS\Frontend\Typolink\UnableToLinkException;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -49,16 +51,10 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     }
 
     /**
-     * @var \PAGEmachine\Searchable\LinkBuilder\Frontend\FrontendRequestInterface
-     */
-    protected $frontendRequest;
-
-    /**
      * @param array $config
      */
     public function __construct(protected $config = null)
     {
-        $this->frontendRequest = GeneralUtility::makeInstance(FrontendRequest::class);
     }
 
     /**
@@ -92,24 +88,25 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
      */
     public function createLinksForBatch($records, $language = 0)
     {
-        $configurationArray = [];
         $metaField = ExtconfService::getInstance()->getMetaFieldname();
+        $finalRecords = [];
 
         foreach ($records as $key => $record) {
             $linkConfiguration = $this->createLinkConfiguration($record, $language);
             $linkConfiguration = $this->finalizeTypoLinkConfig($linkConfiguration, $record);
 
-            $configurationArray[$key] = $linkConfiguration;
+            try {
+                $link = $this->getLink($linkConfiguration);
+                $record[$metaField]['renderedLink'] = $link;
+                $record[$metaField]['linkTitle'] = $this->getLinkTitle($record);
+                $finalRecords[$key] = $record;
+            } catch (UnableToLinkException $e) {
+                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(self::class);
+                $logger->warning('Record with UID ' . ($record['uid'] ?? 'unknown') . ' skipped - ' . $e->getMessage());
+            }
         }
 
-        $links = $this->getFrontendLinks($configurationArray);
-
-        foreach ($links as $key => $link) {
-            $records[$key][$metaField]['renderedLink'] = $link;
-            $records[$key][$metaField]['linkTitle'] = $this->getLinkTitle($records[$key]);
-        }
-
-        return $records;
+        return $finalRecords;
     }
 
     /**
@@ -180,11 +177,15 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
         return $configuration;
     }
 
-    protected function getFrontendLinks($configuration): array
+    protected function getLink($configuration): string
     {
-        $baseUri = new Uri(ExtconfService::getInstance()->getFrontendDomain());
-        $uris = $this->frontendRequest->send($baseUri, $configuration);
+        if (!$configuration['parameter']) {
+            return '';
+        }
 
-        return $uris;
+        $linkFactory = GeneralUtility::makeInstance(LinkFactory::class);
+        $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $linkResult = $linkFactory->create('', $configuration, $contentObjectRenderer);
+        return $linkResult->getUrl();
     }
 }
