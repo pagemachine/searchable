@@ -3,8 +3,6 @@ namespace PAGEmachine\Searchable\Preview;
 
 use PAGEmachine\Searchable\Preview\RequestAwarePreviewRendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -48,12 +46,6 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     {
         if (method_exists($this->view, 'setRequest')) {
             $this->view->setRequest($request);
-        }
-
-        if (method_exists($this->configurationManager, 'setRequest')) {
-            // TODO: Check if using a generic backend request is problematic
-            $backendRequest = (new ServerRequest())->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
-            $this->configurationManager->setRequest($backendRequest);
         }
 
         $this->prepareView();
