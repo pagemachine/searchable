@@ -47,10 +47,9 @@ class TsfeUtility
             'TSFE' => $GLOBALS['TSFE'] ?? null,
         ];
 
+        # TODO: For page indexer records at least, we should be able to get the site from the record directly
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
         $site = $siteIdentifier ? $siteFinder->getSiteByIdentifier($siteIdentifier) : array_values($siteFinder->getAllSites())[0] ?? null;
-
-        # TODO: Get the actual page ID from the page indexer
         $pageId = $site ? $site->getRootPageId() : 0;
 
         if ($site === null) {
