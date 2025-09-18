@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Routing\PageArguments;
@@ -18,6 +19,11 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 final class UriBuilder implements MiddlewareInterface
 {
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {
+    }
+
     /**
      * Process an incoming server request.
      *
@@ -40,7 +46,17 @@ final class UriBuilder implements MiddlewareInterface
         $contentObjectRenderer->setRequest($request);
 
         foreach ($configurations as $index => $configuration) {
-            $uris[$index] = $contentObjectRenderer->typoLink_URL($configuration);
+            try {
+                $uris[$index] = $contentObjectRenderer->typoLink_URL($configuration);
+            } catch (\Throwable $e) {
+                $this->logger->error('Failed to build URI: {message}', [
+                    'message' => $e->getMessage(),
+                    'configuration' => $configuration,
+                    'exception' => $e,
+                ]);
+
+                $uris[$index] = '';
+            }
         }
 
         $response = new JsonResponse($uris);
