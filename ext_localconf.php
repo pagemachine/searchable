@@ -37,9 +37,6 @@ ExtensionUtility::configurePlugin(
     'LiveSearchbar',
     [
         SearchController::class => 'liveSearchbar',
-    ],
-    [
-        SearchController::class => 'liveSearchbar',
     ]
 );
 
