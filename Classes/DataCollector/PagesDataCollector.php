@@ -6,6 +6,7 @@ use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Exception\Page\PageNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
@@ -189,7 +190,12 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      */
     protected function languageOverlay($record)
     {
-        return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language, $this->config['sysLanguageOverlay']);
+        try {
+            return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language, $this->config['sysLanguageOverlay']);
+        } catch (PageNotFoundException) {
+            // Page is not available in the requested language
+            return [];
+        }
     }
 
     protected function shouldIndexRecord($record, $tca)
