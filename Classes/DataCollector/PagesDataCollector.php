@@ -191,7 +191,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     protected function languageOverlay($record)
     {
         try {
-            return OverlayUtility::getInstance()->pagesLanguageOverlay($record, $this->language, $this->config['sysLanguageOverlay']);
+            return OverlayUtility::getInstance()->pagesLanguageOverlay($record);
         } catch (PageNotFoundException) {
             // Page is not available in the requested language
             return [];

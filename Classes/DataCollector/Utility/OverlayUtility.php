@@ -98,13 +98,11 @@ class OverlayUtility implements SingletonInterface
     /**
      * Overlay Workflow for pages. Based on PageInformationFactory::class->settingLanguage
      *
-     * @param  array          $record
-     * @param  int            $language
-     * @param  int            $overlayMode
+     * @param  array $record
      * @throws PageNotFoundException
      * @return array
      */
-    public function pagesLanguageOverlay($record, $language, $overlayMode = 1)
+    public function pagesLanguageOverlay($record)
     {
         $context = GeneralUtility::makeInstance(Context::class);
         $languageAspect = $context->getAspect('language');
