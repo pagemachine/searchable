@@ -488,6 +488,105 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
     }
 
     /**
+     * @test
+     */
+    public function indexesPageOverlayWithFallbackTypeStrict(): void
+    {
+        $this->writeSiteConfiguration(
+            '1',
+            $this->buildSiteConfiguration(1, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '/'),
+                $this->buildLanguageConfiguration('DE', '/de/', [], 'strict'),
+            ]
+        );
+
+        // EN-only page
+        $this->insertArray('pages', [
+            'uid' => 300,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'EN only page',
+            'slug' => '/en-only/',
+        ]);
+
+        $this->assertIndexEmpty(0);
+        $this->assertIndexEmpty(1);
+
+        $this->indexingService->resetIndex();
+        $this->indexingService->indexFull('foo_pages');
+
+        // Present in EN
+        $this->assertDocumentInIndex(
+            300,
+            [
+                'title' => 'EN only page',
+                'searchable_meta' => [
+                    'renderedLink' => '/en-only/',
+                ],
+            ],
+            0
+        );
+        // Not present in DE due to strict (no fallbacks)
+        $this->assertDocumentNotInIndex(300, 1);
+    }
+
+    /**
+     * @test
+     */
+    public function indexesPageOverlayWithFallbackTypeFallback(): void
+    {
+        $this->writeSiteConfiguration(
+            '1',
+            $this->buildSiteConfiguration(1, '/'),
+            [
+                $this->buildDefaultLanguageConfiguration('EN', '/'),
+                $this->buildLanguageConfiguration('DE', '/de/', ['EN'], 'fallback'),
+            ]
+        );
+
+        // EN-only page
+        $this->insertArray('pages', [
+            'uid' => 301,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'EN fallback page',
+            'slug' => '/en-fallback/',
+        ]);
+
+        $this->assertIndexEmpty(0);
+        $this->assertIndexEmpty(1);
+
+        $this->indexingService->resetIndex();
+        $this->indexingService->indexFull('foo_pages');
+
+        // Present in EN
+        $this->assertDocumentInIndex(
+            301,
+            [
+                'title' => 'EN fallback page',
+                'searchable_meta' => [
+                    'renderedLink' => '/en-fallback/',
+                ],
+            ],
+            0
+        );
+
+        // Also present in DE due to fallback
+        $this->assertDocumentInIndex(
+            301,
+            [
+                'title' => 'EN fallback page',
+                'searchable_meta' => [
+                    // expect DE base prefixed link
+                    'renderedLink' => '/de/en-fallback/',
+                ],
+            ],
+            1
+        );
+    }
+
+    /**
      * @return void
      */
     protected function setUp(): void
