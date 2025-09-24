@@ -73,7 +73,7 @@ class SearchQuery extends AbstractQuery
     }
 
     /**
-     * @var int $language
+     * @var int|null $language
      */
     protected $language = null;
 
@@ -336,7 +336,7 @@ class SearchQuery extends AbstractQuery
     protected function getActiveIndices(): array
     {
         if ($this->respectLanguage === true) {
-            $language = $this->language ?: $this->getLanguageId();
+            $language = $this->language ?? $this->getLanguageId();
 
             return ExtconfService::getIndicesByLanguage($language);
         } else {
