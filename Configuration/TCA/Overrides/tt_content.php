@@ -6,7 +6,10 @@ if (!defined('TYPO3')) {
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'Searchable',
     'Searchbar',
-    'Searchable: Search bar'
+    'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:searchbar_title',
+    'actions-search',
+    'Search',
+    'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:searchbar_description'
 );
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['searchable_searchbar'] = 'select_key, pages, recursive';
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_searchbar'] = 'pi_flexform';
@@ -18,7 +21,10 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_s
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'Searchable',
     'LiveSearchbar',
-    'Searchable: Live Search bar (AJAX)'
+    'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:live_searchbar_title',
+    'actions-search',
+    'Search',
+    'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:live_searchbar_description'
 );
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['searchable_livesearchbar'] = 'select_key, pages, recursive';
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_livesearchbar'] = 'pi_flexform';
@@ -30,7 +36,10 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_l
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'Searchable',
     'Results',
-    'Searchable: Results'
+    'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:results_title',
+    'actions-search',
+    'Search',
+    'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:results_description'
 );
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['searchable_results'] = 'select_key, pages, recursive';
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_results'] = 'pi_flexform';

@@ -5,6 +5,13 @@
         <sheetTitle>General</sheetTitle>
         <type>array</type>
         <el>
+          <placeholder>
+            <label>placeholder</label>
+            <displayCond>FIELD:placeholder:=:1</displayCond>
+            <config>
+              <type>none</type>
+            </config>
+          </placeholder>
         </el>
       </ROOT>
     </sDEF>
