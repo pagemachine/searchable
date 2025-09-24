@@ -3,9 +3,13 @@ namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Exception\Page\PageNotFoundException;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Type\Bitmask\PageTranslationVisibility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -92,22 +96,77 @@ class OverlayUtility implements SingletonInterface
     }
 
     /**
-     * Simplified workflow for pages
+     * Overlay Workflow for pages. Based on PageInformationFactory::class->settingLanguage
      *
-     * @param  array          $record
-     * @param  int            $language
-     * @param  int            $overlayMode
+     * @param  array $record
+     * @throws PageNotFoundException
      * @return array
      */
-    public function pagesLanguageOverlay($record, $language, $overlayMode = 1)
+    public function pagesLanguageOverlay($record)
     {
-        $rawOverlay = $this->pageRepository->getPageOverlay($record, $language);
+        $context = GeneralUtility::makeInstance(Context::class);
+        $languageAspect = $context->getAspect('language');
 
-        // Simulate disabled overlay mode for pages
-        if ((int)$overlayMode === 0 && $language > 0 && empty($rawOverlay['_PAGES_OVERLAY'])) {
-            return [];
+        $languageId = $languageAspect->getId();
+        $languageContentId = $languageAspect->getContentId();
+
+        $pageRecord = $record;
+        $pageRecordOverlayed = $this->pageRepository->getPageOverlay($pageRecord, $languageAspect);
+
+        $pageTranslationVisibility = new PageTranslationVisibility((int)($pageRecord['l18n_cfg'] ?? 0));
+        if ($languageAspect->getId() > 0) {
+            // If the incoming language is set to another language than default
+            $olRec = $pageRecordOverlayed;
+            $overlaidLanguageId = (int)($olRec['sys_language_uid'] ?? 0);
+            if ($overlaidLanguageId !== $languageAspect->getId()) {
+                // If requested translation is not available
+                if ($pageTranslationVisibility->shouldHideTranslationIfNoTranslatedRecordExists()) {
+                    throw new PageNotFoundException('Page is not available in the requested language.', 1754384426);
+                }
+                switch ($languageAspect->getLegacyLanguageMode()) {
+                    case 'strict':
+                        throw new PageNotFoundException('Page is not available in the requested language (strict).', 1754384467);
+
+                    case 'content_fallback':
+                        // Setting content uid (but leaving the sys_language_uid) when a content_fallback value was found.
+                        foreach ($languageAspect->getFallbackChain() as $orderValue) {
+                            if ($orderValue === '0' || $orderValue === 0 || $orderValue === '') {
+                                $languageContentId = 0;
+                                break;
+                            }
+                            if (MathUtility::canBeInterpretedAsInteger($orderValue) && $overlaidLanguageId === (int)$orderValue) {
+                                $languageContentId = (int)$orderValue;
+                                break;
+                            }
+                            if ($orderValue === 'pageNotFound') {
+                                // The existing fallbacks have not been found, but instead of continuing page rendering
+                                // with default language, a "page not found" message should be shown instead.
+                                throw new PageNotFoundException('Page is not available in the requested language (fallbacks did not apply).', 1754384524);
+                            }
+                        }
+                        break;
+                    default:
+                        // Default is that everything defaults to the default language.
+                        $languageId = ($languageContentId = 0);
+                }
+            }
+
+            // Define the language aspect again now
+            $languageAspect = new LanguageAspect(
+                $languageId,
+                $languageContentId,
+                $languageAspect->getOverlayType(),
+                $languageAspect->getFallbackChain()
+            );
         }
 
-        return $rawOverlay;
+        if ((!$languageAspect->getContentId() || !$languageAspect->getId())
+            && $pageTranslationVisibility->shouldBeHiddenInDefaultLanguage()
+        ) {
+            // If default language is not available
+            throw new PageNotFoundException('Page is not available in default language.', 1754384591);
+        }
+
+        return $pageRecordOverlayed;
     }
 }
