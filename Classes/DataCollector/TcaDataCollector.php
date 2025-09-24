@@ -254,11 +254,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      */
     protected function shouldIndexRecord($record, $tca)
     {
-        if (!empty($tca['ctrl']['enablecolumns'])) {
-            // Check disabled flag
-            if (!empty($tca['ctrl']['enablecolumns']['disabled']) && !empty($record[$tca['ctrl']['enablecolumns']['disabled']])) {
-                return false;
-            }
+        $disabledColumn = $tca['ctrl']['enablecolumns']['disabled'] ?? null;
+
+        if ($disabledColumn && !empty($record[$disabledColumn])) {
+            return false;
         }
 
         return true;
