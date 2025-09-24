@@ -222,6 +222,10 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $record = $this->languageOverlay($record);
 
         if (!empty($record)) {
+            if (!$this->shouldIndexRecord($record, $data['processedTca'])) {
+                return [];
+            }
+
             //Cleanup
             $record = $this->processColumns($record);
             $record = $this->applyFeatures($record);
@@ -239,6 +243,24 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
     protected function languageOverlay($record)
     {
         return OverlayUtility::getInstance()->languageOverlay($this->config['table'], $record, $this->language, $this->getFieldWhitelist(), $this->config['sysLanguageOverlay']);
+    }
+
+    /**
+     * Checks whether the record should be indexed
+     *
+     * @param  array $record
+     * @param  array $tca
+     * @return bool
+     */
+    protected function shouldIndexRecord($record, $tca)
+    {
+        $disabledColumn = $tca['ctrl']['enablecolumns']['disabled'] ?? null;
+
+        if ($disabledColumn && !empty($record[$disabledColumn])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
