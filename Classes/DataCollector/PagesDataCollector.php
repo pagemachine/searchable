@@ -201,14 +201,14 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             return $result;
         }
 
-        // Check if page is of a valid doktype
-        $doktype = (int)($record['doktype'][0] ?? $record['doktype']);
-        if (!in_array($doktype, $this->config['doktypes'], true)) {
+        // Skip page if search has been disabled
+        if (!empty($record['no_search'])) {
             return false;
         }
 
-        // Skip page if search has been disabled
-        if (!empty($record['no_search'])) {
+        // Check if page is of a valid doktype
+        $doktype = (int)($record['doktype'][0] ?? $record['doktype']);
+        if (!in_array($doktype, $this->config['doktypes'], true)) {
             return false;
         }
 
