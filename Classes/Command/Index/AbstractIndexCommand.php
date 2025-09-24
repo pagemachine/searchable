@@ -9,6 +9,9 @@ use TYPO3\CMS\Core\Authentication\CommandLineUserAuthentication;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Log\LogLevel;
+use TYPO3\CMS\Core\Log\Writer\PhpErrorLogWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 abstract class AbstractIndexCommand extends Command
@@ -20,6 +23,10 @@ abstract class AbstractIndexCommand extends Command
 
     public function __construct(...$arguments)
     {
+        if (Environment::isCli()) {
+            $GLOBALS['TYPO3_CONF_VARS']['LOG']['PAGEmachine']['Searchable']['writerConfiguration'][LogLevel::INFO][PhpErrorLogWriter::class] = [];
+        }
+
         parent::__construct(...$arguments);
 
         $this->indexingService = GeneralUtility::makeInstance(IndexingService::class);
