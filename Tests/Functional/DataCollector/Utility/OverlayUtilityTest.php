@@ -46,8 +46,7 @@ final class OverlayUtilityTest extends AbstractElasticsearchTest
         // EN
         TsfeUtility::createTSFE('1', 0);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
-            $record,
-            0
+            $record
         );
         $this->assertEquals(300, $recordOverlay['uid']);
 
@@ -55,8 +54,7 @@ final class OverlayUtilityTest extends AbstractElasticsearchTest
         TsfeUtility::createTSFE('1', 1);
         $this->expectException(\Exception::class);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
-            $record,
-            1
+            $record
         );
     }
 
@@ -87,16 +85,14 @@ final class OverlayUtilityTest extends AbstractElasticsearchTest
         // EN
         TsfeUtility::createTSFE('1', 0);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
-            $record,
-            0
+            $record
         );
         $this->assertEquals(300, $recordOverlay['uid']);
 
         // DE
         TsfeUtility::createTSFE('1', 1);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
-            $record,
-            1
+            $record
         );
         $this->assertEquals(300, $recordOverlay['uid']);
     }
