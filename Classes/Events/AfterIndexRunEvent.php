@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace PAGEmachine\Searchable\Events;
 
-final class AfterIndexRunEvent
+final readonly class AfterIndexRunEvent
 {
-    public function __construct(private readonly bool $fullIndexing, private readonly int $elapsedTime)
+    public function __construct(private bool $fullIndexing, private int $elapsedTime)
     {
     }
 
