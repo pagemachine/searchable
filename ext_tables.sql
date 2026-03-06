@@ -1,4 +1,4 @@
-CREATE TABLE tx_searchable_domain_model_update (
+CREATE TABLE tx_searchable_update (
 	uid int(11) NOT NULL auto_increment,
 
 	type varchar(255) NOT NULL,

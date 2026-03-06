@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 
 final readonly class UpdateQueue
 {
-    private const TABLE_NAME = 'tx_searchable_domain_model_update';
+    private const TABLE_NAME = 'tx_searchable_update';
 
     public function __construct(private ConnectionPool $connectionPool)
     {
