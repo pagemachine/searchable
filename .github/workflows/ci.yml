@@ -28,9 +28,6 @@ jobs:
           - '^13.4'
         elasticsearch:
           - '7.17.22'
-        exclude:
-          - php: '8.1'
-            typo3: '^13.4'
 
     steps:
       - uses: actions/checkout@v6
