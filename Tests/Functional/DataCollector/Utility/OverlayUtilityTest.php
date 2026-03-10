@@ -20,9 +20,6 @@ final class OverlayUtilityTest extends AbstractElasticsearchTestCase
      */
     protected $OverlayUtility;
 
-    /**
-     * @test
-     */
     #[Test]
     public function overlayWithFallbackTypeStrict(): void
     {
@@ -60,9 +57,6 @@ final class OverlayUtilityTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function overlayWithFallbackTypeFallback(): void
     {

@@ -17,9 +17,6 @@ class FileLinkBuilderTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
     #[Test]
     public function createsFileLinkForToplevelFileRecord()
     {
@@ -43,9 +40,6 @@ class FileLinkBuilderTest extends UnitTestCase
         $this->assertEquals('t3://file?uid=22', $linkConfiguration['parameter']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function createsFileLinkForSingleSublevelFile()
     {
@@ -69,9 +63,6 @@ class FileLinkBuilderTest extends UnitTestCase
         $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function createsFileLinkForNestedSublevelFile()
     {

@@ -29,9 +29,6 @@ class HighlightFeatureTest extends UnitTestCase
         $this->feature = new HighlightFeature();
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function addsFieldMapping()
     {
@@ -48,9 +45,6 @@ class HighlightFeatureTest extends UnitTestCase
         $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function keepsExistingMappingPropiertes()
     {
@@ -76,9 +70,6 @@ class HighlightFeatureTest extends UnitTestCase
         $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function mapsRecursively()
     {

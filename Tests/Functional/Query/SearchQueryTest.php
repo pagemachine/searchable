@@ -14,9 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 final class SearchQueryTest extends AbstractElasticsearchTestCase
 {
-    /**
-     * @test
-     */
     #[Test]
     public function searchesByTerm(): void
     {
@@ -53,9 +50,6 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function searchesByTermWithHighlighting(): void
     {
@@ -81,9 +75,6 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function searchesByLanguages(): void
     {
@@ -132,9 +123,6 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $this->assertEquals('Dansk test page', $result['hits']['hits'][0]['_source']['title']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function normalizeIndicesWithIndex(): void
     {
@@ -148,9 +136,6 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $this->assertEquals($indices, $query->getElasticsearchIndices());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function normalizeIndicesWithIndexer(): void
     {

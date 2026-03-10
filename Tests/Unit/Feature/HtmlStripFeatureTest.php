@@ -38,9 +38,6 @@ class HtmlStripFeatureTest extends UnitTestCase
         GeneralUtility::purgeInstances();
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function stripsHtmlTags()
     {

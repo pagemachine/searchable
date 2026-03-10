@@ -51,9 +51,6 @@ class ConfigurationManagerTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(ExtconfService::class, $this->extconfService->reveal());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function mergesToplevelConfiguration()
     {
@@ -80,9 +77,6 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function doesNothingIfNoClassIsAvailable()
     {
@@ -98,9 +92,6 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($configuration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function mergesRecursiveConfiguration()
     {
@@ -141,9 +132,6 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function mergesMultipleConfigurationsOnTheSameLevel()
     {
@@ -202,9 +190,6 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function createsMappingWithUserPrecedence()
     {
@@ -234,9 +219,6 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals('newMapperValue', $mapping['pages']['properties']['newKey']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function enrichesMappingByFeatures()
     {
@@ -269,9 +251,6 @@ class ConfigurationManagerTest extends UnitTestCase
         $this->assertEquals('featurevalue', $mapping['pages']['featureproperty']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function createsUpdateConfiguration()
     {

@@ -45,9 +45,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         ],
     ];
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesRecordsFully(): void
     {
@@ -74,9 +71,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesRecordTranslations(): void
     {
@@ -114,9 +108,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function appliesLanguageForRecordTranslationIndexing(): void
     {
@@ -161,9 +152,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesRecordsPartially(): void
     {
@@ -208,9 +196,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesHiddenRecordsPartially(): void
     {
@@ -251,9 +236,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         $this->assertDocumentNotInIndex(3);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
@@ -294,9 +276,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         $this->assertDocumentInIndex(6);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function respectsSiteBase(): void
     {
@@ -348,9 +327,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesRecordsOfUnlocalizableTables(): void
     {
@@ -379,9 +355,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesPagesWithinTransientPages(): void
     {
@@ -442,9 +415,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         $this->assertDocumentInIndex(9);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesPagesWithinHiddenPages(): void
     {
@@ -498,9 +468,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         $this->assertDocumentInIndex(8);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesPageOverlayWithFallbackTypeStrict(): void
     {
@@ -543,9 +510,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         $this->assertDocumentNotInIndex(300, 1);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function indexesPageOverlayWithFallbackTypeFallback(): void
     {

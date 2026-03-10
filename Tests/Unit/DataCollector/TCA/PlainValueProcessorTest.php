@@ -29,9 +29,6 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->plainValueProcessor = new PlainValueProcessor();
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function convertsCheckboxValues()
     {
@@ -54,9 +51,6 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function supportsAssociativeCheckboxItems()
     {
@@ -79,9 +73,6 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function convertsRadioValues()
     {
@@ -103,9 +94,6 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function supportsAssociativeRadioItems()
     {
@@ -127,9 +115,6 @@ class PlainValueProcessorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $output);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function convertsStringRadioValues()
     {

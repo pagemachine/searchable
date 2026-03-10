@@ -54,9 +54,6 @@ class TcaDataCollectorTest extends UnitTestCase
         GeneralUtility::setSingletonInstance(OverlayUtility::class, $this->overlayUtility->reveal());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function processesFlatRecord()
     {
@@ -156,9 +153,6 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function processesRelations()
     {
@@ -245,9 +239,6 @@ class TcaDataCollectorTest extends UnitTestCase
         $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function processesTranslations()
     {

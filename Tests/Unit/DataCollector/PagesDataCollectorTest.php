@@ -95,9 +95,6 @@ class PagesDataCollectorTest extends UnitTestCase
             ->getMock();
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function collectsPageListSingleLevel()
     {
@@ -139,9 +136,6 @@ class PagesDataCollectorTest extends UnitTestCase
         $this->assertEquals($pageList[1], $records->current());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function collectsPageListRecursive()
     {
@@ -181,9 +175,6 @@ class PagesDataCollectorTest extends UnitTestCase
         $this->assertEquals($pageList[1], $records->current());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function collectsPageIncludingRoot()
     {

@@ -18,13 +18,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-
-    /**
-     * @test
-     * @dataProvider languagesAndLinkConfigurations
-     *
-     * @param int $language
-     */
     #[Test]
     #[DataProvider('languagesAndLinkConfigurations')]
     public function createsFixedLinkConfigurationWithLanguage($language, array $expectedLinkConfiguration)
@@ -76,9 +69,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function replacesDynamicFields()
     {
@@ -104,9 +94,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
     }
 
 
-    /**
-     * @test
-     */
     #[Test]
     public function replacesNestedDynamicFields()
     {
@@ -135,9 +122,6 @@ class AbstractLinkBuilderTest extends UnitTestCase
         $this->assertSame(['param1' => 'value1', 'param2' => 'value2'], $linkConfiguration['additionalParams'] ?? null);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead()
     {

@@ -41,9 +41,6 @@ class SiteLanguageViewHelperTest extends TestCase
         unset($GLOBALS['TSFE']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function returnsCurrentLanguage()
     {
@@ -54,9 +51,6 @@ class SiteLanguageViewHelperTest extends TestCase
         $this->assertEquals(1, $this->viewHelper->render());
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function returnsZeroIfTsfeDoesNotExist()
     {

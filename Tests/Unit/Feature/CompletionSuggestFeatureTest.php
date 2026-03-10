@@ -36,9 +36,6 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function addsFieldsToplevel()
     {
@@ -51,9 +48,6 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         $this->assertEquals(['one', 'two'], $record['autosuggest']['input']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function addsFieldsFromChild()
     {
@@ -73,9 +67,6 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         $this->assertArrayNotHasKey('autosuggest', $record['child']);
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function addsFieldsFromChildren()
     {

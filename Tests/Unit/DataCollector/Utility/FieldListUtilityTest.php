@@ -30,10 +30,6 @@ class FieldListUtilityTest extends UnitTestCase
         $this->fieldListUtility = new FieldListUtility();
     }
 
-    /**
-     * @test
-     * @dataProvider whitelistCombinations
-     */
     #[Test]
     #[DataProvider('whitelistCombinations')]
     public function evaluatesWhitelistItem($item, $list, $allowed)
@@ -54,11 +50,6 @@ class FieldListUtilityTest extends UnitTestCase
         ];
     }
 
-
-    /**
-     * @test
-     * @dataProvider blacklistCombinations
-     */
     #[Test]
     #[DataProvider('blacklistCombinations')]
     public function evaluatesBlacklistItem($item, $list, $allowed)

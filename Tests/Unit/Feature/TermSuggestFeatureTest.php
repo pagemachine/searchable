@@ -33,9 +33,6 @@ class TermSuggestFeatureTest extends UnitTestCase
         $this->feature = new TermSuggestFeature();
     }
 
-    /**
-     * @test
-     */
     #[Test]
     public function addsSuggestionQueryString()
     {

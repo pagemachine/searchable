@@ -22,9 +22,6 @@ class PageLinkBuilderTest extends UnitTestCase
      */
     protected $pageLinkBuilder;
 
-    /**
-     * @test
-     */
     #[Test]
     public function convertsFromViewHelperConfigToTypoLinkConfig()
     {
