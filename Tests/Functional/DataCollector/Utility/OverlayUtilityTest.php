@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
-use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
 use PAGEmachine\Searchable\Utility\TsfeUtility;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * Testcase for PAGEmachine\Searchable\DataCollector\Utility\OverlayUtilityTest
  */
-final class OverlayUtilityTest extends AbstractElasticsearchTest
+final class OverlayUtilityTest extends AbstractElasticsearchTestCase
 {
     /**
      * @var OverlayUtility

@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-abstract class AbstractElasticsearchTest extends FunctionalTestCase
+abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
 {
     use ArraySubsetAsserts;
     use WebserverTrait;
