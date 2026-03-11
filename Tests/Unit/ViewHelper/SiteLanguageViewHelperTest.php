@@ -6,6 +6,7 @@ namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
  */
 
 use PAGEmachine\Searchable\ViewHelpers\SiteLanguageViewHelper;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Context\Context;
@@ -40,9 +41,7 @@ class SiteLanguageViewHelperTest extends TestCase
         unset($GLOBALS['TSFE']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsCurrentLanguage()
     {
         $GLOBALS['TSFE'] = $this->prophesize(TypoScriptFrontendController::class)->reveal();
@@ -52,9 +51,7 @@ class SiteLanguageViewHelperTest extends TestCase
         $this->assertEquals(1, $this->viewHelper->render());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroIfTsfeDoesNotExist()
     {
         $this->assertEquals(0, $this->viewHelper->render());

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\HighlightFeature;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /*
@@ -28,9 +29,7 @@ class HighlightFeatureTest extends UnitTestCase
         $this->feature = new HighlightFeature();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsFieldMapping()
     {
         $configuration = [
@@ -46,9 +45,7 @@ class HighlightFeatureTest extends UnitTestCase
         $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function keepsExistingMappingPropiertes()
     {
         $configuration = [
@@ -73,9 +70,7 @@ class HighlightFeatureTest extends UnitTestCase
         $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsRecursively()
     {
         $configuration = [

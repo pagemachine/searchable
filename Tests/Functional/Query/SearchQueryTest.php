@@ -4,18 +4,17 @@ declare(strict_types = 1);
 namespace PAGEmachine\Searchable\Tests\Functional\Query;
 
 use PAGEmachine\Searchable\Query\SearchQuery;
-use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Testcase for PAGEmachine\Searchable\Query\SearchQuery
  */
-final class SearchQueryTest extends AbstractElasticsearchTest
+final class SearchQueryTest extends AbstractElasticsearchTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function searchesByTerm(): void
     {
         $this->insertArray('pages', [
@@ -51,9 +50,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchesByTermWithHighlighting(): void
     {
         $this->insertArray('pages', [
@@ -78,9 +75,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchesByLanguages(): void
     {
         $this->insertArray('pages', [
@@ -128,9 +123,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         $this->assertEquals('Dansk test page', $result['hits']['hits'][0]['_source']['title']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function normalizeIndicesWithIndex(): void
     {
         $query = GeneralUtility::makeInstance(SearchQuery::class);
@@ -143,9 +136,7 @@ final class SearchQueryTest extends AbstractElasticsearchTest
         $this->assertEquals($indices, $query->getElasticsearchIndices());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function normalizeIndicesWithIndexer(): void
     {
         $query = GeneralUtility::makeInstance(SearchQuery::class);

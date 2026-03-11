@@ -5,7 +5,8 @@ namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
 use PAGEmachine\Searchable\Database\Connection;
 use PAGEmachine\Searchable\Service\IndexingService;
-use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTest;
+use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -16,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Testcase for PAGEmachine\Searchable\Service\IndexingService
  */
-final class IndexingServiceTest extends AbstractElasticsearchTest
+final class IndexingServiceTest extends AbstractElasticsearchTestCase
 {
     /**
      * @var array
@@ -44,9 +45,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         ],
     ];
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordsFully(): void
     {
         $this->insertArray('pages', [
@@ -72,9 +71,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordTranslations(): void
     {
         $this->insertArray('pages', [
@@ -111,9 +108,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function appliesLanguageForRecordTranslationIndexing(): void
     {
         $this->insertArray('tt_content', [
@@ -157,9 +152,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordsPartially(): void
     {
         $this->insertArray('pages', [
@@ -203,9 +196,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesHiddenRecordsPartially(): void
     {
         $this->insertArray('pages', [
@@ -245,9 +236,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentNotInIndex(3);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function skipsPagesWithNoSearchFromIndexing(): void
     {
         $this->insertArray('pages', [
@@ -287,9 +276,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentInIndex(6);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function respectsSiteBase(): void
     {
         $siteConfiguration = GeneralUtility::makeInstance(SiteConfiguration::class);
@@ -340,9 +327,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesRecordsOfUnlocalizableTables(): void
     {
         $this->insertArray('tx_unlocalizedtabletest_unlocalizedtable', [
@@ -370,9 +355,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesPagesWithinTransientPages(): void
     {
         $this->insertArray('pages', [
@@ -432,9 +415,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentInIndex(9);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesPagesWithinHiddenPages(): void
     {
         $this->insertArray('pages', [
@@ -487,9 +468,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentInIndex(8);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesPageOverlayWithFallbackTypeStrict(): void
     {
         $this->writeSiteConfiguration(
@@ -531,9 +510,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTest
         $this->assertDocumentNotInIndex(300, 1);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function indexesPageOverlayWithFallbackTypeFallback(): void
     {
         $this->writeSiteConfiguration(

@@ -2,6 +2,8 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\AbstractLinkBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -16,13 +18,8 @@ class AbstractLinkBuilderTest extends UnitTestCase
 {
     use ProphecyTrait;
 
-
-    /**
-     * @test
-     * @dataProvider languagesAndLinkConfigurations
-     *
-     * @param int $language
-     */
+    #[Test]
+    #[DataProvider('languagesAndLinkConfigurations')]
     public function createsFixedLinkConfigurationWithLanguage($language, array $expectedLinkConfiguration)
     {
         $record = [];
@@ -72,9 +69,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function replacesDynamicFields()
     {
         $configuration = [
@@ -99,9 +94,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function replacesNestedDynamicFields()
     {
         $configuration = [
@@ -129,9 +122,7 @@ class AbstractLinkBuilderTest extends UnitTestCase
         $this->assertSame(['param1' => 'value1', 'param2' => 'value2'], $linkConfiguration['additionalParams'] ?? null);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function unsetsEmptyDynamicFieldsAndUsesFixedPartInstead()
     {
         $configuration = [

@@ -2,6 +2,7 @@
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -21,9 +22,7 @@ class PageLinkBuilderTest extends UnitTestCase
      */
     protected $pageLinkBuilder;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function convertsFromViewHelperConfigToTypoLinkConfig()
     {
         $this->pageLinkBuilder = new PageLinkBuilder();
