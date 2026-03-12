@@ -1,11 +1,15 @@
 <?php
 namespace PAGEmachine\Searchable\Hook;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Configuration\Event\AfterFlexFormDataStructureParsedEvent;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -26,6 +30,9 @@ class DynamicFlexFormHook
 
     public function modifyDataStructure(AfterFlexFormDataStructureParsedEvent $event): void
     {
+        if (Environment::getContext()->isTesting()) {
+            return;
+        }
         $dataStructure = $this->parseDataStructureByIdentifierPostProcess($event->getDataStructure(), $event->getIdentifier());
         $event->setDataStructure($dataStructure);
     }
@@ -104,22 +111,46 @@ class DynamicFlexFormHook
     protected function getPluginSettings($pluginName)
     {
         $extensionName = 'searchable';
-        $backendConfigurationManager = GeneralUtility::makeInstance(BackendConfigurationManager::class);
+
+        if (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
+        } else {
+            $request = (new ServerRequest())->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+        }
+
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
+
+        if (method_exists($configurationManager, 'setRequest')) {
+            $configurationManager->setRequest($request);
+        }
+
+        try {
+            $full = $configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
+        } catch (\Throwable) {
+            $full = [];
+        }
+
+        if (!isset($full['plugin.'])) {
+            return [];
+        }
+
+        $pluginRoot = $full['plugin.'];
+        $pluginConfiguration = [];
+
         $typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
 
-        $setup = $backendConfigurationManager->getTypoScriptSetup();
-
-        $pluginConfiguration = [];
-        if (is_array($setup['plugin.']['tx_' . strtolower($extensionName) . '.'])) {
-            $pluginConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($setup['plugin.']['tx_' . strtolower($extensionName) . '.']);
+        $extensionSignature = 'tx_' . strtolower($extensionName) . '.';
+        if (array_key_exists($extensionSignature, $pluginRoot) && is_array($pluginRoot[$extensionSignature])) {
+            $pluginConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($pluginRoot[$extensionSignature]);
         }
-        if ($pluginName !== null) {
-            $pluginSignature = strtolower('tx_' . $pluginName);
-            if (is_array($setup['plugin.'][$pluginSignature . '.'])) {
-                $overruleConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($setup['plugin.'][$pluginSignature . '.']);
+        if (!empty($pluginName)) {
+            $pluginSignature = 'tx_' . strtolower($pluginName) . '.';
+            if (array_key_exists($pluginSignature, $pluginRoot) && is_array($pluginRoot[$pluginSignature])) {
+                $overruleConfiguration = $typoScriptService->convertTypoScriptArrayToPlainArray($pluginRoot[$pluginSignature]);
                 ArrayUtility::mergeRecursiveWithOverrule($pluginConfiguration, $overruleConfiguration);
             }
         }
+
         return $pluginConfiguration;
     }
 }

@@ -23,6 +23,11 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     protected $view;
 
     /**
+     * @var ConfigurationManager $configurationManager
+     */
+    protected $configurationManager;
+
+    /**
      * @var array
      */
     protected $config = [
@@ -34,13 +39,16 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     {
         parent::__construct(...$arguments);
 
-        $this->prepareView();
+        $this->view = GeneralUtility::makeInstance(StandaloneView::class);
+        $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
     }
     public function setRequest(ServerRequestInterface $request): void
     {
         if (method_exists($this->view, 'setRequest')) {
             $this->view->setRequest($request);
         }
+
+        $this->prepareView();
     }
 
     /**
@@ -75,9 +83,7 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
      */
     protected function prepareView()
     {
-        $this->view = GeneralUtility::makeInstance(StandaloneView::class);
-        $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-        $configuration = $configurationManager->getConfiguration(
+        $configuration = $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
             'Searchable'
         );
