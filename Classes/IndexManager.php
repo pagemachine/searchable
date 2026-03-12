@@ -137,6 +137,11 @@ class IndexManager implements SingletonInterface
         $this->updateQueue->clear($type, $maxUid);
     }
 
+    public function resetCompleteUpdateIndex(): void
+    {
+        $this->updateQueue->clearAll();
+    }
+
     /**
      * Returns the highest uid currently in the update queue
      */
