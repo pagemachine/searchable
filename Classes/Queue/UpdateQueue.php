@@ -6,6 +6,7 @@ namespace PAGEmachine\Searchable\Queue;
  */
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 final readonly class UpdateQueue
@@ -50,7 +51,7 @@ final readonly class UpdateQueue
         if ($type) {
             $queryBuilder
                 ->where(
-                    $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type, \PDO::PARAM_STR)),
+                    $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type, ParameterType::STRING)),
                 );
         }
 
