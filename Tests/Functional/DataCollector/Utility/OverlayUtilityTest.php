@@ -43,18 +43,22 @@ final class OverlayUtilityTest extends AbstractElasticsearchTestCase
         $this->insertArray('pages', $record);
 
         // EN
-        TsfeUtility::createTSFE('1', 0);
+        $tsefeUtility = $this->get(TsfeUtility::class);
+        $previousTSFE = $tsefeUtility->createTSFE('1', 0);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
             $record
         );
         $this->assertEquals(300, $recordOverlay['uid']);
+        $tsefeUtility->restoreTSFE($previousTSFE);
 
         // DE
-        TsfeUtility::createTSFE('1', 1);
+        $tsefeUtility = $this->get(TsfeUtility::class);
+        $previousTSFE = $tsefeUtility->createTSFE('1', 1);
         $this->expectException(\Exception::class);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
             $record
         );
+        $tsefeUtility->restoreTSFE($previousTSFE);
     }
 
     #[Test]
@@ -80,18 +84,22 @@ final class OverlayUtilityTest extends AbstractElasticsearchTestCase
         $this->insertArray('pages', $record);
 
         // EN
-        TsfeUtility::createTSFE('1', 0);
+        $tsefeUtility = $this->get(TsfeUtility::class);
+        $previousTSFE = $tsefeUtility->createTSFE('1', 0);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
             $record
         );
         $this->assertEquals(300, $recordOverlay['uid']);
+        $tsefeUtility->restoreTSFE($previousTSFE);
 
         // DE
-        TsfeUtility::createTSFE('1', 1);
+        $tsefeUtility = $this->get(TsfeUtility::class);
+        $previousTSFE = $tsefeUtility->createTSFE('1', 1);
         $recordOverlay = $this->OverlayUtility->pagesLanguageOverlay(
             $record
         );
         $this->assertEquals(300, $recordOverlay['uid']);
+        $tsefeUtility->restoreTSFE($previousTSFE);
     }
 
     /**

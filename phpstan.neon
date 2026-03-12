@@ -16,5 +16,11 @@ parameters:
       path: Classes/Feature/Traits/FieldCollectionTrait.php
     - message: '#TYPO3\\CMS\\Core\\Configuration\\Event\\AfterFlexFormDataStructureParsedEvent#'
       path: Classes/Hook/DynamicFlexFormHook.php
+    - message: '#TYPO3\\CMS\\Core\\TypoScript\\FrontendTypoScriptFactory#'
+      paths:
+        - Classes/Utility/TsfeUtility.php
+    - message: '#Call to an undefined method TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController#'
+      paths:
+        - Classes/Utility/TsfeUtility.php
 
   reportUnmatchedIgnoredErrors: false

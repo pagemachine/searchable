@@ -246,43 +246,48 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function run()
     {
-        TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
+        $tsfeUtility = GeneralUtility::makeInstance(TsfeUtility::class);
+        $previous = $tsfeUtility->createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
 
-        if (is_a($this->previewRenderer, RequestAwarePreviewRendererInterface::class)) {
-            $this->previewRenderer->setRequest($GLOBALS['TYPO3_REQUEST']);
-        }
-
-        $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
-
-        $counter = 0;
-        $overallCounter = 0;
-
-        $records = [];
-
-        foreach ($this->dataCollector->getRecords() as $fullRecord) {
-            //@TODO: move to data collectors and add "yield from []" at the end there as soon as PHP7 is a requirement
-            if (empty($fullRecord)) {
-                continue;
+        try {
+            if (is_a($this->previewRenderer, RequestAwarePreviewRendererInterface::class)) {
+                $this->previewRenderer->setRequest($GLOBALS['TYPO3_REQUEST']);
             }
 
-            $records[] = $this->addSystemFields($fullRecord);
+            $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
-            $counter++;
-            $overallCounter++;
+            $counter = 0;
+            $overallCounter = 0;
 
-            if ($counter >= $bulkSize) {
+            $records = [];
+
+            foreach ($this->dataCollector->getRecords() as $fullRecord) {
+                //@TODO: move to data collectors and add "yield from []" at the end there as soon as PHP7 is a requirement
+                if (empty($fullRecord)) {
+                    continue;
+                }
+
+                $records[] = $this->addSystemFields($fullRecord);
+
+                $counter++;
+                $overallCounter++;
+
+                if ($counter >= $bulkSize) {
+                    $this->sendBatch($records);
+
+                    $counter = 0;
+                    $records = [];
+                    yield $overallCounter;
+                }
+            }
+
+            if ($counter != 0) {
                 $this->sendBatch($records);
 
-                $counter = 0;
-                $records = [];
                 yield $overallCounter;
             }
-        }
-
-        if ($counter != 0) {
-            $this->sendBatch($records);
-
-            yield $overallCounter;
+        } finally {
+            $tsfeUtility->restoreTSFE($previous);
         }
     }
 
@@ -293,48 +298,53 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      */
     public function runUpdate()
     {
-        TsfeUtility::createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
+        $tsfeUtility = GeneralUtility::makeInstance(TsfeUtility::class);
+        $previous = $tsfeUtility->createTSFE($this->config['siteIdentifier'] ?? null, $this->language);
 
-        if (is_a($this->previewRenderer, RequestAwarePreviewRendererInterface::class)) {
-            $this->previewRenderer->setRequest($GLOBALS['TYPO3_REQUEST']);
-        }
+        try {
+            if (is_a($this->previewRenderer, RequestAwarePreviewRendererInterface::class)) {
+                $this->previewRenderer->setRequest($GLOBALS['TYPO3_REQUEST']);
+            }
 
-        $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
+            $bulkSize = ($this->config['bulkSize'] ?? null) ?: 20;
 
-        $counter = 0;
-        $overallCounter = 0;
+            $counter = 0;
+            $overallCounter = 0;
 
-        $updateQuery = new UpdateQuery();
+            $updateQuery = new UpdateQuery();
 
-        $updates = $updateQuery->getUpdates($this->index, $this->type);
+            $updates = $updateQuery->getUpdates($this->index, $this->type);
 
-        $records = [];
+            $records = [];
 
-        if (!empty($updates)) {
-            foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
-                if ($fullRecord['deleted'] ?? 0 == 1) {
-                    $this->query->delete($fullRecord['uid']);
-                } else {
-                    $counter++;
-                    $overallCounter++;
+            if (!empty($updates)) {
+                foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
+                    if ($fullRecord['deleted'] ?? 0 == 1) {
+                        $this->query->delete($fullRecord['uid']);
+                    } else {
+                        $counter++;
+                        $overallCounter++;
 
-                    $records[] = $this->addSystemFields($fullRecord);
+                        $records[] = $this->addSystemFields($fullRecord);
 
-                    if ($counter >= $bulkSize) {
-                        $this->sendBatch($records);
+                        if ($counter >= $bulkSize) {
+                            $this->sendBatch($records);
 
-                        $records = [];
-                        $counter = 0;
-                        yield $overallCounter;
+                            $records = [];
+                            $counter = 0;
+                            yield $overallCounter;
+                        }
                     }
                 }
-            }
 
-            if ($counter != 0) {
-                $this->sendBatch($records);
+                if ($counter != 0) {
+                    $this->sendBatch($records);
 
-                yield $overallCounter;
+                    yield $overallCounter;
+                }
             }
+        } finally {
+            $tsfeUtility->restoreTSFE($previous);
         }
     }
 
