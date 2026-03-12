@@ -287,9 +287,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
                 yield $overallCounter;
             }
         } finally {
-            if (is_array($previous)) {
-                $tsfeUtility->restoreTSFE($previous);
-            }
+            $tsfeUtility->restoreTSFE($previous);
         }
     }
 
@@ -346,9 +344,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
                 }
             }
         } finally {
-            if (is_array($previous)) {
-                $tsfeUtility->restoreTSFE($previous);
-            }
+            $tsfeUtility->restoreTSFE($previous);
         }
     }
 

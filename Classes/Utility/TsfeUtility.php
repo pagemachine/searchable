@@ -40,7 +40,7 @@ class TsfeUtility
     /**
      * Initializes TSFE. This is necessary to have proper environment for typoLink.
      */
-    public function createTSFE(string $siteIdentifier = null, int $languageId = null)
+    public function createTSFE(string $siteIdentifier = null, int $languageId = null): array
     {
         $previous = [
             'TYPO3_REQUEST' => $GLOBALS['TYPO3_REQUEST'] ?? null,
