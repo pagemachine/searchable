@@ -75,6 +75,11 @@ final class IndexingService implements \Stringable
     protected $type = '';
 
     /**
+     * Maximum update queue uid captured at the start of indexing
+     */
+    protected int $maxUid = 0;
+
+    /**
      * Sets up everything, needs to be run after installation.
      * Can be run multiple times to ensure correct setup.
      */
@@ -193,9 +198,11 @@ final class IndexingService implements \Stringable
             $indexerName = ExtconfService::getIndexerKeyOfIndex($index);
 
             if (empty($this->type) || $this->type == $indexerName) {
-                $this->scheduledIndexers[$index][] = $this->indexerFactory->makeIndexerForIndex($index);
+                $this->scheduledIndexers[$indexerName][$index][] = $this->indexerFactory->makeIndexerForIndex($index);
             }
         }
+
+        $this->maxUid = IndexManager::getInstance()->getMaxUpdateUid() ?? 0;
     }
 
     /**
@@ -209,30 +216,27 @@ final class IndexingService implements \Stringable
             'Starting "%s" indexing',
             $this->runFullIndexing ? 'full' : 'partial'
         ));
+        foreach ($this->scheduledIndexers as $type => $scheduledIndexers) {
+            foreach ($scheduledIndexers as $index => $indexers) {
+                if (!empty($indexers)) {
+                    $this->logger->info(sprintf('Indexing Index "%s"', $index));
 
-        foreach ($this->scheduledIndexers as $index => $indexers) {
-            if (!empty($indexers)) {
-                $this->logger->info(sprintf('Indexing Index "%s"', $index));
+                    $environment = ExtconfService::getEnvironmentOfIndex($index);
+                    $restoreEnvironment = $this->applyEnvironment($environment);
 
-                $environment = ExtconfService::getEnvironmentOfIndex($index);
-                $restoreEnvironment = $this->applyEnvironment($environment);
+                    foreach ($indexers as $indexer) {
+                        $this->runSingleIndexer($indexer);
+                    }
 
-                foreach ($indexers as $indexer) {
-                    $this->runSingleIndexer($indexer);
+                    $restoreEnvironment();
+                    $this->resetPersistence();
+                } else {
+                    $this->logger->warning(sprintf('No indexers found with name "%s", doing nothing', $index));
                 }
-
-                $restoreEnvironment();
-                $this->resetPersistence();
-            } else {
-                $this->logger->warning(sprintf('No indexers found with name "%s", doing nothing', $index));
             }
-        }
 
-        if (empty($this->type)) {
-            IndexManager::getInstance()->resetUpdateIndex();
-            $this->logger->info('Update index was reset');
-        } else {
-            $this->logger->notice('Keeping update index since not all types were updated');
+            IndexManager::getInstance()->resetUpdateIndex($type, $this->maxUid);
+            $this->logger->info(sprintf('Finished indexing type "%s", cleared update queue up to uid %d', $type, $this->maxUid));
         }
 
         $endtime = microtime(true);
