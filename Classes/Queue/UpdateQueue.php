@@ -58,14 +58,33 @@ final readonly class UpdateQueue
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
-    public function clear()
+    public function getMaxUid(): ?int
     {
-        foreach ($this->pendingUpdates() as $object) {
-            $this->connectionPool->getConnectionForTable(self::TABLE_NAME)
-                ->delete(
-                    self::TABLE_NAME,
-                    ['uid' => $object['uid']],
-                );
-        }
+        $result = $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->createQueryBuilder()
+            ->select('uid')
+            ->from(self::TABLE_NAME)
+            ->orderBy('uid', 'DESC')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne();
+
+        return $result === false ? null : (int)$result;
+    }
+
+    public function clear(string $type, int $maxUid): void
+    {
+        $queryBuilder = $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->createQueryBuilder();
+
+        $queryBuilder
+            ->delete(self::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type, ParameterType::STRING)),
+                $queryBuilder->expr()->lte('uid', $queryBuilder->createNamedParameter($maxUid, ParameterType::INTEGER)),
+            )
+            ->executeStatement();
     }
 }
