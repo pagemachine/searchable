@@ -87,4 +87,13 @@ final readonly class UpdateQueue
             )
             ->executeStatement();
     }
+
+    public function clearAll(): void
+    {
+        $this->connectionPool
+            ->getConnectionForTable(self::TABLE_NAME)
+            ->createQueryBuilder()
+            ->delete(self::TABLE_NAME)
+            ->executeStatement();
+    }
 }

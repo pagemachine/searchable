@@ -148,6 +148,9 @@ final class IndexingService implements \Stringable
                 $index
             ));
         }
+
+        $indexManager->resetCompleteUpdateIndex();
+        $this->logger->info('Update index was fully cleared');
     }
 
     /**
