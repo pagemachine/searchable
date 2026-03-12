@@ -133,17 +133,12 @@ final class IndexingService implements \Stringable
     /**
      * Reset index for one or all languages
      */
-    public function resetIndex(int $language = null): void
+    public function resetIndex(): void
     {
         $this->assertConnectionHealthy();
 
         $indexManager = IndexManager::getInstance();
-
-        if ($language !== null) {
-            $indices = ExtconfService::getIndicesByLanguage($language);
-        } else {
-            $indices = ExtconfService::getIndices();
-        }
+        $indices = ExtconfService::getIndices();
 
         foreach ($indices as $index) {
             $indexManager->resetIndex($index);
