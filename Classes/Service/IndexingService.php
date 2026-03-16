@@ -200,7 +200,7 @@ final class IndexingService implements \Stringable
             }
         }
 
-        $this->maxUid = IndexManager::getInstance()->getMaxUpdateUid() ?? 0;
+        $this->maxUid = IndexManager::getInstance()->getMaxUpdateUid();
     }
 
     /**

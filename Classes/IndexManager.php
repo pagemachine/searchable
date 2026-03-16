@@ -145,7 +145,7 @@ class IndexManager implements SingletonInterface
     /**
      * Returns the highest uid currently in the update queue
      */
-    public function getMaxUpdateUid(): ?int
+    public function getMaxUpdateUid()
     {
         return $this->updateQueue->getMaxUid();
     }

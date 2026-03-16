@@ -58,7 +58,7 @@ final readonly class UpdateQueue
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
-    public function getMaxUid(): ?int
+    public function getMaxUid()
     {
         $result = $this->connectionPool
             ->getConnectionForTable(self::TABLE_NAME)
@@ -70,7 +70,7 @@ final readonly class UpdateQueue
             ->executeQuery()
             ->fetchOne();
 
-        return $result === false ? null : (int)$result;
+        return $result === false ? 0 : (int) $result;
     }
 
     public function clear(string $type, int $maxUid): void
