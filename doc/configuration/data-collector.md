@@ -76,3 +76,5 @@ These settings are specific for the PagesDataCollector. The PagesDataCollector h
 | Option | Type | Required | Values | Description |
 |----------|---------|----------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | mimetypes | array (string) | yes | Default: *text/plain, application/pdf* | Filter indexed files by mimetype. Customize if you know what you're doing (or what the elasticsearch attachment plugin can handle). |
+
+Back to [home](../index.md).

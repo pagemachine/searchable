@@ -64,3 +64,5 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['files'] = [
 ];
 ```
 By default the `FileLinkBuilder` is already set and good to go, so you just need to define preview rendering and features like as usual.
+
+Back to [home](index.md).

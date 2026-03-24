@@ -57,3 +57,13 @@ A specific site can be configured for each indexer using the `siteIdentifier` co
     ];
 
 Also there should be a language in the site with an `languageId` matching each index language, otherwise the default site language will be used as fallback.
+
+## Next steps
+
+Once you have completed the basic setup above, proceed with:
+
+* **[Index Setup](index-setup.md)** — Learn how to configure indices for multiple languages and apply custom settings
+* **[Index Updating](index-update.md)** — Understand how to keep your indices up to date
+* **[File Indexing](indexing-files.md)** — Set up indexing for common file formats like PDFs
+
+Back to [home](index.md).

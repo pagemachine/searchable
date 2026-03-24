@@ -135,3 +135,9 @@ After setting up all indices and types, run the following CLI command to apply t
     typo3 index:setup
 
 Whenever the configuration changes, run this command again. It can be run at any time because it only performs the necessary changes.
+
+## Related
+
+* **[Index Updating](index-update.md)** — Update indices fully or partially
+
+Back to [home](index.md).

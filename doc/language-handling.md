@@ -34,3 +34,5 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['your_type']['c
 ```
 
 The different language modes for pages (`config.sys_language_mode`) are currently not supported.
+
+Back to [home](index.md).

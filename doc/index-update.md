@@ -44,3 +44,9 @@ If you need to start from scratch, run the following commands:
 
     typo3 index:reset
     typo3 index:update:full
+
+## Related
+
+* **[Index Setup](index-setup.md)** — Configure indices and indexers
+
+Back to [home](index.md).
