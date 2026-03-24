@@ -16,6 +16,10 @@
 
     Guide on how Searchable handles languages
 
+* [File Indexing](indexing-files.md)
+
+    How to index file content with the ingest-attachment pipeline
+
 ## Configuration Reference
 
 * [Extension Manager Settings](configuration/em-settings.md)
