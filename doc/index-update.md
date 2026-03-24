@@ -8,7 +8,7 @@ After the [index setup](index-setup.md) you should run the following command onc
 
     typo3 index:update:full
 
-This can take some time because it processes all records every time. To reduce runtime during regular operation, setup and run partial updates regularly.
+This can take some time because it processes all records every time. To have faster index updates during daily work, partial updates should be set up and run periodically.
 
 ## Partial updates
 

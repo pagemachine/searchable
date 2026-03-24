@@ -1,6 +1,6 @@
 # Index Setup
 
-Searchable under the hood uses one Elasticsearch index per language and indexer combination. But in configuartion it is only necessary to define one index per typo3 language. Each index in turn then defines which indexers should run.
+Searchable under the hood uses one Elasticsearch index per language and indexer. But in configuration it is only necessary to define one index per TYPO3 language. Each index in turn then defines which indexers should run.
 
 ```php
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
@@ -86,7 +86,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
 ```
 
 > [!NOTE]
-> For languages with compound words (like German) it is recommended to set up an [Hyphenation Decompounder](https://www.elastic.co/search-labs/blog/compound-word-search) in Elasticsearch. As it dramatically improves search results.
+> For languages with compound words (like German) it is recommended to set up an [Hyphenation Decompounder](https://www.elastic.co/search-labs/blog/compound-word-search) in Elasticsearch. This dramatically improves search results.
 
 # Full indexer configuration
 Combining all the above, a full configuration for a two-language setup could look like this:
@@ -134,7 +134,7 @@ After setting up all indices and types, run the following CLI command to apply t
 
     typo3 index:setup
 
-Whenever the configuration changes, run this command again. It can be run at any time because it only performs the necessary changes.
+Whenever the configuration changes, run this command again. It can be run at any time because it only performs the necessary changes. This command should also be run at every deployment to ensure the indices match the configuration.  
 
 ## Related
 

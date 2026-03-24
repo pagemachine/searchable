@@ -6,7 +6,7 @@ While `elasticsearch-php` is included via Composer, you must provide a running E
 
 
 ## Installation
-To install searchable, simply require it via *Composer* (command line):
+Install Searchable via *Composer*:
 
     composer require pagemachine/searchable
 
@@ -15,7 +15,7 @@ Now simply install it via Extension Manager or TYPO3 console.
 ## Setup
 * Add the Elasticsearch connection data and the host name of your site via Extension Manager Settings (See: [EM Settings](configuration/em-settings.md))
 * Include **TypoScript** and **Constants** in your template (static includes)
-* Create a search page and add a *Search* plugin element
+* Create a page with the *Search* plugin
 * Configure your **indices** and **indexers** (see the next chapter)
 * Run the `typo3 index:setup` command to create the configured indices
 * Run the `typo3 index:update:full` command to run all defined indexers
@@ -31,7 +31,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
 ];
 ```
 Now we need to define the **indexers** we want to run.
-Usually everything that produces a single search result URL (*pages* and top-level extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, and *tags* are appended as **subtypes** in the top-level indexer configuration.
+Usually everything that produces a single search result URL (*pages* and top-level extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, and *tags* are nested as **subtypes** in the top-level indexer configuration.
 
 Let's create a simple setup for page indexing:
 ```php
