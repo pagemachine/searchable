@@ -2,29 +2,27 @@
 
 Searchable uses **[Elasticsearch](https://www.elastic.co/)** via **[elasticsearch-php](https://packagist.org/packages/elasticsearch/elasticsearch)** to index and search content.
 
-While elasticsearch-php is included via composer, you must take care of a running elasticsearch instance yourself.
+While `elasticsearch-php` is included via Composer, you must provide a running Elasticsearch instance yourself.
 
 
 ## Installation
-To install searchable, simply require it via *composer* (command line):
+Install Searchable via *Composer*:
 
     composer require pagemachine/searchable
 
 Now simply install it via Extension Manager or TYPO3 console.
 
 ## Setup
-* Add the elasticsearch connection data and the host name of your site via Extension Manager Settings (See: [EM Settings](configuration/em-settings.md))
-* Include **Typoscript** and **Constants** into your template (static includes)
-* Create a search page and and *Search* Plugin element inside
+* Add the Elasticsearch connection data and the host name of your site via Extension Manager Settings (See: [EM Settings](configuration/em-settings.md))
+* Include **TypoScript** and **Constants** in your template (static includes)
+* Create a page with the *Search* plugin
 * Configure your **indices** and **indexers** (see the next chapter)
 * Run the `typo3 index:setup` command to create the configured indices
 * Run the `typo3 index:update:full` command to run all defined indexers
 
-(Use the `typo3cms` CLI binary with TYPO3 Console 7.x or older.)
-
 ## Example Configuration
 
-To create a simple setup for a non-multilanguage page, first configure a **default index**:
+To create a simple setup for a monolingual page, first configure a **default index**:
 ```php
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
   'english' => [
@@ -33,7 +31,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] = [
 ];
 ```
 Now we need to define the **indexers** we want to run.
-Usually everything that produces a single search result URL (*pages* and toplevel extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, *tags*, will be appended as **subtypes** in the toplevel indexer configuration.
+Usually everything that produces a single search result URL (*pages* and top-level extension content such as *news*) deserves a separate indexer. Records that "belong" to another record, such as *tt_content*, *categories*, and *tags* are nested as **subtypes** in the top-level indexer configuration.
 
 Let's create a simple setup for page indexing:
 ```php
@@ -59,3 +57,13 @@ A specific site can be configured for each indexer using the `siteIdentifier` co
     ];
 
 Also there should be a language in the site with an `languageId` matching each index language, otherwise the default site language will be used as fallback.
+
+## Next steps
+
+Once you have completed the basic setup above, proceed with:
+
+* **[Index Setup](index-setup.md)** — Learn how to configure indices for multiple languages and apply custom settings
+* **[Index Updating](index-update.md)** — Understand how to keep your indices up to date
+* **[File Indexing](indexing-files.md)** — Set up indexing for common file formats like PDFs
+
+Back to [home](index.md).

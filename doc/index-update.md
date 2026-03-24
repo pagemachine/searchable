@@ -1,22 +1,22 @@
 # Index Updating
 
-To actually allow for searching indices must be updated regularly whenever records are added, changed or deleted.
+Indices must be updated regularly, to reflect changes to records in typo3.
 
 ## Full updates
 
-After index setup [setup](index-setup.md) you should run the following command once to perform a full index update:
+After the [index setup](index-setup.md) you should run the following command once to perform a full index update:
 
-    typo3cms searchable:indexfull
+    typo3 index:update:full
 
-This takes a while since this processes all records of types in the configuration. To speed this up, partial updates can be performed.
+This can take some time because it processes all records every time. To have faster index updates during daily work, partial updates should be set up and run periodically.
 
 ## Partial updates
 
 To perform partial index updates run the following command:
 
-    typo3cms searchable:indexpartial
+    typo3 index:update:partial
 
-You should set up a Scheduler task using the _Extbase CommandController Task_ to execute this periodically, e.g. every 5 minutes.
+It is recommended to set up a Scheduler task to execute this command periodically, for example every 5 minutes.
 
 You need to add a database connection `wrapperClass` in your `LocalConfiguration.php`:
 
@@ -40,7 +40,13 @@ You need to add a database connection `wrapperClass` in your `LocalConfiguration
 
 ## Reset index
 
-If you ever need to start from scratch you can run the following commands:
+If you need to start from scratch, run the following commands:
 
-    typo3cms searchable:resetindex
-    typo3cms searchable:indexfull
+    typo3 index:reset
+    typo3 index:update:full
+
+## Related
+
+* **[Index Setup](index-setup.md)** — Configure indices and indexers
+
+Back to [home](index.md).

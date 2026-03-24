@@ -63,3 +63,5 @@ For the results plugin add this:
 **Important:** The entered key (here *highlighting*) must match the `featureName` property of your feature class.
 
 Now the feature is activated and you can toggle it for each plugin individually.
+
+Back to [home](../index.md).

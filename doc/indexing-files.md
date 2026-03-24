@@ -1,6 +1,6 @@
 # File Indexing
 
-Elasticsearch can index file content via ingest attachment plugin.
+Elasticsearch can index file content via the ingest-attachment plugin.
 
 You need to install the plugin (see [here](https://www.elastic.co/guide/en/elasticsearch/plugins/current/ingest-attachment.html)) and also create a pipeline configuration in your `ext_localconf.php`:
 
@@ -34,7 +34,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['pipelines'] = [
 ];
 ```
 
-The pipeline itself is created within the `searchable:setup` command, so run it after configuring.
+The pipeline itself is created within the `index:setup` command, so run it after configuring.
+
+    typo3 index:setup
 
 This pipeline does two things:
 
@@ -62,3 +64,5 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers']['files'] = [
 ];
 ```
 By default the `FileLinkBuilder` is already set and good to go, so you just need to define preview rendering and features like as usual.
+
+Back to [home](index.md).

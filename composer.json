@@ -1,6 +1,6 @@
 {
     "name": "pagemachine/searchable",
-    "description": "Elasticsearch companion API for TYPO3",
+    "description": "TYPO3 extension to index and search content with Elasticsearch",
     "license": "GPL-3.0-or-later",
     "type": "typo3-cms-extension",
     "require": {

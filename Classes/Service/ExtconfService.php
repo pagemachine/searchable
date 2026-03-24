@@ -258,16 +258,6 @@ class ExtconfService implements SingletonInterface
     }
 
     /**
-     * Returns the frontend domain to use for link building
-     *
-     * @return string
-     */
-    public function getFrontendDomain()
-    {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['indexing']['domain'];
-    }
-
-    /**
      * Returns pipelines configuration
      *
      * @return array
