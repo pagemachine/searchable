@@ -69,9 +69,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         'connection' => [
             'hosts' => 'http://localhost:9200',
         ],
-        'indexing' => [
-            'domain' => 'http://localhost:80',
-        ],
     ],
     // The fieldname to store meta information in (link, preview etc.). This field will be added to all created ES types and set to index = false
     // Note that this field will also affect how you can access the meta fields in templates!

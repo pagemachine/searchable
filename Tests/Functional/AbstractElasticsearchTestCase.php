@@ -80,9 +80,6 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
                     'connection' => [
                         'hosts' => sprintf('http://%s', getenv('ELASTICSEARCH_HOST')),
                     ],
-                    'indexing' => [
-                        'domain' => 'http://localhost:8080',
-                    ],
                 ],
                 'indices' => [
                     $this->configIndexNames[0] => [
