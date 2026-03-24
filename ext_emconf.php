@@ -2,7 +2,7 @@
 
 $EM_CONF[$_EXTKEY] = [
   'title' => 'Searchable',
-  'description' => 'Elasticsearch companion API for TYPO3',
+  'description' => 'TYPO3 extension to index and search content with Elasticsearch',
   'category' => 'misc',
   'author_company' => 'Pagemachine AG',
   'state' => 'stable',
