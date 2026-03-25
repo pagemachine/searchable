@@ -61,18 +61,11 @@ jobs:
             exit 1
           fi
 
-      - name: Get version
-        id: get-version
-        run: echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-
-      - name: Print version
-        run: echo ${{ env.version }}
-
       - name: Deploy to TER
         env:
           TYPO3_API_TOKEN: ${{secrets.TYPO3_API_TOKEN}}
           TYPO3_API_USERNAME: ${{secrets.TYPO3_API_USERNAME}}
           TYPO3_API_PASSWORD: ${{secrets.TYPO3_API_PASSWORD}}
-          TAG: ${{env.version}}
+          TAG: ${{ github.event.release.tag_name }}
           UPLOAD_MESSAGE: ${{ github.event.release.body }}
         run: docker compose run --rm app composer ter:deploy
