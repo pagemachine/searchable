@@ -28,3 +28,17 @@ parameters:
 			message: "#^Call to an undefined method TYPO3\\\\CMS\\\\Frontend\\\\Controller\\\\TypoScriptFrontendController\\:\\:getConfigArray\\(\\)\\.$#"
 			count: 1
 			path: Classes/Utility/TsfeUtility.php
+		-
+			message: "#^Call to method create\\(\\) on an unknown class TYPO3\\\\CMS\\\\Frontend\\\\Page\\\\PageInformationFactory\\.$#"
+			count: 1
+			path: Classes/Utility/TsfeUtility.php
+
+		-
+			message: "#^Parameter \\$pageInformationFactory of method PAGEmachine\\\\Searchable\\\\Utility\\\\TsfeUtility\\:\\:__construct\\(\\) has invalid type TYPO3\\\\CMS\\\\Frontend\\\\Page\\\\PageInformationFactory\\.$#"
+			count: 1
+			path: Classes/Utility/TsfeUtility.php
+
+		-
+			message: "#^Property PAGEmachine\\\\Searchable\\\\Utility\\\\TsfeUtility\\:\\:\\$pageInformationFactory has unknown class TYPO3\\\\CMS\\\\Frontend\\\\Page\\\\PageInformationFactory as its type\\.$#"
+			count: 1
+			path: Classes/Utility/TsfeUtility.php
