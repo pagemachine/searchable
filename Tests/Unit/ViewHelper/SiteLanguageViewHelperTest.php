@@ -36,11 +36,6 @@ class SiteLanguageViewHelperTest extends TestCase
         $this->viewHelper = new SiteLanguageViewHelper();
     }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TSFE']);
-    }
-
     #[Test]
     public function returnsCurrentLanguage()
     {
@@ -49,11 +44,5 @@ class SiteLanguageViewHelperTest extends TestCase
         GeneralUtility::makeInstance(Context::class)->setAspect('language', new LanguageAspect(1));
 
         $this->assertEquals(1, $this->viewHelper->render());
-    }
-
-    #[Test]
-    public function returnsZeroIfTsfeDoesNotExist()
-    {
-        $this->assertEquals(0, $this->viewHelper->render());
     }
 }
