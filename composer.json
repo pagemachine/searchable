@@ -111,7 +111,7 @@
             "cp /tmp/vendors/vendors.phar .",
             "echo \"require 'phar://' . \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::extPath('$(composer config extra.typo3/cms.extension-key)') . 'vendors.phar/vendor/autoload.php';\" >> ext_localconf.php",
             "composer global exec -v -- tailor set-version $TAG",
-            "composer global exec -v -- tailor ter:publish --comment \"$(git tag -l --format='%(contents)' $TAG)\" $TAG"
+            "composer global exec -v -- tailor ter:publish --comment \"See release at https://github.com/pagemachine/searchable/releases/tag/$TAG\" $TAG"
         ],
         "test": [
             "@php:unit:test",
