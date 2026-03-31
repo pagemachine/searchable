@@ -17,8 +17,10 @@ use TYPO3\CMS\Core\TypoScript\FrontendTypoScriptFactory;
 use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
+use TYPO3\CMS\Frontend\Aspect\PreviewAspect;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageInformationFactory;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -34,6 +36,7 @@ class TsfeUtility
         private readonly ?PhpFrontend $typoScriptCache = null,
         private readonly ?SysTemplateRepository $sysTemplateRepository = null,
         private readonly ?FrontendTypoScriptFactory $frontendTypoScriptFactory = null,
+        private readonly ?PageInformationFactory $pageInformationFactory = null,
     ) {
     }
 
@@ -83,8 +86,11 @@ class TsfeUtility
 
         // TYPO3 13+
         if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), '13.0', '>=')) {
+            $context->setAspect('frontend.preview', new PreviewAspect());
             $frontendTypoScript = $this->getFrontendTypoScript($request, $pageId);
             $request = $request->withAttribute('frontend.typoscript', $frontendTypoScript);
+            $pageInformation = $this->pageInformationFactory->create($request);
+            $request = $request->withAttribute('frontend.page.information', $pageInformation);
             $GLOBALS['TYPO3_REQUEST'] = $request;
 
             return $previous;
