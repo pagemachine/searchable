@@ -7,6 +7,7 @@ services:
       TYPO3_API_PASSWORD:
       TYPO3_API_USERNAME:
       TAG:
+      UPLOAD_MESSAGE:
       typo3DatabaseHost: mysql
       typo3DatabaseName: typo3
       typo3DatabaseUsername: root
