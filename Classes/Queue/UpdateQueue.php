@@ -23,8 +23,7 @@ final readonly class UpdateQueue
         int $propertyUid,
     ): void {
         try {
-            $this->connectionPool
-                ->getConnectionForTable(self::TABLE_NAME)
+            $this->getConnection()
                 ->insert(
                     self::TABLE_NAME,
                     [
@@ -40,8 +39,7 @@ final readonly class UpdateQueue
 
     public function pendingUpdates(string $type = null): array
     {
-        $queryBuilder = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $queryBuilder = $this->getConnection()
             ->createQueryBuilder();
 
         $queryBuilder
@@ -60,8 +58,7 @@ final readonly class UpdateQueue
 
     public function getMaxUid()
     {
-        $result = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $result = $this->getConnection()
             ->createQueryBuilder()
             ->select('uid')
             ->from(self::TABLE_NAME)
@@ -75,8 +72,7 @@ final readonly class UpdateQueue
 
     public function clear(string $type, int $maxUid): void
     {
-        $queryBuilder = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $queryBuilder = $this->getConnection()
             ->createQueryBuilder();
 
         $queryBuilder
@@ -90,10 +86,15 @@ final readonly class UpdateQueue
 
     public function clearAll(): void
     {
-        $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $this->getConnection()
             ->createQueryBuilder()
             ->delete(self::TABLE_NAME)
             ->executeStatement();
+    }
+
+    protected function getConnection()
+    {
+        return $this->connectionPool
+            ->getConnectionByName('SearchablePartialUpdateQueue');
     }
 }
