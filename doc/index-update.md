@@ -38,6 +38,8 @@ You need to add a database connection `wrapperClass` in your `LocalConfiguration
     // ...
 ```
 
+Partial updates use a dedicated `SearchablePartialUpdateQueue` database connection to avoid polluting `LAST_INSERT_ID`. It is derived automatically from the `Default` connection, but can be configured explicitly if needed.
+
 ## Reset index
 
 If you need to start from scratch, run the following commands:
