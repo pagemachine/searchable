@@ -30,6 +30,10 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
     use WebserverTrait;
     use SiteBasedTestTrait;
 
+    protected array $coreExtensionsToLoad = [
+        'typo3/cms-fluid-styled-content',
+    ];
+
     /**
      * @var array
      */
