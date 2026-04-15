@@ -155,6 +155,48 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
     }
 
     #[Test]
+    public function indexesTablesWithFluidPreviewAndHtml(): void
+    {
+        $this->insertArray('pages', [
+            'uid' => 3,
+            'pid' => 1,
+            'doktype' => PageRepository::DOKTYPE_DEFAULT,
+            'title' => 'Test page',
+            'slug' => '/test-page/',
+        ]);
+        $this->insertArray('tt_content', [
+            'uid' => 1,
+            'pid' => 1,
+            'CType' => 'textmedia',
+            'header' => 'Test content',
+            'header_layout' => 1,
+            'bodytext' => '<p>Some <strong>important</strong> content with <a href="t3://page?uid=3">link</a>.</p>',
+        ]);
+
+        $this->assertIndexEmpty();
+
+        $this->indexingService->indexFull('content_fluid_preview');
+
+        $this->assertDocumentInIndex(
+            1,
+            [
+                'header' => 'Test content',
+                'bodytext' => '<p>Some <strong>important</strong> content with <a href="t3://page?uid=3">link</a>.</p>',
+            ]
+        );
+
+        $expectedPreview = <<<HTML
+        <div id="c1" class="frame frame-default frame-type-textmedia frame-layout-0"><header><h1 class="">
+                        Test content
+                    </h1></header><div class="ce-textpic ce-center ce-above"><div class="ce-bodytext"><p>Some <strong>important</strong> content with <a href="/test-page/">link</a>.</p></div></div></div>
+        HTML;
+        $document = $this->searchDocumentByUid(1, 0);
+        $normalizedPreview = trim(preg_replace('/>\s+</', '><', $document['searchable_meta']['preview'] ?? ''));
+
+        self::assertSame($expectedPreview, $normalizedPreview);
+    }
+
+    #[Test]
     public function indexesRecordsPartially(): void
     {
         $this->insertArray('pages', [

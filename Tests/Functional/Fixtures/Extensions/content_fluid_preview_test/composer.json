@@ -1,0 +1,9 @@
+{
+    "name": "pagemachine/searchable-content-fluid-preview-test",
+    "type": "typo3-cms-extension",
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "content_fluid_preview_test"
+        }
+    }
+}
