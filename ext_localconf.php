@@ -8,6 +8,7 @@ use PAGEmachine\Searchable\Feature\HighlightFeature;
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;
 use PAGEmachine\Searchable\Query\AutosuggestQuery;
 use PAGEmachine\Searchable\Query\SearchQuery;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -136,10 +137,10 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
 })();
 
 // Use a dedicated connection for the update queue so its inserts do not overwrite LAST_INSERT_ID on the Default connection
-if (empty($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['SearchablePartialUpdateQueue'])) {
+if (empty($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][UpdateQueue::CONNECTION_NAME])) {
     $defaultParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][ConnectionPool::DEFAULT_CONNECTION_NAME] ?? [];
     unset($defaultParams['wrapperClass']);
-    $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['SearchablePartialUpdateQueue'] = $defaultParams;
+    $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][UpdateQueue::CONNECTION_NAME] = $defaultParams;
 }
 
 //Register eid

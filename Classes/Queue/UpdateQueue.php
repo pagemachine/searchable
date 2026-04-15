@@ -7,10 +7,13 @@ namespace PAGEmachine\Searchable\Queue;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 final readonly class UpdateQueue
 {
+    public const CONNECTION_NAME = 'SearchablePartialUpdateQueue';
+
     private const TABLE_NAME = 'tx_searchable_update';
 
     public function __construct(private ConnectionPool $connectionPool)
@@ -92,9 +95,9 @@ final readonly class UpdateQueue
             ->executeStatement();
     }
 
-    protected function getConnection()
+    protected function getConnection(): Connection
     {
         return $this->connectionPool
-            ->getConnectionByName('SearchablePartialUpdateQueue');
+            ->getConnectionByName(self::CONNECTION_NAME);
     }
 }
