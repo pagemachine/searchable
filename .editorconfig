@@ -53,7 +53,7 @@ indent_style = space
 indent_size = 4
 
 # TypoScript
-[*.ts]
+[*.typoscript,*.ts]
 indent_style = space
 indent_size = 2
 

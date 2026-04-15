@@ -1,0 +1,21 @@
+@import "EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript"
+
+lib {
+  contentElementRendering = RECORDS
+  contentElementRendering {
+    tables = tt_content
+    source.current = 1
+    dontCheckPid = 1
+  }
+}
+
+
+plugin {
+  tx_searchable {
+    view {
+      templateRootPaths {
+        1 = EXT:content_fluid_preview_test/Resources/Private/Templates/
+      }
+    }
+  }
+}

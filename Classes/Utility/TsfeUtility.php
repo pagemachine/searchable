@@ -93,6 +93,12 @@ class TsfeUtility
             $request = $request->withAttribute('frontend.page.information', $pageInformation);
             $GLOBALS['TYPO3_REQUEST'] = $request;
 
+            // Copy from CObjectViewHelper::getContentObjectRenderer()
+            $frontendController = GeneralUtility::makeInstance(TypoScriptFrontendController::class);
+            $frontendController->initializePageRenderer($request);
+            $frontendController->initializeLanguageService($request);
+            $GLOBALS['TSFE'] = $frontendController;
+
             return $previous;
         }
 

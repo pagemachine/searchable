@@ -9,6 +9,7 @@ use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
+use PAGEmachine\Searchable\Preview\FluidPreviewRenderer;
 use PAGEmachine\Searchable\Preview\NoPreviewRenderer;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use PAGEmachine\Searchable\Service\IndexingService;
@@ -30,11 +31,16 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
     use WebserverTrait;
     use SiteBasedTestTrait;
 
+    protected array $coreExtensionsToLoad = [
+        'typo3/cms-fluid-styled-content',
+    ];
+
     /**
      * @var array
      */
     protected array $testExtensionsToLoad = [
         'typo3conf/ext/searchable',
+        'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/content_fluid_preview_test',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/extbase_l10n_test',
         'typo3conf/ext/searchable/Tests/Functional/Fixtures/Extensions/unlocalized_table_test',
     ];
@@ -134,6 +140,33 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
                             ],
                             'preview' => [
                                 'className' => ContentPreviewRenderer::class,
+                            ],
+                            'link' => [
+                                'className' => TypoLinkBuilder::class,
+                            ],
+                        ],
+                    ],
+                    'content_fluid_preview' => [
+                        'className' => TcaIndexer::class,
+                        'config' => [
+                            'collector' => [
+                                'config' => [
+                                    'table' => 'tt_content',
+                                    'pid' => 1,
+                                    'fields' => [
+                                        'header',
+                                        'bodytext',
+                                    ],
+                                ],
+                            ],
+                            'preview' => [
+                                'className' => FluidPreviewRenderer::class,
+                                'config' => [
+                                    'templateName' => 'Preview/Content',
+                                    'fields' => [
+                                        'uid',
+                                    ],
+                                ],
                             ],
                             'link' => [
                                 'className' => TypoLinkBuilder::class,
