@@ -38,7 +38,7 @@ You need to add a database connection `wrapperClass` in your `LocalConfiguration
     // ...
 ```
 
-Partial updates use a dedicated `SearchablePartialUpdateQueue` database connection to avoid polluting `LAST_INSERT_ID`. It is derived automatically from the `Default` connection, but can be configured explicitly if needed.
+Partial updates use a dedicated `SearchablePartialUpdateQueue` database connection to avoid inconsistencies caused by pollution of the last inserted ID. The `SearchablePartialUpdateQueue` connection is derived from the `Default` connection and the `wrapperClass` is removed. It can configured explicitly if needed but the `wrapperClass` must not be set in this case.
 
 ## Reset index
 
