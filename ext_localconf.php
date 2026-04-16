@@ -8,8 +8,10 @@ use PAGEmachine\Searchable\Feature\HighlightFeature;
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;
 use PAGEmachine\Searchable\Query\AutosuggestQuery;
 use PAGEmachine\Searchable\Query\SearchQuery;
+use PAGEmachine\Searchable\Queue\UpdateQueue;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -133,6 +135,13 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable'] = [
         }
     }
 })();
+
+// Use a dedicated connection for the update queue so its inserts do not overwrite LAST_INSERT_ID on the Default connection
+if (empty($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][UpdateQueue::CONNECTION_NAME])) {
+    $defaultParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][ConnectionPool::DEFAULT_CONNECTION_NAME] ?? [];
+    unset($defaultParams['wrapperClass']);
+    $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][UpdateQueue::CONNECTION_NAME] = $defaultParams;
+}
 
 //Register eid
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['searchable_autosuggest'] = Autosuggest::class . '::processRequest';

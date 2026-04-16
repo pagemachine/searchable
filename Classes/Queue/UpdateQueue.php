@@ -7,10 +7,13 @@ namespace PAGEmachine\Searchable\Queue;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 final readonly class UpdateQueue
 {
+    public const CONNECTION_NAME = 'SearchablePartialUpdateQueue';
+
     private const TABLE_NAME = 'tx_searchable_update';
 
     public function __construct(private ConnectionPool $connectionPool)
@@ -23,8 +26,7 @@ final readonly class UpdateQueue
         int $propertyUid,
     ): void {
         try {
-            $this->connectionPool
-                ->getConnectionForTable(self::TABLE_NAME)
+            $this->getConnection()
                 ->insert(
                     self::TABLE_NAME,
                     [
@@ -40,8 +42,7 @@ final readonly class UpdateQueue
 
     public function pendingUpdates(string $type = null): array
     {
-        $queryBuilder = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $queryBuilder = $this->getConnection()
             ->createQueryBuilder();
 
         $queryBuilder
@@ -60,8 +61,7 @@ final readonly class UpdateQueue
 
     public function getMaxUid()
     {
-        $result = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $result = $this->getConnection()
             ->createQueryBuilder()
             ->select('uid')
             ->from(self::TABLE_NAME)
@@ -75,8 +75,7 @@ final readonly class UpdateQueue
 
     public function clear(string $type, int $maxUid): void
     {
-        $queryBuilder = $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $queryBuilder = $this->getConnection()
             ->createQueryBuilder();
 
         $queryBuilder
@@ -90,10 +89,15 @@ final readonly class UpdateQueue
 
     public function clearAll(): void
     {
-        $this->connectionPool
-            ->getConnectionForTable(self::TABLE_NAME)
+        $this->getConnection()
             ->createQueryBuilder()
             ->delete(self::TABLE_NAME)
             ->executeStatement();
+    }
+
+    protected function getConnection(): Connection
+    {
+        return $this->connectionPool
+            ->getConnectionByName(self::CONNECTION_NAME);
     }
 }
