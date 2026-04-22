@@ -4,9 +4,11 @@ namespace PAGEmachine\Searchable\Preview;
 use PAGEmachine\Searchable\Preview\RequestAwarePreviewRendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -18,14 +20,13 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRendererInterface, RequestAwarePreviewRendererInterface
 {
     /**
-     * @var StandaloneView $view
-     */
-    protected $view;
-
-    /**
      * @var ConfigurationManager $configurationManager
      */
     protected $configurationManager;
+
+    protected ViewInterface $view;
+
+    protected ViewFactoryInterface $viewFactory;
 
     /**
      * @var array
@@ -39,16 +40,13 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     {
         parent::__construct(...$arguments);
 
-        $this->view = GeneralUtility::makeInstance(StandaloneView::class);
         $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+        $this->viewFactory = GeneralUtility::makeInstance(ViewFactoryInterface::class);
     }
+
     public function setRequest(ServerRequestInterface $request): void
     {
-        if (method_exists($this->view, 'setRequest')) {
-            $this->view->getRenderingContext()->setAttribute(ServerRequestInterface::class, $request);
-        }
-
-        $this->prepareView();
+        $this->prepareView($request);
     }
 
     /**
@@ -71,27 +69,23 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
             $this->view->assign("fields", $assignFields);
         }
 
-        $preview = $this->view->render();
+        $preview = $this->view->render($this->config['templateName']);
 
         return $preview;
     }
 
-
-    /**
-     * Prepares the view
-     * @return void
-     */
-    protected function prepareView()
+    protected function prepareView(ServerRequestInterface $request)
     {
         $configuration = $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
             'Searchable'
         );
 
-        $this->view->getRenderingContext()->getTemplatePaths()->setTemplateRootPaths($configuration['view']['templateRootPaths']);
-        $this->view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
-        $this->view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($configuration['view']['partialRootPaths']);
-
-        $this->view->getRenderingContext()->setControllerAction($this->config['templateName']);
+        $this->view = $this->viewFactory->create(new ViewFactoryData(
+            templateRootPaths: $configuration['view']['templateRootPaths'],
+            layoutRootPaths: $configuration['view']['layoutRootPaths'],
+            partialRootPaths: $configuration['view']['partialRootPaths'],
+            request: $request,
+        ));
     }
 }
