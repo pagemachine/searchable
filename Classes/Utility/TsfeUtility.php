@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspectFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -83,37 +82,18 @@ class TsfeUtility
 
         $context = GeneralUtility::makeInstance(Context::class);
         $context->setAspect('language', LanguageAspectFactory::createFromSiteLanguage($siteLanguage));
+        $context->setAspect('frontend.preview', new PreviewAspect());
 
-        // TYPO3 13+
-        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), '13.0', '>=')) {
-            $context->setAspect('frontend.preview', new PreviewAspect());
-            $frontendTypoScript = $this->getFrontendTypoScript($request, $pageId);
-            $request = $request->withAttribute('frontend.typoscript', $frontendTypoScript);
-            $pageInformation = $this->pageInformationFactory->create($request);
-            $request = $request->withAttribute('frontend.page.information', $pageInformation);
-            $GLOBALS['TYPO3_REQUEST'] = $request;
+        $frontendTypoScript = $this->getFrontendTypoScript($request, $pageId);
+        $request = $request->withAttribute('frontend.typoscript', $frontendTypoScript);
+        $pageInformation = $this->pageInformationFactory->create($request);
+        $request = $request->withAttribute('frontend.page.information', $pageInformation);
+        $GLOBALS['TYPO3_REQUEST'] = $request;
 
-            // Copy from CObjectViewHelper::getContentObjectRenderer()
-            $frontendController = GeneralUtility::makeInstance(TypoScriptFrontendController::class);
-            $frontendController->initializePageRenderer($request);
-            $frontendController->initializeLanguageService($request);
-            $GLOBALS['TSFE'] = $frontendController;
-
-            return $previous;
-        }
-
-        $frontendController = GeneralUtility::makeInstance(
-            TypoScriptFrontendController::class,
-            GeneralUtility::makeInstance(Context::class),
-            $request->getAttribute('site'),
-            $request->getAttribute('language'),
-            $request->getAttribute('routing'),
-            $request->getAttribute('frontend.user')
-        );
-        $frontendController->determineId($request);
-
-        $GLOBALS['TYPO3_REQUEST'] = $frontendController->getFromCache($GLOBALS['TYPO3_REQUEST']);
-
+        // Copy from CObjectViewHelper::getContentObjectRenderer()
+        $frontendController = GeneralUtility::makeInstance(TypoScriptFrontendController::class);
+        $frontendController->initializePageRenderer($request);
+        $frontendController->initializeLanguageService($request);
         $GLOBALS['TSFE'] = $frontendController;
 
         return $previous;
