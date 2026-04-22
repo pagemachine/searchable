@@ -7,6 +7,7 @@ use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
 use PAGEmachine\Searchable\Feature\HtmlStripFeature;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Exception\Page\PageNotFoundException;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
@@ -124,6 +125,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
             'doktype',
             'shortcut',
             'shortcut_mode',
+            ...((new Typo3Version())->getMajorVersion() < 14 ? [] : ['link']),
             'no_search',
         ]);
 
