@@ -45,7 +45,7 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
     public function setRequest(ServerRequestInterface $request): void
     {
         if (method_exists($this->view, 'setRequest')) {
-            $this->view->setRequest($request);
+            $this->view->getRenderingContext()->setAttribute(ServerRequestInterface::class, $request);
         }
 
         $this->prepareView();
@@ -88,10 +88,10 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
             'Searchable'
         );
 
-        $this->view->setTemplateRootPaths($configuration['view']['templateRootPaths']);
-        $this->view->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
-        $this->view->setPartialRootPaths($configuration['view']['partialRootPaths']);
+        $this->view->getRenderingContext()->getTemplatePaths()->setTemplateRootPaths($configuration['view']['templateRootPaths']);
+        $this->view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($configuration['view']['layoutRootPaths']);
+        $this->view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($configuration['view']['partialRootPaths']);
 
-        $this->view->setTemplate($this->config['templateName']);
+        $this->view->getRenderingContext()->setControllerAction($this->config['templateName']);
     }
 }
