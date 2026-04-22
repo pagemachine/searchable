@@ -35,7 +35,7 @@ class QueryBuilder extends BaseQueryBuilder
 
             if ($this->getTypeHelper() === $this->queryType()::INSERT) {
                 try {
-                    $this->getQuery()->updateToplevel($tableName, (int)$this->connection->lastInsertId($tableName));
+                    $this->getQuery()->updateToplevel($tableName, (int)$this->connection->lastInsertId());
                 } catch (DriverException) {
                     // Could not retrieve lastInsertedId
                 }

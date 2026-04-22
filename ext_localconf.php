@@ -29,7 +29,8 @@ ExtensionUtility::configurePlugin(
     ],
     [
         SearchController::class => 'searchbar',
-    ]
+    ],
+    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
 
 ExtensionUtility::configurePlugin(
@@ -37,7 +38,9 @@ ExtensionUtility::configurePlugin(
     'LiveSearchbar',
     [
         SearchController::class => 'liveSearchbar',
-    ]
+    ],
+    [],
+    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
 
 
@@ -49,7 +52,8 @@ ExtensionUtility::configurePlugin(
     ],
     [
         SearchController::class => 'results',
-    ]
+    ],
+    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
 
 // Add custom logging

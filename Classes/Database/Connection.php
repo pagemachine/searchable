@@ -49,7 +49,7 @@ class Connection extends BaseConnection
         $result = parent::insert(...func_get_args());
 
         try {
-            $this->getQuery()->updateToplevel($tableName, (int)$this->lastInsertId($tableName));
+            $this->getQuery()->updateToplevel($tableName, (int)$this->lastInsertId());
             // Special treatment for tt_content (since no connection to the pages record is triggered by the insert)
             if ($tableName == 'tt_content' && !empty($data['pid'])) {
                 $this->getQuery()->updateToplevel('pages', (int)$data['pid']);
