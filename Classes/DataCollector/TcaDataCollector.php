@@ -7,7 +7,6 @@ use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
-use PAGEmachine\Searchable\Enumeration\TcaType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -284,11 +283,11 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
             //plain types
             switch ($type) {
-                case TcaType::RADIO:
+                case 'radio':
                     $record[$key] = $plainValueProcessor->processRadioField($field, $this->processedTca['columns'][$key]['config']);
                     break;
 
-                case TcaType::CHECK:
+                case 'check':
                     $record[$key] = $plainValueProcessor->processCheckboxField($field, $this->processedTca['columns'][$key]['config']);
                     break;
             }
