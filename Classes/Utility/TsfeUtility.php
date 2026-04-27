@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspectFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -20,6 +21,7 @@ use TYPO3\CMS\Frontend\Aspect\PreviewAspect;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageInformationFactory;
+use TYPO3\CMS\Frontend\Page\PageParts;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -88,13 +90,21 @@ class TsfeUtility
         $request = $request->withAttribute('frontend.typoscript', $frontendTypoScript);
         $pageInformation = $this->pageInformationFactory->create($request);
         $request = $request->withAttribute('frontend.page.information', $pageInformation);
+
+        if ((new Typo3Version())->getMajorVersion() >= 14) {
+            $request = $request->withAttribute('frontend.page.parts', new PageParts()); // @phpstan-ignore class.notFound
+        }
+
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
-        // Copy from CObjectViewHelper::getContentObjectRenderer()
-        $frontendController = GeneralUtility::makeInstance(TypoScriptFrontendController::class);
-        $frontendController->initializePageRenderer($request);
-        $frontendController->initializeLanguageService($request);
-        $GLOBALS['TSFE'] = $frontendController;
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            // Copy from CObjectViewHelper::getContentObjectRenderer()
+            $frontendController = GeneralUtility::makeInstance(TypoScriptFrontendController::class); // @phpstan-ignore class.notFound
+            $frontendController->initializePageRenderer($request); // @phpstan-ignore class.notFound
+            $frontendController->initializeLanguageService($request); // @phpstan-ignore class.notFound
+            $GLOBALS['TSFE'] = $frontendController;
+        }
+
 
         return $previous;
     }

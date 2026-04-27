@@ -7,7 +7,7 @@ use PAGEmachine\Searchable\Controller\BackendController;
 return [
     'searchable' => [
         'parent' => 'web',
-        'access' => 'user,group',
+        'access' => 'user',
         'workspaces' => 'live',
         'labels' => 'LLL:EXT:searchable/Resources/Private/Language/locallang_mod.xlf',
         'iconIdentifier' => 'tx-searchable-main',

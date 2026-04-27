@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Configuration\SiteWriter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -414,6 +415,7 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
             'pid' => 1,
             'doktype' => PageRepository::DOKTYPE_LINK,
             'title' => 'Link page',
+            ...((new Typo3Version())->getMajorVersion() < 14 ? [] : ['link' => 3]),
         ]);
         $this->insertArray('pages', [
             'uid' => 5,

@@ -12,7 +12,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Testcase for SiteLanguageViewHelper
@@ -39,8 +38,6 @@ class SiteLanguageViewHelperTest extends TestCase
     #[Test]
     public function returnsCurrentLanguage()
     {
-        $GLOBALS['TSFE'] = $this->prophesize(TypoScriptFrontendController::class)->reveal();
-
         GeneralUtility::makeInstance(Context::class)->setAspect('language', new LanguageAspect(1));
 
         $this->assertEquals(1, $this->viewHelper->render());

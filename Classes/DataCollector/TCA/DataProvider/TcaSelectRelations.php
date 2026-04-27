@@ -11,14 +11,8 @@ class TcaSelectRelations extends TcaSelectItems implements FormDataProviderInter
 {
     /**
      * Return empty array as we do not want to pull all foreign table items (performance)
-     *
-     * @param array $result Result array
-     * @param string $fieldName Current handle field name
-     * @param array $items Incoming items
-     * @param bool $includeFullRows @internal Hack for category tree to speed up tree processing, adding full db row as _row to item
-     * @return array Modified item array
      */
-    protected function addItemsFromForeignTable(array $result, $fieldName, array $items, bool $includeFullRows = false)
+    protected function addItemsFromForeignTable(array $result, $fieldName, array $items = [], bool $includeFullRows = false): array
     {
         return $items;
     }
