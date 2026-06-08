@@ -8,7 +8,7 @@ if (!defined('TYPO3')) {
     'Searchbar',
     'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:searchbar_title',
     'actions-search',
-    'Search',
+    'plugins',
     'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:searchbar_description'
 );
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['searchable_searchbar'] = 'select_key, pages, recursive';
@@ -23,7 +23,7 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_s
     'LiveSearchbar',
     'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:live_searchbar_title',
     'actions-search',
-    'Search',
+    'plugins',
     'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:live_searchbar_description'
 );
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['searchable_livesearchbar'] = 'select_key, pages, recursive';
@@ -38,7 +38,7 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['searchable_l
     'Results',
     'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:results_title',
     'actions-search',
-    'Search',
+    'plugins',
     'LLL:EXT:searchable/Resources/Private/Language/locallang_be.xlf:results_description'
 );
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['searchable_results'] = 'select_key, pages, recursive';
