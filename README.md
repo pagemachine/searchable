@@ -29,6 +29,13 @@ You can install this extension from multiple sources:
 2. From the [TYPO3 Extension Repository](https://extensions.typo3.org/extension/searchable/)
 3. From [GitHub](https://github.com/pagemachine/searchable/releases)
 
+Add the "Searchable" Site Set to your site dependencies:
+
+```yaml
+dependencies:
+  - pagemachine/searchable
+```
+
 ## Testing
 
 All tests can be executed with the shipped Docker Compose definition:
