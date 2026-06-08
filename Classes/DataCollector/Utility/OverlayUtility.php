@@ -138,7 +138,7 @@ class OverlayUtility implements SingletonInterface
                                 $languageContentId = (int)$orderValue;
                                 break;
                             }
-                            if ($orderValue === 'pageNotFound') {
+                            if ($orderValue === 'pageNotFound') { // @phpstan-ignore identical.alwaysFalse
                                 // The existing fallbacks have not been found, but instead of continuing page rendering
                                 // with default language, a "page not found" message should be shown instead.
                                 throw new PageNotFoundException('Page is not available in the requested language (fallbacks did not apply).', 1754384524);
