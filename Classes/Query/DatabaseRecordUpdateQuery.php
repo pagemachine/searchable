@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 /*
@@ -36,7 +37,6 @@ class DatabaseRecordUpdateQuery
      *
      * @param string $table
      * @param int $uid
-     * @return void
      */
     public function updateToplevel($table, $uid)
     {
@@ -51,7 +51,6 @@ class DatabaseRecordUpdateQuery
      *
      * @param string $table
      * @param int $uid
-     * @return void
      */
     public function updateSublevel($table, $uid)
     {

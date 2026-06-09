@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Indexer;
 
 /*
@@ -37,7 +38,6 @@ class FileIndexer extends TcaIndexer
      * Sends a batch
      *
      * @param  array $records
-     * @return void
      */
     protected function sendBatch($records)
     {

@@ -1,12 +1,10 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature;
 
 /*
  * This file is part of the Pagemachine Searchable project.
  */
-
-use PAGEmachine\Searchable\Feature\AbstractFeature;
-use PAGEmachine\Searchable\Feature\FeatureInterface;
 
 /**
  * Feature to strip HTML from all record fields

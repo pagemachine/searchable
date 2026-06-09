@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Service;
 
@@ -9,7 +10,6 @@ use PAGEmachine\Searchable\Indexer\IndexerFactory;
 use PAGEmachine\Searchable\Indexer\IndexerInterface;
 use PAGEmachine\Searchable\IndexManager;
 use PAGEmachine\Searchable\PipelineManager;
-use PAGEmachine\Searchable\Service\ExtconfService;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;

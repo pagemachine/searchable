@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\TCA;
 
 use PAGEmachine\Searchable\DataCollector\TCA\DataProvider\TcaInlineCopyToDbRecord;
@@ -21,9 +22,6 @@ class SearchableRecordGroup implements FormDataGroupInterface
 {
     protected $dataProviders = [];
 
-    /**
-     * @return void
-     */
     public function __construct()
     {
         $dataProvider = $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'];
@@ -38,7 +36,6 @@ class SearchableRecordGroup implements FormDataGroupInterface
             ],
         ];
 
-
         //Unset DataProvider which determines the items to process. This information will be handed over in the compiler input array
         unset($dataProvider[TcaColumnsProcessShowitem::class]);
 
@@ -52,11 +49,9 @@ class SearchableRecordGroup implements FormDataGroupInterface
             ],
         ];
 
-
         $orderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
         $this->dataProviders = $orderingService->orderByDependencies($dataProvider, 'before', 'depends');
     }
-
 
     /**
      * Compile form data

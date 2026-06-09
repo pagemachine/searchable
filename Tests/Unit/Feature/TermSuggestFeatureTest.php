@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\TermSuggestFeature;

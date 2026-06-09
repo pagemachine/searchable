@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\TCA\DataProvider;
 
 use TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems;

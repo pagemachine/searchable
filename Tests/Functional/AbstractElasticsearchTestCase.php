@@ -67,9 +67,6 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
      */
     protected $indexingService;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -277,9 +274,6 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
         $this->startWebserver();
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         $this->getElasticsearchClient()->indices()->delete([
@@ -313,27 +307,27 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
         ]);
         $total = $response['hits']['total']['value'];
 
-        $this->assertEquals(0, $total, 'Documents in index');
+        self::assertEquals(0, $total, 'Documents in index');
     }
 
     protected function assertDocumentInIndex(int $uid, array $documentSubset = [], int $languageId = 0): void
     {
         $document = $this->searchDocumentByUid($uid, $languageId);
 
-        $this->assertNotEmpty($document, sprintf('Document %d not in index', $uid));
-        $this->assertArraySubset($documentSubset, $document, sprintf('Document %d source mismatch', $uid));
+        self::assertNotEmpty($document, sprintf('Document %d not in index', $uid));
+        self::assertArraySubset($documentSubset, $document, sprintf('Document %d source mismatch', $uid));
     }
 
     private function assertArraySubset(array $subset, array $array, string $message = ''): void
     {
         foreach ($subset as $key => $expectedValue) {
-            $this->assertArrayHasKey($key, $array, $message ?: sprintf('Key "%s" not found in array', $key));
+            self::assertArrayHasKey($key, $array, $message ?: sprintf('Key "%s" not found in array', $key));
 
             if (is_array($expectedValue)) {
-                $this->assertIsArray($array[$key], $message ?: sprintf('Key "%s" is not an array', $key));
-                $this->assertArraySubset($expectedValue, $array[$key], $message);
+                self::assertIsArray($array[$key], $message ?: sprintf('Key "%s" is not an array', $key));
+                self::assertArraySubset($expectedValue, $array[$key], $message);
             } else {
-                $this->assertEquals($expectedValue, $array[$key], $message ?: sprintf('Key "%s" value mismatch', $key));
+                self::assertEquals($expectedValue, $array[$key], $message ?: sprintf('Key "%s" value mismatch', $key));
             }
         }
     }
@@ -342,7 +336,7 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
     {
         $document = $this->searchDocumentByUid($uid, $languageId);
 
-        $this->assertEmpty($document, sprintf('Document %d in index', $uid));
+        self::assertEmpty($document, sprintf('Document %d in index', $uid));
     }
 
     protected function getElasticsearchClient(): ElasticsearchClient

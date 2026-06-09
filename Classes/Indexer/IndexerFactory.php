@@ -14,7 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class IndexerFactory implements SingletonInterface
 {
-
     /**
      * Builds an array of indexers
      * @param  string $index

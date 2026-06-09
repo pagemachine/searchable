@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine\SelectRelationResolver;
@@ -134,13 +135,12 @@ class TcaDataCollectorTest extends UnitTestCase
             'emptyfield',
         ])->shouldBeCalled()->willReturn($record);
 
-        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"), 1)
+        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type('array'), 1)
             ->shouldBeCalled()
             ->willReturn($record['databaseRow']);
 
-        $this->plainValueProcessor->processCheckboxField("2", Argument::type("array"))->shouldBeCalled()->willReturn("checkboxvalue");
-        $this->plainValueProcessor->processRadioField("3", Argument::type("array"))->shouldBeCalled()->willReturn("radiovalue");
-
+        $this->plainValueProcessor->processCheckboxField('2', Argument::type('array'))->shouldBeCalled()->willReturn('checkboxvalue');
+        $this->plainValueProcessor->processRadioField('3', Argument::type('array'))->shouldBeCalled()->willReturn('radiovalue');
 
         $expectedOutput = [
             'uid' => 123,
@@ -150,7 +150,7 @@ class TcaDataCollectorTest extends UnitTestCase
             'radiofield' => 'radiovalue',
         ];
 
-        $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
+        self::assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
     #[Test]
@@ -204,26 +204,25 @@ class TcaDataCollectorTest extends UnitTestCase
             'processedTca' => $recordTca,
         ];
 
-
         $this->formDataRecord->getRecord(123, 'example_table', Argument::type('array'))->willReturn($record);
 
-        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type("array"), 1)
+        $this->overlayUtility->languageOverlay('example_table', $record['databaseRow'], 0, Argument::type('array'), 1)
             ->shouldBeCalled()
             ->willReturn($record['databaseRow']);
 
         $resolver = $this->prophesize(SelectRelationResolver::class);
-        $resolver->resolveRelation("selectfield", $record['databaseRow'], $subCollector, Argument::any())->willReturn([[
+        $resolver->resolveRelation('selectfield', $record['databaseRow'], $subCollector, Argument::any())->willReturn([[
             'uid' => 123,
             'title' => 'foobar',
         ]]);
 
         $resolverManager = $this->prophesize(ResolverManager::class);
-        $resolverManager->findResolverForRelation("selectfield", Argument::any(), Argument::any())->willReturn($resolver->reveal());
+        $resolverManager->findResolverForRelation('selectfield', Argument::any(), Argument::any())->willReturn($resolver->reveal());
         GeneralUtility::setSingletonInstance(ResolverManager::class, $resolverManager->reveal());
 
         $tcaDataCollector = new TcaDataCollector($configuration, 0);
 
-        $tcaDataCollector->addSubCollector("es_selectfield", $subCollector->reveal());
+        $tcaDataCollector->addSubCollector('es_selectfield', $subCollector->reveal());
 
         $expectedOutput = [
             'uid' => 1,
@@ -236,7 +235,7 @@ class TcaDataCollectorTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
+        self::assertEquals($expectedOutput, $tcaDataCollector->getRecord(123));
     }
 
     #[Test]
@@ -282,8 +281,8 @@ class TcaDataCollectorTest extends UnitTestCase
 
         $this->formDataRecord->getRecord(1, 'example_table', Argument::type('array'))->willReturn($record);
 
-        $this->overlayUtility->languageOverlay('example_table', $baseRow, 1, Argument::type("array"), 1)->shouldBeCalled()->willReturn($translatedRow);
+        $this->overlayUtility->languageOverlay('example_table', $baseRow, 1, Argument::type('array'), 1)->shouldBeCalled()->willReturn($translatedRow);
 
-        $this->assertEquals($translatedRow, $tcaDataCollector->getRecord(1));
+        self::assertEquals($translatedRow, $tcaDataCollector->getRecord(1));
     }
 }

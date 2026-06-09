@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Eid;
 
 use PAGEmachine\Searchable\Query\AutosuggestQuery;

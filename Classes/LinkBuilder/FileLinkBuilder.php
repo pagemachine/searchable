@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 /*
@@ -35,9 +36,9 @@ class FileLinkBuilder extends AbstractLinkBuilder
         if (!isset($fileRecord['uid'])) {
             if (isset($fileRecord[0]['uid'])) {
                 $fileRecord = $fileRecord[0];
-            } else {
-                //Something should happen if there is no file found
             }
+            //Something should happen if there is no file found
+
         }
         $configuration['parameter'] = 't3://file?uid=' . $fileRecord['uid'];
 

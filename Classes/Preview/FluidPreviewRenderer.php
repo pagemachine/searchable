@@ -1,7 +1,7 @@
 <?php
+
 namespace PAGEmachine\Searchable\Preview;
 
-use PAGEmachine\Searchable\Preview\RequestAwarePreviewRendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
@@ -66,7 +66,7 @@ class FluidPreviewRenderer extends AbstractPreviewRenderer implements PreviewRen
                 }
             }
 
-            $this->view->assign("fields", $assignFields);
+            $this->view->assign('fields', $assignFields);
         }
 
         $preview = $this->view->render($this->config['templateName']);

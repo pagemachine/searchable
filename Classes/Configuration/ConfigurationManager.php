@@ -1,7 +1,7 @@
 <?php
+
 namespace PAGEmachine\Searchable\Configuration;
 
-use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
 use PAGEmachine\Searchable\Feature\FeatureInterface;
 use PAGEmachine\Searchable\Mapper\MapperInterface;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
@@ -31,21 +31,21 @@ class ConfigurationManager implements SingletonInterface
      *
      * @var array
      */
-    protected $processedConfiguration = null;
+    protected $processedConfiguration;
 
     /**
      * Holds the processed mapping for each index
      *
      * @var array
      */
-    protected $processedMapping = null;
+    protected $processedMapping;
 
     /**
      * Holds the processed query configuration
      *
      * @var array
      */
-    protected $processedQueryConfiguration = null;
+    protected $processedQueryConfiguration;
 
     /**
      * UpdateConfiguration
@@ -57,7 +57,6 @@ class ConfigurationManager implements SingletonInterface
             'sublevel' => [],
         ],
     ];
-
 
     /**
      * Builds and returns the processed configuration
@@ -144,7 +143,6 @@ class ConfigurationManager implements SingletonInterface
     }
 
     /**
-     *
      * @param  array $indexerConfiguration
      * @return array
      */
@@ -257,14 +255,14 @@ class ConfigurationManager implements SingletonInterface
      * @param string $typeName
      * @param string $collectorPath
      */
-    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration, $typeName, $collectorPath = "")
+    protected function addRecursiveCollectorConfig($configuration, $parentConfiguration, $typeName, $collectorPath = '')
     {
         $configuration = $this->addClassDefaultConfiguration($configuration, $parentConfiguration);
 
         if (!empty($configuration['config'])) {
             if (!empty($configuration['config']['table'])) {
                 if ($configuration['config']['field'] ?? null) {
-                    $collectorPath = $collectorPath ? $collectorPath . "." . $configuration['config']['field'] : $configuration['config']['field'];
+                    $collectorPath = $collectorPath ? $collectorPath . '.' . $configuration['config']['field'] : $configuration['config']['field'];
                     $this->addSublevelUpdateConfiguration($typeName, $collectorPath, $configuration['config']['table']);
                 } else {
                     $this->addToplevelUpdateConfiguration($typeName, $configuration['config']['table']);

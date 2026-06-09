@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\TCA\FormDataRecord;
@@ -31,7 +32,6 @@ class OverlayUtility implements SingletonInterface
     }
 
     /**
-     *
      * @param PageRepository|null $pageRepository
      */
     public function __construct(PageRepository $pageRepository = null)
@@ -85,7 +85,7 @@ class OverlayUtility implements SingletonInterface
         $translationRecord = $translationData['databaseRow'];
 
         foreach ($record as $key => $field) {
-            if ($key == "uid" || $key == "pid") {
+            if ($key == 'uid' || $key == 'pid') {
                 continue;
             }
 

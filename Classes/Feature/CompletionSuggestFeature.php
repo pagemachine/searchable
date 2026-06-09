@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Feature\Traits\FieldCollectionTrait;
@@ -36,10 +37,9 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
     ];
 
     /**
-     *
      * @var string
      */
-    public static $featureName = "completionSuggest";
+    public static $featureName = 'completionSuggest';
 
     /**
      * Entry point to modify mapping
@@ -96,7 +96,7 @@ class CompletionSuggestFeature extends AbstractFeature implements FeatureInterfa
         $splittedContent = [];
         if (!empty($fields)) {
             foreach ($fields as $field) {
-                $split = preg_split($this->config['splitRegex'], (string) $field);
+                $split = preg_split($this->config['splitRegex'], (string)$field);
                 $splittedContent = array_merge($splittedContent, $split);
             }
         }

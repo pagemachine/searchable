@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
@@ -10,9 +11,6 @@ use TYPO3\CMS\Core\SingletonInterface;
  * This file is part of the Pagemachine Searchable project.
  */
 
-/**
- *
- */
 class ResolverManager implements SingletonInterface
 {
     /**
@@ -43,10 +41,10 @@ class ResolverManager implements SingletonInterface
         // Check for a custom resolver first
         if (isset($subConfiguration['resolver']) && is_array($subConfiguration['resolver']) && $subConfiguration['resolver']['className']) {
             $classname = $subConfiguration['resolver']['className'];
-        //Next try TCA/FormEngine related stuff
+            //Next try TCA/FormEngine related stuff
         } elseif ($tca['columns'][$fieldname] && $tca['columns'][$fieldname]['config']['type']) {
             if (!empty($this->relationResolvers['FormEngine'][$tca['columns'][$fieldname]['config']['type']])) {
-                 $classname = $this->relationResolvers['FormEngine'][$tca['columns'][$fieldname]['config']['type']];
+                $classname = $this->relationResolvers['FormEngine'][$tca['columns'][$fieldname]['config']['type']];
             } else {
                 throw new \Exception('No TCA relation resolver for type "' . $tca['columns'][$fieldname]['config']['type'] . '" found.', 1488368425);
             }
@@ -55,8 +53,8 @@ class ResolverManager implements SingletonInterface
         if ($classname != null) {
             $resolver = $classname::getInstance();
             return $resolver;
-        } else {
-            throw new \Exception('No relation resolver for field "' . $fieldname . '" found.', 1488369044);
         }
+        throw new \Exception('No relation resolver for field "' . $fieldname . '" found.', 1488369044);
+
     }
 }

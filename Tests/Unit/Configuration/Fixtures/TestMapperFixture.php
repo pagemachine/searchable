@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 
 use PAGEmachine\Searchable\Mapper\DefaultMapper;
@@ -6,7 +7,6 @@ use PAGEmachine\Searchable\Mapper\DefaultMapper;
 /*
  * This file is part of the Pagemachine Searchable project.
  */
-
 
 class TestMapperFixture extends DefaultMapper
 {

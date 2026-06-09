@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 /*
@@ -20,7 +21,6 @@ class BulkQuery extends AbstractQuery
 
     /**
      * @param string $pipeline
-     * @return void
      */
     public function setPipeline($pipeline)
     {
@@ -41,7 +41,6 @@ class BulkQuery extends AbstractQuery
 
     /**
      * Creates the basic information for bulk indexing
-     * @return void
      */
     public function init()
     {
@@ -60,8 +59,6 @@ class BulkQuery extends AbstractQuery
      *
      * @param int $uid The uid of the current record
      * @param array $body
-     *
-     * @return void
      */
     public function addRow($uid, $body)
     {
@@ -102,7 +99,7 @@ class BulkQuery extends AbstractQuery
             $response = $this->client->bulk($this->getParameters());
 
             if ($response['errors'] ?? false) {
-                $this->logger->error("Bulk Query response contains errors: ", $response);
+                $this->logger->error('Bulk Query response contains errors: ', $response);
             }
         }
 
@@ -114,7 +111,6 @@ class BulkQuery extends AbstractQuery
      * @todo move this away from the bulkquery (does not fit its domain)
      *
      * @param  int $id
-     * @return void
      */
     public function delete($id)
     {
@@ -128,15 +124,13 @@ class BulkQuery extends AbstractQuery
             $response = $this->client->delete($params);
 
             if ($response['errors'] ?? false) {
-                $this->logger->error("Delete Query response contains errors: ", $response);
+                $this->logger->error('Delete Query response contains errors: ', $response);
             }
         }
     }
 
     /**
      * Resets the body (for batch indexing)
-     *
-     * @return void
      */
     public function resetBody()
     {

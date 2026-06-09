@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
@@ -7,9 +8,6 @@ use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
  * This file is part of the Pagemachine Searchable project.
  */
 
-/**
- *
- */
 interface RelationResolverInterface
 {
     /**

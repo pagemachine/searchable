@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 
 use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
@@ -6,7 +7,6 @@ use PAGEmachine\Searchable\DataCollector\TcaDataCollector;
 /*
  * This file is part of the Pagemachine Searchable project.
  */
-
 
 class TcaDataCollectorFixture extends TcaDataCollector
 {

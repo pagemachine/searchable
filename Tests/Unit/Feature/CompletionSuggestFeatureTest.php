@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\CompletionSuggestFeature;
@@ -45,7 +46,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         ];
         $record = $this->feature->modifyRecord($record);
 
-        $this->assertEquals(['one', 'two'], $record['autosuggest']['input']);
+        self::assertEquals(['one', 'two'], $record['autosuggest']['input']);
     }
 
     #[Test]
@@ -63,8 +64,8 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         ];
         $record = $this->feature->modifyRecord($record);
 
-        $this->assertEquals(['one', 'two', 'three'], $record['autosuggest']['input']);
-        $this->assertArrayNotHasKey('autosuggest', $record['child']);
+        self::assertEquals(['one', 'two', 'three'], $record['autosuggest']['input']);
+        self::assertArrayNotHasKey('autosuggest', $record['child']);
     }
 
     #[Test]
@@ -84,7 +85,7 @@ class CompletionSuggestFeatureTest extends UnitTestCase
         ];
         $record = $this->feature->modifyRecord($record);
 
-        $this->assertEquals(['one', 'two', 'three'], $record['autosuggest']['input']);
-        $this->assertArrayNotHasKey('autosuggest', $record['children'][0]);
+        self::assertEquals(['one', 'two', 'three'], $record['autosuggest']['input']);
+        self::assertArrayNotHasKey('autosuggest', $record['children'][0]);
     }
 }

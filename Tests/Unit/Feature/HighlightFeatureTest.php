@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Feature;
 
 use PAGEmachine\Searchable\Feature\HighlightFeature;
@@ -39,10 +40,9 @@ class HighlightFeatureTest extends UnitTestCase
             'highlightField' => 'searchable_highlight',
         ];
 
-
         $mapping = HighlightFeature::modifyMapping([], $configuration);
 
-        $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
+        self::assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
     #[Test]
@@ -63,11 +63,10 @@ class HighlightFeatureTest extends UnitTestCase
             ],
         ];
 
-
         $mapping = HighlightFeature::modifyMapping($mapping, $configuration);
 
-        $this->assertEquals('text', $mapping['properties']['fieldone']['type'] ?? null);
-        $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
+        self::assertEquals('text', $mapping['properties']['fieldone']['type'] ?? null);
+        self::assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
     }
 
     #[Test]
@@ -100,10 +99,10 @@ class HighlightFeatureTest extends UnitTestCase
 
         $mapping = HighlightFeature::modifyMapping($mapping, $configuration);
 
-        $this->assertEquals('text', $mapping['properties']['fieldone']['type'] ?? null);
-        $this->assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
+        self::assertEquals('text', $mapping['properties']['fieldone']['type'] ?? null);
+        self::assertEquals(['searchable_highlight'], $mapping['properties']['fieldone']['copy_to'] ?? null);
 
-        $this->assertEquals('text', $mapping['properties']['sublevel']['properties']['fieldtwo']['type'] ?? null);
-        $this->assertEquals(['searchable_highlight'], $mapping['properties']['sublevel']['properties']['fieldtwo']['copy_to'] ?? null);
+        self::assertEquals('text', $mapping['properties']['sublevel']['properties']['fieldtwo']['type'] ?? null);
+        self::assertEquals(['searchable_highlight'], $mapping['properties']['sublevel']['properties']['fieldtwo']['copy_to'] ?? null);
     }
 }

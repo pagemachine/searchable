@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Service;
 
@@ -610,9 +611,6 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         );
     }
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();

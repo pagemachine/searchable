@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector;
 
 /*
@@ -31,7 +32,6 @@ interface DataCollectorInterface
      * @return DataCollectorInterface $subCollector
      */
     public function getSubCollectorForField($field);
-
 
     /**
      * Returns the merged configuration (default + custom)

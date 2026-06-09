@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\ViewHelper;
 
 /*
@@ -40,6 +41,6 @@ class SiteLanguageViewHelperTest extends TestCase
     {
         GeneralUtility::makeInstance(Context::class)->setAspect('language', new LanguageAspect(1));
 
-        $this->assertEquals(1, $this->viewHelper->render());
+        self::assertEquals(1, $this->viewHelper->render());
     }
 }

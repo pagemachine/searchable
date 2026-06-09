@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration;
 
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
@@ -74,7 +75,7 @@ class ConfigurationManagerTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
+        self::assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
     #[Test]
@@ -89,7 +90,7 @@ class ConfigurationManagerTest extends UnitTestCase
         ];
         $this->extconfService->getIndexers()->willReturn($configuration);
 
-        $this->assertEquals($configuration, $this->configurationManager->getIndexerConfiguration());
+        self::assertEquals($configuration, $this->configurationManager->getIndexerConfiguration());
     }
 
     #[Test]
@@ -129,7 +130,7 @@ class ConfigurationManagerTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
+        self::assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
     #[Test]
@@ -187,7 +188,7 @@ class ConfigurationManagerTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
+        self::assertEquals($expectedConfiguration, $this->configurationManager->getIndexerConfiguration());
     }
 
     #[Test]
@@ -214,9 +215,9 @@ class ConfigurationManagerTest extends UnitTestCase
 
         $mapping = $this->configurationManager->getMapping();
 
-        $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
-        $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
-        $this->assertEquals('newMapperValue', $mapping['pages']['properties']['newKey']);
+        self::assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
+        self::assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
+        self::assertEquals('newMapperValue', $mapping['pages']['properties']['newKey']);
     }
 
     #[Test]
@@ -246,9 +247,9 @@ class ConfigurationManagerTest extends UnitTestCase
 
         $mapping = $this->configurationManager->getMapping();
 
-        $this->assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
-        $this->assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
-        $this->assertEquals('featurevalue', $mapping['pages']['featureproperty']);
+        self::assertEquals('existingValue', $mapping['pages']['properties']['existingKey']);
+        self::assertEquals('overrideValue', $mapping['pages']['properties']['overrideKey']);
+        self::assertEquals('featurevalue', $mapping['pages']['featureproperty']);
     }
 
     #[Test]
@@ -325,6 +326,6 @@ class ConfigurationManagerTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expectedUpdateConfiguration, $this->configurationManager->getUpdateConfiguration());
+        self::assertEquals($expectedUpdateConfiguration, $this->configurationManager->getUpdateConfiguration());
     }
 }
