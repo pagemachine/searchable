@@ -3,6 +3,7 @@
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
+use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
 use PAGEmachine\Searchable\LinkBuilder\LinkBuilderInterface;
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
 use PAGEmachine\Searchable\Preview\DefaultPreviewRenderer;
@@ -46,7 +47,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     protected $query;
 
     /**
-     * @var \PAGEmachine\Searchable\DataCollector\DataCollectorInterface
+     * @var DataCollectorInterface
      */
     protected $dataCollector;
 

@@ -2,6 +2,7 @@
 
 namespace PAGEmachine\Searchable;
 
+use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\Service\ExtconfService;
 
@@ -17,14 +18,14 @@ class Connection
     /**
      * The cached ES client
      *
-     * @var \Elasticsearch\Client
+     * @var Client
      */
     protected static $client;
 
     /**
      * Returns the (configured) ES Client
      *
-     * @return \Elasticsearch\Client
+     * @return Client
      */
     public static function getClient()
     {

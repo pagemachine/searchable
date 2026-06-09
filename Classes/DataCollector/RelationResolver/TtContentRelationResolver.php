@@ -17,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TtContentRelationResolver implements SingletonInterface, RelationResolverInterface
 {
     /**
-     * @var \TYPO3\CMS\Core\Domain\Repository\PageRepository
+     * @var PageRepository
      */
     protected $pageRepository;
 

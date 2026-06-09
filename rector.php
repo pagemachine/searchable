@@ -16,7 +16,10 @@ return RectorConfig::configure()
     ->withSkip([
         __DIR__ . '/Tests/Functional/Fixtures/Extensions/*/Configuration/*',
     ])
-    ->withImportNames(true, false, false, true)
+    ->withImportNames(
+        importShortClasses: false,
+        removeUnusedImports: true,
+    )
     ->withPhpSets()
     ->withSets([
         PHPUnitSetList::PHPUNIT_90,

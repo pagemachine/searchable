@@ -3,6 +3,7 @@
 namespace PAGEmachine\Searchable\DataCollector;
 
 use Doctrine\DBAL\ArrayParameterType;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
 /*
  * This file is part of the Pagemachine Searchable project.
@@ -46,7 +47,7 @@ class FileDataCollector extends TcaDataCollector implements DataCollectorInterfa
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
+     * @return QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {

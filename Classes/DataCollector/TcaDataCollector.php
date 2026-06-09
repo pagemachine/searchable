@@ -9,6 +9,7 @@ use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
 use PAGEmachine\Searchable\DataCollector\Utility\OverlayUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -333,7 +334,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      * Modify this method if you want to apply custom restrictions
      *
      * @param  bool $applyLanguageRestriction
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder $subCollector
+     * @return QueryBuilder $subCollector
      */
     public function buildUidListQueryBuilder($applyLanguageRestriction = false)
     {
