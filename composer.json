@@ -102,8 +102,8 @@
         "php:rector:fix": "rector",
         "php:rector:lint": "rector --dry-run --no-progress-bar",
         "php:static:lint": "phpstan analyse --ansi --no-progress --configuration=phpstan.neon",
-        "php:style:fix": "phpcbf",
-        "php:style:lint": "phpcs",
+        "php:style:fix": "php-cs-fixer fix --diff",
+        "php:style:lint": "php-cs-fixer check --diff",
         "php:syntax:lint": "parallel-lint --show-deprecated --exclude bin --exclude vendor --exclude web .",
         "php:unit:test": "phpunit --colors=always",
         "ter:deploy": [
