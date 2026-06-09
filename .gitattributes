@@ -2,6 +2,7 @@
 .gitattributes export-ignore
 .github export-ignore
 .gitignore export-ignore
+.php-cs-fixer.dist.php export-ignore
 composer.lock export-ignore
 docker-compose.yml export-ignore
 package.json export-ignore
