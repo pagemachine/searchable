@@ -30,7 +30,7 @@ class QueryBuilder extends BaseQueryBuilder
 
         $fromParts = $this->getFromHelper();
         if (!empty($fromParts)) {
-            $fromTable = $fromParts['table'] ?: $fromParts[0]->table;
+            $fromTable = $fromParts['table'] ?? $fromParts[0]->table;
             $tableName = $this->unquoteSingleIdentifier($fromTable);
 
             if ($this->getTypeHelper() === $this->queryType()::INSERT) {
