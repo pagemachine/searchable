@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Utility;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,8 +39,7 @@ class TsfeUtility
         private readonly ?SysTemplateRepository $sysTemplateRepository = null,
         private readonly ?FrontendTypoScriptFactory $frontendTypoScriptFactory = null,
         private readonly ?PageInformationFactory $pageInformationFactory = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Initializes TSFE. This is necessary to have proper environment for typoLink.
@@ -51,7 +51,7 @@ class TsfeUtility
             'TSFE' => $GLOBALS['TSFE'] ?? null,
         ];
 
-        # TODO: For page indexer records at least, we should be able to get the site from the record directly
+        // TODO: For page indexer records at least, we should be able to get the site from the record directly
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
         $site = $siteIdentifier ? $siteFinder->getSiteByIdentifier($siteIdentifier) : array_values($siteFinder->getAllSites())[0] ?? null;
         $pageId = $site ? $site->getRootPageId() : 0;
@@ -104,7 +104,6 @@ class TsfeUtility
             $frontendController->initializeLanguageService($request); // @phpstan-ignore class.notFound
             $GLOBALS['TSFE'] = $frontendController;
         }
-
 
         return $previous;
     }

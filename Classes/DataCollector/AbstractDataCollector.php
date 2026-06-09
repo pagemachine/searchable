@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -31,14 +32,12 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
     }
 
     /**
-     *
      * @param array $config
      */
     public function setConfig($config = [])
     {
         $this->config = $config;
     }
-
 
     /**
      * @return array
@@ -58,7 +57,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
 
     /**
      * @param int $language
-     * @return void
      */
     public function setLanguage($language)
     {
@@ -123,7 +121,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
     }
 
     /**
-     *
      * @param array $config
      * @param int $language
      */
@@ -140,8 +137,6 @@ abstract class AbstractDataCollector implements DynamicConfigurationInterface
 
     /**
      * Builds up subcollectors. Note that this function will be called in the subcollectors as well, so all collectors build a tree structure.
-     *
-     * @return void
      */
     public function buildSubCollectors()
     {

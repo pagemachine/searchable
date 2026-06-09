@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Query\QueryInterface;
@@ -25,10 +26,9 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
     ];
 
     /**
-     *
      * @var string
      */
-    public static $featureName = "highlighting";
+    public static $featureName = 'highlighting';
 
     /**
      * Entry point to modify mapping
@@ -62,7 +62,7 @@ class HighlightFeature extends AbstractFeature implements FeatureInterface
         $parameters['body']['query']['multi_match']['fields'][] = $this->config['highlightField'];
         $parameters['body']['highlight'] = [
             'pre_tags' => ["<span class='searchable-highlight'>"],
-            'post_tags' => ["</span>"],
+            'post_tags' => ['</span>'],
             'fields' => [
                 $this->config['highlightField'] => new \stdClass(),
             ],

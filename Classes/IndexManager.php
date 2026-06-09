@@ -1,9 +1,9 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
-use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Queue\UpdateQueue;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
 use PAGEmachine\Searchable\Service\ExtconfService;
@@ -65,7 +65,7 @@ class IndexManager implements SingletonInterface
                     'nameIndex' => $index,
                     'language' => $language,
                 ];
-            };
+            }
 
             foreach (ExtconfService::getInstance()->getIndexers() as $name => $config) {
                 if ($name == ExtconfService::getIndexerKeyOfIndex($index)) {
@@ -87,7 +87,6 @@ class IndexManager implements SingletonInterface
     /**
      * Deletes and recreates an index
      * @param  string $index
-     * @return void
      */
     public function resetIndex($index)
     {

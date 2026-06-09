@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\Utility;
 
 use PAGEmachine\Searchable\DataCollector\Utility\FieldListUtility;
@@ -34,11 +35,10 @@ class FieldListUtilityTest extends UnitTestCase
     #[DataProvider('whitelistCombinations')]
     public function evaluatesWhitelistItem($item, $list, $allowed)
     {
-        $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_WHITELIST));
+        self::assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_WHITELIST));
     }
 
     /**
-     *
      * @return array
      */
     public static function whitelistCombinations()
@@ -54,11 +54,10 @@ class FieldListUtilityTest extends UnitTestCase
     #[DataProvider('blacklistCombinations')]
     public function evaluatesBlacklistItem($item, $list, $allowed)
     {
-        $this->assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_BLACKLIST));
+        self::assertEquals($allowed, $this->fieldListUtility->shouldInclude($item, $list, FieldListUtility::MODE_BLACKLIST));
     }
 
     /**
-     *
      * @return array
      */
     public static function blacklistCombinations()

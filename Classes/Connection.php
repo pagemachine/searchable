@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\ClientBuilder;
@@ -18,8 +19,7 @@ class Connection
      *
      * @var \Elasticsearch\Client
      */
-    protected static $client = null;
-
+    protected static $client;
 
     /**
      * Returns the (configured) ES Client

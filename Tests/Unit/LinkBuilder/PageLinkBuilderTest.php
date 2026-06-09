@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\PageLinkBuilder;
@@ -61,6 +62,6 @@ class PageLinkBuilderTest extends UnitTestCase
 
         $typolinkConfig = $this->pageLinkBuilder->finalizeTypoLinkConfig($config, []);
 
-        $this->assertEquals($expectedTypolinkConfig, $typolinkConfig);
+        self::assertEquals($expectedTypolinkConfig, $typolinkConfig);
     }
 }

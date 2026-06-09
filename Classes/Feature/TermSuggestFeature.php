@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Query\QueryInterface;
@@ -22,12 +23,11 @@ class TermSuggestFeature extends AbstractFeature implements FeatureInterface
     ];
 
     /**
-     *
      * @var string
      */
-    public static $featureName = "termSuggest";
+    public static $featureName = 'termSuggest';
 
-    public static $fieldName = "searchable_suggest";
+    public static $fieldName = 'searchable_suggest';
 
     /**
      * Entry point to modify Default mapping.

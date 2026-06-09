@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Indexer;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -65,7 +66,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     protected $features = [];
 
     /**
-     * @return String
+     * @return string
      */
     public function getIndex()
     {
@@ -73,22 +74,20 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     }
 
     /**
-     * @param String $index
-     * @return void
+     * @param string $index
      */
     public function setIndex($index)
     {
         $this->index = $index;
     }
 
-
     /**
-     * @var String $type
+     * @var string $type
      */
     protected $type;
 
     /**
-     * @return String
+     * @return string
      */
     public function getType()
     {
@@ -96,8 +95,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
     }
 
     /**
-     * @param String $type
-     * @return void
+     * @param string $type
      */
     public function setType($type)
     {
@@ -114,7 +112,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
     /**
      * @param int $language
-     * @return void
      */
     public function setLanguage($language)
     {
@@ -131,7 +128,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
     /**
      * @param array $config
-     * @return void
      */
     public function setConfig($config)
     {
@@ -319,7 +315,7 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
 
             if (!empty($updates)) {
                 foreach ($this->dataCollector->getUpdatedRecords($updates) as $fullRecord) {
-                    if (((int) ($fullRecord['deleted'] ?? 0)) === 1) {
+                    if (((int)($fullRecord['deleted'] ?? 0)) === 1) {
                         $this->query->delete($fullRecord['uid']);
                     } else {
                         $counter++;
@@ -352,7 +348,6 @@ class Indexer implements IndexerInterface, DynamicConfigurationInterface
      * Sends a batch
      *
      * @param  array $records
-     * @return void
      */
     protected function sendBatch($records)
     {

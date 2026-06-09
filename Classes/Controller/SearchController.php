@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Controller;
 
 use PAGEmachine\Searchable\Query\SearchQuery;
@@ -29,7 +30,7 @@ class SearchController extends ActionController
     public function initializeView($view)
     {
         $contentObject = $this->request->getAttribute('currentContentObject');
-        $view->assign("identifier", $contentObject->data['uid'] ?? random_int(0, 10000));
+        $view->assign('identifier', $contentObject->data['uid'] ?? random_int(0, 10000));
     }
 
     /**
@@ -39,8 +40,8 @@ class SearchController extends ActionController
      */
     public function searchbarAction($term = null): ResponseInterface
     {
-        $this->view->assign("settings", $this->settings);
-        $this->view->assign("term", $term);
+        $this->view->assign('settings', $this->settings);
+        $this->view->assign('term', $term);
         return $this->htmlResponse();
     }
 
@@ -49,7 +50,7 @@ class SearchController extends ActionController
      */
     public function liveSearchbarAction(): ResponseInterface
     {
-        $this->view->assign("settings", $this->settings);
+        $this->view->assign('settings', $this->settings);
         return $this->htmlResponse();
     }
 
@@ -80,7 +81,7 @@ class SearchController extends ActionController
             'settings' => $this->settings,
             'currentPage' => $page,
             'previousPage' => ($page > 1 ? $page - 1 : null),
-            'nextPage' => (array_key_exists($page+1, $pagesArray) ? $page + 1 : null),
+            'nextPage' => (array_key_exists($page + 1, $pagesArray) ? $page + 1 : null),
             'totalPages' => $pagesArray,
             'result' => $result,
         ]);

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Controller;
 
 use PAGEmachine\Searchable\IndexManager;
@@ -21,8 +22,7 @@ class BackendController extends ActionController
     public function __construct(
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
         private readonly UpdateQueue $updateQueue
-    ) {
-    }
+    ) {}
 
     /**
      * Backend controller overview action to show general information about the elasticsearch instance
@@ -31,12 +31,12 @@ class BackendController extends ActionController
     {
         $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         try {
-            $moduleTemplate->assign("updates", $this->fetchScheduledUpdates());
+            $moduleTemplate->assign('updates', $this->fetchScheduledUpdates());
 
             $stats = IndexManager::getInstance()->getStats();
 
-            $moduleTemplate->assign("health", $stats['health']);
-            $moduleTemplate->assign("indices", $stats['indices']);
+            $moduleTemplate->assign('health', $stats['health']);
+            $moduleTemplate->assign('indices', $stats['indices']);
         } catch (\Exception $e) {
             $this->addFlashMessage($e->getMessage(), $e::class, ContextualFeedbackSeverity::ERROR);
         }
@@ -45,7 +45,6 @@ class BackendController extends ActionController
 
     /**
      * Fetches scheduled updates for backend module
-     *
      */
     protected function fetchScheduledUpdates()
     {
@@ -84,7 +83,7 @@ class BackendController extends ActionController
         if ($url != '') {
             $result = $this->request($url, $body);
 
-            $moduleTemplate->assign('response', json_decode((string) $result['body'], true));
+            $moduleTemplate->assign('response', json_decode((string)$result['body'], true));
 
             $resultColor = match ($result['status']) {
                 '200' => 'success',
@@ -101,8 +100,8 @@ class BackendController extends ActionController
             $url = sprintf('%s/%s/', $this->getDefaultHost(), $indices[0] ?? 'typo3');
         }
 
-        $moduleTemplate->assign("url", $url);
-        $moduleTemplate->assign("body", $body);
+        $moduleTemplate->assign('url', $url);
+        $moduleTemplate->assign('body', $body);
         return $moduleTemplate->renderResponse('Backend/Request');
     }
 
@@ -127,7 +126,7 @@ class BackendController extends ActionController
                 $url = sprintf('%s/%s/_analyze', $hostUrl, $selectedIndex);
                 $body = json_encode(['text' => $text]);
                 $result = $this->request($url, $body);
-                $moduleTemplate->assign('response', json_decode((string) $result['body'], true));
+                $moduleTemplate->assign('response', json_decode((string)$result['body'], true));
             } catch (\Exception $e) {
                 $this->addFlashMessage($e->getMessage(), 'Error analyzing text', ContextualFeedbackSeverity::ERROR);
             }

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Hook;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +48,7 @@ class DynamicFlexFormHook
     public function parseDataStructureByIdentifierPostProcess($dataStructure, $identifier)
     {
         if ($identifier['tableName'] == 'tt_content' && $identifier['fieldName'] == 'pi_flexform' && in_array($identifier['dataStructureKey'], $this->allowedIdentifiers)) {
-            [$pluginKey, $listType] = explode(",", (string) $identifier['dataStructureKey']);
+            [$pluginKey, $listType] = explode(',', (string)$identifier['dataStructureKey']);
             $dataStructure['sheets']['features'] = $this->buildFlexSettingsFromTSSettings($pluginKey);
         }
         return $dataStructure;
@@ -69,8 +70,6 @@ class DynamicFlexFormHook
                 'el' => [],
             ],
         ];
-
-
 
         if (!empty($configuration['settings']['features'])) {
             foreach ($configuration['settings']['features'] as $feature => $value) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\TCA;
 
 use PAGEmachine\Searchable\Utility\BinaryConversionUtility;
@@ -15,14 +16,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PlainValueProcessor implements SingletonInterface
 {
     /**
-     *
      * @return PlainValueProcessor
      */
     public static function getInstance()
     {
         return GeneralUtility::makeInstance(self::class);
     }
-
 
     /**
      * Resolves the bitmask and puts in labels for checkboxes
@@ -41,14 +40,14 @@ class PlainValueProcessor implements SingletonInterface
         foreach ($activeItemKeys as $key) {
             $label = $fieldTca['items'][$key]['label'] ?? $fieldTca['items'][$key][0];
 
-            if (str_starts_with((string) $label, 'LLL:')) {
+            if (str_starts_with((string)$label, 'LLL:')) {
                 $label = $this->getLanguageService()->sL($label);
             }
 
             $items[] = $label;
         }
 
-        return implode(", ", $items);
+        return implode(', ', $items);
     }
 
     /**
@@ -60,7 +59,7 @@ class PlainValueProcessor implements SingletonInterface
      */
     public function processRadioField($value, $fieldTca)
     {
-        $label = "";
+        $label = '';
 
         if (is_array($fieldTca['items'])) {
             foreach ($fieldTca['items'] as $set) {
@@ -74,7 +73,7 @@ class PlainValueProcessor implements SingletonInterface
             }
         }
 
-        if (str_starts_with((string) $label, 'LLL:')) {
+        if (str_starts_with((string)$label, 'LLL:')) {
             $label = $this->getLanguageService()->sL($label);
         }
 

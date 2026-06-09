@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\Configuration\Fixtures;
 
 use PAGEmachine\Searchable\Feature\AbstractFeature;
@@ -7,7 +8,6 @@ use PAGEmachine\Searchable\Feature\FeatureInterface;
 /*
  * This file is part of the Pagemachine Searchable project.
  */
-
 
 class TestFeatureFixture extends AbstractFeature implements FeatureInterface
 {

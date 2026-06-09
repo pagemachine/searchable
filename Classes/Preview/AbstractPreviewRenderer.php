@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Preview;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -35,7 +36,5 @@ abstract class AbstractPreviewRenderer implements DynamicConfigurationInterface
     /**
      * @param array $config
      */
-    public function __construct(protected $config)
-    {
-    }
+    public function __construct(protected $config) {}
 }

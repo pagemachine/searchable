@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -53,9 +54,7 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     /**
      * @param array $config
      */
-    public function __construct(protected $config = null)
-    {
-    }
+    public function __construct(protected $config = null) {}
 
     /**
      * Creates merged link configuration
@@ -157,7 +156,6 @@ abstract class AbstractLinkBuilder implements LinkBuilderInterface, DynamicConfi
     }
 
     /**
-     *
      * @param  array $configuration
      * @param  array $record
      * @return array

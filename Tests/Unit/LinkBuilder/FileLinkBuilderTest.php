@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\FileLinkBuilder;
@@ -37,7 +38,7 @@ class FileLinkBuilderTest extends UnitTestCase
 
         $linkConfiguration = $linkBuilder->finalizeTypoLinkConfig([], $record);
 
-        $this->assertEquals('t3://file?uid=22', $linkConfiguration['parameter']);
+        self::assertEquals('t3://file?uid=22', $linkConfiguration['parameter']);
     }
 
     #[Test]
@@ -60,7 +61,7 @@ class FileLinkBuilderTest extends UnitTestCase
 
         $linkConfiguration = $linkBuilder->finalizeTypoLinkConfig([], $record);
 
-        $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
+        self::assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
 
     #[Test]
@@ -85,6 +86,6 @@ class FileLinkBuilderTest extends UnitTestCase
 
         $linkConfiguration = $linkBuilder->finalizeTypoLinkConfig([], $record);
 
-        $this->assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
+        self::assertEquals('t3://file?uid=25', $linkConfiguration['parameter']);
     }
 }

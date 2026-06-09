@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\RelationResolver\FormEngine;
 
 use PAGEmachine\Searchable\DataCollector\DataCollectorInterface;
@@ -10,13 +11,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * This file is part of the Pagemachine Searchable project.
  */
 
-/**
- *
- */
 class SelectRelationResolver implements SingletonInterface, RelationResolverInterface
 {
     /**
-     *
      * @return SelectRelationResolver
      */
     public static function getInstance()

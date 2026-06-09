@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Eid;
 
 use Psr\Http\Message\ResponseInterface;

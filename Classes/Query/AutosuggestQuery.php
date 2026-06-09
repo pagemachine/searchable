@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\LanguageIdTrait;
@@ -17,7 +18,7 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface
     /**
      * @var string $term
      */
-    protected $term = "";
+    protected $term = '';
 
     /**
      * @return string
@@ -39,8 +40,6 @@ class AutosuggestQuery extends SearchQuery implements QueryInterface
 
     /**
      * Builds the query
-     *
-     * @return void
      */
     protected function build()
     {

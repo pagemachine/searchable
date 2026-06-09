@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Configuration\DynamicConfigurationInterface;
@@ -36,14 +37,12 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
     /**
      * @param array $config
      */
-    public function __construct(protected $config = null)
-    {
-    }
+    public function __construct(protected $config = null) {}
 
     /**
      * @var string
      */
-    public static $featureName = "";
+    public static $featureName = '';
 
     /**
      * Returns the feature name (used in TypoScript to enable/disable the feature in FE)

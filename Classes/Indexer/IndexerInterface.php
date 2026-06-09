@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Indexer;
 
 /*
@@ -14,32 +15,30 @@ interface IndexerInterface
      */
     public function run();
 
-     /**
-     * Update function for indexing
-     *
-     * @return \Generator
-     */
+    /**
+    * Update function for indexing
+    *
+    * @return \Generator
+    */
     public function runUpdate();
 
     /**
-     * @return String
+     * @return string
      */
     public function getIndex();
 
     /**
-     * @param String $index
-     * @return void
+     * @param string $index
      */
     public function setIndex($index);
 
     /**
-     * @return String
+     * @return string
      */
     public function getType();
 
     /**
-     * @param String $type
-     * @return void
+     * @param string $type
      */
     public function setType($type);
 
@@ -50,7 +49,6 @@ interface IndexerInterface
 
     /**
      * @param int $language
-     * @return void
      */
     public function setLanguage($language);
 
@@ -61,7 +59,6 @@ interface IndexerInterface
 
     /**
      * @param array $config
-     * @return void
      */
     public function setConfig($config);
 }

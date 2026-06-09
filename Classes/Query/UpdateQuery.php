@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 use PAGEmachine\Searchable\Queue\UpdateQueue;
@@ -16,9 +17,6 @@ class UpdateQuery extends AbstractQuery
 {
     protected UpdateQueue $updateQueue;
 
-    /**
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();
@@ -30,7 +28,6 @@ class UpdateQuery extends AbstractQuery
 
     /**
      * Creates the basic information for bulk indexing
-     * @return void
      */
     public function init()
     {
@@ -42,7 +39,6 @@ class UpdateQuery extends AbstractQuery
 
     /**
      * Adds a new update query string
-     *
      */
     public function addUpdate($type, $property, $id): void
     {
@@ -70,7 +66,7 @@ class UpdateQuery extends AbstractQuery
                 $recordids[$update['property_uid']] = $update['property_uid'];
             } else {
                 $updateParams[] = [
-                    "term" => [
+                    'term' => [
                         $update['property'] => $update['property_uid'],
                     ],
                 ];
@@ -94,7 +90,7 @@ class UpdateQuery extends AbstractQuery
 
             if (!empty($result['hits']['hits'])) {
                 foreach ($result['hits']['hits'] as $hit) {
-                    $recordids[$hit['_id']] = (int) $hit['_id'];
+                    $recordids[$hit['_id']] = (int)$hit['_id'];
                 }
             }
         }

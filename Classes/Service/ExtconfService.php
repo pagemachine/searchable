@@ -65,7 +65,6 @@ class ExtconfService implements SingletonInterface
         return array_keys($indicesConfiguration);
     }
 
-
     /**
      * Returns the language indices for a given language, if set. Otherwise throws an error so no invalid indices are created
      *
@@ -232,7 +231,7 @@ class ExtconfService implements SingletonInterface
      */
     public function getHostsSettings()
     {
-        $hosts = explode(",", (string) $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts']);
+        $hosts = explode(',', (string)$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts']);
 
         return $hosts;
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector\TCA;
 
 use PAGEmachine\Searchable\DataCollector\TCA\PlainValueProcessor;
@@ -48,7 +49,7 @@ class PlainValueProcessorTest extends UnitTestCase
 
         $output = $this->plainValueProcessor->processCheckboxField($value, $fieldTca);
 
-        $this->assertEquals($expectedOutput, $output);
+        self::assertEquals($expectedOutput, $output);
     }
 
     #[Test]
@@ -70,7 +71,7 @@ class PlainValueProcessorTest extends UnitTestCase
 
         $output = $this->plainValueProcessor->processCheckboxField($value, $fieldTca);
 
-        $this->assertEquals($expectedOutput, $output);
+        self::assertEquals($expectedOutput, $output);
     }
 
     #[Test]
@@ -87,11 +88,11 @@ class PlainValueProcessorTest extends UnitTestCase
 
         $value = 2;
 
-        $expectedOutput = "baz";
+        $expectedOutput = 'baz';
 
         $output = $this->plainValueProcessor->processRadioField($value, $fieldTca);
 
-        $this->assertEquals($expectedOutput, $output);
+        self::assertEquals($expectedOutput, $output);
     }
 
     #[Test]
@@ -108,11 +109,11 @@ class PlainValueProcessorTest extends UnitTestCase
 
         $value = 2;
 
-        $expectedOutput = "baz";
+        $expectedOutput = 'baz';
 
         $output = $this->plainValueProcessor->processRadioField($value, $fieldTca);
 
-        $this->assertEquals($expectedOutput, $output);
+        self::assertEquals($expectedOutput, $output);
     }
 
     #[Test]
@@ -128,10 +129,10 @@ class PlainValueProcessorTest extends UnitTestCase
 
         $value = 'bazvalue';
 
-        $expectedOutput = "bazlabel";
+        $expectedOutput = 'bazlabel';
 
         $output = $this->plainValueProcessor->processRadioField($value, $fieldTca);
 
-        $this->assertEquals($expectedOutput, $output);
+        self::assertEquals($expectedOutput, $output);
     }
 }

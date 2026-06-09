@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\LinkBuilder;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\RelationResolver\TtContentRelationResolver;
@@ -76,7 +77,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
      *
      * @var string|null
      */
-    protected $doktypes = null;
+    protected $doktypes;
 
     /**
      * Returns the doktypes needed for db fetching
@@ -87,7 +88,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     {
         if ($this->doktypes == null) {
             $this->doktypes = implode(
-                ",",
+                ',',
                 array_merge($this->config['doktypes'], $this->config['transientDoktypes'])
             );
         }
@@ -96,8 +97,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     }
 
     /**
-     *
-     *
      * @return \Generator
      */
     public function getRecords()
@@ -108,8 +107,6 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
     }
 
     /**
-     *
-     *
      * @return \Generator|null
      */
     protected function getPageRecords($pid = null, $includeSelf = false)
@@ -177,7 +174,7 @@ class PagesDataCollector extends TcaDataCollector implements DataCollectorInterf
         $updateUidList = $this->filterPageListByRootline($updateUidList, $this->config['pid']);
 
         $this->config['pid'] = null;
-        $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(",", $this->config['doktypes']) . ')';
+        $this->config['select']['additionalWhereClauses']['doktypes'] = ' AND pages.doktype IN(' . implode(',', $this->config['doktypes']) . ')';
 
         foreach (parent::getUpdatedRecords($updateUidList) as $record) {
             yield $record;

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Query;
 
 use Elasticsearch\Client;
@@ -55,7 +56,6 @@ abstract class AbstractQuery implements QueryInterface
 
     /**
      * @param string $key
-     * @return void
      */
     public function setParameter($key, mixed $parameter)
     {
@@ -183,7 +183,6 @@ abstract class AbstractQuery implements QueryInterface
         return $this;
     }
 
-
     /**
      * @var bool $pluginMode
      */
@@ -240,7 +239,6 @@ abstract class AbstractQuery implements QueryInterface
 
     /**
      * Apply features to query
-     *
      */
     protected function applyFeatures()
     {
@@ -263,7 +261,7 @@ abstract class AbstractQuery implements QueryInterface
     {
         if (!$this->pluginMode ||
             (isset($this->featureSettings[$featureName]) && $this->featureSettings[$featureName] == 1)
-            ) {
+        ) {
             return true;
         }
         return false;

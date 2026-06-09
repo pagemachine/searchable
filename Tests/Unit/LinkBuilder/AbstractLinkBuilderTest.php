@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\LinkBuilder;
 
 use PAGEmachine\Searchable\LinkBuilder\AbstractLinkBuilder;
@@ -35,11 +36,10 @@ class AbstractLinkBuilderTest extends UnitTestCase
             ],
         ];
 
-        $linkBuilder = new class($configuration) extends AbstractLinkBuilder {
-        };
+        $linkBuilder = new class ($configuration) extends AbstractLinkBuilder {};
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, $language);
 
-        $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
+        self::assertEquals($expectedLinkConfiguration, $linkConfiguration);
     }
 
     /**
@@ -85,16 +85,14 @@ class AbstractLinkBuilderTest extends UnitTestCase
             'page' => '123',
         ];
 
-        $linkBuilder = new class($configuration) extends AbstractLinkBuilder {
-        };
+        $linkBuilder = new class ($configuration) extends AbstractLinkBuilder {};
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
         $expectedLinkConfiguration = [
             'pageUid' => '123',
         ];
 
-        $this->assertEquals($expectedLinkConfiguration, $linkConfiguration);
+        self::assertEquals($expectedLinkConfiguration, $linkConfiguration);
     }
-
 
     #[Test]
     public function replacesNestedDynamicFields()
@@ -117,12 +115,11 @@ class AbstractLinkBuilderTest extends UnitTestCase
             'property2' => 'value2',
         ];
 
-        $linkBuilder = new class($configuration) extends AbstractLinkBuilder {
-        };
+        $linkBuilder = new class ($configuration) extends AbstractLinkBuilder {};
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
 
-        $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
-        $this->assertSame(['param1' => 'value1', 'param2' => 'value2'], $linkConfiguration['additionalParams'] ?? null);
+        self::assertSame('123', $linkConfiguration['pageUid'] ?? null);
+        self::assertSame(['param1' => 'value1', 'param2' => 'value2'], $linkConfiguration['additionalParams'] ?? null);
     }
 
     #[Test]
@@ -137,10 +134,9 @@ class AbstractLinkBuilderTest extends UnitTestCase
 
         $record = [];
 
-        $linkBuilder = new class($configuration) extends AbstractLinkBuilder {
-        };
+        $linkBuilder = new class ($configuration) extends AbstractLinkBuilder {};
         $linkConfiguration = $linkBuilder->createLinkConfiguration($record, 0);
 
-        $this->assertSame('123', $linkConfiguration['pageUid'] ?? null);
+        self::assertSame('123', $linkConfiguration['pageUid'] ?? null);
     }
 }

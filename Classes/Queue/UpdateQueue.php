@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Queue;
 
 /*
@@ -16,9 +17,7 @@ final readonly class UpdateQueue
 
     private const TABLE_NAME = 'tx_searchable_update';
 
-    public function __construct(private ConnectionPool $connectionPool)
-    {
-    }
+    public function __construct(private ConnectionPool $connectionPool) {}
 
     public function enqueue(
         string $type,
@@ -70,7 +69,7 @@ final readonly class UpdateQueue
             ->executeQuery()
             ->fetchOne();
 
-        return $result === false ? 0 : (int) $result;
+        return $result === false ? 0 : (int)$result;
     }
 
     public function clear(string $type, int $maxUid): void

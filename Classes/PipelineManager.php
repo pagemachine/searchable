@@ -1,8 +1,8 @@
 <?php
+
 namespace PAGEmachine\Searchable;
 
 use Elasticsearch\Client;
-use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -40,8 +40,6 @@ class PipelineManager implements SingletonInterface
 
     /**
      * Creates all defined pipelines
-     *
-     * @return void
      */
     public function createPipelines()
     {

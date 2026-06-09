@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Tests\Unit\DataCollector;
 
 use PAGEmachine\Searchable\DataCollector\PagesDataCollector;
@@ -120,20 +121,20 @@ class PagesDataCollectorTest extends UnitTestCase
 
         $pagesDataCollector = $this->getPagesDataCollector(0);
 
-        $pagesDataCollector->method("getRecord")
+        $pagesDataCollector->method('getRecord')
             ->willReturnMap($valueMap);
 
-        $this->pageRepository->getMenu(0, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['3' => ['doktype' => '1'], '4' => ['doktype' => '1']]);
-        $this->pageRepository->getMenu(3, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
-        $this->pageRepository->getMenu(4, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
+        $this->pageRepository->getMenu(0, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn(['3' => ['doktype' => '1'], '4' => ['doktype' => '1']]);
+        $this->pageRepository->getMenu(3, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn([]);
+        $this->pageRepository->getMenu(4, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn([]);
 
         GeneralUtility::addInstance(PageRepository::class, $this->pageRepository->reveal());
 
         $records = $pagesDataCollector->getRecords();
 
-        $this->assertEquals($pageList[0], $records->current());
+        self::assertEquals($pageList[0], $records->current());
         $records->next();
-        $this->assertEquals($pageList[1], $records->current());
+        self::assertEquals($pageList[1], $records->current());
     }
 
     #[Test]
@@ -159,20 +160,20 @@ class PagesDataCollectorTest extends UnitTestCase
 
         $pagesDataCollector = $this->getPagesDataCollector(0);
 
-        $pagesDataCollector->method("getRecord")
+        $pagesDataCollector->method('getRecord')
             ->willReturnMap($valueMap);
 
-        $this->pageRepository->getMenu(0, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['3' => ['doktype' => '1']]);
-        $this->pageRepository->getMenu(3, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['4' => ['doktype' => '1']]);
-        $this->pageRepository->getMenu(4, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
+        $this->pageRepository->getMenu(0, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn(['3' => ['doktype' => '1']]);
+        $this->pageRepository->getMenu(3, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn(['4' => ['doktype' => '1']]);
+        $this->pageRepository->getMenu(4, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn([]);
 
         GeneralUtility::addInstance(PageRepository::class, $this->pageRepository->reveal());
 
         $records = $pagesDataCollector->getRecords();
 
-        $this->assertEquals($pageList[0], $records->current());
+        self::assertEquals($pageList[0], $records->current());
         $records->next();
-        $this->assertEquals($pageList[1], $records->current());
+        self::assertEquals($pageList[1], $records->current());
     }
 
     #[Test]
@@ -198,20 +199,20 @@ class PagesDataCollectorTest extends UnitTestCase
 
         $pagesDataCollector = $this->getPagesDataCollector(3);
 
-        $pagesDataCollector->method("getRecord")
+        $pagesDataCollector->method('getRecord')
             ->willReturnMap($valueMap);
 
-        $this->pageRepository->getMenuForPages([3], Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['3' => ['doktype' => '1']]);
-        $this->pageRepository->getMenu(0, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['3' => ['doktype' => '1']]);
-        $this->pageRepository->getMenu(3, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn(['4' => ['doktype' => '1']]);
-        $this->pageRepository->getMenu(4, Argument::type("string"), 'sorting', Argument::type("string"))->willReturn([]);
+        $this->pageRepository->getMenuForPages([3], Argument::type('string'), 'sorting', Argument::type('string'))->willReturn(['3' => ['doktype' => '1']]);
+        $this->pageRepository->getMenu(0, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn(['3' => ['doktype' => '1']]);
+        $this->pageRepository->getMenu(3, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn(['4' => ['doktype' => '1']]);
+        $this->pageRepository->getMenu(4, Argument::type('string'), 'sorting', Argument::type('string'))->willReturn([]);
 
         GeneralUtility::addInstance(PageRepository::class, $this->pageRepository->reveal());
 
         $records = $pagesDataCollector->getRecords();
 
-        $this->assertEquals($pageList[0], $records->current());
+        self::assertEquals($pageList[0], $records->current());
         $records->next();
-        $this->assertEquals($pageList[1], $records->current());
+        self::assertEquals($pageList[1], $records->current());
     }
 }

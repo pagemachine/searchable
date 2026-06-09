@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector;
 
 use Doctrine\DBAL\ArrayParameterType;
@@ -48,7 +49,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
      *
      * @var array|null
      */
-    protected $fieldWhitelist = null;
+    protected $fieldWhitelist;
 
     /**
      * This function will be called by the ConfigurationManager.
@@ -67,7 +68,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
                 if ($parentConfiguration['table'] && $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table']) {
                     $defaultConfiguration['table'] = $GLOBALS['TCA'][$parentConfiguration['table']]['columns'][$currentSubconfiguration['field']]['config']['foreign_table'];
                 } else {
-                    throw new \Exception("Table must be set for TCA record indexing.", 1487344697);
+                    throw new \Exception('Table must be set for TCA record indexing.', 1487344697);
                 }
             }
         }
@@ -124,7 +125,6 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
 
         return false;
     }
-
 
     /**
      * @return array
@@ -341,7 +341,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         $whereExpressions = [];
 
         $queryBuilder
-            ->select($this->config['table'].'.uid')
+            ->select($this->config['table'] . '.uid')
             ->from($this->config['table']);
 
         //PID restriction
@@ -352,7 +352,7 @@ class TcaDataCollector extends AbstractDataCollector implements DataCollectorInt
         //LanguageRestriction
         if ($applyLanguageRestriction && !empty($this->getTcaConfiguration()['ctrl']['languageField'])) {
             $whereExpressions[] = $queryBuilder->expr()->in(
-                $this->config['table'] . "." . $this->getTcaConfiguration()['ctrl']['languageField'],
+                $this->config['table'] . '.' . $this->getTcaConfiguration()['ctrl']['languageField'],
                 $queryBuilder->createNamedParameter([0, -1], ArrayParameterType::INTEGER)
             );
         }

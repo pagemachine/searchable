@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector\Utility;
 
 use TYPO3\CMS\Core\SingletonInterface;

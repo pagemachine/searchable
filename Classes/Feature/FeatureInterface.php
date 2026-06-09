@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature;
 
 use PAGEmachine\Searchable\Query\QueryInterface;

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Feature\Traits;
 
 /*
@@ -66,7 +67,6 @@ trait FieldCollectionTrait
     }
 
     /**
-     *
      * @param array $collection
      * @return array $collection
      */

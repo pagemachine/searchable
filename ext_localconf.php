@@ -43,7 +43,6 @@ ExtensionUtility::configurePlugin(
     ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
 
-
 ExtensionUtility::configurePlugin(
     'Searchable',
     'Results',

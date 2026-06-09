@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\ViewHelpers;
 
 use PAGEmachine\Searchable\LanguageIdTrait;

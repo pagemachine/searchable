@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\DataCollector;
 
 use Doctrine\DBAL\ArrayParameterType;

@@ -1,4 +1,5 @@
 <?php
+
 namespace PAGEmachine\Searchable\Utility;
 
 /*
@@ -21,7 +22,7 @@ class BinaryConversionUtility
     {
         $checkedItemKeys = [];
 
-        for ($i=0; $i < $itemCount; $i++) {
+        for ($i = 0; $i < $itemCount; $i++) {
             $pow = 2 ** $i;
             if ($value & $pow) {
                 $checkedItemKeys[] = $i;

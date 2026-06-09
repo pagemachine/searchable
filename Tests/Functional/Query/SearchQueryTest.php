@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional\Query;
 
@@ -45,9 +46,9 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
 
         $result = $query->execute();
 
-        $this->assertEquals(2, $result['hits']['total']['value']);
-        $this->assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
-        $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
+        self::assertEquals(2, $result['hits']['total']['value']);
+        self::assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
+        self::assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
     }
 
     #[Test]
@@ -68,8 +69,8 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $query->setTerm('highlighting');
         $result = $query->execute();
 
-        $this->assertEquals(1, $result['hits']['total']['value']);
-        $this->assertStringContainsString(
+        self::assertEquals(1, $result['hits']['total']['value']);
+        self::assertStringContainsString(
             "<span class='searchable-highlight'>Highlighting</span>",
             $result['hits']['hits'][0]['highlight']['searchable_highlight'][0]
         );
@@ -99,7 +100,6 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
             'title' => 'Another test page',
         ]);
 
-
         $this->indexingService->indexFull();
         $this->syncIndices();
 
@@ -109,9 +109,9 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
 
         $result = $query->execute();
 
-        $this->assertEquals(2, $result['hits']['total']['value']);
-        $this->assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
-        $this->assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
+        self::assertEquals(2, $result['hits']['total']['value']);
+        self::assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
+        self::assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
 
         $query = GeneralUtility::makeInstance(SearchQuery::class);
         $query->setLanguage(1);
@@ -119,8 +119,8 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
 
         $result = $query->execute();
 
-        $this->assertEquals(1, $result['hits']['total']['value']);
-        $this->assertEquals('Dansk test page', $result['hits']['hits'][0]['_source']['title']);
+        self::assertEquals(1, $result['hits']['total']['value']);
+        self::assertEquals('Dansk test page', $result['hits']['hits'][0]['_source']['title']);
     }
 
     #[Test]
@@ -131,9 +131,9 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $indices = [$this->configIndexNames[1] . '_foo_pages'];
 
         $query->setIndices($indices);
-        $this->assertEquals([], $query->getElasticsearchIndices());
+        self::assertEquals([], $query->getElasticsearchIndices());
         $query->setRespectLanguage(false);
-        $this->assertEquals($indices, $query->getElasticsearchIndices());
+        self::assertEquals($indices, $query->getElasticsearchIndices());
     }
 
     #[Test]
@@ -143,8 +143,8 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $query->setLanguage(0);
 
         $query->setIndices(['foo_pages']);
-        $this->assertEquals([$this->configIndexNames[0] . '_foo_pages'], $query->getElasticsearchIndices());
+        self::assertEquals([$this->configIndexNames[0] . '_foo_pages'], $query->getElasticsearchIndices());
         $query->setRespectLanguage(false);
-        $this->assertEquals([$this->configIndexNames[0] . '_foo_pages', $this->configIndexNames[1] . '_foo_pages'], $query->getElasticsearchIndices());
+        self::assertEquals([$this->configIndexNames[0] . '_foo_pages', $this->configIndexNames[1] . '_foo_pages'], $query->getElasticsearchIndices());
     }
 }
