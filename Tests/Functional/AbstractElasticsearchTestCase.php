@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PAGEmachine\Searchable\Tests\Functional;
 
-use Elasticsearch\Client as ElasticsearchClient;
+use Elastic\Elasticsearch\Client as ElasticsearchClient;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;

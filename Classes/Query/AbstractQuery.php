@@ -2,7 +2,7 @@
 
 namespace PAGEmachine\Searchable\Query;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Connection;
 use PAGEmachine\Searchable\Service\ExtconfService;

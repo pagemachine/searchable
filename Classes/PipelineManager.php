@@ -2,7 +2,7 @@
 
 namespace PAGEmachine\Searchable;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

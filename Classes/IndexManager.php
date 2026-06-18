@@ -2,7 +2,7 @@
 
 namespace PAGEmachine\Searchable;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 use PAGEmachine\Searchable\Configuration\ConfigurationManager;
 use PAGEmachine\Searchable\Queue\UpdateQueue;
 use PAGEmachine\Searchable\Service\ConfigurationMergerService;
