@@ -110,7 +110,7 @@ class BulkQuery extends AbstractQuery
     {
         $params = [
             'index' => implode(',', $this->getElasticsearchIndices()),
-            'id' => $id,
+            'id' => (string)$id,
         ];
 
         if ($this->client->exists($params)->asBool()) {
