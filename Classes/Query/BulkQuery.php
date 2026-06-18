@@ -66,10 +66,8 @@ class BulkQuery extends AbstractQuery
         $this->parameters['body'][] = [
             'index' => [
                 '_index' => implode(',', $this->getElasticsearchIndices()),
-                '_type' => '_doc',
                 '_id' => $uid,
             ],
-
         ];
 
         $this->parameters['body'][] = $body;
@@ -116,7 +114,6 @@ class BulkQuery extends AbstractQuery
     {
         $params = [
             'index' => implode(',', $this->getElasticsearchIndices()),
-            'type' => '_doc',
             'id' => $id,
         ];
 
