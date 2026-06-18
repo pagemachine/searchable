@@ -29,6 +29,11 @@ jobs:
         elasticsearch:
           - '8.17.6'
           - '9.4.2'
+        include:
+          - elasticsearch: '8.17.6'
+            elasticsearch_client: '^8.0'
+          - elasticsearch: '9.4.2'
+            elasticsearch_client: '^9.0'
 
     steps:
       - uses: actions/checkout@v6
@@ -38,6 +43,7 @@ jobs:
           PHP_VERSION: ${{matrix.php}}
           TYPO3_VERSION: ${{matrix.typo3}}
           ELASTICSEARCH_VERSION: ${{matrix.elasticsearch}}
+          ELASTICSEARCH_CLIENT_VERSION: ${{matrix.elasticsearch_client}}
         run: docker compose run --rm app composer build
 
       - name: Cleanup

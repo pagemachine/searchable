@@ -3,6 +3,7 @@ services:
     image: thecodingmachine/php:${PHP_VERSION:-8.2}-v4-cli
     environment:
       TYPO3_VERSION: ${TYPO3_VERSION:-^13.4}
+      ELASTICSEARCH_CLIENT_VERSION: ${ELASTICSEARCH_CLIENT_VERSION:-^9.0}
       TYPO3_API_TOKEN:
       TYPO3_API_PASSWORD:
       TYPO3_API_USERNAME:
