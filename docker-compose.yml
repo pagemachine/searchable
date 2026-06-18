@@ -3,7 +3,7 @@ services:
     image: thecodingmachine/php:${PHP_VERSION:-8.2}-v4-cli
     environment:
       TYPO3_VERSION: ${TYPO3_VERSION:-^13.4}
-      ELASTICSEARCH_CLIENT_VERSION: ${ELASTICSEARCH_CLIENT_VERSION:-^9.0}
+      ELASTICSEARCH_CLIENT_VERSION: ${ELASTICSEARCH_CLIENT_VERSION:-^8.0}
       TYPO3_API_TOKEN:
       TYPO3_API_PASSWORD:
       TYPO3_API_USERNAME:
@@ -39,7 +39,7 @@ services:
       - /var/lib/mysql
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-9.4.2}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-8.19.15}
     environment:
       - "ES_JAVA_OPTS=-Xms1m -Xmx4096m"
       - ingest.geoip.downloader.enabled=false

@@ -27,10 +27,10 @@ jobs:
           - '^13.4'
           - '^14.3'
         elasticsearch:
-          - '8.17.6'
+          - '8.19.15'
           - '9.4.2'
         include:
-          - elasticsearch: '8.17.6'
+          - elasticsearch: '8.19.15'
             elasticsearch_client: '^8.0'
           - elasticsearch: '9.4.2'
             elasticsearch_client: '^9.0'
