@@ -94,8 +94,8 @@ class IndexManager implements SingletonInterface
             'index' => $index,
         ];
 
-        if ($this->client->indices()->exists($deleteParams)) {
-            $response = $this->client->indices()->delete($deleteParams);
+        if ($this->client->indices()->exists($deleteParams)->asBool()) {
+            $this->client->indices()->delete($deleteParams);
         }
 
         $this->createIndex($index);
@@ -108,7 +108,7 @@ class IndexManager implements SingletonInterface
      */
     public function createIndex($index)
     {
-        if ($this->client->indices()->exists(['index' => $index])) {
+        if ($this->client->indices()->exists(['index' => $index])->asBool()) {
             return [];
         }
 
@@ -125,7 +125,7 @@ class IndexManager implements SingletonInterface
             $params['body']['mappings'] = $mapping;
         }
 
-        return $this->client->indices()->create($params);
+        return $this->client->indices()->create($params)->asArray();
     }
 
     /**

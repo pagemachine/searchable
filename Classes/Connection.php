@@ -44,8 +44,6 @@ class Connection
      */
     public static function isHealthy()
     {
-        $ping = self::getClient()->ping();
-
-        return $ping;
+        return self::getClient()->ping()->asBool();
     }
 }

@@ -57,11 +57,9 @@ class PipelineManager implements SingletonInterface
      */
     public function createPipeline($name, $configuration)
     {
-        $result = $this->client->ingest()->putPipeline([
+        return $this->client->ingest()->putPipeline([
             'id' => $name,
             'body' => $configuration,
-        ]);
-
-        return $result;
+        ])->asArray();
     }
 }
