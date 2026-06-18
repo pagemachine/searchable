@@ -38,11 +38,12 @@ services:
       - /var/lib/mysql
 
   elasticsearch:
-    image: elasticsearch:${ELASTICSEARCH_VERSION:-7.17.22}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-9.4.2}
     environment:
       - "ES_JAVA_OPTS=-Xms1m -Xmx4096m"
       - ingest.geoip.downloader.enabled=false
       - discovery.type=single-node
+      - xpack.security.enabled=false
     healthcheck:
       test: ["CMD-SHELL", "curl --silent http://localhost:9200/_cluster/health | grep --quiet '\"status\":\"\\(green\\|yellow\\)\"'"]
       interval: 10s
