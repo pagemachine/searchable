@@ -80,8 +80,7 @@
     },
     "scripts": {
         "build": [
-            "@composer require --no-progress --ansi --update-with-dependencies typo3/cms-core $TYPO3_VERSION",
-            "@composer require --no-progress --ansi --with-all-dependencies elasticsearch/elasticsearch $ELASTICSEARCH_CLIENT_VERSION",
+            "@composer require --no-progress --ansi --update-with-dependencies typo3/cms-core $TYPO3_VERSION elasticsearch/elasticsearch $ELASTICSEARCH_CLIENT_VERSION",
             "@lint",
             "@test"
         ],
