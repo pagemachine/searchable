@@ -2,8 +2,8 @@
 
 namespace PAGEmachine\Searchable;
 
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\Client;
+use Elastic\Elasticsearch\ClientBuilder;
 use PAGEmachine\Searchable\Service\ExtconfService;
 
 /*
@@ -44,8 +44,6 @@ class Connection
      */
     public static function isHealthy()
     {
-        $ping = self::getClient()->ping();
-
-        return $ping;
+        return self::getClient()->ping()->asBool();
     }
 }

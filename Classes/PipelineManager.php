@@ -2,7 +2,7 @@
 
 namespace PAGEmachine\Searchable;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 use PAGEmachine\Searchable\Service\ExtconfService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -57,11 +57,9 @@ class PipelineManager implements SingletonInterface
      */
     public function createPipeline($name, $configuration)
     {
-        $result = $this->client->ingest()->putPipeline([
+        return $this->client->ingest()->putPipeline([
             'id' => $name,
             'body' => $configuration,
-        ]);
-
-        return $result;
+        ])->asArray();
     }
 }
