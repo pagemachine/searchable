@@ -32,7 +32,7 @@ class ExtconfService implements SingletonInterface
     protected static function getElasticsearchIndices()
     {
         $indices = [];
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] as $indexKey => $index) {
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indices'] ?? [] as $indexKey => $index) {
             if (!isset($index['typo3_language'])) {
                 throw new \Exception('Please set the "typo3_language" for the index ' . $indexKey, 1719935622);
             }
@@ -95,7 +95,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getConfigOfIndex($nameIndex = '')
     {
-        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['configIndex'];
+        $index = ExtconfService::getElasticsearchIndices()[$nameIndex]['configIndex'] ?? null;
 
         if (empty($index)) {
             throw new UndefinedIndexException('Index ' . $nameIndex . ' is not defined!');
@@ -111,7 +111,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getLanguageOfIndex($nameIndex = '')
     {
-        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo3_language'];
+        $language = ExtconfService::getElasticsearchIndices()[$nameIndex]['typo3_language'] ?? null;
 
         if (!isset($language)) {
             throw new UndefinedIndexException('Language for Index ' . $nameIndex . ' is not defined!');
@@ -127,7 +127,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getIndexerKeyOfIndex(string $nameIndex)
     {
-        $indexerName = ExtconfService::getElasticsearchIndices()[$nameIndex]['indexer'];
+        $indexerName = ExtconfService::getElasticsearchIndices()[$nameIndex]['indexer'] ?? null;
 
         if (empty($indexerName)) {
             throw new UndefinedIndexException('Indexer for Index ' . $nameIndex . ' is not defined!');
@@ -176,7 +176,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getDefaultIndexSettings()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultIndexSettings'] ?: [];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultIndexSettings'] ?? [];
     }
 
     /**
@@ -203,7 +203,7 @@ class ExtconfService implements SingletonInterface
     {
         $indexer = [];
 
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'] as $key => $value) {
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['indexers'] ?? [] as $key => $value) {
             if (!empty($value['config']['type'])) {
                 throw new \Exception('Please remove the "type" config key for ' . $key, 1669216900);
             }
@@ -221,7 +221,7 @@ class ExtconfService implements SingletonInterface
      */
     public static function getMetaFieldname()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['metaField'] ?? 'searchable_meta';
     }
 
     /**
@@ -231,7 +231,7 @@ class ExtconfService implements SingletonInterface
      */
     public function getHostsSettings()
     {
-        $hosts = explode(',', (string)$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts']);
+        $hosts = explode(',', (string)($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['extensionManagement']['connection']['hosts'] ?? ''));
 
         return $hosts;
     }
@@ -243,7 +243,7 @@ class ExtconfService implements SingletonInterface
      */
     public function getQueryConfiguration()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['query'];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['query'] ?? [];
     }
 
     /**
@@ -253,7 +253,7 @@ class ExtconfService implements SingletonInterface
      */
     public function getDefaultMappingConfiguration()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultMapping'];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['defaultMapping'] ?? [];
     }
 
     /**
@@ -263,6 +263,6 @@ class ExtconfService implements SingletonInterface
      */
     public function getPipelines()
     {
-        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['pipelines'];
+        return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['searchable']['pipelines'] ?? [];
     }
 }
