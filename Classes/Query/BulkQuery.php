@@ -66,10 +66,8 @@ class BulkQuery extends AbstractQuery
         $this->parameters['body'][] = [
             'index' => [
                 '_index' => implode(',', $this->getElasticsearchIndices()),
-                '_type' => '_doc',
                 '_id' => $uid,
             ],
-
         ];
 
         $this->parameters['body'][] = $body;
@@ -92,11 +90,7 @@ class BulkQuery extends AbstractQuery
         $response = [];
 
         if (!empty($this->parameters['body'])) {
-
-            /**
-             * @var array
-             */
-            $response = $this->client->bulk($this->getParameters());
+            $response = $this->client->bulk($this->getParameters())->asArray();
 
             if ($response['errors'] ?? false) {
                 $this->logger->error('Bulk Query response contains errors: ', $response);
@@ -116,12 +110,11 @@ class BulkQuery extends AbstractQuery
     {
         $params = [
             'index' => implode(',', $this->getElasticsearchIndices()),
-            'type' => '_doc',
-            'id' => $id,
+            'id' => (string)$id,
         ];
 
-        if ($this->client->exists($params)) {
-            $response = $this->client->delete($params);
+        if ($this->client->exists($params)->asBool()) {
+            $response = $this->client->delete($params)->asArray();
 
             if ($response['errors'] ?? false) {
                 $this->logger->error('Delete Query response contains errors: ', $response);

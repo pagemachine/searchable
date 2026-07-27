@@ -47,8 +47,9 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $result = $query->execute();
 
         self::assertEquals(2, $result['hits']['total']['value']);
-        self::assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
-        self::assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
+        $titles = array_column(array_column($result['hits']['hits'], '_source'), 'title');
+        sort($titles);
+        self::assertEquals(['Another test page', 'Test page'], $titles);
     }
 
     #[Test]
@@ -110,8 +111,9 @@ final class SearchQueryTest extends AbstractElasticsearchTestCase
         $result = $query->execute();
 
         self::assertEquals(2, $result['hits']['total']['value']);
-        self::assertEquals('Test page', $result['hits']['hits'][0]['_source']['title']);
-        self::assertEquals('Another test page', $result['hits']['hits'][1]['_source']['title']);
+        $titles = array_column(array_column($result['hits']['hits'], '_source'), 'title');
+        sort($titles);
+        self::assertEquals(['Another test page', 'Test page'], $titles);
 
         $query = GeneralUtility::makeInstance(SearchQuery::class);
         $query->setLanguage(1);

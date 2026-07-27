@@ -261,7 +261,7 @@ class SearchQuery extends AbstractQuery
         }
 
         try {
-            $response = $this->client->search($this->getParameters());
+            $response = $this->client->search($this->getParameters())->asArray();
 
             if (!empty($response['errors'])) {
                 $this->logger->error('Search Query response contains errors: ', $response);
