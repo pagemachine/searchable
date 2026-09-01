@@ -115,9 +115,7 @@ abstract class AbstractFeature implements DynamicConfigurationInterface
                     $mapping['properties'][$key] = self::addRecursiveCopyTo($field, $mapping['properties'][$key] ?? [], $copyToField);
                 } else {
                     $mapping['properties'][$field]['type'] = 'text';
-                    if (!isset($mapping['properties'][$field]['copy_to'])) {
-                        $mapping['properties'][$field]['copy_to'] = [];
-                    }
+                    $mapping['properties'][$field]['copy_to'] ??= [];
                     $mapping['properties'][$field]['copy_to'][] = $copyToField;
                 }
             }
