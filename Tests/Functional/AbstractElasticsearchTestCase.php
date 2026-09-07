@@ -6,6 +6,7 @@ namespace PAGEmachine\Searchable\Tests\Functional;
 
 use Elasticsearch\Client as ElasticsearchClient;
 use PAGEmachine\Searchable\Connection;
+use PAGEmachine\Searchable\Indexer\FileIndexer;
 use PAGEmachine\Searchable\Indexer\PagesIndexer;
 use PAGEmachine\Searchable\Indexer\TcaIndexer;
 use PAGEmachine\Searchable\LinkBuilder\TypoLinkBuilder;
@@ -88,6 +89,33 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
                     ],
                     $this->configIndexNames[1] => [
                         'typo3_language' => 1,
+                    ],
+                ],
+                'pipelines' => [
+                    'attachment' => [
+                        'description' => 'Extract attachment information from arrays',
+                        'processors' => [
+                            [
+                                'foreach' => [
+                                    'field' => 'attachments',
+                                    'processor' => [
+                                        'attachment' => [
+                                            'target_field' => '_ingest._value.attachment',
+                                            'field' => '_ingest._value.data',
+                                            'indexed_chars' => -1,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            [
+                                'foreach' => [
+                                    'field' => 'attachments',
+                                    'processor' => [
+                                        'remove' => ['field' => '_ingest._value.data'],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
                 'indexers' => [
@@ -185,6 +213,23 @@ abstract class AbstractElasticsearchTestCase extends FunctionalTestCase
                             ],
                             'link' => [
                                 'className' => TypoLinkBuilder::class,
+                            ],
+                        ],
+                    ],
+                    'files' => [
+                        'className' => FileIndexer::class,
+                        'config' => [
+                            'collector' => [
+                                'config' => [
+                                    'fields' => [
+                                        'title',
+                                        'description',
+                                        'file',
+                                    ],
+                                ],
+                            ],
+                            'preview' => [
+                                'className' => NoPreviewRenderer::class,
                             ],
                         ],
                     ],
