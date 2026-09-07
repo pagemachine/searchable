@@ -38,7 +38,13 @@ services:
       - /var/lib/mysql
 
   elasticsearch:
-    image: elasticsearch:${ELASTICSEARCH_VERSION:-7.17.22}
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM elasticsearch:${ELASTICSEARCH_VERSION:-7.17.22}
+
+        RUN ["/usr/share/elasticsearch/bin/elasticsearch-plugin", "install", "--batch", "ingest-attachment"]
+    image: searchable-elasticsearch:${ELASTICSEARCH_VERSION:-7.17.22}
     environment:
       - "ES_JAVA_OPTS=-Xms1m -Xmx4096m"
       - ingest.geoip.downloader.enabled=false
