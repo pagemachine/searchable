@@ -101,6 +101,11 @@ class Connection extends BaseConnection
      */
     public function delete($tableName, array $identifier = [], array $types = []): int
     {
+        // Handle deletion of file metadata by file identifier
+        if ($tableName === 'sys_file_metadata' && empty($identifier['uid']) && !empty($identifier['file'])) {
+            $identifier = $this->select(['uid'], 'sys_file_metadata', ['file' => $identifier['file']])->fetchAssociative();
+        }
+
         $result = parent::delete(...func_get_args());
 
         if (!empty($identifier['uid'])) {

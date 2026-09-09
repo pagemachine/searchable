@@ -10,11 +10,13 @@ use PAGEmachine\Searchable\Tests\Functional\AbstractElasticsearchTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Configuration\SiteWriter;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
+use TYPO3\CMS\Core\Resource\FileType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -279,6 +281,68 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
         $this->indexingService->indexPartial();
 
         $this->assertDocumentNotInIndex(3);
+    }
+
+    #[Test]
+    public function removesFileDocumentFromIndexWhenMetadataIsDeletedByFileIdentifier(): void
+    {
+        $this->createLocalFileStorage();
+        $this->createIndexableFile(5, 42, 'Test file');
+
+        $this->assertIndexEmpty();
+
+        $this->indexingService->setup();
+        $this->indexingService->indexFull('files');
+
+        $this->assertDocumentInIndex(
+            42,
+            [
+                'title' => 'Test file',
+            ]
+        );
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('sys_file_metadata');
+
+        self::assertInstanceOf(Connection::class, $connection);
+
+        $affectedRows = $connection->delete('sys_file_metadata', ['file' => 5]);
+
+        self::assertSame(1, $affectedRows);
+
+        $this->syncIndices();
+
+        $this->indexingService->indexPartial();
+
+        $this->assertDocumentNotInIndex(42);
+    }
+
+    #[Test]
+    public function leavesOtherFileDocumentsInIndexWhenUnrelatedMetadataIsDeleted(): void
+    {
+        $this->createLocalFileStorage();
+        $this->createIndexableFile(5, 42, 'Test file');
+        $this->createIndexableFile(6, 43, 'Other test file');
+
+        $this->indexingService->setup();
+        $this->indexingService->indexFull('files');
+
+        $this->assertDocumentInIndex(42, ['title' => 'Test file']);
+        $this->assertDocumentInIndex(43, ['title' => 'Other test file']);
+
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('sys_file_metadata');
+
+        $affectedRows = $connection->delete('sys_file_metadata', ['file' => 5]);
+
+        self::assertSame(1, $affectedRows);
+
+        $this->syncIndices();
+
+        $this->indexingService->indexPartial();
+
+        $this->assertDocumentNotInIndex(42);
+        $this->assertDocumentInIndex(43, ['title' => 'Other test file']);
     }
 
     #[Test]
@@ -609,6 +673,75 @@ final class IndexingServiceTest extends AbstractElasticsearchTestCase
             ],
             1
         );
+    }
+
+    /**
+     * Creates a "1:/" local file storage backed by a real, writable directory
+     * inside the functional test instance, so files placed there are actually
+     * readable by \TYPO3\CMS\Core\Resource\ResourceFactory, as required by
+     * FileIndexer::sendBatch().
+     */
+    private function createLocalFileStorage(): void
+    {
+        $basePath = Environment::getPublicPath() . '/fileadmin/';
+        GeneralUtility::mkdir_deep($basePath);
+
+        $this->insertArray('sys_file_storage', [
+            'uid' => 1,
+            'pid' => 0,
+            'name' => 'fileadmin/',
+            'driver' => 'Local',
+            'is_online' => 1,
+            'is_browsable' => 1,
+            'is_public' => 1,
+            'is_writable' => 1,
+            'is_default' => 1,
+            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>'
+                . '<T3FlexForms><data><sheet index="sDEF"><language index="lDEF">'
+                . '<field index="basePath"><value index="vDEF">fileadmin/</value></field>'
+                . '<field index="pathType"><value index="vDEF">relative</value></field>'
+                . '<field index="caseSensitive"><value index="vDEF">1</value></field>'
+                . '</language></sheet></data></T3FlexForms>',
+        ]);
+    }
+
+    /**
+     * Creates a real sys_file + sys_file_metadata pair backed by an actual
+     * file on disk in the "1:/" storage created by createLocalFileStorage().
+     * A real file is required because FileIndexer::sendBatch() reads its
+     * content via ResourceFactory::getFileObject()->getContents() and drops
+     * the record from the batch entirely if that fails.
+     */
+    private function createIndexableFile(int $fileUid, int $metadataUid, string $title): void
+    {
+        $basePath = Environment::getPublicPath() . '/fileadmin/';
+        $fileName = sprintf('test-%d.txt', $fileUid);
+        $fileContents = sprintf('Contents of %s', $title);
+
+        file_put_contents($basePath . $fileName, $fileContents);
+
+        $this->insertArray('sys_file', [
+            'uid' => $fileUid,
+            'pid' => 0,
+            'storage' => 1,
+            'identifier' => '/' . $fileName,
+            'identifier_hash' => sha1('/' . $fileName),
+            'folder_hash' => sha1('/'),
+            'extension' => 'txt',
+            'mime_type' => 'text/plain',
+            'name' => $fileName,
+            'sha1' => sha1($fileContents),
+            'size' => strlen($fileContents),
+            'type' => FileType::TEXT->value,
+        ]);
+
+        $this->insertArray('sys_file_metadata', [
+            'uid' => $metadataUid,
+            'pid' => 0,
+            'file' => $fileUid,
+            'title' => $title,
+            'description' => 'Created for functional testing',
+        ]);
     }
 
     protected function setUp(): void
