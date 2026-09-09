@@ -32,6 +32,7 @@ class Connection
         if (self::$client == null) {
             self::$client = ClientBuilder::create()
                 ->setHosts(ExtconfService::getInstance()->getHostsSettings())
+                ->setRetries(5)
                 ->build();
         }
         return self::$client;
