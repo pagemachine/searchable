@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder as BaseQueryBuilder;
 class QueryBuilder extends BaseQueryBuilder
 {
     /**
-     * @var DatabaseRecordUpdateQuery
+     * @var DatabaseRecordUpdateQuery|null
      */
     protected $updateQuery;
 
