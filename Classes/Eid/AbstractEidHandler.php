@@ -27,8 +27,8 @@ abstract class AbstractEidHandler
      */
     public function processRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $term = $request->getQueryParams()['term'];
-        $this->options = $request->getQueryParams()['options'];
+        $term = $request->getQueryParams()['term'] ?? '';
+        $this->options = $request->getQueryParams()['options'] ?? [];
 
         $result = $this->getResults($term);
 
