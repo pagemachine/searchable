@@ -19,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class Connection extends BaseConnection
 {
     /**
-     * @var DatabaseRecordUpdateQuery
+     * @var DatabaseRecordUpdateQuery|null
      */
     protected $updateQuery;
 

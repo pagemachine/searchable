@@ -18,7 +18,7 @@ class Connection
     /**
      * The cached ES client
      *
-     * @var Client
+     * @var Client|null
      */
     protected static $client;
 
